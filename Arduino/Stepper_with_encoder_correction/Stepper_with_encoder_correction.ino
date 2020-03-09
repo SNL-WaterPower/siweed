@@ -1,4 +1,3 @@
-#include <TimerThree.h>
 #include <Encoder.h>
 #include<math.h>
 
@@ -9,8 +8,8 @@ const float leadPitch = 10.0;     //mm/turn
 const float gearRatio = 40.0 / 12.0; //motor turns per lead screw turns
 const float motorStepsPerTurn = 400.0;   //steps per motor revolution
 const float encStepsPerTurn = 3200.0;   //steps per encoder revolution
-float amp = 20.0; //in mm
-float hz = 1.5;
+volatile float amp = 20.0; //in mm
+volatile float hz = 1.5;
 
 float inputFnc(float tm)   //inputs time in seconds //outputs velocity in mm/second
 {
@@ -33,13 +32,11 @@ void setup()
   pinMode(dirPin, OUTPUT);
   digitalWrite(dirPin, HIGH);
   previousStepMillis = millis();
-  //Timer3.initialize();
-  //Timer3.attachInterrupt(moveMotor, 100000);  //once every millisecond
 }
 
 void loop()
 {
-
+  recieveSerial();
   encPos = waveEnc.read() * (1 / encStepsPerTurn) * leadPitch; //steps*(turns/step)*(mm/turn)
   t = millis() / (float)1000;
   Serial.println(encPos);
@@ -84,4 +81,13 @@ void moveMotor()
 float mmToSteps(float mm)
 {
   return mm * (1 / leadPitch) * (1 / gearRatio) * motorStepsPerTurn; //mm*(lead turns/mm)*(motor turns/lead turn)*(steps per motor turn)
+}
+
+void recieveSerial()
+{
+  if(Serial.available())
+  {
+    String str = Serial.readStringUntil('e');   //e marks ending character    
+    //needs ending character and a way to identify which variable is being assigned
+  }
 }
