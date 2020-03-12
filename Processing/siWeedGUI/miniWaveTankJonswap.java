@@ -7,7 +7,7 @@ public class miniWaveTankJonswap{
     
         double f_low = 2;
         double f_high = 4;
-        double df = .01;
+        double df = 1/30;
 
         int num_fs = (int)((f_high - f_low)/df);
         double[] f = new double[num_fs];
