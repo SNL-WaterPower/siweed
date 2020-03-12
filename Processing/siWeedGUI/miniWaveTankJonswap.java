@@ -7,20 +7,15 @@ public class miniWaveTankJonswap{
     
         double f_low = 2;
         double f_high = 4;
-        double df = 1.0/5.0;
-   
-        System.out.println(f_low);
-        System.out.println(f_high);
-        System.out.println(df);
+        double df = .01;
+
         int num_fs = (int)((f_high - f_low)/df);
-        System.out.println(num_fs);
         double[] f = new double[num_fs];
     
         for(i = 0; i < num_fs; i++){
             f[i] = f_low + i*df;
         }
         Jonswap S = new Jonswap(f, Tp, Hm0, gamma);
-        System.out.println("S, f");
         for(i = 0; i < f.length; i++){
             System.out.println(""+S.S[i]+"  "+S.f[i]);
         }
@@ -35,14 +30,12 @@ public class miniWaveTankJonswap{
             double g = 9.81;
             double siga = 0.07;
             double sigb = 0.09;
-
             double fp = 1/Tp;
             double[] S_temp = new double[f.length];
             double[] Gf = new double[f.length];
             double[] Sf = new double[f.length];
-            double alpha_JS;
+            double alpha_JS = 0;
             double trapz = 0;;
-
             int i;
 
             for(i = 0; i < f.length; i++){
@@ -54,9 +47,11 @@ public class miniWaveTankJonswap{
                 }
                 S_temp[i] = Math.pow(g,2) * Math.pow((2*Math.PI),-4) * Math.pow(f[i],-5) * Math.exp(-(5/4)*Math.pow(f[i]/fp,-4));
             }
+            
             //trapezoidal rule
+
             for(i = 0; i < f.length - 1; i++){
-                trapz += (S_temp[i]*Gf[i] + S_temp[i+1]*Gf[i+1]) * (f[i+1]-f[i]);
+                trapz += (S_temp[i]*Gf[i] + S_temp[i+1]*Gf[i+1]) * (f[i+1]-f[i])/2;
             }
             alpha_JS = (Hm0*Hm0)/16/trapz;
             for(i = 0; i < f.length; i++){
