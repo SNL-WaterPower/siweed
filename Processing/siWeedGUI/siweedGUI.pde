@@ -181,7 +181,7 @@ void draw() {
 
   sendFloat(position.getValue();
 
-  delay(100);
+  delay(10);
 }
 
 /////////////////// MAKES BUTTONS DO THINGS ////////////////////////////////////
@@ -226,13 +226,33 @@ void off() {
 }
 void sendFloat(float f)
 {
-    /* '!' indicates mode switch, next int is mode
+  /* '!' indicates mode switch
      j indicates jog position
 
      n indicates length of vectors/number of functions in sea state(starting at 1)
      a indicates incoming amp vector
      p indicates incoming phase vector
      f indicates incoming frequency vector
+     
+     ex:  !<1>n<2>a<1.35><2.36>p<1.35><2.36>f<1.35><2.36>    
+     
+     with this function sending data will look something like this:
+     if(values have changed)    //or run certain lines on a button press
+       port1.write('!');    set mode(only needs to be done when switching)
+       sendFloat(1);
+       
+       port1.write('n');    set number of components(only needs to be done once)
+       sendFloat(30);        
+       
+       port1.write('a');
+       sendFloat(2.3);
+       sendFloat(1.2);
+       .
+       .
+       .
+       .
+       //needs to send n number of floats
+       
   */
   f= Math.round(f*100.0)/100.0;    //limits to two decimal places
   String posStr = "<";    //starts the string
