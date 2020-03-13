@@ -1,4 +1,3 @@
-#include <TimerThree.h>
 #include <Encoder.h>
 #include<math.h>
 
@@ -20,9 +19,19 @@ float inputFnc(float tm)   //inputs time in seconds //outputs velocity in mm/sec
 
 Encoder waveEnc(2, 3);   //pins 2 and 3(interupts)//for 800 ppr/3200 counts per revolution set dip switches(0100) //2048ppr/8192 counts per revolution max(0000)
 const int stepPin = 4, dirPin = 5;
-float encPos = 0;   //how many steps have been taken acording to the encoder(in steps)
-unsigned long previousStepMillis;
 double t;    //time in seconds
+int mode = 0;     //0 is jog, 1 is seastate
+int n = 1;            //numbe of functions for the sea state
+const int maxComponents = 60;   //max needed number of frequency components
+float amps[maxComponents];
+float phases[maxComponents];
+float freqs[maxComponents];
+float encPos = 0;   //how many steps have been taken acording to the encoder(in steps)
+float desiredPos;
+unsigned long previousStepMillis;
+
+
+
 float stepInterval = .01;   //in seconds
 const float maxRate = 500.0;   //max mm/seconds
 
@@ -33,8 +42,6 @@ void setup()
   pinMode(dirPin, OUTPUT);
   digitalWrite(dirPin, HIGH);
   previousStepMillis = millis();
-  //Timer3.initialize();
-  //Timer3.attachInterrupt(moveMotor, 100000);  //once every millisecond
 }
 
 void loop()
@@ -42,7 +49,8 @@ void loop()
 
   encPos = waveEnc.read() * (1 / encStepsPerTurn) * leadPitch; //steps*(turns/step)*(mm/turn)
   t = millis() / (float)1000;
-
+  readSerial();
+  //////////////////
   unsigned long currentMillis = millis();
   if (currentMillis - previousStepMillis >= stepInterval)
   {
@@ -50,13 +58,13 @@ void loop()
     moveMotor();
     previousStepMillis = currentMillis;
   }
-
+  ////////////////////////
 }
 float futurePos;
 void moveMotor()
 {
   float pos = encPos;
-  //Serial.println(pos);  
+  //Serial.println(pos);
   futurePos = inputFnc(t + stepInterval);  //time plus delta time
   float vel = (futurePos - pos) / stepInterval; //desired velocity in mm/second
   //Serial.println(encPos);
@@ -74,10 +82,10 @@ void moveMotor()
     sp = 2.6;
     //Serial.println("min");
   }
-  else if(sp > maxRate)    //max speed
+  else if (sp > maxRate)   //max speed
   {
     sp = maxRate;
-    Serial.println("max");
+    //Serial.println("max");
   }
   tone(stepPin, mmToSteps(sp));     //steps per second
 }
@@ -86,4 +94,87 @@ void moveMotor()
 float mmToSteps(float mm)
 {
   return mm * (1 / leadPitch) * (1 / gearRatio) * motorStepsPerTurn; //mm*(lead turns/mm)*(motor turns/lead turn)*(steps per motor turn)
+}
+
+void readSerial()
+{
+  /* '!' indicates mode switch, next int is mode
+     j indicates jog position
+
+     n indicates length of vectors/number of functions in sea state(starting at 1)
+     a indicates incoming amp vector
+     p indicates incoming phase vector
+     f indicates incoming frequency vector
+  */
+  if (Serial.available())
+  {
+    char c = Serial.read();
+    switch (c)
+    {
+      case '!':
+        mode = (int)readFloat();
+        if (mode > maxComponents)
+        {
+          mode = maxComponents;     //to prevents reading invalid index
+        }
+        break;
+      case 'n':
+        n = (int)readFloat();
+        break;
+      case 'j':
+        desiredPos = readFloat();
+        break;
+      case 'a':
+        for (int i = 0; i < n; i++)
+        {
+          amps[i] = readFloat();
+        }
+        break;
+      case 'p':
+        for (int i = 0; i < n; i++)
+        {
+          phases[i] = readFloat();
+        }
+        break;
+      case 'f':
+        for (int i = 0; i < n; i++)
+        {
+          freqs[i] = readFloat();
+        }
+        break;
+    }
+  }
+  Serial.print("mode: ");
+  Serial.print(mode);
+  Serial.print(" ");
+  Serial.print("pos ");
+  Serial.print(desiredPos);
+  Serial.print(" ");
+  Serial.print("amp0 ");
+  Serial.print(amps[0]);
+  Serial.print(" ");
+  Serial.print("amp1 ");
+  Serial.print(amps[1]);
+  Serial.print(" ");
+  Serial.print("amp2 ");
+  Serial.print(amps[2]);
+  Serial.print(" ");
+  Serial.print("amp3 ");
+  Serial.print(amps[3]);
+  Serial.print(" ");
+  Serial.print("amp4 ");
+  Serial.println(amps[4]);
+}
+float readFloat()
+{
+  while (Serial.available() < 1) {}
+  if (Serial.read() == '<')
+  {
+    String str = Serial.readStringUntil('>');
+    return str.toFloat();
+  }
+  else
+  {
+    return 0.0;
+  }
 }
