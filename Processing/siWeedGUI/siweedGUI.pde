@@ -134,6 +134,8 @@ void setup() {
 
   waveSig.addDataSet("incoming");
   waveSig.setData("incoming", new float[100]);
+  ///////////////////////for testing:
+  port.
 }
 
 
@@ -224,6 +226,14 @@ void off() {
 }
 void sendFloat(float f)
 {
+    /* '!' indicates mode switch, next int is mode
+     j indicates jog position
+
+     n indicates length of vectors/number of functions in sea state(starting at 1)
+     a indicates incoming amp vector
+     p indicates incoming phase vector
+     f indicates incoming frequency vector
+  */
   f= Math.round(f*100.0)/100.0;    //limits to two decimal places
   String posStr = "<";    //starts the string
   posStr = posStr.concat(Float.toString(f));
