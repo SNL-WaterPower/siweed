@@ -133,7 +133,7 @@ ISR(TIMER4_COMPA_vect)    //function called by interupt     //Takes about .8 mil
   }
   else
   {
-    noTone();
+    noTone(stepPin);
   }
 }
 float mmToSteps(float mm)
@@ -224,9 +224,17 @@ float readFloat()
     return 0.0;
   }
 }
+void sendFloat(float f)     //needs fixing and implementation
+{
+  f= round(f*100.0)/100.0;    //limits to two decimal places
+  String posStr = "<";    //starts the string
+  //posStr += String(f);
+  posStr += ">";    //end of string "keychar"
+  //Serial.print(posStr);
+}
 void updateSpeedScalar()    //used to prevent jumps/smooth start   //STILL NEEDS IMPLEMENTATION: something*speedScalar
 {
-  Serial.println(speedScalar);
+  //Serial.println(speedScalar);
   if(speedScalar < 1)
   {
     speedScalar += .005;

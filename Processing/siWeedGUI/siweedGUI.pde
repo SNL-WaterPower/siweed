@@ -239,7 +239,7 @@ void sea() {
   //set mode on arduino:
   port1.write('!');
   sendFloat(1);
-  //tell arduino to only look at all components
+  //tell arduino to look at all components
   port1.write('n');
   sendFloat(nComponents);
 }
@@ -290,4 +290,11 @@ void sendFloat(float f)
   posStr = posStr.concat(Float.toString(f));
   posStr = posStr.concat(">");    //end of string "keychar"
   port1.write(posStr);
+}
+void readSerial(){
+  
+}
+float readFloat()
+{
+  return 1.0;
 }
