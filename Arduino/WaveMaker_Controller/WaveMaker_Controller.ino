@@ -106,7 +106,7 @@ ISR(TIMER4_COMPA_vect)    //function called by interupt     //Takes about .8 mil
 {
   float pos = encPos;
   futurePos = inputFnc(t + interval);  //time plus delta time
-  float vel = (futurePos - pos) / interval; //desired velocity in mm/second
+  float vel = speedScalar*(futurePos - pos) / interval; //desired velocity in mm/second   //ramped up over about a second
   if (vel > 0)
   {
     digitalWrite(dirPin, HIGH);
@@ -152,6 +152,7 @@ void readSerial()
   */
   if (Serial.available())
   {
+    speedScalar = 0;    //if anything happens, reset the speed scalar(and ramp up speed)
     char c = Serial.read();
     switch (c)
     {
@@ -232,7 +233,7 @@ void sendFloat(float f)     //needs fixing and implementation
   posStr += ">";    //end of string "keychar"
   //Serial.print(posStr);
 }
-void updateSpeedScalar()    //used to prevent jumps/smooth start   //STILL NEEDS IMPLEMENTATION: something*speedScalar
+void updateSpeedScalar()    //used to prevent jumps/smooth start
 {
   //Serial.println(speedScalar);
   if(speedScalar < 1)
