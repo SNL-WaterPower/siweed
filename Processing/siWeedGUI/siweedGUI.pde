@@ -16,6 +16,7 @@ PFont fb; // Bold font
 // Sandia logo
 PImage snlLogo;
 
+int nComponents = 10;     //number of wave components in sea state
 float hVal, freqVal, sigHval, peakVal, peakFval, pVal;
 
 
@@ -134,8 +135,10 @@ void setup() {
 
   waveSig.addDataSet("incoming");
   waveSig.setData("incoming", new float[100]);
+
+  port1.write('!');
+  sendFloat(0);    //initialize arduino in jog mode
   ///////////////////////for testing:
-  port.
 }
 
 
@@ -162,26 +165,36 @@ void draw() {
   line(width/3, 75, width/3, height-75);
 
   //updates chart for function mode  
-  if (mode == 1) {
-    pVal = position.getValue();
+  if (mode == 1) {    //jog
+    if (position.getValue() != pVal) {    //only sends if value has changed
+      pVal = position.getValue();
+      port1.write('j');
+      sendFloat(pVal);
+    }
     waveSig.push("incoming", (sin(frameCount*0.1)*pVal));
-    //println(mode);
-  } else if (mode == 2) {
-    hVal = h.getValue();
-    freqVal = freq.getValue();
+  } else if (mode == 2) {    //function
+    if (hVal != h.getValue() || freqVal != freq.getValue()) { //only executes if a value has changed
+      hVal = h.getValue();
+      freqVal = freq.getValue();
+      port1.write('a');
+      sendFloat(hVal);
+      port1.write('f');
+      sendFloat(freqVal);
+    }
     waveSig.push("incoming", (sin(frameCount*freqVal)*hVal));
-    //println(mode);
-  } else if (mode == 3) {
-    //Here we will call other java function
+  } else if (mode == 3) {    //sea state
+  if (sigHval != sigH.getValue() || peakFval != peakF.getValue()) { //only executes if a value has changed
     sigHval = sigH.getValue();
     peakFval = peakF.getValue();
-    waveSig.push("incoming", (sin(frameCount*peakFval)*sigHval));
-    //println(mode);
+    //Here we will call other java function
+    
+    //then send to arduino
   }
+    waveSig.push("incoming", (sin(frameCount*peakFval)*sigHval));
+  }
+  //println(mode);
 
-  sendFloat(position.getValue();
-
-  delay(10);
+  //delay(10);    //maybe delay to slow down serial
 }
 
 /////////////////// MAKES BUTTONS DO THINGS ////////////////////////////////////
@@ -194,6 +207,9 @@ void jog() {
   peakF.hide();
   gama.hide();
   position.show();
+  //set mode on arduino:
+  port1.write('!');
+  sendFloat(0);
 }
 
 void fun() {
@@ -203,6 +219,12 @@ void fun() {
 
   h.show();
   freq.show();
+  //set mode on arduino:
+  port1.write('!');
+  sendFloat(1f);
+  //tell arduino to only look at one component
+  port1.write('n');
+  sendFloat(1);
 }
 
 void sea() {
@@ -214,6 +236,12 @@ void sea() {
   sigH.show();
   peakF.show();
   gama.show();
+  //set mode on arduino:
+  port1.write('!');
+  sendFloat(1);
+  //tell arduino to only look at all components
+  port1.write('n');
+  sendFloat(nComponents);
 }
 
 void off() {
@@ -223,41 +251,43 @@ void off() {
   sigH.setValue(0);
   peakF.setValue(0); 
   position.setValue(0);
+  //set mode on arduino:
+  port1.write('!');
+  sendFloat(-1);
 }
 void sendFloat(float f)
 {
   /* '!' indicates mode switch
-     j indicates jog position
-
-     n indicates length of vectors/number of functions in sea state(starting at 1)
-     a indicates incoming amp vector
-     p indicates incoming phase vector
-     f indicates incoming frequency vector
-     
-     ex:  !<1>n<2>a<1.35><2.36>p<1.35><2.36>f<1.35><2.36>    
-     
-     with this function sending data will look something like this:
-     if(values have changed)    //or run certain lines on a button press
-       port1.write('!');    set mode(only needs to be done when switching)
-       sendFloat(1);
-       
-       port1.write('n');    set number of components(only needs to be done once)
-       sendFloat(30);        
-       
-       port1.write('a');
-       sendFloat(2.3);
-       sendFloat(1.2);
-       .
-       .
-       .
-       .
-       //needs to send n number of floats
-       
-  */
+   j indicates jog position
+   
+   n indicates length of vectors/number of functions in sea state(starting at 1)
+   a indicates incoming amp vector
+   p indicates incoming phase vector
+   f indicates incoming frequency vector
+   
+   ex:  !<1>n<2>a<1.35><2.36>p<1.35><2.36>f<1.35><2.36>    
+   
+   with this function sending data will look something like this:
+   if(values have changed)    //or run certain lines on a button press
+   port1.write('!');    set mode(only needs to be done when switching)
+   sendFloat(1);
+   
+   port1.write('n');    set number of components(only needs to be done once)
+   sendFloat(30);        
+   
+   port1.write('a');
+   sendFloat(2.3);
+   sendFloat(1.2);
+   .
+   .
+   .
+   .
+   //needs to send n number of floats
+   
+   */
   f= Math.round(f*100.0)/100.0;    //limits to two decimal places
   String posStr = "<";    //starts the string
   posStr = posStr.concat(Float.toString(f));
   posStr = posStr.concat(">");    //end of string "keychar"
   port1.write(posStr);
-  port1.write(2);
 }

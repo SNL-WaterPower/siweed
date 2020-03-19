@@ -3,9 +3,10 @@
 
 
 Encoder waveEnc(2, 3);   //pins 2 and 3(interupts)//for 800 ppr/3200 counts per revolution set dip switches(0100) //2048ppr/8192 counts per revolution max(0000)
-const int stepPin = 4, dirPin = 5;
+const int stepPin = 4, dirPin = 5, limitPin = A0;
 double t;    //time in seconds
-int mode = 0;     //0 is jog, 1 is seastate
+float speedScalar = 0;
+int mode = 0;     //-1 is stop, 0 is jog, 1 is seastate
 int n = 1;            //numbe of functions for the sea state
 const int maxComponents = 60;   //max needed number of frequency components
 float amps[maxComponents];
@@ -52,8 +53,15 @@ void setup()
   Serial.begin(9600);
   pinMode(stepPin, OUTPUT);
   pinMode(dirPin, OUTPUT);
+  pinMode(13, OUTPUT);
+  digitalWrite(13, LOW);    //initialization of max indicator led
   digitalWrite(dirPin, HIGH);
-  previousStepMillis = millis();
+  /////////Zero encoder:
+  tone(stepPin, 100);   //start moving
+  while(analogRead(limitPin) > 500){}     //do nothing until the beam is broken
+  tone(stepPin, 0);     //stop moving
+  waveEnc.write(0);     //zero encoder
+  
 
   //interupt setup:
   cli();//stop interrupts
@@ -67,18 +75,22 @@ void setup()
   sei();//allow interrupts
   ////////////////////////////////////////////// For testing only:
   mode = 1;
-  n = 3;
+  n = 4;
   amps[0] = 1.2;
   phases[0] = 0;
   freqs[0] = .2;
 
   amps[1] = 2.8;
   phases[1] = 2.4;
-  freqs[1] = 2.6;
+  freqs[1] = .3;
 
   amps[2] = 3.8;
   phases[2] = 3.4;
-  freqs[3] = 3.2;
+  freqs[2] = .2;
+
+  amps[3] = 3.8;
+  phases[3] = 3.4;
+  freqs[3] = .1;
 }
 
 void loop()
@@ -86,10 +98,11 @@ void loop()
   encPos = waveEnc.read() * (1 / encStepsPerTurn) * leadPitch; //steps*(turns/step)*(mm/turn)
   t = millis() / (float)1000;
   readSerial();
+  updateSpeedScalar();
 }
 
 float futurePos;
-ISR(TIMER4_COMPA_vect)    //function called by interupt
+ISR(TIMER4_COMPA_vect)    //function called by interupt     //Takes about .8 milliseconds
 {
   float pos = encPos;
   futurePos = inputFnc(t + interval);  //time plus delta time
@@ -111,9 +124,17 @@ ISR(TIMER4_COMPA_vect)    //function called by interupt
   else if (sp > maxRate)   //max speed
   {
     sp = maxRate;
+    digitalWrite(13,HIGH);    //on board led turns on if max speed was reached
     //Serial.println("max");
   }
+  if(mode != -1)    //only plays a tone if mode is not STOP
+  {
   tone(stepPin, mmToSteps(sp));     //steps per second
+  }
+  else
+  {
+    noTone();
+  }
 }
 float mmToSteps(float mm)
 {
@@ -201,5 +222,17 @@ float readFloat()
   else
   {
     return 0.0;
+  }
+}
+void updateSpeedScalar()    //used to prevent jumps/smooth start   //STILL NEEDS IMPLEMENTATION: something*speedScalar
+{
+  Serial.println(speedScalar);
+  if(speedScalar < 1)
+  {
+    speedScalar += .005;
+  }
+  else
+  {
+    speedScalar = 1.0;
   }
 }
