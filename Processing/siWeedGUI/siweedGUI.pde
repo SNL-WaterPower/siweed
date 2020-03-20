@@ -171,7 +171,7 @@ void draw() {
       port1.write('j');
       sendFloat(pVal);
     }
-    waveSig.push("incoming", (sin(frameCount*0.1)*pVal));
+    //waveSig.push("incoming", (sin(frameCount*0.1)*pVal));
   } else if (mode == 2) {    //function
     if (hVal != h.getValue() || freqVal != freq.getValue()) { //only executes if a value has changed
       hVal = h.getValue();
@@ -181,18 +181,18 @@ void draw() {
       port1.write('f');
       sendFloat(freqVal);
     }
-    waveSig.push("incoming", (sin(frameCount*freqVal)*hVal));
+    //waveSig.push("incoming", (sin(frameCount*freqVal)*hVal));
   } else if (mode == 3) {    //sea state
-  if (sigHval != sigH.getValue() || peakFval != peakF.getValue()) { //only executes if a value has changed
-    sigHval = sigH.getValue();
-    peakFval = peakF.getValue();
-    //Here we will call other java function
-    
-    //then send to arduino
-  }
+    if (sigHval != sigH.getValue() || peakFval != peakF.getValue()) { //only executes if a value has changed
+      sigHval = sigH.getValue();
+      peakFval = peakF.getValue();
+      //Here we will call other java function
+
+      //then send to arduino
+    }
     waveSig.push("incoming", (sin(frameCount*peakFval)*sigHval));
   }
-  //println(mode);
+  readSerial();
 
   //delay(10);    //maybe delay to slow down serial
 }
@@ -221,7 +221,7 @@ void fun() {
   freq.show();
   //set mode on arduino:
   port1.write('!');
-  sendFloat(1f);
+  sendFloat(1);
   //tell arduino to only look at one component
   port1.write('n');
   sendFloat(1);
@@ -291,10 +291,26 @@ void sendFloat(float f)
   posStr = posStr.concat(">");    //end of string "keychar"
   port1.write(posStr);
 }
-void readSerial(){
-  
+void readSerial() {
+  if (port1.available() > 0)
+  {
+    waveSig.push("incoming", readFloat());
+    //println(readFloat());
+  }
 }
-float readFloat()
-{
-  return 1.0;
+float readFloat() {
+  while (port1.available() < 1) {
+  }
+  if (port1.read() == '<') {
+    delay(5);    //short delay to allow the rest of the data through
+    String str = port1.readStringUntil('>');
+    if (str != null) {
+      str = str.substring(0, str.length()-1);    //removes the >
+      return float(str);
+    } else {
+      return 888.8;
+    }
+  } else {
+    return 0.0;
+  }
 }

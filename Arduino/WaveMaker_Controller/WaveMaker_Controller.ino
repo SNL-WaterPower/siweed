@@ -46,6 +46,7 @@ float inputFnc(float tm)   //inputs time in seconds //outputs position in mm
 
 
 float interval = .01;   //time between each interupt call in seconds //max value: 1.04
+float serialInterval = .1;   //time between each interupt call in seconds //max value: 1.04
 const float maxRate = 500.0;   //max mm/seconds
 
 void setup()
@@ -72,8 +73,19 @@ void setup()
   TCCR4B |= (1 << WGM12);   // turn on CTC mode aka reset on positive compare(I think)
   TCCR4B |= (1 << CS42);// Set CS42 bit for 256 prescaler
   TIMSK4 |= (1 << OCIE4A);  // enable timer compare interrupt
+  //////timer 5 for serial sending
+  
+  TCCR5A = 0;// set entire TCCR5A register to 0
+  TCCR5B = 0;// same for TCCR5B
+  TCNT5  = 0;//initialize counter value to 0
+  OCR5A = serialInterval * 16000000.0 / 256.0 - 1; // = (interval in seconds)(16*10^6) / (1*1024)  (must be <65536) -1 to account for overflow(255 -> 0)
+  TCCR5B |= (1 << WGM12);   // turn on CTC mode aka reset on positive compare(I think)
+  TCCR5B |= (1 << CS52);// Set CS42 bit for 256 prescaler
+  TIMSK5 |= (1 << OCIE5A);  // enable timer compare interrupt
+  
   sei();//allow interrupts
   ////////////////////////////////////////////// For testing only:
+  /*
   mode = 1;
   n = 4;
   amps[0] = 1.2;
@@ -91,6 +103,7 @@ void setup()
   amps[3] = 3.8;
   phases[3] = 3.4;
   freqs[3] = .1;
+  */
 }
 
 void loop()
@@ -104,9 +117,10 @@ void loop()
 float futurePos;
 ISR(TIMER4_COMPA_vect)    //function called by interupt     //Takes about .8 milliseconds
 {
+
   float pos = encPos;
   futurePos = inputFnc(t + interval);  //time plus delta time
-  float vel = speedScalar*(futurePos - pos) / interval; //desired velocity in mm/second   //ramped up over about a second
+  float vel = speedScalar*(futurePos - pos) / interval; //desired velocity in mm/second   //ramped up over about a second   //LIKELY NEEDS TUNING
   if (vel > 0)
   {
     digitalWrite(dirPin, HIGH);
@@ -135,6 +149,10 @@ ISR(TIMER4_COMPA_vect)    //function called by interupt     //Takes about .8 mil
   {
     noTone(stepPin);
   }
+}
+ISR(TIMER5_COMPA_vect)
+{
+  sendFloat(futurePos);
 }
 float mmToSteps(float mm)
 {
@@ -225,13 +243,13 @@ float readFloat()
     return 0.0;
   }
 }
-void sendFloat(float f)     //needs fixing and implementation
+void sendFloat(float f)
 {
   f= round(f*100.0)/100.0;    //limits to two decimal places
-  String posStr = "<";    //starts the string
-  //posStr += String(f);
-  posStr += ">";    //end of string "keychar"
-  //Serial.print(posStr);
+  String dataStr = "<";    //starts the string
+  dataStr += String(f);
+  dataStr += ">";    //end of string
+  Serial.print(dataStr);
 }
 void updateSpeedScalar()    //used to prevent jumps/smooth start
 {
