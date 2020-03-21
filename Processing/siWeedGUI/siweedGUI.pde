@@ -36,8 +36,7 @@ int mode = 1; // 1 = jog, 2 = function, 3 = sea, 4 = off
 
 
 void setup() {
-
-  fullScreen();
+  fullScreen(P2D);
   port1 = new Serial(this, "COM4", 9600); // all communication with Mega
   delay(5000);
   // Fonts
@@ -74,7 +73,7 @@ void setup() {
 
   // Sliders // 
   position = cp5.addSlider("Position (CM)")  //name slider
-    .setRange(0, 10) //slider range
+    .setRange(-10, 10) //slider range
     .setPosition(150, 250) //x and y coordinates of upper left corner of button
     .setSize(300, 20); //size (width, height)
 
@@ -85,7 +84,7 @@ void setup() {
     .hide(); //size (width, height)
 
   freq = cp5.addSlider("Frequency (Hz)")  //name of button
-    .setRange(2, 4)
+    .setRange(0, 4)
     .setPosition(150, 300) //x and y coordinates of upper left corner of button
     .setSize(300, 20)
     .hide(); //size (width, height)
@@ -134,15 +133,14 @@ void setup() {
 
 
   waveSig.addDataSet("incoming");
-  waveSig.setData("incoming", new float[100]);
+  waveSig.setData("incoming", new float[50]);
 
   port1.write('!');
   sendFloat(0);    //initialize arduino in jog mode
-  ///////////////////////for testing:
 }
 
 
-void draw() {
+void draw() {      //about 50 times a second
   // Background color
   background(dblue);
 
@@ -193,6 +191,10 @@ void draw() {
     waveSig.push("incoming", (sin(frameCount*peakFval)*sigHval));
   }
   readSerial();
+
+  if (frameCount % 100 == 0) {
+    println(frameCount/(millis()/1000f));
+  }
 
   //delay(10);    //maybe delay to slow down serial
 }
@@ -295,21 +297,23 @@ void readSerial() {
   if (port1.available() > 0)
   {
     waveSig.push("incoming", readFloat());
-    //println(readFloat());
   }
 }
 float readFloat() {
-  while (port1.available() < 1) {
-  }
-  if (port1.read() == '<') {
-    delay(5);    //short delay to allow the rest of the data through
-    String str = port1.readStringUntil('>');
-    if (str != null) {
-      str = str.substring(0, str.length()-1);    //removes the >
-      return float(str);
-    } else {
-      return 888.8;
-    }
+  //while (port1.available() < 1) {}
+  if (port1.readChar() == '<') {
+    //delay(10);    //short delay to allow the rest of the data through
+    String str = "";    //port1.readStringUntil('>');
+    do {
+      while (port1.available() < 1) {
+        //println("waiting");
+        delay(1);        //doesn't work without this for some reason
+    }    //wait until data comes through
+      str += port1.readChar();
+    } while (str.charAt(str.length()-1) != '>');
+    str = str.substring(0, str.length()-1);    //removes the >
+    //println(str);
+    return float(str);
   } else {
     return 0.0;
   }

@@ -46,7 +46,7 @@ float inputFnc(float tm)   //inputs time in seconds //outputs position in mm
 
 
 float interval = .01;   //time between each interupt call in seconds //max value: 1.04
-float serialInterval = .1;   //time between each interupt call in seconds //max value: 1.04
+float serialInterval = .05;   //time between each interupt call in seconds //max value: 1.04
 const float maxRate = 500.0;   //max mm/seconds
 
 void setup()
@@ -59,10 +59,10 @@ void setup()
   digitalWrite(dirPin, HIGH);
   /////////Zero encoder:
   tone(stepPin, 100);   //start moving
-  while(analogRead(limitPin) > 500){}     //do nothing until the beam is broken
+  while (analogRead(limitPin) > 500) {}   //do nothing until the beam is broken
   tone(stepPin, 0);     //stop moving
   waveEnc.write(0);     //zero encoder
-  
+
 
   //interupt setup:
   cli();//stop interrupts
@@ -74,7 +74,7 @@ void setup()
   TCCR4B |= (1 << CS42);// Set CS42 bit for 256 prescaler
   TIMSK4 |= (1 << OCIE4A);  // enable timer compare interrupt
   //////timer 5 for serial sending
-  
+
   TCCR5A = 0;// set entire TCCR5A register to 0
   TCCR5B = 0;// same for TCCR5B
   TCNT5  = 0;//initialize counter value to 0
@@ -82,27 +82,27 @@ void setup()
   TCCR5B |= (1 << WGM12);   // turn on CTC mode aka reset on positive compare(I think)
   TCCR5B |= (1 << CS52);// Set CS42 bit for 256 prescaler
   TIMSK5 |= (1 << OCIE5A);  // enable timer compare interrupt
-  
+
   sei();//allow interrupts
   ////////////////////////////////////////////// For testing only:
   /*
-  mode = 1;
-  n = 4;
-  amps[0] = 1.2;
-  phases[0] = 0;
-  freqs[0] = .2;
+    mode = 1;
+    n = 4;
+    amps[0] = 1.2;
+    phases[0] = 0;
+    freqs[0] = .2;
 
-  amps[1] = 2.8;
-  phases[1] = 2.4;
-  freqs[1] = .3;
+    amps[1] = 2.8;
+    phases[1] = 2.4;
+    freqs[1] = .3;
 
-  amps[2] = 3.8;
-  phases[2] = 3.4;
-  freqs[2] = .2;
+    amps[2] = 3.8;
+    phases[2] = 3.4;
+    freqs[2] = .2;
 
-  amps[3] = 3.8;
-  phases[3] = 3.4;
-  freqs[3] = .1;
+    amps[3] = 3.8;
+    phases[3] = 3.4;
+    freqs[3] = .1;
   */
 }
 
@@ -120,7 +120,7 @@ ISR(TIMER4_COMPA_vect)    //function called by interupt     //Takes about .8 mil
 
   float pos = encPos;
   futurePos = inputFnc(t + interval);  //time plus delta time
-  float vel = speedScalar*(futurePos - pos) / interval; //desired velocity in mm/second   //ramped up over about a second   //LIKELY NEEDS TUNING
+  float vel = speedScalar * (futurePos - pos) / interval; //desired velocity in mm/second   //ramped up over about a second   //LIKELY NEEDS TUNING
   if (vel > 0)
   {
     digitalWrite(dirPin, HIGH);
@@ -138,12 +138,12 @@ ISR(TIMER4_COMPA_vect)    //function called by interupt     //Takes about .8 mil
   else if (sp > maxRate)   //max speed
   {
     sp = maxRate;
-    digitalWrite(13,HIGH);    //on board led turns on if max speed was reached
+    digitalWrite(13, HIGH);   //on board led turns on if max speed was reached
     //Serial.println("max");
   }
-  if(mode != -1)    //only plays a tone if mode is not STOP
+  if (mode != -1)   //only plays a tone if mode is not STOP
   {
-  tone(stepPin, mmToSteps(sp));     //steps per second
+    tone(stepPin, mmToSteps(sp));     //steps per second
   }
   else
   {
@@ -245,7 +245,7 @@ float readFloat()
 }
 void sendFloat(float f)
 {
-  f= round(f*100.0)/100.0;    //limits to two decimal places
+  f = round(f * 100.0) / 100.0; //limits to two decimal places
   String dataStr = "<";    //starts the string
   dataStr += String(f);
   dataStr += ">";    //end of string
@@ -254,7 +254,7 @@ void sendFloat(float f)
 void updateSpeedScalar()    //used to prevent jumps/smooth start
 {
   //Serial.println(speedScalar);
-  if(speedScalar < 1)
+  if (speedScalar < 1)
   {
     speedScalar += .005;
   }
