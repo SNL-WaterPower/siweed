@@ -31,6 +31,9 @@ Slider torque, other; // WEC sliders
 Button jog, function, sea, off; // mode buttons
 
 int mode = 1; // 1 = jog, 2 = function, 3 = sea, 4 = off
+Table table; //create Table
+int m; 
+
 
 
 
@@ -318,3 +321,18 @@ float readFloat() {
     return 0.0;
   }
 }
+
+//Funciton to test CSV functionality 
+void mouseClicked(){ //we will want this to log data every 10 milli seconds 
+  //table.addColumn("timeStamp");
+  //table.addColumn("waveMakerMode");
+  //table.addColumn("wec_kp");
+  //table.addColumn("wec_ki");
+  TableRow newRow = table.addRow();
+  newRow.setFloat("timeStamp", m);
+  newRow.setInt("waveMakerMode", mode);
+  newRow.setFloat("wec_kp", torque.getValue());
+  newRow.setFloat("wec_ki", other.getValue()); 
+  saveTable(table, "data/new.csv");
+
+} 
