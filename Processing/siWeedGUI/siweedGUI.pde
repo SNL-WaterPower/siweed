@@ -9,7 +9,6 @@ color turq = color(0, 173, 208);
 color dblue = color(0, 83, 118);
 
 // Fonts
-//println(PFont.list()); Prints avliable fonts to console
 PFont f; // Regular font
 PFont fb; // Bold font
 
@@ -40,8 +39,9 @@ int m;
 
 void setup() {
   fullScreen(P2D);
+  frameRate(30);    //sets draw() to run 30 times a second. It would run around 40 without this restriciton
   port1 = new Serial(this, "COM4", 9600); // all communication with Mega
-  delay(5000);
+  delay(1000);
   // Fonts
   f = createFont("Arial", 16, true);
   fb = createFont("Arial Bold Italic", 32, true);
@@ -136,14 +136,16 @@ void setup() {
 
 
   waveSig.addDataSet("incoming");
-  waveSig.setData("incoming", new float[50]);
+  waveSig.setData("incoming", new float[250]);    //use to set the domain of the plot
 
   port1.write('!');
-  sendFloat(0);    //initialize arduino in jog mode
+  sendFloat(0);    //initialize arduino in jog mode at position 0
+  port1.write('j');
+  sendFloat(0);
 }
 
 
-void draw() {      //about 50 times a second
+void draw() {
   // Background color
   background(dblue);
 
@@ -191,15 +193,9 @@ void draw() {      //about 50 times a second
 
       //then send to arduino
     }
-    waveSig.push("incoming", (sin(frameCount*peakFval)*sigHval));
+    //waveSig.push("incoming", (sin(frameCount*peakFval)*sigHval));
   }
   readSerial();
-
-  if (frameCount % 100 == 0) {
-    println(frameCount/(millis()/1000f));
-  }
-
-  //delay(10);    //maybe delay to slow down serial
 }
 
 /////////////////// MAKES BUTTONS DO THINGS ////////////////////////////////////
@@ -297,33 +293,30 @@ void sendFloat(float f)
   port1.write(posStr);
 }
 void readSerial() {
-  if (port1.available() > 0)
+  while (port1.available() > 0)    //recieves until buffer is empty. Since it runs 30 times a second, the arduino will send many samples per execution
   {
     waveSig.push("incoming", readFloat());
   }
 }
 float readFloat() {
-  //while (port1.available() < 1) {}
   if (port1.readChar() == '<') {
-    //delay(10);    //short delay to allow the rest of the data through
     String str = "";    //port1.readStringUntil('>');
     do {
       while (port1.available() < 1) {
         //println("waiting");
         delay(1);        //doesn't work without this for some reason
-    }    //wait until data comes through
+      }    //wait until data comes through
       str += port1.readChar();
     } while (str.charAt(str.length()-1) != '>');
     str = str.substring(0, str.length()-1);    //removes the >
-    //println(str);
     return float(str);
   } else {
-    return 0.0;
+    return -1.0;
   }
 }
-
+/*
 //Funciton to test CSV functionality 
-void mouseClicked(){ //we will want this to log data every 10 milli seconds 
+void mouseClicked() { //we will want this to log data every 10 milli seconds 
   //table.addColumn("timeStamp");
   //table.addColumn("waveMakerMode");
   //table.addColumn("wec_kp");
@@ -334,5 +327,5 @@ void mouseClicked(){ //we will want this to log data every 10 milli seconds
   newRow.setFloat("wec_kp", torque.getValue());
   newRow.setFloat("wec_ki", other.getValue()); 
   saveTable(table, "data/new.csv");
-
 } 
+*/

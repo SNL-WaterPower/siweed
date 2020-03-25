@@ -46,7 +46,7 @@ float inputFnc(float tm)   //inputs time in seconds //outputs position in mm
 
 
 float interval = .01;   //time between each interupt call in seconds //max value: 1.04
-float serialInterval = .05;   //time between each interupt call in seconds //max value: 1.04
+float serialInterval = .02;   //time between each interupt call in seconds //max value: 1.04
 const float maxRate = 500.0;   //max mm/seconds
 
 void setup()
@@ -55,7 +55,7 @@ void setup()
   pinMode(stepPin, OUTPUT);
   pinMode(dirPin, OUTPUT);
   pinMode(13, OUTPUT);
-  digitalWrite(13, LOW);    //initialization of max indicator led
+  digitalWrite(13, LOW);    //initialization of maxRate indicator led
   digitalWrite(dirPin, HIGH);
   /////////Zero encoder:
   tone(stepPin, 100);   //start moving
@@ -109,16 +109,18 @@ void setup()
 void loop()
 {
   encPos = waveEnc.read() * (1 / encStepsPerTurn) * leadPitch; //steps*(turns/step)*(mm/turn)
-  t = millis() / (float)1000;
+  t = millis() / 1000.0;
   readSerial();
   updateSpeedScalar();
 }
 
 float futurePos;
+float error;
 ISR(TIMER4_COMPA_vect)    //function called by interupt     //Takes about .8 milliseconds
 {
 
   float pos = encPos;
+  error = futurePos - encPos;   //where we told it to go vs where it is
   futurePos = inputFnc(t + interval);  //time plus delta time
   float vel = speedScalar * (futurePos - pos) / interval; //desired velocity in mm/second   //ramped up over about a second   //LIKELY NEEDS TUNING
   if (vel > 0)
@@ -154,11 +156,6 @@ ISR(TIMER5_COMPA_vect)
 {
   sendFloat(futurePos);
 }
-float mmToSteps(float mm)
-{
-  return mm * (1 / leadPitch) * (1 / gearRatio) * motorStepsPerTurn; //mm*(lead turns/mm)*(motor turns/lead turn)*(steps per motor turn)
-}
-
 void readSerial()
 {
   /* '!' indicates mode switch, next int is mode
@@ -168,7 +165,7 @@ void readSerial()
      p indicates incoming phase vector
      f indicates incoming frequency vector
   */
-  if (Serial.available())
+  if (Serial.available() > 0)
   {
     speedScalar = 0;    //if anything happens, reset the speed scalar(and ramp up speed)
     char c = Serial.read();
@@ -262,4 +259,8 @@ void updateSpeedScalar()    //used to prevent jumps/smooth start
   {
     speedScalar = 1.0;
   }
+}
+float mmToSteps(float mm)
+{
+  return mm * (1 / leadPitch) * (1 / gearRatio) * motorStepsPerTurn; //mm*(lead turns/mm)*(motor turns/lead turn)*(steps per motor turn)
 }
