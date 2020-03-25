@@ -176,7 +176,7 @@ void draw() {
     }
     //waveSig.push("incoming", (sin(frameCount*0.1)*pVal));
   } else if (mode == 2) {    //function
-    if (hVal != h.getValue() || freqVal != freq.getValue()) { //only executes if a value has changed
+    if (!mousePressed && (hVal != h.getValue() || freqVal != freq.getValue())) { //only executes if a value has changed and the mouse is lifted(smooths transition)
       hVal = h.getValue();
       freqVal = freq.getValue();
       port1.write('a');
@@ -186,7 +186,7 @@ void draw() {
     }
     //waveSig.push("incoming", (sin(frameCount*freqVal)*hVal));
   } else if (mode == 3) {    //sea state
-    if (sigHval != sigH.getValue() || peakFval != peakF.getValue()) { //only executes if a value has changed
+    if (!mousePressed && (sigHval != sigH.getValue() || peakFval != peakF.getValue())) { //only executes if a value has changed and the mouse is lifted(smooths transition)
       sigHval = sigH.getValue();
       peakFval = peakF.getValue();
       //Here we will call other java function
@@ -195,7 +195,7 @@ void draw() {
     }
     //waveSig.push("incoming", (sin(frameCount*peakFval)*sigHval));
   }
-  readSerial();
+  thread("readSerial");    //will run this funciton in parallel thread
 }
 
 /////////////////// MAKES BUTTONS DO THINGS ////////////////////////////////////
@@ -315,7 +315,7 @@ float readFloat() {
   }
 }
 /*
-//Funciton to test CSV functionality 
+//Funciton to test CSV functionality     //didn't compile with this for me
 void mouseClicked() { //we will want this to log data every 10 milli seconds 
   //table.addColumn("timeStamp");
   //table.addColumn("waveMakerMode");
