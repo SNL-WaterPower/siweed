@@ -3,7 +3,7 @@
 
 
 Encoder waveEnc(2, 3);   //pins 2 and 3(interupts)//for 800 ppr/3200 counts per revolution set dip switches(0100) //2048ppr/8192 counts per revolution max(0000)
-const int stepPin = 4, dirPin = 5, limitPin = A0;
+const int stepPin = 4, dirPin = 5, limitPin = A0, probe1Pin = A1;
 double t;    //time in seconds
 float speedScalar = 0;
 int mode = 0;     //-1 is stop, 0 is jog, 1 is seastate
@@ -154,7 +154,8 @@ ISR(TIMER4_COMPA_vect)    //function called by interupt     //Takes about .8 mil
 }
 ISR(TIMER5_COMPA_vect)
 {
-  sendFloat(futurePos);
+  //sendFloat(futurePos);
+  sendFloat(map(analogRead(probe1Pin), 0, 1023, 0, 10));
 }
 void readSerial()
 {
