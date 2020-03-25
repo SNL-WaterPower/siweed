@@ -24,7 +24,7 @@ switch mode
         tau = 5;
 end
 
-% pass to DUE: mode, kP, kD, [w0, Amp, fs_indices, phase]
+% pass to DUE: mode, kP, kD, [w0, Amp, fs_indices, phase], tau
         
 %% DUE
 
