@@ -155,7 +155,7 @@ ISR(TIMER4_COMPA_vect)    //function called by interupt     //Takes about .8 mil
 ISR(TIMER5_COMPA_vect)
 {
   //sendFloat(futurePos);
-  sendFloat(map(analogRead(probe1Pin), 0, 1023, 0, 10));
+  sendFloat(mapFloat(analogRead(probe1Pin), 0.0, 560.0, 0.0, 27.0));   //maps to cm
 }
 void readSerial()
 {
@@ -264,4 +264,8 @@ void updateSpeedScalar()    //used to prevent jumps/smooth start
 float mmToSteps(float mm)
 {
   return mm * (1 / leadPitch) * (1 / gearRatio) * motorStepsPerTurn; //mm*(lead turns/mm)*(motor turns/lead turn)*(steps per motor turn)
+}
+float mapFloat(long x, long in_min, long in_max, long out_min, long out_max)
+{
+ return (float)(x - in_min) * (out_max - out_min) / (float)(in_max - in_min) + out_min;
 }

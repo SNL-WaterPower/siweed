@@ -41,7 +41,7 @@ void setup() {
   fullScreen(P2D);
   frameRate(30);    //sets draw() to run 30 times a second. It would run around 40 without this restriciton
   port1 = new Serial(this, "COM4", 9600); // all communication with Mega
-  delay(1000);
+  delay(2000);
   // Fonts
   f = createFont("Arial", 16, true);
   fb = createFont("Arial Bold Italic", 32, true);
