@@ -121,7 +121,7 @@ ISR(TIMER4_COMPA_vect)    //function called by interupt     //Takes about .8 mil
 
   float pos = encPos;
   error = futurePos - encPos;   //where we told it to go vs where it is
-  futurePos = inputFnc(t + interval);  //time plus delta time
+  futurePos = inputFnc(t + interval) + error;  //time plus delta time plus previous error !!!!!!!!!!!!!!NEEDS TESTING
   float vel = speedScalar * (futurePos - pos) / interval; //desired velocity in mm/second   //ramped up over about a second   //LIKELY NEEDS TUNING
   if (vel > 0)
   {

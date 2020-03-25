@@ -168,31 +168,26 @@ void draw() {
   line(width/3, 75, width/3, height-75);
 
   //updates chart for function mode  
-  if (mode == 1) {    //jog
-    if (position.getValue() != pVal) {    //only sends if value has changed
-      pVal = position.getValue();
-      port1.write('j');
-      sendFloat(pVal);
-    }
-    //waveSig.push("incoming", (sin(frameCount*0.1)*pVal));
-  } else if (mode == 2) {    //function
-    if (!mousePressed && (hVal != h.getValue() || freqVal != freq.getValue())) { //only executes if a value has changed and the mouse is lifted(smooths transition)
-      hVal = h.getValue();
-      freqVal = freq.getValue();
-      port1.write('a');
-      sendFloat(hVal);
-      port1.write('f');
-      sendFloat(freqVal);
-    }
-    //waveSig.push("incoming", (sin(frameCount*freqVal)*hVal));
-  } else if (mode == 3) {    //sea state
-    if (!mousePressed && (sigHval != sigH.getValue() || peakFval != peakF.getValue())) { //only executes if a value has changed and the mouse is lifted(smooths transition)
-      sigHval = sigH.getValue();
-      peakFval = peakF.getValue();
-      //Here we will call other java function
+  //Jog:
+  if (mode == 1 && position.getValue() != pVal) {  //only sends if value has changed  
+    pVal = position.getValue();
+    port1.write('j');
+    sendFloat(pVal);
+    //function:
+  } else if (mode == 2 && !mousePressed && (hVal != h.getValue() || freqVal != freq.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
+    hVal = h.getValue();
+    freqVal = freq.getValue();
+    port1.write('a');
+    sendFloat(hVal);
+    port1.write('f');
+    sendFloat(freqVal);
+    //Sea State:
+  } else if (mode == 3 && !mousePressed && (sigHval != sigH.getValue() || peakFval != peakF.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
+    sigHval = sigH.getValue();
+    peakFval = peakF.getValue();
+    //Here we will call other java function
 
-      //then send to arduino
-    }
+    //then send to arduino
     //waveSig.push("incoming", (sin(frameCount*peakFval)*sigHval));
   }
   thread("readSerial");    //will run this funciton in parallel thread
@@ -316,16 +311,16 @@ float readFloat() {
 }
 /*
 //Funciton to test CSV functionality     //didn't compile with this for me
-void mouseClicked() { //we will want this to log data every 10 milli seconds 
-  //table.addColumn("timeStamp");
-  //table.addColumn("waveMakerMode");
-  //table.addColumn("wec_kp");
-  //table.addColumn("wec_ki");
-  TableRow newRow = table.addRow();
-  newRow.setFloat("timeStamp", m);
-  newRow.setInt("waveMakerMode", mode);
-  newRow.setFloat("wec_kp", torque.getValue());
-  newRow.setFloat("wec_ki", other.getValue()); 
-  saveTable(table, "data/new.csv");
-} 
-*/
+ void mouseClicked() { //we will want this to log data every 10 milli seconds 
+ //table.addColumn("timeStamp");
+ //table.addColumn("waveMakerMode");
+ //table.addColumn("wec_kp");
+ //table.addColumn("wec_ki");
+ TableRow newRow = table.addRow();
+ newRow.setFloat("timeStamp", m);
+ newRow.setInt("waveMakerMode", mode);
+ newRow.setFloat("wec_kp", torque.getValue());
+ newRow.setFloat("wec_ki", other.getValue()); 
+ saveTable(table, "data/new.csv");
+ } 
+ */
