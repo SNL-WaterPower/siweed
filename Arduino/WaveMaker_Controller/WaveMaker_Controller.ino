@@ -121,7 +121,7 @@ ISR(TIMER4_COMPA_vect)    //function called by interupt     //Takes about .8 mil
 
   float pos = encPos;
   error = futurePos - encPos;   //where we told it to go vs where it is
-  futurePos = inputFnc(t + interval) + error;  //time plus delta time plus previous error !!!!!!!!!!!!!!NEEDS TESTING
+  futurePos = inputFnc(t + interval);// + error;  //time plus delta time plus previous error !!!!!!!!!!!!!!NEEDS TESTING
   float vel = speedScalar * (futurePos - pos) / interval; //desired velocity in mm/second   //ramped up over about a second   //LIKELY NEEDS TUNING
   if (vel > 0)
   {
@@ -155,7 +155,10 @@ ISR(TIMER4_COMPA_vect)    //function called by interupt     //Takes about .8 mil
 ISR(TIMER5_COMPA_vect)
 {
   //sendFloat(futurePos);
+  Serial.write('p');    //to indicate wave probe data
   sendFloat(mapFloat(analogRead(probe1Pin), 0.0, 560.0, 0.0, 27.0));   //maps to cm
+  Serial.write('d');    //to indicate alternate data
+  sendFloat(futurePos);
 }
 void readSerial()
 {

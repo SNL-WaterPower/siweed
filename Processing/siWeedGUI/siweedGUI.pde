@@ -191,6 +191,7 @@ void draw() {
     //waveSig.push("incoming", (sin(frameCount*peakFval)*sigHval));
   }
   thread("readSerial");    //will run this funciton in parallel thread
+  //thread("csvFunctionName");
 }
 
 /////////////////// MAKES BUTTONS DO THINGS ////////////////////////////////////
@@ -290,17 +291,26 @@ void sendFloat(float f)
 void readSerial() {
   while (port1.available() > 0)    //recieves until buffer is empty. Since it runs 30 times a second, the arduino will send many samples per execution
   {
-    waveSig.push("incoming", readFloat());
+    char c = port1.readChar();
+    switch(c) {
+    case 'p':
+      float probeData = readFloat();
+      //waveSig.push("incoming", probeData);
+      break;
+    case 'd':
+      float data = readFloat();
+      waveSig.push("incoming", data);
+      ///////////log extra variable here
+      break;
+    }
   }
 }
 float readFloat() {
+  waitForSerial();
   if (port1.readChar() == '<') {
     String str = "";    //port1.readStringUntil('>');
     do {
-      while (port1.available() < 1) {
-        //println("waiting");
-        delay(1);        //doesn't work without this for some reason
-      }    //wait until data comes through
+      waitForSerial();
       str += port1.readChar();
     } while (str.charAt(str.length()-1) != '>');
     str = str.substring(0, str.length()-1);    //removes the >
@@ -309,8 +319,13 @@ float readFloat() {
     return -1.0;
   }
 }
+void waitForSerial(){
+  while(port1.available() < 1){    //wait for port to not be empty
+  delay(1);    //give serial some time to come through
+  }
+}
 /*
-//Funciton to test CSV functionality     //didn't compile with this for me
+//Funciton to test CSV functionality     //should be called by thread("functionName") in draw, like readSerail() is now
  void mouseClicked() { //we will want this to log data every 10 milli seconds 
  //table.addColumn("timeStamp");
  //table.addColumn("waveMakerMode");
