@@ -17,7 +17,7 @@ switch mode
     case 0
     case 1
         kP = -1.4;
-        kI = 1.2;
+        kD = 1.2;
     case 2
         % see fsTimeseries.m example
     case 3
@@ -38,7 +38,7 @@ switch mode
         pos(ii-1) = 3.9;
         pos(ii) = 4;
         vel(ii) = (pos(ii) - pos(ii-1)) / dt;
-        tau = kP * vel(ii) + kI * pos(ii);
+        tau = kP * pos(ii) + kD * vel(ii);
     case 2
         % see fsTimeseries.m example
     case 3
