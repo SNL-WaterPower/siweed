@@ -4,7 +4,7 @@
 
 Encoder waveEnc(2, 3);   //pins 2 and 3(interupts)//for 800 ppr/3200 counts per revolution set dip switches(0100) //2048ppr/8192 counts per revolution max(0000)
 const int stepPin = 4, dirPin = 5, limitPin = A0, probe1Pin = A1;
-double t;    //time in seconds
+double t = 0;    //time in seconds
 float speedScalar = 0;
 int mode = 0;     //-1 is stop, 0 is jog, 1 is seastate
 int n = 1;            //numbe of functions for the sea state
@@ -12,7 +12,7 @@ const int maxComponents = 60;   //max needed number of frequency components
 float amps[maxComponents];
 float phases[maxComponents];
 float freqs[maxComponents];
-float encPos = 0;   //how many steps have been taken acording to the encoder(in steps)
+float encPos = 0;
 float desiredPos;   //used for jog mode
 unsigned long previousStepMillis;
 
@@ -109,7 +109,7 @@ void setup()
 void loop()
 {
   encPos = waveEnc.read() * (1 / encStepsPerTurn) * leadPitch; //steps*(turns/step)*(mm/turn)
-  t = millis() / 1000.0;
+  t = micros() / 1000000.0;
   readSerial();
   updateSpeedScalar();
 }
@@ -155,20 +155,21 @@ ISR(TIMER4_COMPA_vect)    //function called by interupt     //Takes about .8 mil
 ISR(TIMER5_COMPA_vect)
 {
   //sendFloat(futurePos);
+  //Serial.println(mapFloat(analogRead(probe1Pin), 0.0, 560.0, 0.0, 27.0));
   Serial.write('p');    //to indicate wave probe data
   sendFloat(mapFloat(analogRead(probe1Pin), 0.0, 560.0, 0.0, 27.0));   //maps to cm
   Serial.write('d');    //to indicate alternate data
   sendFloat(futurePos);
 }
+/* '!' indicates mode switch, next int is mode
+   j indicates jog position
+   n indicates length of vectors/number of functions in sea state(starting at 1)
+   a indicates incoming amp vector
+   p indicates incoming phase vector
+   f indicates incoming frequency vector
+*/
 void readSerial()
 {
-  /* '!' indicates mode switch, next int is mode
-     j indicates jog position
-     n indicates length of vectors/number of functions in sea state(starting at 1)
-     a indicates incoming amp vector
-     p indicates incoming phase vector
-     f indicates incoming frequency vector
-  */
   if (Serial.available() > 0)
   {
     speedScalar = 0;    //if anything happens, reset the speed scalar(and ramp up speed)
@@ -177,13 +178,13 @@ void readSerial()
     {
       case '!':
         mode = (int)readFloat();
-        if (mode > maxComponents)
-        {
-          mode = maxComponents;     //to prevents reading invalid index
-        }
         break;
       case 'n':
         n = (int)readFloat();
+        if (n > maxComponents)
+        {
+          n = maxComponents;     //to prevents reading invalid index
+        }
         break;
       case 'j':
         desiredPos = readFloat();
@@ -270,5 +271,5 @@ float mmToSteps(float mm)
 }
 float mapFloat(long x, long in_min, long in_max, long out_min, long out_max)
 {
- return (float)(x - in_min) * (out_max - out_min) / (float)(in_max - in_min) + out_min;
+  return (float)(x - in_min) * (out_max - out_min) / (float)(in_max - in_min) + out_min;
 }
