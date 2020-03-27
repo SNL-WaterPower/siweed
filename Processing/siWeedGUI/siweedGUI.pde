@@ -17,10 +17,12 @@ PImage snlLogo;
 
 int nComponents = 10;     //number of wave components in sea state
 float hVal, freqVal, sigHval, peakVal, peakFval, pVal;
+float debugData;
 
 
 
-Serial port1;
+Serial port1;    //arduino mega
+Serial port2;    //arduino Due
 ControlP5 cp5; 
 Chart waveSig; //wave Signal chart
 Slider position; //slider for position mode
@@ -41,7 +43,10 @@ void setup() {
   fullScreen(P2D);
   frameRate(30);    //sets draw() to run 30 times a second. It would run around 40 without this restriciton
   port1 = new Serial(this, "COM4", 9600); // all communication with Mega
+  port2 = new Serial(this, "COM5", 9600); // all communication with Due
   delay(2000);
+  port1.bufferUntil('>');
+  port2.bufferUntil('>');
   // Fonts
   f = createFont("Arial", 16, true);
   fb = createFont("Arial Bold Italic", 32, true);
@@ -139,9 +144,9 @@ void setup() {
   waveSig.setData("incoming", new float[250]);    //use to set the domain of the plot
 
   port1.write('!');
-  sendFloat(0);    //initialize arduino in jog mode at position 0
+  sendFloat(0, port1);    //initialize arduino in jog mode at position 0
   port1.write('j');
-  sendFloat(0);
+  sendFloat(0, port1);
 }
 
 
@@ -172,15 +177,15 @@ void draw() {
   if (mode == 1 && position.getValue() != pVal) {  //only sends if value has changed  
     pVal = position.getValue();
     port1.write('j');
-    sendFloat(pVal);
+    sendFloat(pVal, port1);
     //function:
   } else if (mode == 2 && !mousePressed && (hVal != h.getValue() || freqVal != freq.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
     hVal = h.getValue();
     freqVal = freq.getValue();
     port1.write('a');
-    sendFloat(hVal);
+    sendFloat(hVal, port1);
     port1.write('f');
-    sendFloat(freqVal);
+    sendFloat(freqVal, port1);
     //Sea State:
   } else if (mode == 3 && !mousePressed && (sigHval != sigH.getValue() || peakFval != peakF.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
     sigHval = sigH.getValue();
@@ -190,9 +195,20 @@ void draw() {
     //then send to arduino
     //waveSig.push("incoming", (sin(frameCount*peakFval)*sigHval));
   }
-  thread("readSerial");    //will run this funciton in parallel thread
+  thread("readMegaSerial");    //will run this funciton in parallel thread
+  thread("readDueSerial");
   //thread("csvFunctionName");
+  //waveSig.push("incoming", debugData);
 }
+/*
+void serialEvent(Serial thisPort){
+  if (thisPort == port1){
+  readMegaSerial();
+  }else if(thisPort == port2){
+  readDueSerial();
+  }
+}
+*/
 
 /////////////////// MAKES BUTTONS DO THINGS ////////////////////////////////////
 
@@ -206,7 +222,7 @@ void jog() {
   position.show();
   //set mode on arduino:
   port1.write('!');
-  sendFloat(0);
+  sendFloat(0, port1);
 }
 
 void fun() {
@@ -218,10 +234,10 @@ void fun() {
   freq.show();
   //set mode on arduino:
   port1.write('!');
-  sendFloat(1);
+  sendFloat(1, port1);
   //tell arduino to only look at one component
   port1.write('n');
-  sendFloat(1);
+  sendFloat(1, port1);
 }
 
 void sea() {
@@ -235,10 +251,10 @@ void sea() {
   gama.show();
   //set mode on arduino:
   port1.write('!');
-  sendFloat(1);
+  sendFloat(1, port1);
   //tell arduino to look at all components
   port1.write('n');
-  sendFloat(nComponents);
+  sendFloat(nComponents, port1);
 }
 
 void off() {
@@ -250,11 +266,13 @@ void off() {
   position.setValue(0);
   //set mode on arduino:
   port1.write('!');
-  sendFloat(-1);
+  sendFloat(-1, port1);
 }
-void sendFloat(float f)
+void sendFloat(float f, Serial port)
 {
-  /* '!' indicates mode switch
+  /* 
+   For mega:
+   '!' indicates mode switch
    j indicates jog position
    
    n indicates length of vectors/number of functions in sea state(starting at 1)
@@ -281,37 +299,94 @@ void sendFloat(float f)
    .
    //needs to send n number of floats
    
+   For Due:
+   '!' indicates mode switch, next int is mode
+   t indicates torque command
+   k indicates kp -p was taken
+   d indicates kd
+   n indicates length of vectors/number of functions in sea state(starting at 1)
+   a indicates incoming amp vector
+   p indicates incoming phase vector
+   f indicates incoming frequency vector
    */
   f= Math.round(f*100.0)/100.0;    //limits to two decimal places
   String posStr = "<";    //starts the string
   posStr = posStr.concat(Float.toString(f));
   posStr = posStr.concat(">");    //end of string "keychar"
-  port1.write(posStr);
+  port.write(posStr);
 }
-void readSerial() {
+void readMegaSerial() {
+  //long past = millis();
+  //////////////ALL OF THESE NEED TO LOG THE DATA THEY RECIEVE!!!
+  /*
+  mega:
+   1:probe 1
+   2:probe 2
+   p:position
+   d:other data for debugging
+   */
   while (port1.available() > 0)    //recieves until buffer is empty. Since it runs 30 times a second, the arduino will send many samples per execution
   {
-    char c = port1.readChar();
-    switch(c) {
+    switch(port1.readChar()) {
+    case '1':
+      float probe1Data = readFloat(port1);
+      break;
+    case '2':
+      float probe2Data = readFloat(port1);
+      break;
     case 'p':
-      float probeData = readFloat();
-      //waveSig.push("incoming", probeData);
+      float waveMakerPos = altreadFloat(port1);
       break;
     case 'd':
-      float data = readFloat();
-      waveSig.push("incoming", data);
+      debugData = readFloat(port1);
+      waveSig.push("incoming", debugData);    //this needs to move for this to be called in serialEvent, but if it is moved not all data is displayed
       ///////////log extra variable here
       break;
     }
   }
+    //println(millis()-past);
 }
-float readFloat() {
-  waitForSerial();
-  if (port1.readChar() == '<') {
+void readDueSerial() {
+  /*
+  Due:
+  e: encoder position
+  t: tau
+  p: power
+  */
+  while (port2.available() > 0)
+  {
+    switch(port2.readChar()) {
+    case 'e':
+      float wecEncPos = readFloat(port2);
+      //waveSig.push("incoming", probeData);
+      break;
+    case 't':
+      float tau_commanded = readFloat(port2);
+      //waveSig.push("incoming", data);
+      ///////////log extra variable here
+      break;
+    case 'p':
+      float power = readFloat(port2);
+      break;
+    }
+  }
+}
+float altreadFloat(Serial port){    //better, since a buffer is used, but then not all data is drawn. Either data needs to be stored or old method returned to
+  if (port.readChar() == '<') {
+    String str = port1.readStringUntil('>');
+    str = str.substring(0, str.length()-1);    //removes the >
+    return float(str);
+  } else {
+    return -1.0;
+  }
+}
+float readFloat(Serial port) {
+  waitForSerial(port);
+  if (port.readChar() == '<') {
     String str = "";    //port1.readStringUntil('>');
     do {
-      waitForSerial();
-      str += port1.readChar();
+      waitForSerial(port);
+      str += port.readChar();
     } while (str.charAt(str.length()-1) != '>');
     str = str.substring(0, str.length()-1);    //removes the >
     return float(str);
@@ -319,9 +394,9 @@ float readFloat() {
     return -1.0;
   }
 }
-void waitForSerial(){
-  while(port1.available() < 1){    //wait for port to not be empty
-  delay(1);    //give serial some time to come through
+void waitForSerial(Serial port) {
+  while (port.available() < 1) {    //wait for port to not be empty
+    delay(1);    //give serial some time to come through
   }
 }
 /*

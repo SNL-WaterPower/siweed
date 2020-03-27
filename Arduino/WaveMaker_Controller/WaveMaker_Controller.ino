@@ -3,11 +3,11 @@
 
 
 Encoder waveEnc(2, 3);   //pins 2 and 3(interupts)//for 800 ppr/3200 counts per revolution set dip switches(0100) //2048ppr/8192 counts per revolution max(0000)
-const int stepPin = 4, dirPin = 5, limitPin = A0, probe1Pin = A1;
+const int stepPin = 4, dirPin = 5, limitPin = A0, probe1Pin = A1, probe2Pin = A2;
 double t = 0;    //time in seconds
 float speedScalar = 0;
 int mode = 0;     //-1 is stop, 0 is jog, 1 is seastate
-int n = 1;            //numbe of functions for the sea state
+int n = 1;            //number of functions for the sea state
 const int maxComponents = 60;   //max needed number of frequency components
 float amps[maxComponents];
 float phases[maxComponents];
@@ -46,7 +46,7 @@ float inputFnc(float tm)   //inputs time in seconds //outputs position in mm
 
 
 float interval = .01;   //time between each interupt call in seconds //max value: 1.04
-float serialInterval = .02;   //time between each interupt call in seconds //max value: 1.04
+float serialInterval = .03;   //time between each interupt call in seconds //max value: 1.04    .03 is 33.3 times a second, just over processings speed(30hz)
 const float maxRate = 500.0;   //max mm/seconds
 
 void setup()
@@ -106,7 +106,7 @@ void setup()
   */
 }
 
-void loop()
+void loop()   //60 microseconds
 {
   encPos = waveEnc.read() * (1 / encStepsPerTurn) * leadPitch; //steps*(turns/step)*(mm/turn)
   t = micros() / 1000000.0;
@@ -116,9 +116,8 @@ void loop()
 
 float futurePos;
 float error;
-ISR(TIMER4_COMPA_vect)    //function called by interupt     //Takes about .8 milliseconds
+ISR(TIMER4_COMPA_vect)    //function called by interupt     //Takes about .4 milliseconds
 {
-
   float pos = encPos;
   error = futurePos - encPos;   //where we told it to go vs where it is
   futurePos = inputFnc(t + interval);// + error;  //time plus delta time plus previous error. maybe error should scale as a percentage of speed? !!!!!!!!!!!!!!NEEDS TESTING
@@ -152,12 +151,22 @@ ISR(TIMER4_COMPA_vect)    //function called by interupt     //Takes about .8 mil
     noTone(stepPin);
   }
 }
-ISR(TIMER5_COMPA_vect)
+ISR(TIMER5_COMPA_vect)    //takes 1.5 milliseconds
 {
-  //sendFloat(futurePos);
+  /*
+    1: probe 1
+    2: probe 2
+    p: position
+    d: other data for debugging
+  */
   //Serial.println(mapFloat(analogRead(probe1Pin), 0.0, 560.0, 0.0, 27.0));
-  Serial.write('p');    //to indicate wave probe data
+  
+  Serial.write('1');    //to indicate wave probe data
   sendFloat(mapFloat(analogRead(probe1Pin), 0.0, 560.0, 0.0, 27.0));   //maps to cm
+  //Serial.write('2');    //to indicate wave probe data
+  //sendFloat(mapFloat(analogRead(probe2Pin), 0.0, 560.0, 0.0, 27.0));   //maps to cm
+  Serial.write('p');    //to indicate position
+  sendFloat(encPos);
   Serial.write('d');    //to indicate alternate data
   sendFloat(futurePos);
 }
