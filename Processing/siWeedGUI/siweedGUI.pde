@@ -42,12 +42,10 @@ int m;
 void setup() {
   fullScreen(P2D);
   frameRate(30);    //sets draw() to run 30 times a second. It would run around 40 without this restriciton
-  port1 = new Serial(this, "COM4", 9600); // all communication with Mega
-  port2 = new Serial(this, "COM5", 9600); // all communication with Due
+  port1 = new Serial(this, "COM4", 19200); // all communication with Megas
+  port2 = new Serial(this, "COM5", 19200); // all communication with Due
   delay(2000);
-  port1.bufferUntil('>');
-  port2.bufferUntil('>');
-  // Fonts
+  //Fonts
   f = createFont("Arial", 16, true);
   fb = createFont("Arial Bold Italic", 32, true);
 
@@ -200,15 +198,6 @@ void draw() {
   //thread("csvFunctionName");
   //waveSig.push("incoming", debugData);
 }
-/*
-void serialEvent(Serial thisPort){
-  if (thisPort == port1){
-  readMegaSerial();
-  }else if(thisPort == port2){
-  readDueSerial();
-  }
-}
-*/
 
 /////////////////// MAKES BUTTONS DO THINGS ////////////////////////////////////
 
@@ -316,7 +305,6 @@ void sendFloat(float f, Serial port)
   port.write(posStr);
 }
 void readMegaSerial() {
-  //long past = millis();
   //////////////ALL OF THESE NEED TO LOG THE DATA THEY RECIEVE!!!
   /*
   mega:
@@ -325,8 +313,7 @@ void readMegaSerial() {
    p:position
    d:other data for debugging
    */
-  while (port1.available() > 0)    //recieves until buffer is empty. Since it runs 30 times a second, the arduino will send many samples per execution
-  {
+  while (port1.available() > 0) {    //recieves until buffer is empty. Since it runs 30 times a second, the arduino will send many samples per execution.
     switch(port1.readChar()) {
     case '1':
       float probe1Data = readFloat(port1);
@@ -335,7 +322,7 @@ void readMegaSerial() {
       float probe2Data = readFloat(port1);
       break;
     case 'p':
-      float waveMakerPos = altreadFloat(port1);
+      float waveMakerPos = readFloat(port1);
       break;
     case 'd':
       debugData = readFloat(port1);
@@ -344,15 +331,14 @@ void readMegaSerial() {
       break;
     }
   }
-    //println(millis()-past);
 }
 void readDueSerial() {
   /*
   Due:
-  e: encoder position
-  t: tau
-  p: power
-  */
+   e: encoder position
+   t: tau
+   p: power
+   */
   while (port2.available() > 0)
   {
     switch(port2.readChar()) {
@@ -371,19 +357,10 @@ void readDueSerial() {
     }
   }
 }
-float altreadFloat(Serial port){    //better, since a buffer is used, but then not all data is drawn. Either data needs to be stored or old method returned to
-  if (port.readChar() == '<') {
-    String str = port1.readStringUntil('>');
-    str = str.substring(0, str.length()-1);    //removes the >
-    return float(str);
-  } else {
-    return -1.0;
-  }
-}
 float readFloat(Serial port) {
   waitForSerial(port);
   if (port.readChar() == '<') {
-    String str = "";    //port1.readStringUntil('>');
+    String str = "";    //port.readStringUntil('>');
     do {
       waitForSerial(port);
       str += port.readChar();
@@ -413,4 +390,25 @@ void waitForSerial(Serial port) {
  newRow.setFloat("wec_ki", other.getValue()); 
  saveTable(table, "data/new.csv");
  } 
+ */
+
+/////Old but maybe useful:
+/*
+void serialEvent(Serial thisPort){
+ if (thisPort == port1){
+ readMegaSerial();
+ }else if(thisPort == port2){
+ readDueSerial();
+ }
+ }
+ //Would work if you could guarantee that the last available character was '>'. Current version is the same but with a wait
+ float altreadFloat(Serial port) {    //better, since a buffer is used, but then not all data is drawn. Either data needs to be stored or old method returned to
+ if (port.readChar() == '<') {
+ String str = port1.readStringUntil('>');
+ str = str.substring(0, str.length()-1);    //removes the >
+ return float(str);
+ } else {
+ return -1.0;
+ }
+ }
  */

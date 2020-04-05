@@ -15,6 +15,9 @@ float freqs[maxComponents];
 float encPos = 0;
 float desiredPos;   //used for jog mode
 unsigned long previousStepMillis;
+const int buffSize = 10;    //number of data points buffered in the moving average filter
+float probe1Buffer[buffSize];
+float probe2Buffer[buffSize];
 
 
 
@@ -46,12 +49,12 @@ float inputFnc(float tm)   //inputs time in seconds //outputs position in mm
 
 
 float interval = .01;   //time between each interupt call in seconds //max value: 1.04
-float serialInterval = .03;   //time between each interupt call in seconds //max value: 1.04    .03 is 33.3 times a second, just over processings speed(30hz)
+float serialInterval = .0333;//.0333;   //time between each interupt call in seconds //max value: 1.04    .0333 is ~30 times a second to match processing's speed(30hz)
 const float maxRate = 500.0;   //max mm/seconds
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(19200);
   pinMode(stepPin, OUTPUT);
   pinMode(dirPin, OUTPUT);
   pinMode(13, OUTPUT);
@@ -62,6 +65,13 @@ void setup()
   while (analogRead(limitPin) > 500) {}   //do nothing until the beam is broken
   tone(stepPin, 0);     //stop moving
   waveEnc.write(0);     //zero encoder
+
+  //fill probe buffers with 0's:
+  for (int i = 0; i < buffSize; i++)
+  {
+    probe1Buffer[i] = 0;
+    probe2Buffer[i] = 0;
+  }
 
 
   //interupt setup:
@@ -151,7 +161,7 @@ ISR(TIMER4_COMPA_vect)    //function called by interupt     //Takes about .4 mil
     noTone(stepPin);
   }
 }
-ISR(TIMER5_COMPA_vect)    //takes 1.5 milliseconds
+ISR(TIMER5_COMPA_vect)    //takes ___ milliseconds
 {
   /*
     1: probe 1
@@ -160,11 +170,12 @@ ISR(TIMER5_COMPA_vect)    //takes 1.5 milliseconds
     d: other data for debugging
   */
   //Serial.println(mapFloat(analogRead(probe1Pin), 0.0, 560.0, 0.0, 27.0));
-  
+  pushBuffer(probe1Buffer, mapFloat(analogRead(probe1Pin), 0.0, 560.0, 0.0, 27.0));     //maps to cm and adds to data buffer
+  pushBuffer(probe2Buffer, mapFloat(analogRead(probe2Pin), 0.0, 560.0, 0.0, 27.0));
   Serial.write('1');    //to indicate wave probe data
-  sendFloat(mapFloat(analogRead(probe1Pin), 0.0, 560.0, 0.0, 27.0));   //maps to cm
-  //Serial.write('2');    //to indicate wave probe data
-  //sendFloat(mapFloat(analogRead(probe2Pin), 0.0, 560.0, 0.0, 27.0));   //maps to cm
+  sendFloat(averageArray(probe1Buffer));
+  Serial.write('2');    //to indicate wave probe data
+  sendFloat(averageArray(probe2Buffer));
   Serial.write('p');    //to indicate position
   sendFloat(encPos);
   Serial.write('d');    //to indicate alternate data
@@ -281,4 +292,22 @@ float mmToSteps(float mm)
 float mapFloat(long x, long in_min, long in_max, long out_min, long out_max)
 {
   return (float)(x - in_min) * (out_max - out_min) / (float)(in_max - in_min) + out_min;
+}
+float averageArray(float *arr)
+{
+  float total = 0;
+  for (int i = 0; i < buffSize; i++)
+  {
+    total += arr[i];
+  }
+  total /= buffSize;
+  return total;
+}
+void pushBuffer(float* arr, float f)
+{
+  for (int i = buffSize - 1; i > 0; i--)
+  {
+    arr[i] = arr[i - 1];
+  }
+  arr[0] = f;
 }

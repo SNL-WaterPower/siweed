@@ -21,7 +21,7 @@ float freqs[maxComponents];
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(19200);
   analogWriteResolution(12);    //analog write now runs from 0 to 4095
   wecEnc.write(0);     //zero encoder
 }
