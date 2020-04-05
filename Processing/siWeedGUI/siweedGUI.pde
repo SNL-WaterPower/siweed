@@ -336,7 +336,7 @@ void readDueSerial() {
   /*
   Due:
    e: encoder position
-   t: tau
+   t: tau commanded to motor
    p: power
    */
   while (port2.available() > 0)
