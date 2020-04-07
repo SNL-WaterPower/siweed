@@ -1,12 +1,12 @@
 #include <Encoder.h>
 #include<math.h>
-int mode = -1;    //-1 stop, 0 torque control, 1 feedback control, 2 function mode
-double t = 0;    //time in seconds
-float tau = 0, kp = 0, kd = 0, power = 0, vel = 0;
-float tauCommand = 0;   //tau after any modifications
+volatile int mode = -1;    //-1 stop, 0 torque control, 1 feedback control, 2 function mode
+volatile double t = 0;    //time in seconds
+volatile float tau = 0, kp = 0, kd = 0, power = 0, vel = 0;
+volatile float tauCommand = 0;   //tau after any modifications
 const int tauPin = DAC0, enablePin = 6, l1Pin = 10, l2Pin = 11, l3Pin = 12, l4Pin = 13;
 Encoder wecEnc(2, 3); //pins 2 and 3(interupts)//for 800 ppr/3200 counts per revolution set dip switches(0100) //2048ppr/8192 counts per revolution max(0000)
-float encPos;
+volatile float encPos;
 const float pi = 3.14159265358979;
 const float encStepsPerTurn = 3200.0;
 const float teethPerTurn = 5;   //EDIT
@@ -16,11 +16,11 @@ const float minTau = -5, maxTau = 5;    //EDIT
 const float interval = .001;    //interval of updateTau interupt in seconds
 const float serialInterval = .02; //interval of serial interupt
 
-int n = 1;            //number of components
+volatile int n = 1;            //number of components
 const int maxComponents = 60;   //max needed number of frequency components
-float amps[maxComponents];
-float phases[maxComponents];
-float freqs[maxComponents];
+volatile float amps[maxComponents];
+volatile float phases[maxComponents];
+volatile float freqs[maxComponents];
 
 void setup()
 {
@@ -38,10 +38,10 @@ void loop()
   power = -1 * tauCommand * vel;
   readSerial();
 }
-float pos;
+volatile float pos;
 void updateTau()    //will need to be called by an interupt
 {
-  float prevPos = pos;
+  volatile float prevPos = pos;
   pos = encPos;
   vel = (pos - prevPos) / interval;
   switch (mode)
@@ -57,7 +57,7 @@ void updateTau()    //will need to be called by an interupt
       break;
     case 2:
       tauCommand = 0;
-      for (int i = 0; i < n; i++)           //function mode
+      for (volatile int i = 0; i < n; i++)           //function mode
       {
         tauCommand += amps[i] * sin(2 * pi * t * freqs[i] + phases[i]);
       }
@@ -153,7 +153,7 @@ float readFloat()
     return 0.0;
   }
 }
-void sendFloat(float f)
+volatile void sendFloat(volatile float f)
 {
   f = round(f * 100.0) / 100.0; //limits to two decimal places
   String dataStr = "<";    //starts the string
@@ -161,7 +161,7 @@ void sendFloat(float f)
   dataStr += ">";    //end of string
   Serial.print(dataStr);
 }
-float mapFloat(long x, long in_min, long in_max, long out_min, long out_max)
+volatile float mapFloat(volatile long x, volatile long in_min, volatile long in_max, volatile long out_min, volatile long out_max)
 {
   return (float)(x - in_min) * (out_max - out_min) / (float)(in_max - in_min) + out_min;
 }

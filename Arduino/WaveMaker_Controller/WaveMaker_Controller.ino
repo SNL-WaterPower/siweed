@@ -4,20 +4,19 @@
 
 Encoder waveEnc(2, 3);   //pins 2 and 3(interupts)//for 800 ppr/3200 counts per revolution set dip switches(0100) //2048ppr/8192 counts per revolution max(0000)
 const int stepPin = 4, dirPin = 5, limitPin = A0, probe1Pin = A1, probe2Pin = A2;
-double t = 0;    //time in seconds
-float speedScalar = 0;
-int mode = 0;     //-1 is stop, 0 is jog, 1 is seastate
-int n = 1;            //number of functions for the sea state
+volatile double t = 0;    //time in seconds
+volatile float speedScalar = 0;
+volatile int mode = 0;     //-1 is stop, 0 is jog, 1 is seastate
+volatile int n = 1;            //number of functions for the sea state
 const int maxComponents = 60;   //max needed number of frequency components
-float amps[maxComponents];
-float phases[maxComponents];
-float freqs[maxComponents];
-float encPos = 0;
-float desiredPos;   //used for jog mode
-unsigned long previousStepMillis;
+volatile float amps[maxComponents];
+volatile float phases[maxComponents];
+volatile float freqs[maxComponents];
+volatile float encPos = 0;
+volatile float desiredPos;   //used for jog mode
 const int buffSize = 10;    //number of data points buffered in the moving average filter
-float probe1Buffer[buffSize];
-float probe2Buffer[buffSize];
+volatile float probe1Buffer[buffSize];
+volatile float probe2Buffer[buffSize];
 
 
 
@@ -29,16 +28,16 @@ const float gearRatio = 40.0 / 12.0; //motor turns per lead screw turns
 const float motorStepsPerTurn = 400.0;   //steps per motor revolution
 const float encStepsPerTurn = 3200.0;
 
-float inputFnc(float tm)   //inputs time in seconds //outputs position in mm
+volatile float inputFnc(volatile float tm)   //inputs time in seconds //outputs position in mm
 {
-  float val = 0;
+  volatile float val = 0;
   if (mode == 0)
   {
     val = desiredPos;
   }
   else if (mode == 1)
   {
-    for (int i = 0; i < n; i++)
+    for (volatile int i = 0; i < n; i++)
     {
       val += amps[i] * sin(2 * pi * tm * freqs[i] + phases[i]);
     }
@@ -48,8 +47,8 @@ float inputFnc(float tm)   //inputs time in seconds //outputs position in mm
 //////////////////////////////////////////////////
 
 
-float interval = .01;   //time between each interupt call in seconds //max value: 1.04
-float serialInterval = .0333;//.0333;   //time between each interupt call in seconds //max value: 1.04    .0333 is ~30 times a second to match processing's speed(30hz)
+const float interval = .01;   //time between each interupt call in seconds //max value: 1.04
+const float serialInterval = .0333;//.0333;   //time between each interupt call in seconds //max value: 1.04    .0333 is ~30 times a second to match processing's speed(30hz)
 const float maxRate = 500.0;   //max mm/seconds
 
 void setup()
@@ -124,14 +123,14 @@ void loop()   //60 microseconds
   updateSpeedScalar();
 }
 
-float futurePos;
-float error;
+volatile float futurePos;
+volatile float error;
 ISR(TIMER4_COMPA_vect)    //function called by interupt     //Takes about .4 milliseconds
 {
-  float pos = encPos;
+  volatile float pos = encPos;
   error = futurePos - encPos;   //where we told it to go vs where it is
   futurePos = inputFnc(t + interval);// + error;  //time plus delta time plus previous error. maybe error should scale as a percentage of speed? !!!!!!!!!!!!!!NEEDS TESTING
-  float vel = speedScalar * (futurePos - pos) / interval; //desired velocity in mm/second   //ramped up over about a second   //LIKELY NEEDS TUNING
+  volatile float vel = speedScalar * (futurePos - pos) / interval; //desired velocity in mm/second   //ramped up over about a second   //LIKELY NEEDS TUNING
   if (vel > 0)
   {
     digitalWrite(dirPin, HIGH);
@@ -140,7 +139,7 @@ ISR(TIMER4_COMPA_vect)    //function called by interupt     //Takes about .4 mil
   {
     digitalWrite(dirPin, LOW);
   }
-  float sp = abs(vel);     //steping is always positive, so convert to speed
+  volatile float sp = abs(vel);     //steping is always positive, so convert to speed
   if (sp < 2.6)    //31hz is the lowest frequency of tone(), in mm/s this is 2.6
   {
     sp = 2.6;
@@ -265,7 +264,7 @@ float readFloat()
     return 0.0;
   }
 }
-void sendFloat(float f)
+volatile void sendFloat(volatile float f)
 {
   f = round(f * 100.0) / 100.0; //limits to two decimal places
   String dataStr = "<";    //starts the string
@@ -285,27 +284,27 @@ void updateSpeedScalar()    //used to prevent jumps/smooth start
     speedScalar = 1.0;
   }
 }
-float mmToSteps(float mm)
+volatile float mmToSteps(volatile float mm)
 {
   return mm * (1 / leadPitch) * (1 / gearRatio) * motorStepsPerTurn; //mm*(lead turns/mm)*(motor turns/lead turn)*(steps per motor turn)
 }
-float mapFloat(long x, long in_min, long in_max, long out_min, long out_max)
+volatile float mapFloat(volatile long x, volatile long in_min, volatile long in_max, volatile long out_min, volatile long out_max)
 {
   return (float)(x - in_min) * (out_max - out_min) / (float)(in_max - in_min) + out_min;
 }
-float averageArray(float *arr)
+volatile float averageArray(volatile float* arr)
 {
-  float total = 0;
-  for (int i = 0; i < buffSize; i++)
+  volatile float total = 0;
+  for (volatile int i = 0; i < buffSize; i++)
   {
     total += arr[i];
   }
   total /= buffSize;
   return total;
 }
-void pushBuffer(float* arr, float f)
+volatile void pushBuffer(volatile float* arr, volatile float f)
 {
-  for (int i = buffSize - 1; i > 0; i--)
+  for (volatile int i = buffSize - 1; i > 0; i--)
   {
     arr[i] = arr[i - 1];
   }
