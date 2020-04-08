@@ -1,4 +1,5 @@
 #include <Encoder.h>
+#include<DueTimer.h>
 #include<math.h>
 volatile int mode = -1;    //-1 stop, 0 torque control, 1 feedback control, 2 function mode
 volatile double t = 0;    //time in seconds
@@ -13,8 +14,8 @@ const float teethPerTurn = 5;   //EDIT
 const float mmPerTooth = 10;    //EDIT
 const float minTau = -5, maxTau = 5;    //EDIT
 
-const float interval = .001;    //interval of updateTau interupt in seconds
-const float serialInterval = .02; //interval of serial interupt
+const float interval = .01;    //interval of updateTau interupt in seconds
+const float serialInterval = .0333; //interval of serial interupt
 
 volatile int n = 1;            //number of components
 const int maxComponents = 60;   //max needed number of frequency components
@@ -29,6 +30,9 @@ void setup()
   pinMode(enablePin, OUTPUT);
   digitalWrite(enablePin, LOW);
   wecEnc.write(0);     //zero encoder
+  Timer.getAvailable().attachInterrupt(sendSerial).start(serialInterval * 1000000);
+  delay(50);
+  Timer.getAvailable().attachInterrupt(updateTau).start(interval * 1000000);
 }
 
 void loop()
@@ -39,7 +43,7 @@ void loop()
   readSerial();
 }
 volatile float pos;
-void updateTau()    //will need to be called by an interupt
+void updateTau()    //called by interupt
 {
   volatile float prevPos = pos;
   pos = encPos;
@@ -69,7 +73,7 @@ void updateTau()    //will need to be called by an interupt
     digitalWrite(enablePin, HIGH);
   }
 }
-void sendSerial()   //will need to be called by an interupt
+void sendSerial()   //called by interupt
 {
   /*
     e: encoder position
@@ -82,7 +86,6 @@ void sendSerial()   //will need to be called by an interupt
   sendFloat(tauCommand);
   Serial.write('p');
   sendFloat(power);
-
 }
 void readSerial()
 {

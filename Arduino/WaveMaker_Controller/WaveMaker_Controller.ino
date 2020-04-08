@@ -82,8 +82,8 @@ void setup()
   TCCR4B |= (1 << WGM12);   // turn on CTC mode aka reset on positive compare(I think)
   TCCR4B |= (1 << CS42);// Set CS42 bit for 256 prescaler
   TIMSK4 |= (1 << OCIE4A);  // enable timer compare interrupt
+  
   //////timer 5 for serial sending
-
   TCCR5A = 0;// set entire TCCR5A register to 0
   TCCR5B = 0;// same for TCCR5B
   TCNT5  = 0;//initialize counter value to 0
