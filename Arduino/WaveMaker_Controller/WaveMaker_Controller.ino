@@ -118,7 +118,7 @@ void setup()
 void loop()   //60 microseconds
 {
   encPos = waveEnc.read() * (1 / encStepsPerTurn) * leadPitch; //steps*(turns/step)*(mm/turn)
-  t = micros() / 1000000.0;
+  t = micros() / 1.0e6;
   readSerial();
   updateSpeedScalar();
 }
@@ -128,7 +128,7 @@ volatile float error;
 ISR(TIMER4_COMPA_vect)    //function called by interupt     //Takes about .4 milliseconds
 {
   volatile float pos = encPos;
-  error = futurePos - encPos;   //where we told it to go vs where it is
+  error = futurePos - pos;   //where we told it to go vs where it is
   futurePos = inputFnc(t + interval);// + error;  //time plus delta time plus previous error. maybe error should scale as a percentage of speed? !!!!!!!!!!!!!!NEEDS TESTING
   volatile float vel = speedScalar * (futurePos - pos) / interval; //desired velocity in mm/second   //ramped up over about a second   //LIKELY NEEDS TUNING
   if (vel > 0)

@@ -30,15 +30,15 @@ void setup()
   pinMode(enablePin, OUTPUT);
   digitalWrite(enablePin, LOW);
   wecEnc.write(0);     //zero encoder
-  Timer.getAvailable().attachInterrupt(sendSerial).start(serialInterval * 1000000);
+  Timer.getAvailable().attachInterrupt(sendSerial).start(serialInterval * 1.0e6);
   delay(50);
-  Timer.getAvailable().attachInterrupt(updateTau).start(interval * 1000000);
+  Timer.getAvailable().attachInterrupt(updateTau).start(interval * 1.0e6);
 }
 
 void loop()
 {
   encPos = wecEnc.read() * (1 / encStepsPerTurn) * teethPerTurn * mmPerTooth; //steps*(turns/step)*(mm/turn)
-  t = micros() / 1000000.0;
+  t = micros() / 1.0e6;
   power = -1 * tauCommand * vel;
   readSerial();
 }

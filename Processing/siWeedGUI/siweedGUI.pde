@@ -32,8 +32,7 @@ Slider torque, other; // WEC sliders
 Button jog, function, sea, off; // mode buttons
 
 int mode = 1; // 1 = jog, 2 = function, 3 = sea, 4 = off
-Table table; //create Table
-int m; 
+Table table;  //create Table
 
 
 
@@ -49,7 +48,7 @@ void setup() {
   f = createFont("Arial", 16, true);
   fb = createFont("Arial Bold Italic", 32, true);
 
-
+  table = new Table();
   // starting ControlP5 stuff
 
   cp5 = new ControlP5(this);
@@ -195,8 +194,7 @@ void draw() {
   }
   thread("readMegaSerial");    //will run this funciton in parallel thread
   thread("readDueSerial");
-  //thread("csvFunctionName");
-  //waveSig.push("incoming", debugData);
+  thread("logData");
 }
 
 /////////////////// MAKES BUTTONS DO THINGS ////////////////////////////////////
@@ -217,6 +215,9 @@ void jog() {
 void fun() {
   mode = 2;
   position.hide();
+  gama.hide();
+  sigH.hide();
+  peakF.hide();
   gama.hide();
 
   h.show();
@@ -376,21 +377,21 @@ void waitForSerial(Serial port) {
     delay(1);    //give serial some time to come through
   }
 }
-/*
+
 //Funciton to test CSV functionality     //should be called by thread("functionName") in draw, like readSerail() is now
- void mouseClicked() { //we will want this to log data every 10 milli seconds 
- //table.addColumn("timeStamp");
- //table.addColumn("waveMakerMode");
- //table.addColumn("wec_kp");
- //table.addColumn("wec_ki");
- TableRow newRow = table.addRow();
- newRow.setFloat("timeStamp", m);
- newRow.setInt("waveMakerMode", mode);
- newRow.setFloat("wec_kp", torque.getValue());
- newRow.setFloat("wec_ki", other.getValue()); 
- saveTable(table, "data/new.csv");
- } 
- */
+void logData() {     //will be called at the framerate
+  table.addColumn("timeStamp");
+  table.addColumn("waveMakerMode");
+  table.addColumn("wec_kp");
+  table.addColumn("wec_ki");
+  TableRow newRow = table.addRow();
+  newRow.setFloat("timeStamp", millis());
+  newRow.setInt("waveMakerMode", mode);
+  newRow.setFloat("wec_kp", torque.getValue());
+  newRow.setFloat("wec_ki", other.getValue()); 
+  saveTable(table, "data/new.csv");
+} 
+
 
 /////Old but maybe useful:
 /*
