@@ -15,10 +15,6 @@ PFont fb; // Bold font
 // Sandia logo
 PImage snlLogo;
 
-int nComponents = 10;     //number of wave components in sea state
-float hVal, freqVal, sigHval, peakVal, peakFval, pVal;
-float debugData;
-
 
 
 Serial port1;    //arduino mega
@@ -31,26 +27,63 @@ Slider sigH, peakF, gama;  //sliders for sea state mode
 Slider torque, other; // WEC sliders
 Button jog, function, sea, off; // mode buttons
 
-int mode = 1; // 1 = jog, 2 = function, 3 = sea, 4 = off
+int waveMakerMode = 1; // 1 = jog, 2 = function, 3 = sea, 4 = off
+int wecMode = 3;  //1 = torque, 2 = "sea", 3 = off
 Table table;  //create Table
-
-
-
-
-
+String startTime;
+//Variables to be logged:
+int nComponents = 10;     //number of wave components in sea state
+public class UIData {        //an object for the WEC and Wavemaker portions of the UI to use
+  public int mode;
+  public float mag, amp, freq, sigH, peakF, gama;
+}
+//data not held in the class(not in the UI):
+float probe1, probe2, waveMakerPos, debugData, wecPos, tau, pow;
+UIData waveMaker;
+UIData wec;
 void setup() {
   fullScreen(P2D);
   frameRate(30);    //sets draw() to run 30 times a second. It would run around 40 without this restriciton
+  startTime = month() + "-" + day() + "-" + year() + "_" + hour() + "-" + minute() + "-" + second();
+  waveMaker = new UIData();
+  wec = new UIData();
+  waveMaker.mode = 1;    // 1 = jog, 2 = function, 3 = sea, 4 = off
+  wec.mode = 3;  //1 = torque, 2 = "sea", 3 = off
   port1 = new Serial(this, "COM4", 19200); // all communication with Megas
   port2 = new Serial(this, "COM5", 19200); // all communication with Due
   delay(2000);
+  
   //Fonts
   f = createFont("Arial", 16, true);
   fb = createFont("Arial Bold Italic", 32, true);
-
+  //Table initialization:
   table = new Table();
-  // starting ControlP5 stuff
+  table.addColumn("timeStamp");
+  table.addColumn("UIWaveMakerMode");
+  table.addColumn("UIWaveMakerPos");
+  table.addColumn("UIWaveMakerHeight");
+  table.addColumn("UIWaveMakerFrequency");
+  table.addColumn("UIWaveMakerSigH");
+  table.addColumn("UIWaveMakerPeakF");
+  table.addColumn("UIWaveMakerGama");
+  table.addColumn("UIWecMode");
+  table.addColumn("UIWecTorque");
+  table.addColumn("UIWeckP");
+  table.addColumn("UIWeckD");
+  table.addColumn("UIWecHeight");
+  table.addColumn("UIWecFrequency");
+  table.addColumn("UIWecSigH");
+  table.addColumn("UIWecPeakF");
+  table.addColumn("UIWecGama");
+  table.addColumn("probe1");
+  table.addColumn("probe2");
+  table.addColumn("waveMakerPos");
+  table.addColumn("waveMakerDebugData");
+  table.addColumn("wecPos");
+  table.addColumn("wecTau");
+  table.addColumn("wecPower");
 
+  // starting ControlP5 stuff
   cp5 = new ControlP5(this);
 
   // Buttons //
@@ -74,7 +107,6 @@ void setup() {
     .setPosition(400, 100)
     .setSize(100, 50)
     .setLabel("OFF"); 
-
 
   // Sliders // 
   position = cp5.addSlider("Position (CM)")  //name slider
@@ -140,10 +172,18 @@ void setup() {
   waveSig.addDataSet("incoming");
   waveSig.setData("incoming", new float[250]);    //use to set the domain of the plot
 
+  //initialize the modes on the arduinos:
   port1.write('!');
-  sendFloat(0, port1);    //initialize arduino in jog mode at position 0
+  sendFloat(0, port1);    //jog mode
   port1.write('j');
-  sendFloat(0, port1);
+  sendFloat(0, port1);    //at position 0
+  port1.write('n');
+  sendFloat(1, port1);    //initialize n at 1
+  
+  port2.write('!');
+  sendFloat(-1, port2);    //off
+  port2.write('n');
+  sendFloat(1, port2);    //initialize n at 1
 }
 
 
@@ -171,22 +211,23 @@ void draw() {
 
   //updates chart for function mode  
   //Jog:
-  if (mode == 1 && position.getValue() != pVal) {  //only sends if value has changed  
-    pVal = position.getValue();
+  if (waveMaker.mode == 1 && position.getValue() != waveMaker.mag) {  //only sends if value has changed  
+    waveMaker.amp = position.getValue();
     port1.write('j');
-    sendFloat(pVal, port1);
+    sendFloat(waveMaker.mag, port1);
     //function:
-  } else if (mode == 2 && !mousePressed && (hVal != h.getValue() || freqVal != freq.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
-    hVal = h.getValue();
-    freqVal = freq.getValue();
+  } else if (waveMakerMode == 2 && !mousePressed && (waveMaker.amp != h.getValue() || waveMaker.freq != freq.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
+    waveMaker.amp = h.getValue();
+    waveMaker.freq = freq.getValue();
     port1.write('a');
-    sendFloat(hVal, port1);
+    sendFloat(waveMaker.amp, port1);
     port1.write('f');
-    sendFloat(freqVal, port1);
+    sendFloat(waveMaker.freq, port1);
     //Sea State:
-  } else if (mode == 3 && !mousePressed && (sigHval != sigH.getValue() || peakFval != peakF.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
-    sigHval = sigH.getValue();
-    peakFval = peakF.getValue();
+  } else if (waveMakerMode == 3 && !mousePressed && (waveMaker.sigH != sigH.getValue() || waveMaker.peakF != peakF.getValue() || waveMaker.gama != gama.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
+    waveMaker.sigH = sigH.getValue();
+    waveMaker.peakF = peakF.getValue();
+    waveMaker.gama = gama.getValue();
     //Here we will call other java function
 
     //then send to arduino
@@ -200,7 +241,7 @@ void draw() {
 /////////////////// MAKES BUTTONS DO THINGS ////////////////////////////////////
 
 void jog() {
-  mode = 1;
+  waveMakerMode = 1;
   h.hide();
   freq.hide();
   sigH.hide();
@@ -213,7 +254,7 @@ void jog() {
 }
 
 void fun() {
-  mode = 2;
+  waveMakerMode = 2;
   position.hide();
   gama.hide();
   sigH.hide();
@@ -231,7 +272,7 @@ void fun() {
 }
 
 void sea() {
-  mode = 3;
+  waveMakerMode = 3;
   h.hide();
   freq.hide();
   h.hide();
@@ -248,7 +289,7 @@ void sea() {
 }
 
 void off() {
-  mode = 4;
+  waveMakerMode = 4;
   h.setValue(0);
   freq.setValue(0);
   sigH.setValue(0);
@@ -317,13 +358,13 @@ void readMegaSerial() {
   while (port1.available() > 0) {    //recieves until buffer is empty. Since it runs 30 times a second, the arduino will send many samples per execution.
     switch(port1.readChar()) {
     case '1':
-      float probe1Data = readFloat(port1);
+      probe1 = readFloat(port1);
       break;
     case '2':
-      float probe2Data = readFloat(port1);
+      probe2 = readFloat(port1);
       break;
     case 'p':
-      float waveMakerPos = readFloat(port1);
+      waveMakerPos = readFloat(port1);
       break;
     case 'd':
       debugData = readFloat(port1);
@@ -344,16 +385,16 @@ void readDueSerial() {
   {
     switch(port2.readChar()) {
     case 'e':
-      float wecEncPos = readFloat(port2);
+      wecPos = readFloat(port2);
       //waveSig.push("incoming", probeData);
       break;
     case 't':
-      float tau_commanded = readFloat(port2);
+      tau = readFloat(port2);
       //waveSig.push("incoming", data);
       ///////////log extra variable here
       break;
     case 'p':
-      float power = readFloat(port2);
+      pow = readFloat(port2);
       break;
     }
   }
@@ -380,16 +421,32 @@ void waitForSerial(Serial port) {
 
 //Funciton to test CSV functionality     //should be called by thread("functionName") in draw, like readSerail() is now
 void logData() {     //will be called at the framerate
-  table.addColumn("timeStamp");
-  table.addColumn("waveMakerMode");
-  table.addColumn("wec_kp");
-  table.addColumn("wec_ki");
   TableRow newRow = table.addRow();
   newRow.setFloat("timeStamp", millis());
-  newRow.setInt("waveMakerMode", mode);
-  newRow.setFloat("wec_kp", torque.getValue());
-  newRow.setFloat("wec_ki", other.getValue()); 
-  saveTable(table, "data/new.csv");
+  newRow.setInt("UIWaveMakerMode", waveMaker.mode);
+  newRow.setFloat("UIWaveMakerPos", waveMaker.mag);
+  newRow.setFloat("UIWaveMakerHeight", waveMaker.amp);
+  newRow.setFloat("UIWaveMakerFrequency", waveMaker.freq);
+  newRow.setFloat("UIWaveMakerSigH", waveMaker.sigH);
+  newRow.setFloat("UIWaveMakerPeakF", waveMaker.peakF);
+  newRow.setFloat("UIWaveMakerGama", waveMaker.gama);
+  newRow.setFloat("UIWecMode", wec.mode);
+  newRow.setFloat("UIWecTorque", wec.mag);
+  newRow.setFloat("UIWeckP", torque.getValue());
+  newRow.setFloat("UIWeckD", other.getValue()); 
+  newRow.setFloat("UIWecHeight", wec.amp);
+  newRow.setFloat("UIWecFrequency", wec.freq);
+  newRow.setFloat("UIWecSigH", wec.sigH);
+  newRow.setFloat("UIWecPeakF", wec.peakF);
+  newRow.setFloat("UIWecGama", wec.gama);
+  newRow.setFloat("probe1", probe1);
+  newRow.setFloat("probe2", probe2);
+  newRow.setFloat("waveMakerPos", waveMakerPos);
+  newRow.setFloat("waveMakerDebugData", debugData);
+  newRow.setFloat("wecPos", wecPos);
+  newRow.setFloat("wecTau", tau);
+  newRow.setFloat("wecPower", pow);
+  saveTable(table, "data/"+startTime+".csv");
 } 
 
 
