@@ -28,8 +28,6 @@ Slider sigH, peakF, gama;  //sliders for sea state mode
 Slider torque, other; // WEC sliders
 Button jog, function, sea, off; // mode buttons
 
-//int waveMakerMode = 1; // 1 = jog, 2 = function, 3 = sea, 4 = off
-//int wecMode = 3;  //1 = torque, 2 = "sea", 3 = off
 Table table;  //create Table
 String startTime;
 //Variables to be logged:
@@ -46,10 +44,16 @@ void setup() {
   fullScreen(P2D);
   frameRate(30);    //sets draw() to run 30 times a second. It would run around 40 without this restriciton
   startTime = month() + "-" + day() + "-" + year() + "_" + hour() + "-" + minute() + "-" + second();
+  
+  miniWaveTankJonswap jonswap = new miniWaveTankJonswap();
+  String[] jsArgs = new String[]{"2.3", "4.6", "1.2"};
+  jonswap.main(jsArgs);
+  
   waveMaker = new UIData();
   wec = new UIData();
   waveMaker.mode = 1;    // 1 = jog, 2 = function, 3 = sea, 4 = off
   wec.mode = 3;  //1 = torque, 2 = "sea", 3 = off
+  
   port1 = new Serial(this, "COM4", 19200); // all communication with Megas
   port2 = new Serial(this, "COM5", 19200); // all communication with Due
   delay(2000);
