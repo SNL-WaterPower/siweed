@@ -52,7 +52,7 @@ void setup() {
   port1 = new Serial(this, "COM4", 19200); // all communication with Megas
   port2 = new Serial(this, "COM5", 19200); // all communication with Due
   delay(2000);
-  
+
   //Fonts
   f = createFont("Arial", 16, true);
   fb = createFont("Arial Bold Italic", 32, true);
@@ -179,18 +179,19 @@ void setup() {
   sendFloat(0, port1);    //at position 0
   port1.write('n');
   sendFloat(1, port1);    //initialize n at 1
-  
+
   port2.write('!');
   sendFloat(-1, port2);    //off
   port2.write('n');
   sendFloat(1, port2);    //initialize n at 1
+
+  snlLogo = loadImage("SNL_Stacked_White.png");
 }
 
 
 void draw() {
   // Background color
   background(dblue);
-
   //Title 
   textFont(fb, 32);
   fill(green);
@@ -198,9 +199,7 @@ void draw() {
   textAlign(CENTER, TOP);
   text("CAPTURING the POWER of WAVES", width/6, 20);
 
-
   // Sandia Labs logo
-  snlLogo = loadImage("SNL_Stacked_White.png");
   tint(255, 126);  // Apply transparency without changing color
   image(snlLogo, 5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25);
 
@@ -208,7 +207,6 @@ void draw() {
   stroke(green);
   strokeWeight(1.5);
   line(width/3, 75, width/3, height-75);
-
   //updates chart for function mode  
   //Jog:
   if (waveMaker.mode == 1 && position.getValue() != waveMaker.mag) {  //only sends if value has changed  
