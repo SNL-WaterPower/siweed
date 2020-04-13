@@ -16,8 +16,6 @@ PFont fb; // Bold font
 PImage snlLogo;
 
 
-
-
 Serial port1;    //arduino mega
 Serial port2;    //arduino Due
 ControlP5 cp5; 
@@ -46,8 +44,7 @@ void setup() {
   startTime = month() + "-" + day() + "-" + year() + "_" + hour() + "-" + minute() + "-" + second();
   
   miniWaveTankJonswap jonswap = new miniWaveTankJonswap();
-  String[] jsArgs = new String[]{"2.3", "4.6", "1.2"};
-  jonswap.main(jsArgs);
+  //jonswap.update(1.2, 3.4, 2.34);
   
   waveMaker = new UIData();
   wec = new UIData();
@@ -191,7 +188,6 @@ void setup() {
   sendFloat(1, port2);    //initialize n at 1
 }
 
-
 void draw() {
   // Background color
   background(dblue);
@@ -205,9 +201,9 @@ void draw() {
 
 
   // Sandia Labs logo
-  snlLogo = loadImage("SNL_Stacked_White.png");
-  tint(255, 126);  // Apply transparency without changing color
-  image(snlLogo, 5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25);
+  //snlLogo = loadImage("SNL_Stacked_White.png");
+  //tint(255, 126);  // Apply transparency without changing color
+  //image(snlLogo, 5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25);
 
   //dividing line
   stroke(green);

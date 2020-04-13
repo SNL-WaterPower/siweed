@@ -1,16 +1,12 @@
 public class miniWaveTankJonswap {
-  public miniWaveTankJonswap {
-    
+  public miniWaveTankJonswap() {
   }
-  public static void main(String[] args) {
+  public static void update(double Hm0, double Tp, double gamma) {
     int i;
-    double Hm0 = Double.parseDouble(args[0]);
-    double Tp = Double.parseDouble(args[1]);
-    double gamma = Double.parseDouble(args[2]);
 
     double f_low = 2;
     double f_high = 4;
-    double df = 1/30;
+    double df = 1/2;//1/30;
 
     int num_fs = (int)((f_high - f_low)/df);
     double[] f = new double[num_fs];
