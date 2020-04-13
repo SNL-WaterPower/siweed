@@ -27,8 +27,8 @@ Slider sigH, peakF, gama;  //sliders for sea state mode
 Slider torque, other; // WEC sliders
 Button jog, function, sea, off; // mode buttons
 
-int waveMakerMode = 1; // 1 = jog, 2 = function, 3 = sea, 4 = off
-int wecMode = 3;  //1 = torque, 2 = "sea", 3 = off
+//int waveMakerMode = 1; // 1 = jog, 2 = function, 3 = sea, 4 = off
+//int wecMode = 3;  //1 = torque, 2 = "sea", 3 = off
 Table table;  //create Table
 String startTime;
 //Variables to be logged:
@@ -212,11 +212,11 @@ void draw() {
   //updates chart for function mode  
   //Jog:
   if (waveMaker.mode == 1 && position.getValue() != waveMaker.mag) {  //only sends if value has changed  
-    waveMaker.amp = position.getValue();
+    waveMaker.mag = position.getValue();
     port1.write('j');
     sendFloat(waveMaker.mag, port1);
     //function:
-  } else if (waveMakerMode == 2 && !mousePressed && (waveMaker.amp != h.getValue() || waveMaker.freq != freq.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
+  } else if (waveMaker.mode == 2 && !mousePressed && (waveMaker.amp != h.getValue() || waveMaker.freq != freq.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
     waveMaker.amp = h.getValue();
     waveMaker.freq = freq.getValue();
     port1.write('a');
@@ -224,7 +224,7 @@ void draw() {
     port1.write('f');
     sendFloat(waveMaker.freq, port1);
     //Sea State:
-  } else if (waveMakerMode == 3 && !mousePressed && (waveMaker.sigH != sigH.getValue() || waveMaker.peakF != peakF.getValue() || waveMaker.gama != gama.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
+  } else if (waveMaker.mode == 3 && !mousePressed && (waveMaker.sigH != sigH.getValue() || waveMaker.peakF != peakF.getValue() || waveMaker.gama != gama.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
     waveMaker.sigH = sigH.getValue();
     waveMaker.peakF = peakF.getValue();
     waveMaker.gama = gama.getValue();
@@ -241,7 +241,7 @@ void draw() {
 /////////////////// MAKES BUTTONS DO THINGS ////////////////////////////////////
 
 void jog() {
-  waveMakerMode = 1;
+  waveMaker.mode = 1;
   h.hide();
   freq.hide();
   sigH.hide();
@@ -254,7 +254,7 @@ void jog() {
 }
 
 void fun() {
-  waveMakerMode = 2;
+  waveMaker.mode = 2;
   position.hide();
   gama.hide();
   sigH.hide();
@@ -272,7 +272,7 @@ void fun() {
 }
 
 void sea() {
-  waveMakerMode = 3;
+  waveMaker.mode = 3;
   h.hide();
   freq.hide();
   h.hide();
@@ -289,7 +289,7 @@ void sea() {
 }
 
 void off() {
-  waveMakerMode = 4;
+  waveMaker.mode = 4;
   h.setValue(0);
   freq.setValue(0);
   sigH.setValue(0);
@@ -347,7 +347,6 @@ void sendFloat(float f, Serial port)
   port.write(posStr);
 }
 void readMegaSerial() {
-  //////////////ALL OF THESE NEED TO LOG THE DATA THEY RECIEVE!!!
   /*
   mega:
    1:probe 1
@@ -369,7 +368,6 @@ void readMegaSerial() {
     case 'd':
       debugData = readFloat(port1);
       waveSig.push("incoming", debugData);    //this needs to move for this to be called in serialEvent, but if it is moved not all data is displayed
-      ///////////log extra variable here
       break;
     }
   }
