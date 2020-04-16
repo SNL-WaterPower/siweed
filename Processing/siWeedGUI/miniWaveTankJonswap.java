@@ -1,3 +1,4 @@
+import java.util.Random;
 public class miniWaveTankJonswap {
 
   final static double f_low = 2;
@@ -15,17 +16,18 @@ public class miniWaveTankJonswap {
     amp = new double[num_fs];
     phase = new double[num_fs];
 
-    // f and phase are assigned upon construction for consistency(if the values are set to previous values the output will be the same per run)
+    // f and phase are assigned upon construction
     for (int i = 0; i < num_fs; i++) {    //f increments by df
       f[i] = f_low + i*df;
     }
-
+    Random rnd = new Random(123);      //uses a defined seed, so the sequence is the same between runs
     for (double d : phase) {    //assigns random numbers to phase
-      d = num_fs*Math.random()*2*Math.PI;
+      d = rnd.nextInt(num_fs)*2*Math.PI;
+      System.out.println(d);
     }
   }
 
-  public static void update(double sigH, double peakF, double gamma) {    //updates amp with new values
+  public static void update(double sigH, double peakF, double gamma) {    //updates amp with new values. Called on button press
     double Hm0 = sigH;
     double Tp = 1 / peakF;
     //gamma is the same;
