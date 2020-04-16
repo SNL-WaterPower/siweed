@@ -1,22 +1,39 @@
 public class miniWaveTankJonswap {
-  public miniWaveTankJonswap() {
-  }
-  public static void update(double Hm0, double Tp, double gamma) {
-    int i;
 
-    double f_low = 2;
-    double f_high = 4;
-    double df = 1/2;//1/30;
+  final static double f_low = 2;
+  final static double f_high = 4;
+  final static double df = 1.0/30.0;
 
-    int num_fs = (int)((f_high - f_low)/df);
-    double[] f = new double[num_fs];
+  static int num_fs;    
+  static double[] f;
+  static double[] amp;
+  static double[] phase;
 
-    for (i = 0; i < num_fs; i++) {
+  public miniWaveTankJonswap() {    //constructor
+    num_fs = (int)((f_high - f_low)/df); 
+    f = new double[num_fs];
+    amp = new double[num_fs];
+    phase = new double[num_fs];
+
+    // f and phase are assigned upon construction for consistency(if the values are set to previous values the output will be the same per run)
+    for (int i = 0; i < num_fs; i++) {    //f increments by df
       f[i] = f_low + i*df;
     }
+
+    for (double d : phase) {    //assigns random numbers to phase
+      d = num_fs*Math.random()*2*Math.PI;
+    }
+  }
+
+  public static void update(double sigH, double peakF, double gamma) {    //updates amp with new values
+    double Hm0 = sigH;
+    double Tp = 1 / peakF;
+    //gamma is the same;
+
     Jonswap S = new Jonswap(f, Tp, Hm0, gamma);
-    for (i = 0; i < f.length; i++) {
-      System.out.println(""+S.S[i]+"  "+S.f[i]);
+    for (int i = 0; i < f.length; i++) {    //reassign amplitude.
+      //System.out.println(""+S.S[i]+"  "+S.f[i]+"  "+f[i]);    //this proves that f and S.f are the same
+      amp[i] = Math.sqrt(2*S.S[i]*2*Math.PI*df);
     }
   }
 
@@ -59,5 +76,24 @@ public class miniWaveTankJonswap {
       this.S = Sf;
       this.f = f;
     }
+  }
+  public int getNum() {
+    return num_fs;
+  }
+  public float[] getAmp() {
+    return copyArraydf(amp);
+  }
+  public float[] getPhase() {
+    return copyArraydf(phase);
+  }
+  public float[] getF() {
+    return copyArraydf(f);
+  }
+  float[] copyArraydf(final double[] d) {    //copies a double array to a float array
+    float[] f = new float[d.length];
+    for (int i = 0; i < d.length; i++) {
+      f[i] = (float)d[i];
+    }
+    return f;
   }
 }
