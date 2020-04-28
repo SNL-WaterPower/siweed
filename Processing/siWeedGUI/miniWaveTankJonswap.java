@@ -3,7 +3,7 @@ public class miniWaveTankJonswap {
 
   final static double f_low = 2;
   final static double f_high = 4;
-  final static double df = 1.0/30.0;
+  final static double df = 1.0/10.0;
 
   static int num_fs;    
   static double[] f;
@@ -22,20 +22,19 @@ public class miniWaveTankJonswap {
     }
     Random rnd = new Random(123);      //uses a defined seed, so the sequence is the same between runs
     for (double d : phase) {    //assigns random numbers to phase
-      d = rnd.nextInt(num_fs)*2*Math.PI;
-      System.out.println(d);
+      d = rnd.nextDouble()*2*Math.PI;
     }
   }
 
   public static void update(double sigH, double peakF, double gamma) {    //updates amp with new values. Called on button press
-    double Hm0 = sigH;
+    double Hm0 = sigH / 100;    //cm to meters
     double Tp = 1 / peakF;
     //gamma is the same;
 
     Jonswap S = new Jonswap(f, Tp, Hm0, gamma);
     for (int i = 0; i < f.length; i++) {    //reassign amplitude.
       //System.out.println(""+S.S[i]+"  "+S.f[i]+"  "+f[i]);    //this proves that f and S.f are the same
-      amp[i] = Math.sqrt(2*S.S[i]*2*Math.PI*df);
+      amp[i] = Math.sqrt(2*S.S[i]*2*Math.PI*df) * 100;    //meters to cm
     }
   }
 

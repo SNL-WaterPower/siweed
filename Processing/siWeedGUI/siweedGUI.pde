@@ -44,7 +44,7 @@ void setup() {
   frameRate(30);    //sets draw() to run 30 times a second. It would run around 40 without this restriciton
   ///////initialize jonswap
   jonswap = new miniWaveTankJonswap();
-  jonswap.update(1.2, 3.4, 2.34);      //default values    //CHANGE TO DEFAULT SLIDER VALUES
+  //jonswap.update(1.2, 3.4, 2.34);      //default values
   /////////initilize UIData objects
   waveMaker = new UIData();
   wec = new UIData();
@@ -78,8 +78,8 @@ void setup() {
   table.addColumn("wecTau");
   table.addColumn("wecPower");
   ///////////initialize Serial
-  port1 = new Serial(this, "COM4", 19200); // all communication with Megas
-  port2 = new Serial(this, "COM5", 19200); // all communication with Due
+  port1 = new Serial(this, "COM4", 500000); // all communication with Megas
+  port2 = new Serial(this, "COM5", 500000); // all communication with Due
   delay(2000);
   //Fonts
   f = createFont("Arial", 16, true);
@@ -155,7 +155,6 @@ void setup() {
     .setSize(300, 20); //size (width, height)
 
   // Charts //
-
   waveSig =  cp5.addChart("Sin Wave")
     .setPosition(933.375, 100  )
     .setSize(800, 300)
@@ -167,10 +166,13 @@ void setup() {
     .setColorLabel(green)
     ;
 
-
-
   waveSig.addDataSet("incoming");
   waveSig.setData("incoming", new float[250]);    //use to set the domain of the plot
+  
+  sigH.setValue(2.5);
+  peakF.setValue(3.0);
+  gamma.setValue(7.0);
+  
 
   //initialize the modes on the arduinos:
   port1.write('!');
@@ -199,7 +201,6 @@ void draw() {
   textAlign(CENTER, TOP);
   text("CAPTURING the POWER of WAVES", width/6, 20);
 
-
   //Sandia Labs logo
   tint(255, 126);  // Apply transparency without changing color
   image(snlLogo, 5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25);
@@ -209,7 +210,6 @@ void draw() {
   strokeWeight(1.5);
   line(width/3, 75, width/3, height-75);
 
-  //updates chart for function mode  
   //Jog:
   if (waveMaker.mode == 1 && position.getValue() != waveMaker.mag) {  //only sends if value has changed  
     waveMaker.mag = position.getValue();
@@ -246,6 +246,13 @@ void draw() {
       sendFloat(f, port1);
     }
   }
+  /////////testing section/////
+  float val = 0;
+  for (int i = 0; i < jonswap.getNum(); i++) {
+    val += jonswap.getAmp()[i] * sin(2.0 * PI * millis()/1000.0 * jonswap.getF()[i] + jonswap.getPhase()[i]);
+  }
+  waveSig.push("incoming", val);
+  ///////////////////
   thread("readMegaSerial");    //will run this funciton in parallel thread
   thread("readDueSerial");
   thread("logData");
@@ -380,7 +387,7 @@ void readMegaSerial() {
       break;
     case 'd':
       debugData = readFloat(port1);
-      waveSig.push("incoming", debugData);    //this needs to move for this to be called in serialEvent, but if it is moved not all data is displayed
+      //waveSig.push("incoming", debugData);
       break;
     }
   }
@@ -402,7 +409,6 @@ void readDueSerial() {
     case 't':
       tau = readFloat(port2);
       //waveSig.push("incoming", data);
-      ///////////log extra variable here
       break;
     case 'p':
       pow = readFloat(port2);
