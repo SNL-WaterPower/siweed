@@ -3,26 +3,33 @@ public class miniWaveTankJonswap {
 
   final static double f_low = 2;
   final static double f_high = 4;
-  final static double df = 1.0/10.0;
+  final static double df = 1.0/30.0;
 
   static int num_fs;    
   static double[] f;
   static double[] amp;
-  static double[] phase;
+  static double[] phase = {3.152416,3.037871,5.045899,3.415424,1.167684,3.443497,3.721319,4.670000,3.773063,5.373082,6.113500,1.607072,5.608919,0.956348,6.036062,1.037471,5.557559,4.663542,1.105112,3.408563,4.351425,4.267931,0.195947,0.738568,3.467186,2.080551,1.471086,0.333220,2.303043,5.546058,5.556698,1.180501,6.169116,4.755245,2.835494,5.268132,5.952006,1.173083,4.801221,2.111487,2.028668,4.333523,0.226176,2.636901,5.026371,2.955182,4.031354,4.803817,4.847541,6.223209,0.417596,5.151822,1.939631,5.052632,1.916994,2.979530,3.140566,5.817336,4.445193,5.076769};
 
   public miniWaveTankJonswap() {    //constructor
-    num_fs = (int)((f_high - f_low)/df); 
+    num_fs = (int)((f_high - f_low)/df);
     f = new double[num_fs];
     amp = new double[num_fs];
-    phase = new double[num_fs];
+    //phase = new double[num_fs];
 
     // f and phase are assigned upon construction
     for (int i = 0; i < num_fs; i++) {    //f increments by df
       f[i] = f_low + i*df;
     }
+    /*
     Random rnd = new Random(123);      //uses a defined seed, so the sequence is the same between runs
     for (double d : phase) {    //assigns random numbers to phase
       d = rnd.nextDouble()*2*Math.PI;
+    }
+    */
+    /////for testing:
+    for (int i = 0; i < num_fs; i++) {
+      //phase[i] = 2.0 * Math.PI * (float)i/((float)num_fs);
+      System.out.println(phase[i]);
     }
   }
 

@@ -44,7 +44,6 @@ void setup() {
   frameRate(30);    //sets draw() to run 30 times a second. It would run around 40 without this restriciton
   ///////initialize jonswap
   jonswap = new miniWaveTankJonswap();
-  //jonswap.update(1.2, 3.4, 2.34);      //default values
   /////////initilize UIData objects
   waveMaker = new UIData();
   wec = new UIData();
@@ -78,8 +77,8 @@ void setup() {
   table.addColumn("wecTau");
   table.addColumn("wecPower");
   ///////////initialize Serial
-  port1 = new Serial(this, "COM4", 500000); // all communication with Megas
-  port2 = new Serial(this, "COM5", 500000); // all communication with Due
+  port1 = new Serial(this, "COM4", 250000); // all communication with Megas
+  port2 = new Serial(this, "COM5", 250000); // all communication with Due
   delay(2000);
   //Fonts
   f = createFont("Arial", 16, true);
@@ -158,7 +157,7 @@ void setup() {
   waveSig =  cp5.addChart("Sin Wave")
     .setPosition(933.375, 100  )
     .setSize(800, 300)
-    .setRange(-20, 20)
+    .setRange(-5, 5)
     .setView(Chart.LINE) // use Chart.LINE, Chart.PIE, Chart.AREA, Chart.BAR_CENTERED
     .setStrokeWeight(4)
     .setColorCaptionLabel(color(40))
@@ -167,7 +166,7 @@ void setup() {
     ;
 
   waveSig.addDataSet("incoming");
-  waveSig.setData("incoming", new float[250]);    //use to set the domain of the plot
+  waveSig.setData("incoming", new float[3600]);    //use to set the domain of the plot
   
   sigH.setValue(2.5);
   peakF.setValue(3.0);
@@ -246,13 +245,15 @@ void draw() {
       sendFloat(f, port1);
     }
   }
-  /////////testing section/////
+  /////////testing section////
+  
   float val = 0;
   for (int i = 0; i < jonswap.getNum(); i++) {
-    val += jonswap.getAmp()[i] * sin(2.0 * PI * millis()/1000.0 * jonswap.getF()[i] + jonswap.getPhase()[i]);
+    val += jonswap.getAmp()[i] * sin(2.0 * PI * (millis()/1000.0 - 2.0) * jonswap.getF()[i] + jonswap.getPhase()[i]);
   }
   waveSig.push("incoming", val);
   ///////////////////
+  
   thread("readMegaSerial");    //will run this funciton in parallel thread
   thread("readDueSerial");
   thread("logData");
@@ -314,6 +315,7 @@ void off() {
   freq.setValue(0);
   sigH.setValue(0);
   peakF.setValue(0); 
+  gamma.setValue(0);
   position.setValue(0);
   //set mode on arduino:
   port1.write('!');
