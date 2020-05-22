@@ -5,6 +5,8 @@ import java.lang.Math.*;
 import java.util.LinkedList;
 import java.util.Queue;
 
+int queueSize = 1024;    //power of 2 closest to 30 seconds
+
 // Custom colors
 color green = color(190, 214, 48);
 color turq = color(0, 173, 208);
@@ -50,46 +52,12 @@ void setup() {
   /////////initilize UIData objects
   waveMaker = new UIData();
   wec = new UIData();
+  fftQueue = new LinkedList();
+  fft = new FFTbase();
   waveMaker.mode = 1;    // 1 = jog, 2 = function, 3 = sea, 4 = off
   wec.mode = 3;  //1 = torque, 2 = "sea", 3 = off
-  startTime = month() + "-" + day() + "-" + year() + "_" + hour() + "-" + minute() + "-" + second();
-  fftQueue = new LinkedList();
-  //Table initialization:
-  table = new Table();
-  table.addColumn("timeStamp");
-  table.addColumn("UIWaveMakerMode");
-  table.addColumn("UIWaveMakerPos");
-  table.addColumn("UIWaveMakerHeight");
-  table.addColumn("UIWaveMakerFrequency");
-  table.addColumn("UIWaveMakerSigH");
-  table.addColumn("UIWaveMakerPeakF");
-  table.addColumn("UIWaveMakergamma");
-  table.addColumn("UIWecMode");
-  table.addColumn("UIWecTorque");
-  table.addColumn("UIWeckP");
-  table.addColumn("UIWeckD");
-  table.addColumn("UIWecHeight");
-  table.addColumn("UIWecFrequency");
-  table.addColumn("UIWecSigH");
-  table.addColumn("UIWecPeakF");
-  table.addColumn("UIWecgamma");
-  table.addColumn("probe1");
-  table.addColumn("probe2");
-  table.addColumn("waveMakerPos");
-  table.addColumn("waveMakerDebugData");
-  table.addColumn("wecPos");
-  table.addColumn("wecTau");
-  table.addColumn("wecPower");
-  ///////////initialize Serial
-  port1 = new Serial(this, "COM4", 1000000); // all communication with Megas
-  port2 = new Serial(this, "COM5", 500000); // all communication with Due
-  delay(2000);
-  //Fonts
-  f = createFont("Arial", 16, true);
-  fb = createFont("Arial Bold Italic", 32, true);
-  // starting ControlP5 stuff
-  cp5 = new ControlP5(this);
-
+  initializeDataLogging();
+  initializeSerial();    //has a 2 second delay
   initializeUI();
   
   //initialize the modes on the arduinos:
@@ -104,8 +72,6 @@ void setup() {
   sendFloat(-1, port2);    //off
   port2.write('n');
   sendFloat(1, port2);    //initialize n at 1
-
-  snlLogo = loadImage("SNL_Stacked_White.png");
 }
 
 void draw() {
@@ -164,7 +130,10 @@ void draw() {
       sendFloat(f, port1);
     }
     /////FFT section:
-    
+    if(fftQueue.size() == ) {
+      
+    }else{
+    }
   }
   /*/////////testing section////
    

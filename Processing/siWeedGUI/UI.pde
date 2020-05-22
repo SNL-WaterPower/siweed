@@ -1,4 +1,9 @@
 void initializeUI() {
+  // starting ControlP5 stuff
+  cp5 = new ControlP5(this);
+  //Fonts
+  f = createFont("Arial", 16, true);
+  fb = createFont("Arial Bold Italic", 32, true);
   // Buttons //
   jog = cp5.addButton("jog")
     .setPosition(100, 100)
@@ -84,6 +89,8 @@ void initializeUI() {
   sigH.setValue(2.5);
   peakF.setValue(3.0);
   gamma.setValue(7.0);
+  
+  snlLogo = loadImage("SNL_Stacked_White.png");
 }
 //button functions:
 /////////////////// MAKES BUTTONS DO THINGS ////////////////////////////////////

@@ -1,3 +1,9 @@
+void initializeSerial() {
+  ///////////initialize Serial
+  port1 = new Serial(this, "COM4", 1000000); // all communication with Megas
+  port2 = new Serial(this, "COM5", 500000); // all communication with Due
+  delay(2000);
+}
 void sendFloat(float f, Serial port)
 {
   /* 
@@ -74,7 +80,7 @@ void readMegaSerial() {
       debugData = readFloat(port1);
       waveSig.push("incoming", debugData);
       fftQueue.add(debugData);      //adds to the tail
-      if(fftQueue.size() > 1024)    //power of 2 closest to 30 seconds
+      if(fftQueue.size() > queueSize)
       {
         fftQueue.remove();          //removes from the head
       }
