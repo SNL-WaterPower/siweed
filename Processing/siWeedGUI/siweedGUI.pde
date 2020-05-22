@@ -5,7 +5,7 @@ import java.lang.Math.*;
 import java.util.LinkedList;
 import java.util.Queue;
 
-int queueSize = 1024;    //power of 2 closest to 30 seconds
+int queueSize = 1024;    //power of 2 closest to 30 seconds at 30 samples/second
 
 // Custom colors
 color green = color(190, 214, 48);
@@ -43,7 +43,8 @@ float probe1, probe2, waveMakerPos, debugData, wecPos, tau, pow;
 UIData waveMaker;
 UIData wec;
 Queue fftQueue;
-FFTbase fft;
+FFTbase myFFT;
+float[] fftArr;
 void setup() {
   fullScreen(P2D);
   frameRate(30);    //sets draw() to run 30 times a second. It would run around 40 without this restriciton
@@ -53,13 +54,14 @@ void setup() {
   waveMaker = new UIData();
   wec = new UIData();
   fftQueue = new LinkedList();
-  fft = new FFTbase();
+  myFFT = new FFTbase();
+  fftArr = new float[queueSize*2];
   waveMaker.mode = 1;    // 1 = jog, 2 = function, 3 = sea, 4 = off
   wec.mode = 3;  //1 = torque, 2 = "sea", 3 = off
   initializeDataLogging();
   initializeSerial();    //has a 2 second delay
   initializeUI();
-  
+
   //initialize the modes on the arduinos:
   port1.write('!');
   sendFloat(0, port1);    //jog mode
@@ -77,18 +79,15 @@ void setup() {
 void draw() {
   // Background color
   background(dblue);
-
   //Title 
   textFont(fb, 32);
   fill(green);
   textLeading(15);
   textAlign(CENTER, TOP);
   text("CAPTURING the POWER of WAVES", width/6, 20);
-
   //Sandia Labs logo
   tint(255, 126);  // Apply transparency without changing color
   image(snlLogo, 5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25);
-
   //dividing line
   stroke(green);
   strokeWeight(1.5);
@@ -129,11 +128,21 @@ void draw() {
     for (float f : jonswap.getF()) {
       sendFloat(f, port1);
     }
-    /////FFT section:
-    if(fftQueue.size() == ) {
-      
-    }else{
+  }
+  /////FFT section:
+  if (fftQueue.size() == queueSize) {    //only happens occasionaly, because queue is emptied
+    println("graphing FFT");
+    float[] signalr = new float[queueSize];   //signal real
+    float[] signali = new float[queueSize];    //signal imaginary
+    for (int i = 0; i < queueSize; i++) {
+      signalr[i] = (float)fftQueue.poll();
     }
+    fftArr = myFFT.fft(signalr, signali, true);
+  } else {
+    println("fftQueue wrong size: "+fftQueue.size());
+  }
+  for (int i=0; i<queueSize; i++) {
+    line((width*5/6)+i, height/4, (width*5/6)+i, height/4 - 20*fftArr[i]);
   }
   /*/////////testing section////
    
@@ -149,36 +158,6 @@ void draw() {
   thread("readDueSerial");
   thread("logData");
 }
-
-//Funciton to test CSV functionality     //should be called by thread("functionName") in draw, like readSerail() is now
-void logData() {     //will be called at the framerate
-  TableRow newRow = table.addRow();
-  newRow.setFloat("timeStamp", millis());
-  newRow.setInt("UIWaveMakerMode", waveMaker.mode);
-  newRow.setFloat("UIWaveMakerPos", waveMaker.mag);
-  newRow.setFloat("UIWaveMakerHeight", waveMaker.amp);
-  newRow.setFloat("UIWaveMakerFrequency", waveMaker.freq);
-  newRow.setFloat("UIWaveMakerSigH", waveMaker.sigH);
-  newRow.setFloat("UIWaveMakerPeakF", waveMaker.peakF);
-  newRow.setFloat("UIWaveMakergamma", waveMaker.gamma);
-  newRow.setFloat("UIWecMode", wec.mode);
-  newRow.setFloat("UIWecTorque", wec.mag);
-  newRow.setFloat("UIWeckP", torque.getValue());
-  newRow.setFloat("UIWeckD", other.getValue()); 
-  newRow.setFloat("UIWecHeight", wec.amp);
-  newRow.setFloat("UIWecFrequency", wec.freq);
-  newRow.setFloat("UIWecSigH", wec.sigH);
-  newRow.setFloat("UIWecPeakF", wec.peakF);
-  newRow.setFloat("UIWecgamma", wec.gamma);
-  newRow.setFloat("probe1", probe1);
-  newRow.setFloat("probe2", probe2);
-  newRow.setFloat("waveMakerPos", waveMakerPos);
-  newRow.setFloat("waveMakerDebugData", debugData);
-  newRow.setFloat("wecPos", wecPos);
-  newRow.setFloat("wecTau", tau);
-  newRow.setFloat("wecPower", pow);
-  saveTable(table, "data/"+startTime+".csv");
-} 
 
 
 /////Old but maybe useful:

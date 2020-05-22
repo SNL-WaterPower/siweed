@@ -79,7 +79,7 @@ void readMegaSerial() {
     case 'd':
       debugData = readFloat(port1);
       waveSig.push("incoming", debugData);
-      fftQueue.add(debugData);      //adds to the tail
+      if(waveMaker.mode == 3) fftQueue.add(debugData);      //adds to the tail if in the right mode
       if(fftQueue.size() > queueSize)
       {
         fftQueue.remove();          //removes from the head

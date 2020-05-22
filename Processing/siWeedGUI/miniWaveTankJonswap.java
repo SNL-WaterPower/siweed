@@ -3,7 +3,7 @@ public class miniWaveTankJonswap {
 
   final static double f_low = 2;
   final static double f_high = 4;
-  final static double df = 1.0/20.0;
+  final static double df = 1.0/10;
 
   static int num_fs;    
   static double[] f;
