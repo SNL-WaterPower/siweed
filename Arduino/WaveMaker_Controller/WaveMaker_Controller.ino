@@ -55,7 +55,7 @@ const float maxRate = 500.0;   //max mm/seconds
 
 void setup()
 {
-  Serial.begin(1000000);
+  Serial.begin(1500000);
   pinMode(stepPin, OUTPUT);
   pinMode(dirPin, OUTPUT);
   pinMode(13, OUTPUT);

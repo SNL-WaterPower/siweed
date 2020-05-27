@@ -6,54 +6,28 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 int queueSize = 1024;    //power of 2 closest to 30 seconds at 30 samples/second
-
-// Custom colors
-color green = color(190, 214, 48);
-color turq = color(0, 173, 208);
-color dblue = color(0, 83, 118);
-
-// Fonts
-PFont f; // Regular font
-PFont fb; // Bold font
-
-// Sandia logo
-PImage snlLogo;
 miniWaveTankJonswap jonswap;
-
-Serial port1;    //arduino mega
-Serial port2;    //arduino Due
-ControlP5 cp5; 
-Chart waveSig; //wave Signal chart
-Slider position; //slider for position mode
-Slider h, freq; //sliders for function mode
-Slider sigH, peakF, gamma;  //sliders for sea state mode
-Slider torque, other; // WEC sliders
-Button jog, function, sea, off; // mode buttons
-
 Table table;  //table for data logging
 String startTime;
-//Variables to be logged:
-//int nComponents = 10;     //number of wave components in sea state
-public class UIData {        //an object for the WEC and Wavemaker portions of the UI to use
-  public int mode;
-  public float mag, amp, freq, sigH, peakF, gamma;
-}
-//data not held in the class(not in the UI):
-float probe1, probe2, waveMakerPos, debugData, wecPos, tau, pow;
-UIData waveMaker;
-UIData wec;
 Queue fftQueue;
+LinkedList fftList;
 FFTbase myFFT;
 float[] fftArr;
+
+int previousMillis = 0;    //used to update fft 
+int fftInterval = 100;    //in milliseconds
+
+///test vars:
+int sampleCount = 0;
 void setup() {
   fullScreen(P2D);
-  frameRate(30);    //sets draw() to run 30 times a second. It would run around 40 without this restriciton
-  ///////initialize jonswap
+  frameRate(30);    //sets draw() to run 30 times a second.
+  ///////initialize objects
   jonswap = new miniWaveTankJonswap();
-  /////////initilize UIData objects
   waveMaker = new UIData();
   wec = new UIData();
   fftQueue = new LinkedList();
+  fftList = new LinkedList();
   myFFT = new FFTbase();
   fftArr = new float[queueSize*2];
   waveMaker.mode = 1;    // 1 = jog, 2 = function, 3 = sea, 4 = off
@@ -114,44 +88,50 @@ void draw() {
     //update the jonswap values with new inputs
     jonswap.update(waveMaker.sigH, waveMaker.peakF, waveMaker.gamma);
     //then send to arduino
+    //!!!!put this in a thread to not slow down processing(maybe)
     port1.write('n');
     sendFloat(jonswap.getNum(), port1);    //update n
     port1.write('a');              //send amplitude vector
     for (float f : jonswap.getAmp()) {
-      sendFloat(f, port1);
+      //sendFloat(f, port1);
     }
     port1.write('p');              //send phase vector
     for (float f : jonswap.getPhase()) {
-      sendFloat(f, port1);
+      //sendFloat(f, port1);
     }
     port1.write('f');              //send frequency vector
     for (float f : jonswap.getF()) {
-      sendFloat(f, port1);
+      //sendFloat(f, port1);
     }
   }
-  /////FFT section:
-  if (fftQueue.size() == queueSize) {    //only happens occasionaly, because queue is emptied
-    println("graphing FFT");
+  /////FFT section(move to fft tab eventually):
+  if (millis() > previousMillis+fftInterval) { //fftList.size() == queueSize && 
+    previousMillis = millis();
+    //println("graphing FFT");
     float[] signalr = new float[queueSize];   //signal real
     float[] signali = new float[queueSize];    //signal imaginary
-    for (int i = 0; i < queueSize; i++) {
-      signalr[i] = (float)fftQueue.poll();
+    for (int i = 0; i < fftList.size(); i++) {
+      signalr[i] = (float)fftList.get(i);
     }
     fftArr = myFFT.fft(signalr, signali, true);
-  } else {
-    println("fftQueue wrong size: "+fftQueue.size());
   }
-  for (int i=0; i<queueSize; i++) {
-    line((width*5/6)+i, height/4, (width*5/6)+i, height/4 - 20*fftArr[i]);
+  for (int i=0; i<queueSize*2; i++) {
+    line((width*3/6)+.5*i, height/2, (width*3/6)+.5*i, height/2 - 20*fftArr[i]);
   }
-  /*/////////testing section////
-   
-   float val = 0;
-   for (int i = 0; i < jonswap.getNum(); i++) {
-   val += jonswap.getAmp()[i] * sin(2.0 * PI * (millis()/1000.0 - 2.0) * jonswap.getF()[i] + jonswap.getPhase()[i]);
-   }
-   waveSig.push("incoming", val);
-   ///////////////////*/
+  /////////testing section////
+
+  float val = 0;
+  for (int i = 0; i < jonswap.getNum(); i++) {
+    val += jonswap.getAmp()[i] * sin(2.0 * PI * (millis()/1000.0 - 2.0) * jonswap.getF()[i] + jonswap.getPhase()[i]);
+  }
+  waveSig.push("incoming", val);
+  if (waveMaker.mode == 3) fftList.add(val);      //adds to the tail if in the right mode
+  if (fftList.size() > queueSize)
+  {
+    fftList.remove();          //removes from the head
+  }
+  //println(fftList.size());
+  ///////////////////*/
 
   readMegaSerial();
   //thread("readMegaSerial");    //will run this funciton in parallel thread

@@ -1,3 +1,20 @@
+ControlP5 cp5; 
+Chart waveSig; //wave Signal chart
+Slider position; //slider for position mode
+Slider h, freq; //sliders for function mode
+Slider sigH, peakF, gamma;  //sliders for sea state mode
+Slider torque, other; // WEC sliders
+Button jog, function, sea, off; // mode buttons
+// Custom colors
+color green = color(190, 214, 48);
+color turq = color(0, 173, 208);
+color dblue = color(0, 83, 118);
+
+// Fonts
+PFont f; // Regular font
+PFont fb; // Bold font
+// Sandia logo
+PImage snlLogo;
 void initializeUI() {
   // starting ControlP5 stuff
   cp5 = new ControlP5(this);
@@ -50,13 +67,13 @@ void initializeUI() {
     .hide(); //size (width, height)
 
   peakF = cp5.addSlider("Peak Frequency (Hz)")  //name of button
-    .setRange(2, 4)
+    .setRange(0, 4)
     .setPosition(150, 300) //x and y coordinates of upper left corner of button
     .setSize(300, 20)
     .hide(); //size (width, height)
 
   gamma = cp5.addSlider("Peakedness")  //name of button
-    .setRange(1, 7)
+    .setRange(0, 7)
     .setPosition(150, 350) //x and y coordinates of upper left corner of button
     .setSize(300, 20)
     .hide(); //size (width, height)

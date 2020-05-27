@@ -1,6 +1,8 @@
+Serial port1;    //arduino mega
+Serial port2;    //arduino Due
 void initializeSerial() {
   ///////////initialize Serial
-  port1 = new Serial(this, "COM4", 1000000); // all communication with Megas
+  port1 = new Serial(this, "COM4", 1500000); // all communication with Megas
   port2 = new Serial(this, "COM5", 500000); // all communication with Due
   delay(2000);
 }
@@ -53,7 +55,7 @@ void sendFloat(float f, Serial port)
   port.write(posStr);
 
   waitForSerial(port);
-  println(port.readChar());    //clears confirmation '*'
+  //println(port.readChar());    //clears confirmation '*'
   //for testing:
   //println(posStr);
 }
@@ -78,12 +80,19 @@ void readMegaSerial() {
       break;
     case 'd':
       debugData = readFloat(port1);
-      waveSig.push("incoming", debugData);
-      if(waveMaker.mode == 3) fftQueue.add(debugData);      //adds to the tail if in the right mode
-      if(fftQueue.size() > queueSize)
+      //waveSig.push("incoming", debugData);
+      /*
+      if (waveMaker.mode == 3) fftQueue.add(debugData);      //adds to the tail if in the right mode
+      if (fftQueue.size() > queueSize)
       {
         fftQueue.remove();          //removes from the head
-      }
+      }*/
+      ///^was with queue, this is with linked list:
+      //if (waveMaker.mode == 3) fftList.add(debugData);      //adds to the tail if in the right mode
+      //if (fftList.size() > queueSize)
+      //{
+      //  fftList.remove();          //removes from the head
+      //}
       break;
     }
   }

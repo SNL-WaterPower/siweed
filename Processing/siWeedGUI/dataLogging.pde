@@ -1,3 +1,12 @@
+//Variables to be logged:
+public class UIData {        //an object for the WEC and Wavemaker portions of the UI to use
+  public int mode;
+  public float mag, amp, freq, sigH, peakF, gamma;
+}
+//data not held in the class(not in the UI):
+float probe1, probe2, waveMakerPos, debugData, wecPos, tau, pow;
+UIData waveMaker;
+UIData wec;
 void initializeDataLogging() {
   startTime = month() + "-" + day() + "-" + year() + "_" + hour() + "-" + minute() + "-" + second();
   //Table initialization:
