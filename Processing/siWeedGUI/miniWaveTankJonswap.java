@@ -1,10 +1,10 @@
 import java.util.Random;
 import java.lang.Math;
 public class miniWaveTankJonswap {
-  final static double period = 1024.0/30.0;
+  final static double period = 1024.0/32.0;
   final static double df = 1/period;
-  final static double f_low = df*Math.floor(0.5/df);    //round to the nearest multiple of df
-  final static double f_high = df*Math.floor(2.5/df);
+  final static double f_low = df*Math.floor(1/df);    //round to the nearest multiple of df
+  final static double f_high = df*Math.floor(1.1/df);
 
   static int num_fs;    
   static double[] f;

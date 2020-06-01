@@ -17,7 +17,6 @@ volatile float desiredPos;   //used for jog mode
 const int buffSize = 10;    //number of data points buffered in the moving average filter
 volatile float probe1Buffer[buffSize];
 volatile float probe2Buffer[buffSize];
-volatile bool readingSerial = false;    //prevents arduino from sending serial while it is reading data. prevents missreading of '*' confirmation
 
 
 
@@ -55,7 +54,7 @@ const float maxRate = 500.0;   //max mm/seconds
 
 void setup()
 {
-  Serial.begin(1500000);
+  Serial.begin(500000);
   pinMode(stepPin, OUTPUT);
   pinMode(dirPin, OUTPUT);
   pinMode(13, OUTPUT);
@@ -185,20 +184,17 @@ ISR(TIMER5_COMPA_vect)    //takes ___ milliseconds
     p: position
     d: other data for debugging
   */
-  if (!readingSerial)
-  {
-    pushBuffer(probe1Buffer, mapFloat(analogRead(probe1Pin), 0.0, 560.0, 0.0, 27.0));     //maps to cm and adds to data buffer
-    pushBuffer(probe2Buffer, mapFloat(analogRead(probe2Pin), 0.0, 560.0, 0.0, 27.0));
-    Serial.write('1');    //to indicate wave probe data
-    sendFloat(averageArray(probe1Buffer));
-    Serial.write('2');    //to indicate wave probe data
-    sendFloat(averageArray(probe2Buffer));
-    Serial.write('p');    //to indicate position
-    sendFloat(encPos);
-    Serial.write('d');    //to indicate alternate data
-    sendFloat(futurePos);
-    Serial.println();
-  }
+  pushBuffer(probe1Buffer, mapFloat(analogRead(probe1Pin), 0.0, 560.0, 0.0, 27.0));     //maps to cm and adds to data buffer
+  pushBuffer(probe2Buffer, mapFloat(analogRead(probe2Pin), 0.0, 560.0, 0.0, 27.0));
+  Serial.write('1');    //to indicate wave probe data
+  sendFloat(averageArray(probe1Buffer));
+  Serial.write('2');    //to indicate wave probe data
+  sendFloat(averageArray(probe2Buffer));
+  Serial.write('p');    //to indicate position
+  sendFloat(encPos);
+  Serial.write('d');    //to indicate alternate data
+  sendFloat(futurePos);
+  Serial.println();
 }
 /* '!' indicates mode switch, next int is mode
    j indicates jog position
@@ -209,9 +205,8 @@ ISR(TIMER5_COMPA_vect)    //takes ___ milliseconds
 */
 void readSerial()
 {
-  if (Serial.available() > 0)
+  if (Serial.available() >= 6)    //if a whole float is through: n+100>
   {
-    readingSerial = true;
     //delay(1000);
     //Serial.print('b');
     //Serial.println(Serial.available());
@@ -253,32 +248,43 @@ void readSerial()
         }
         break;
     }
-    readingSerial = false;    //allows data to be sent
   }
 }
 float readFloat()
 {
-  while (Serial.available() < 1) {}
-  char c = Serial.read();
-  if (c == '<')
+  char charArr[5];    //+123\0
+  char c;
+  int i;
+  for (i = 0; Serial.available() > 0 && c != '>'; i++)
   {
-    String str = Serial.readStringUntil('>');
-    float f = str.toFloat();
-    Serial.write('*');    //sends '*' to confirm that a float has been recieved
-    return f;
+    c = Serial.read();
+    charArr[i] = c;
   }
-  else
-  {
-    return -1.0;
-  }
+  charArr[i] = '\0';
+  float f = atof(charArr)/100.0;
+  return f;
 }
+
+/*float readFloat()
+  {
+  while (Serial.available() < 1) {}
+  String str = Serial.readStringUntil('>');
+  float f = str.toFloat()/100.0;
+  return f;
+  }*/
 volatile void sendFloat(volatile float f)
 {
-  f = round(f * 100.0) / 100.0; //limits to two decimal places
-  String dataStr = "<";    //starts the string
-  dataStr += String(f);
-  dataStr += ">";    //end of string
-  Serial.print(dataStr);
+  volatile int i = (int)(f * 100.0);
+  if(i >= 0)
+  {
+    Serial.print('+');
+  } 
+  else
+  {
+    Serial.print('-');
+  }
+  Serial.print(abs(i));
+  Serial.print('>');
 }
 void updateSpeedScalar()    //used to prevent jumps/smooth start
 {

@@ -9,7 +9,6 @@ int queueSize = 1024;    //power of 2 closest to 30 seconds at 30 samples/second
 miniWaveTankJonswap jonswap;
 Table table;  //table for data logging
 String startTime;
-Queue fftQueue;
 LinkedList fftList;
 FFTbase myFFT;
 float[] fftArr;
@@ -18,15 +17,19 @@ int previousMillis = 0;    //used to update fft
 int fftInterval = 100;    //in milliseconds
 
 ///test vars:
-int sampleCount = 0;
+int sampleCount = 0;    //total number of samples gathered
+int matchCount = 0;      //number of samples that have matched base set
+float[] baseSet;
 void setup() {
+  //tests:///
+  baseSet = new float[100];
+  ////////
   fullScreen(P2D);
-  frameRate(30);    //sets draw() to run 30 times a second.
+  frameRate(32);    //sets draw() to run 30 times a second.
   ///////initialize objects
   jonswap = new miniWaveTankJonswap();
   waveMaker = new UIData();
   wec = new UIData();
-  fftQueue = new LinkedList();
   fftList = new LinkedList();
   myFFT = new FFTbase();
   fftArr = new float[queueSize*2];
@@ -119,18 +122,35 @@ void draw() {
     line((width*3/6)+.5*i, height/2, (width*3/6)+.5*i, height/2 - 20*fftArr[i]);
   }
   /////////testing section////
-
+/*
   float val = 0;
   for (int i = 0; i < jonswap.getNum(); i++) {
     val += jonswap.getAmp()[i] * sin(2.0 * PI * (millis()/1000.0 - 2.0) * jonswap.getF()[i] + jonswap.getPhase()[i]);
+    //val = sin(2.0 * PI * millis()/1000.0);
   }
   waveSig.push("incoming", val);
-  if (waveMaker.mode == 3) fftList.add(val);      //adds to the tail if in the right mode
-  if (fftList.size() > queueSize)
-  {
-    fftList.remove();          //removes from the head
+  if (waveMaker.mode == 3) {
+    fftList.add(val);      //adds to the tail if in the right mode
+    sampleCount++;
+    if (fftList.size() > queueSize)
+    {
+      fftList.remove();          //removes from the head
+    }
+    if (sampleCount < 11) {    //skips first 10
+    } else if (sampleCount < 111) {    //writes initial
+      baseSet[sampleCount-11] = val;
+    } else if (val - baseSet[matchCount] < 0.01) {
+      matchCount++;
+      if (matchCount > 50) {
+        println("match: "+ matchCount + " sample# "+sampleCount);
+      }
+    } else if (matchCount > 0) {
+      println("match failed " + sampleCount+"  "+matchCount);
+      matchCount = 0;
+    }
   }
   //println(fftList.size());
+  */
   ///////////////////*/
 
   readMegaSerial();

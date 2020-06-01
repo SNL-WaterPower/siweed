@@ -2,7 +2,7 @@ Serial port1;    //arduino mega
 Serial port2;    //arduino Due
 void initializeSerial() {
   ///////////initialize Serial
-  port1 = new Serial(this, "COM4", 1500000); // all communication with Megas
+  port1 = new Serial(this, "COM4", 500000); // all communication with Megas
   port2 = new Serial(this, "COM5", 500000); // all communication with Due
   delay(2000);
 }
@@ -46,17 +46,21 @@ void sendFloat(float f, Serial port)
    a indicates incoming amp vector
    p indicates incoming phase vector
    f indicates incoming frequency vector
+   
+   EDIT: numbers are now in this format:  p1234>  has a scalar of 100, so no decimal, and no start char
    */
-  f= Math.round(f*100.0)/100.0;    //limits to two decimal places
-  String posStr = "<";    //starts the string
-  posStr = posStr.concat(Float.toString(f));
+  //f= Math.round(f*100.0)/100.0;    //limits to two decimal places
+  int i = (int)(f*100);    //convert to int(so decimal place does not need to be sent)
+  String posStr = "";    //starts the string
+  if (f >= 0) {
+    posStr = posStr.concat("+");
+  } else {
+    posStr = posStr.concat("-");
+  }
+  posStr = posStr.concat(Integer.toString(abs(i)));
   posStr = posStr.concat(">");    //end of string "keychar"
-  readMegaSerial();    //called right before sending to clear the incoming buffer
+  //readMegaSerial();    //called right before sending to clear the incoming buffer
   port.write(posStr);
-
-  waitForSerial(port);
-  //println(port.readChar());    //clears confirmation '*'
-  //for testing:
   //println(posStr);
 }
 void readMegaSerial() {
@@ -80,14 +84,7 @@ void readMegaSerial() {
       break;
     case 'd':
       debugData = readFloat(port1);
-      //waveSig.push("incoming", debugData);
-      /*
-      if (waveMaker.mode == 3) fftQueue.add(debugData);      //adds to the tail if in the right mode
-      if (fftQueue.size() > queueSize)
-      {
-        fftQueue.remove();          //removes from the head
-      }*/
-      ///^was with queue, this is with linked list:
+      waveSig.push("incoming", debugData);
       //if (waveMaker.mode == 3) fftList.add(debugData);      //adds to the tail if in the right mode
       //if (fftList.size() > queueSize)
       //{
@@ -121,17 +118,13 @@ void readDueSerial() {
 }
 float readFloat(Serial port) {
   waitForSerial(port);
-  if (port.readChar() == '<') {
-    String str = "";    //port.readStringUntil('>');
-    do {
-      waitForSerial(port);
-      str += port.readChar();
-    } while (str.charAt(str.length()-1) != '>');
-    str = str.substring(0, str.length()-1);    //removes the '>'
-    return float(str);
-  } else {
-    return -1.0;
-  }
+  String str = "";    //port.readStringUntil('>');
+  do {
+    waitForSerial(port);
+    str += port.readChar();
+  } while (str.charAt(str.length()-1) != '>');
+  str = str.substring(0, str.length()-1);    //removes the '>'
+  return float(str)/100.0;
 }
 void waitForSerial(Serial port) {
   while (port.available() < 1) {    //wait for port to not be empty
