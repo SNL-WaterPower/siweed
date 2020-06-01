@@ -6,6 +6,28 @@ void initializeSerial() {
   port2 = new Serial(this, "COM5", 500000); // all communication with Due
   delay(2000);
 }
+void sendJonswap() {
+  port1.write('n');
+  sendFloat(jonswap.getNum(), port1);    //update n(redundant)
+  for (int i = 0; i < jonswap.getNum(); i++) {
+    port1.write('a');              //send amplitude vector
+    sendFloat(jonswap.getAmp()[i], port1);
+    port1.write(i);
+    delay(33);
+  }
+  for (int i = 0; i < jonswap.getNum(); i++) {
+    port1.write('p');              //send phase vector
+    sendFloat(jonswap.getPhase()[i], port1);
+    port1.write(i);
+    delay(33);
+  }
+  for (int i = 0; i < jonswap.getNum(); i++) {
+    port1.write('f');              //send frequency vector
+    sendFloat(jonswap.getF()[i], port1);
+    port1.write(i);
+    delay(33);
+  }
+}
 void sendFloat(float f, Serial port)
 {
   /* 
@@ -49,7 +71,6 @@ void sendFloat(float f, Serial port)
    
    EDIT: numbers are now in this format:  p1234>  has a scalar of 100, so no decimal, and no start char
    */
-  //f= Math.round(f*100.0)/100.0;    //limits to two decimal places
   int i = (int)(f*100);    //convert to int(so decimal place does not need to be sent)
   String posStr = "";    //starts the string
   if (f >= 0) {
@@ -59,7 +80,6 @@ void sendFloat(float f, Serial port)
   }
   posStr = posStr.concat(Integer.toString(abs(i)));
   posStr = posStr.concat(">");    //end of string "keychar"
-  //readMegaSerial();    //called right before sending to clear the incoming buffer
   port.write(posStr);
   //println(posStr);
 }

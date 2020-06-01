@@ -81,8 +81,10 @@ void draw() {
     waveMaker.freq = freq.getValue();
     port1.write('a');
     sendFloat(waveMaker.amp, port1);
+    port1.write(0);
     port1.write('f');
     sendFloat(waveMaker.freq, port1);
+    port1.write(0);
     //Sea State:
   } else if (waveMaker.mode == 3 && !mousePressed && (waveMaker.sigH != sigH.getValue() || waveMaker.peakF != peakF.getValue() || waveMaker.gamma != gamma.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
     waveMaker.sigH = sigH.getValue();
@@ -92,20 +94,7 @@ void draw() {
     jonswap.update(waveMaker.sigH, waveMaker.peakF, waveMaker.gamma);
     //then send to arduino
     //!!!!put this in a thread to not slow down processing(maybe)
-    port1.write('n');
-    sendFloat(jonswap.getNum(), port1);    //update n
-    port1.write('a');              //send amplitude vector
-    for (float f : jonswap.getAmp()) {
-      //sendFloat(f, port1);
-    }
-    port1.write('p');              //send phase vector
-    for (float f : jonswap.getPhase()) {
-      //sendFloat(f, port1);
-    }
-    port1.write('f');              //send frequency vector
-    for (float f : jonswap.getF()) {
-      //sendFloat(f, port1);
-    }
+    thread("sendJonswap");
   }
   /////FFT section(move to fft tab eventually):
   if (millis() > previousMillis+fftInterval) { //fftList.size() == queueSize && 
@@ -122,35 +111,35 @@ void draw() {
     line((width*3/6)+.5*i, height/2, (width*3/6)+.5*i, height/2 - 20*fftArr[i]);
   }
   /////////testing section////
-/*
+  /*
   float val = 0;
-  for (int i = 0; i < jonswap.getNum(); i++) {
-    val += jonswap.getAmp()[i] * sin(2.0 * PI * (millis()/1000.0 - 2.0) * jonswap.getF()[i] + jonswap.getPhase()[i]);
-    //val = sin(2.0 * PI * millis()/1000.0);
-  }
-  waveSig.push("incoming", val);
-  if (waveMaker.mode == 3) {
-    fftList.add(val);      //adds to the tail if in the right mode
-    sampleCount++;
-    if (fftList.size() > queueSize)
-    {
-      fftList.remove();          //removes from the head
-    }
-    if (sampleCount < 11) {    //skips first 10
-    } else if (sampleCount < 111) {    //writes initial
-      baseSet[sampleCount-11] = val;
-    } else if (val - baseSet[matchCount] < 0.01) {
-      matchCount++;
-      if (matchCount > 50) {
-        println("match: "+ matchCount + " sample# "+sampleCount);
-      }
-    } else if (matchCount > 0) {
-      println("match failed " + sampleCount+"  "+matchCount);
-      matchCount = 0;
-    }
-  }
-  //println(fftList.size());
-  */
+   for (int i = 0; i < jonswap.getNum(); i++) {
+   val += jonswap.getAmp()[i] * sin(2.0 * PI * (millis()/1000.0 - 2.0) * jonswap.getF()[i] + jonswap.getPhase()[i]);
+   //val = sin(2.0 * PI * millis()/1000.0);
+   }
+   waveSig.push("incoming", val);
+   if (waveMaker.mode == 3) {
+   fftList.add(val);      //adds to the tail if in the right mode
+   sampleCount++;
+   if (fftList.size() > queueSize)
+   {
+   fftList.remove();          //removes from the head
+   }
+   if (sampleCount < 11) {    //skips first 10
+   } else if (sampleCount < 111) {    //writes initial
+   baseSet[sampleCount-11] = val;
+   } else if (val - baseSet[matchCount] < 0.01) {
+   matchCount++;
+   if (matchCount > 50) {
+   println("match: "+ matchCount + " sample# "+sampleCount);
+   }
+   } else if (matchCount > 0) {
+   println("match failed " + sampleCount+"  "+matchCount);
+   matchCount = 0;
+   }
+   }
+   //println(fftList.size());
+   */
   ///////////////////*/
 
   readMegaSerial();

@@ -122,7 +122,7 @@ void setup()
   */
 }
 
-void loop()   //60 microseconds
+void loop()   //__ microseconds
 {
   encPos = waveEnc.read() * (1 / encStepsPerTurn) * leadPitch; //steps*(turns/step)*(mm/turn)
   t = micros() / 1.0e6;
@@ -205,9 +205,8 @@ ISR(TIMER5_COMPA_vect)    //takes ___ milliseconds
 */
 void readSerial()
 {
-  if (Serial.available() >= 6)    //if a whole float is through: n+100>
+  if (Serial.available() >= 6)    //if a whole float is through: n+100>   !!!this may break with larger numbers
   {
-    //delay(1000);
     //Serial.print('b');
     //Serial.println(Serial.available());
     speedScalar = 0;    //if anything happens, reset the speed scalar(and ramp up speed)
@@ -216,6 +215,8 @@ void readSerial()
     //Serial.println(c);
     switch (c)
     {
+      float f;
+      int index;
       case '!':
         mode = (int)readFloat();
         break;
@@ -223,29 +224,27 @@ void readSerial()
         n = (int)readFloat();
         if (n > maxComponents)
         {
-          n = maxComponents;     //to prevents reading invalid index
+          n = maxComponents;     //to prevent reading invalid index
         }
         break;
       case 'j':
         desiredPos = readFloat();
         break;
       case 'a':
-        for (int i = 0; i < n; i++)
-        {
-          amps[i] = readFloat();
-        }
+        f = readFloat();
+        index = Serial.read();
+        amps[index] = f;
+        //Serial.println(index);
         break;
       case 'p':
-        for (int i = 0; i < n; i++)
-        {
-          phases[i] = readFloat();
-        }
+        f = readFloat();
+        index = Serial.read();
+        phases[index] = f;
         break;
       case 'f':
-        for (int i = 0; i < n; i++)
-        {
-          freqs[i] = readFloat();
-        }
+        f = readFloat();
+        index = Serial.read();
+        freqs[index] = f;
         break;
     }
   }
@@ -261,24 +260,16 @@ float readFloat()
     charArr[i] = c;
   }
   charArr[i] = '\0';
-  float f = atof(charArr)/100.0;
+  float f = atof(charArr) / 100.0;
   return f;
 }
-
-/*float readFloat()
-  {
-  while (Serial.available() < 1) {}
-  String str = Serial.readStringUntil('>');
-  float f = str.toFloat()/100.0;
-  return f;
-  }*/
 volatile void sendFloat(volatile float f)
 {
   volatile int i = (int)(f * 100.0);
-  if(i >= 0)
+  if (i >= 0)
   {
     Serial.print('+');
-  } 
+  }
   else
   {
     Serial.print('-');

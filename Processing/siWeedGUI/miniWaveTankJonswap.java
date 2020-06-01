@@ -4,7 +4,7 @@ public class miniWaveTankJonswap {
   final static double period = 1024.0/32.0;
   final static double df = 1/period;
   final static double f_low = df*Math.floor(1/df);    //round to the nearest multiple of df
-  final static double f_high = df*Math.floor(1.1/df);
+  final static double f_high = df*Math.floor(1.2/df);
 
   static int num_fs;    
   static double[] f;
