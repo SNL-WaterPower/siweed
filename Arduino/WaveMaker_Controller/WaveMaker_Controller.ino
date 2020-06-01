@@ -184,17 +184,20 @@ ISR(TIMER5_COMPA_vect)    //takes ___ milliseconds
     p: position
     d: other data for debugging
   */
-  pushBuffer(probe1Buffer, mapFloat(analogRead(probe1Pin), 0.0, 560.0, 0.0, 27.0));     //maps to cm and adds to data buffer
-  pushBuffer(probe2Buffer, mapFloat(analogRead(probe2Pin), 0.0, 560.0, 0.0, 27.0));
-  Serial.write('1');    //to indicate wave probe data
-  sendFloat(averageArray(probe1Buffer));
-  Serial.write('2');    //to indicate wave probe data
-  sendFloat(averageArray(probe2Buffer));
-  Serial.write('p');    //to indicate position
-  sendFloat(encPos);
-  Serial.write('d');    //to indicate alternate data
-  sendFloat(futurePos);
-  Serial.println();
+  /*
+    pushBuffer(probe1Buffer, mapFloat(analogRead(probe1Pin), 0.0, 560.0, 0.0, 27.0));     //maps to cm and adds to data buffer
+    pushBuffer(probe2Buffer, mapFloat(analogRead(probe2Pin), 0.0, 560.0, 0.0, 27.0));
+    Serial.write('1');    //to indicate wave probe data
+    sendFloat(averageArray(probe1Buffer));
+    Serial.write('2');    //to indicate wave probe data
+    sendFloat(averageArray(probe2Buffer));
+    Serial.write('p');    //to indicate position
+    sendFloat(encPos);
+    Serial.write('d');    //to indicate alternate data
+    sendFloat(futurePos);
+    Serial.println();
+  */
+  Serial.println(mode);
 }
 /* '!' indicates mode switch, next int is mode
    j indicates jog position
@@ -203,65 +206,85 @@ ISR(TIMER5_COMPA_vect)    //takes ___ milliseconds
    p indicates incoming phase vector
    f indicates incoming frequency vector
 */
+//Serial variables:
+int serialIndex = 0;
+char charArr[10];    //+123\0
+char active = '.';    //'.' marks as inactive
+bool newData = false;
+float serialData;
 void readSerial()
 {
-  if (Serial.available() >= 6)    //if a whole float is through: n+100>   !!!this may break with larger numbers
+  if (Serial.available() > 0)
   {
-    //Serial.print('b');
-    //Serial.println(Serial.available());
+    //    Serial.print('b');
+    //    Serial.println(Serial.available());
     speedScalar = 0;    //if anything happens, reset the speed scalar(and ramp up speed)
     char c = Serial.read();
-    //Serial.print('x');
-    //Serial.println(c);
-    switch (c)
+    //    Serial.print('c');
+    //    Serial.println(c);
+    switch (active)
     {
-      float f;
-      int index;
+        float f;
+        int index;
       case '!':
-        mode = (int)readFloat();
+        readFloat();
+        if (newData)
+        {
+          mode = (int)serialData;
+          newData = false;
+          active = '.';
+        }
         break;
       case 'n':
-        n = (int)readFloat();
+        //n = (int)readFloat();
         if (n > maxComponents)
         {
           n = maxComponents;     //to prevent reading invalid index
         }
         break;
       case 'j':
-        desiredPos = readFloat();
+        //desiredPos = readFloat();
         break;
       case 'a':
-        f = readFloat();
-        index = Serial.read();
+        //f = readFloat();
+        index = (int)Serial.read() - 50;
         amps[index] = f;
         //Serial.println(index);
         break;
       case 'p':
-        f = readFloat();
-        index = Serial.read();
+        //f = readFloat();
+        index = (int)Serial.read() - 50;
         phases[index] = f;
         break;
       case 'f':
-        f = readFloat();
-        index = Serial.read();
+        //f = readFloat();
+        index = (int)Serial.read() - 50;
         freqs[index] = f;
+        break;
+      default:
+        active = c;
         break;
     }
   }
 }
-float readFloat()
+void readFloat()
 {
-  char charArr[5];    //+123\0
-  char c;
-  int i;
-  for (i = 0; Serial.available() > 0 && c != '>'; i++)
+  if (Serial.available() > 0)
   {
-    c = Serial.read();
-    charArr[i] = c;
+    char c = Serial.read();
+    if (c != '>')
+    {
+      charArr[serialIndex] = c;
+      serialIndex++;
+    }
+    else
+    {
+      charArr[serialIndex] = '\0';
+      serialIndex = 0;
+      newData = true;
+      serialData = atof(charArr) / 100.0;
+    }
   }
-  charArr[i] = '\0';
-  float f = atof(charArr) / 100.0;
-  return f;
 }
 volatile void sendFloat(volatile float f)
 {

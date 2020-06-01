@@ -12,19 +12,19 @@ void sendJonswap() {
   for (int i = 0; i < jonswap.getNum(); i++) {
     port1.write('a');              //send amplitude vector
     sendFloat(jonswap.getAmp()[i], port1);
-    port1.write(i);
+    port1.write(i+50);
     delay(33);
   }
   for (int i = 0; i < jonswap.getNum(); i++) {
     port1.write('p');              //send phase vector
     sendFloat(jonswap.getPhase()[i], port1);
-    port1.write(i);
+    port1.write(i+50);
     delay(33);
   }
   for (int i = 0; i < jonswap.getNum(); i++) {
     port1.write('f');              //send frequency vector
     sendFloat(jonswap.getF()[i], port1);
-    port1.write(i);
+    port1.write(i+50);
     delay(33);
   }
 }
@@ -104,7 +104,7 @@ void readMegaSerial() {
       break;
     case 'd':
       debugData = readFloat(port1);
-      waveSig.push("incoming", debugData);
+      //waveSig.push("incoming", debugData);
       //if (waveMaker.mode == 3) fftList.add(debugData);      //adds to the tail if in the right mode
       //if (fftList.size() > queueSize)
       //{
