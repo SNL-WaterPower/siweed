@@ -102,24 +102,21 @@ void draw() {
   /////FFT section(move to fft tab eventually):
   if (millis() > previousMillis+fftInterval) {
     previousMillis = millis();
-    //println("graphing FFT");
-    //float[] signalr = new float[queueSize];   //signal real
-    //float[] signali = new float[queueSize];    //signal imaginary
     Complex[] fftIn = new Complex[queueSize];
     for (int i = 0; i < queueSize; i++) {    //fill with zeros
       fftIn[i] = new Complex(0,0);
     }
     for (int i = 0; i < fftList.size(); i++) {
-      //signalr[i] = (float)fftList.get(i);
       fftIn[i] = new Complex((float)fftList.get(i), 0);
     }
+    //fftIn[0] = new Complex(1,0);
+    //fftIn[1] = new Complex(0,0);
+    //fftIn[2] = new Complex(-1,0);
+    //fftIn[3] = new Complex(0,0);
     Complex[] fftOut = myNewFFT.fft(fftIn);
-    String[] s = new String[3];
-    s[0] = "4";
-    //myNewFFT.main(s);
-    //fftArr = myFFT.fft(signalr, signali, true);
-    for (int i = 0; i < queueSize; i++) {    //fftList.size()
+    for (int i = 0; i < queueSize; i++) {
       fftArr[i] = (float)Math.sqrt( fftOut[i].re()*fftOut[i].re() + fftOut[i].im()*fftOut[i].im() );      //magnitude
+      //println(fftOut[i].re()+" + "+fftOut[i].im()+"i");
     }
   }
   for (int i=0; i<queueSize*2; i++) {

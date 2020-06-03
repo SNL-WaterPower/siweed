@@ -120,6 +120,7 @@ void setup()
     phases[3] = 3.4;
     freqs[3] = .1;
   */
+  //noInterrupts();
 }
 
 void loop()   //__ microseconds
@@ -127,15 +128,6 @@ void loop()   //__ microseconds
   encPos = waveEnc.read() * (1 / encStepsPerTurn) * leadPitch; //steps*(turns/step)*(mm/turn)
   t = micros() / 1.0e6;
   readSerial();
-  /////for testing:
-  /*
-    while(Serial.available())
-    {
-    char c = Serial.read();
-    Serial.print(c);
-    delay(10);
-    }
-  */
   updateSpeedScalar();
 }
 
@@ -184,7 +176,7 @@ ISR(TIMER5_COMPA_vect)    //takes ___ milliseconds
     p: position
     d: other data for debugging
   */
-  /*
+  
     pushBuffer(probe1Buffer, mapFloat(analogRead(probe1Pin), 0.0, 560.0, 0.0, 27.0));     //maps to cm and adds to data buffer
     pushBuffer(probe2Buffer, mapFloat(analogRead(probe2Pin), 0.0, 560.0, 0.0, 27.0));
     Serial.write('1');    //to indicate wave probe data
@@ -196,8 +188,7 @@ ISR(TIMER5_COMPA_vect)    //takes ___ milliseconds
     Serial.write('d');    //to indicate alternate data
     sendFloat(futurePos);
     Serial.println();
-  */
-  Serial.println(mode);
+  //Serial.println(mode);
 }
 /* '!' indicates mode switch, next int is mode
    j indicates jog position
@@ -220,14 +211,12 @@ void readSerial()
     //    Serial.println(Serial.available());
     speedScalar = 0;    //if anything happens, reset the speed scalar(and ramp up speed)
     char c = Serial.read();
-    //    Serial.print('c');
-    //    Serial.println(c);
     switch (active)
     {
         float f;
         int index;
       case '!':
-        readFloat();
+        readFloat(c);
         if (newData)
         {
           mode = (int)serialData;
@@ -236,55 +225,101 @@ void readSerial()
         }
         break;
       case 'n':
-        //n = (int)readFloat();
-        if (n > maxComponents)
+        readFloat(c);
+        if (newData)
         {
-          n = maxComponents;     //to prevent reading invalid index
+          n = (int)serialData;
+          newData = false;
+          active = '.';
+          if (n > maxComponents)
+          {
+            n = maxComponents;     //to prevent reading invalid index
+          }
         }
         break;
       case 'j':
-        //desiredPos = readFloat();
+        readFloat(c);
+        if (newData)
+        {
+          desiredPos = serialData;
+          newData = false;
+          active = '.';
+        }
         break;
       case 'a':
-        //f = readFloat();
-        index = (int)Serial.read() - 50;
-        amps[index] = f;
-        //Serial.println(index);
+        readFloat(c);
+        if (newData)
+        {
+          index = (int)Serial.read() - 50;
+          amps[index] = serialData;
+          newData = false;
+          active = '.';
+        }
         break;
       case 'p':
-        //f = readFloat();
-        index = (int)Serial.read() - 50;
-        phases[index] = f;
+        readFloat(c);
+        if (newData)
+        {
+          index = (int)Serial.read() - 50;
+          phases[index] = serialData;
+          newData = false;
+          active = '.';
+        }
         break;
       case 'f':
-        //f = readFloat();
-        index = (int)Serial.read() - 50;
-        freqs[index] = f;
+        readFloat(c);
+        if (newData)
+        {
+          index = (int)Serial.read() - 50;
+          freqs[index] = serialData;
+          newData = false;
+          active = '.';
+        }
         break;
+      case 'x':
+        for(int i = 0; i < n; i++)
+        {
+          Serial.println(amps[i]);
+        }
+        for(int i = 0; i < n; i++)
+        {
+          Serial.println(phases[i]);
+        }
+        for(int i = 0; i < n; i++)
+        {
+          Serial.println(freqs[i]);
+        }
+        active = '.';
       default:
         active = c;
         break;
     }
+//    Serial.print("m: ");
+//    Serial.print(mode);
+//    Serial.print(" n: ");
+//    Serial.print(n);
+//    Serial.print(" ");
+//    Serial.println(amps[0]);
   }
 }
-void readFloat()
+void readFloat(char c)
 {
-  if (Serial.available() > 0)
+  //if (Serial.available() > 0)
+  //{
+  //char c = Serial.read();
+  if (c != '>')
   {
-    char c = Serial.read();
-    if (c != '>')
-    {
-      charArr[serialIndex] = c;
-      serialIndex++;
-    }
-    else
-    {
-      charArr[serialIndex] = '\0';
-      serialIndex = 0;
-      newData = true;
-      serialData = atof(charArr) / 100.0;
-    }
+    charArr[serialIndex] = c;
+    serialIndex++;
   }
+  else
+  {
+    charArr[serialIndex] = '\0';
+    serialIndex = 0;
+    newData = true;
+    serialData = atof(charArr) / 100.0;
+  }
+  //}
 }
 volatile void sendFloat(volatile float f)
 {
