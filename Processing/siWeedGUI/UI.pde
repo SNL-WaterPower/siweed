@@ -138,9 +138,6 @@ void fun() {
   //set mode on arduino:
   port1.write('!');
   sendFloat(1, port1);
-  //tell arduino to only look at one component
-  port1.write('n');
-  sendFloat(1, port1);
 }
 
 void sea() {
@@ -154,10 +151,7 @@ void sea() {
   gamma.show();
   //set mode on arduino:
   port1.write('!');
-  sendFloat(1, port1);
-  //tell arduino to look at all components
-  port1.write('n');
-  sendFloat(jonswap.getNum(), port1);
+  sendFloat(2, port1);
 }
 
 void off() {

@@ -1,10 +1,10 @@
 import java.util.Random;
 import java.lang.Math;
 public class miniWaveTankJonswap {
-  final static double period = 1024.0/32.0;
+  final static double period = 512.0/32.0;
   final static double df = 1/period;
-  final static double f_low = df*Math.floor(1/df);    //round to the nearest multiple of df
-  final static double f_high = df*Math.floor(3/df);
+  final static double f_low = df*Math.floor(0.5/df);    //round to the nearest multiple of df
+  final static double f_high = df*Math.floor(2.5/df);
 
   static int num_fs;    
   static double[] f;
@@ -23,7 +23,7 @@ public class miniWaveTankJonswap {
     Random rnd = new Random(123);      //uses a defined seed, so the sequence is the same between runs
     for (int i = 0; i < num_fs; i++) {    //f increments by df
       f[i] = f_low + i*df;
-      phase[i] = rnd.nextDouble()*2*Math.PI;;
+      phase[i] = rnd.nextDouble()*2*Math.PI;
     }
     /*/////for testing:
     for (int i = 0; i < num_fs; i++) {

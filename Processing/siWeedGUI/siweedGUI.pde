@@ -5,29 +5,24 @@ import java.lang.Math.*;
 import java.util.LinkedList;
 import java.util.Queue;
 
-int queueSize = 1024;    //power of 2 closest to 30 seconds at 30 samples/second
-Table table;  //table for data logging
-String startTime;
+int queueSize = 1024;    //power of 2 closest to 30 seconds at 32 samples/second    !!Needs to match arduino
 miniWaveTankJonswap jonswap;
 LinkedList fftList;
 FFTbase myFFT;
 fftNew myNewFFT;         //!!!rename class eventually
 float[] fftArr;
-//Complex[] fftComplexArr;
 
 int previousMillis = 0;    //used to update fft 
 int fftInterval = 100;    //in milliseconds
 
 ///test vars:
-int sampleCount = 0;    //total number of samples gathered
-int matchCount = 0;      //number of samples that have matched base set
-float[] baseSet;
+/*
+float TSVal;
+*/
 void setup() {
-  //tests:///
-  baseSet = new float[100];
   ////////
   fullScreen(P2D);
-  frameRate(32);    //sets draw() to run 30 times a second.
+  frameRate(32);    //sets draw() to run x times a second.
   ///////initialize objects
   jonswap = new miniWaveTankJonswap();
   waveMaker = new UIData();
@@ -48,13 +43,31 @@ void setup() {
   sendFloat(0, port1);    //jog mode
   port1.write('j');
   sendFloat(0, port1);    //at position 0
-  port1.write('n');
-  sendFloat(1, port1);    //initialize n at 1
 
   port2.write('!');
   sendFloat(-1, port2);    //off
   port2.write('n');
   sendFloat(1, port2);    //initialize n at 1
+  
+  //testing
+  jonswap.update(5.0,3.0,7.0);
+  println(jonswap.getNum());
+  for(int i = 0; i<jonswap.getNum(); i++){
+    print(jonswap.getAmp()[i]);
+    print("  ");
+  }
+  println();println();
+  for(int i = 0; i<jonswap.getNum(); i++){
+    print(jonswap.getF()[i]);
+    print("  ");
+  }
+  println();println();
+  for(int i = 0; i<jonswap.getNum(); i++){
+    print(jonswap.getPhase()[i]);
+    print("  ");
+  }
+  println();
+  
 }
 
 void draw() {
@@ -85,19 +98,23 @@ void draw() {
     waveMaker.freq = freq.getValue();
     port1.write('a');
     sendFloat(waveMaker.amp, port1);
-    port1.write(50);
     port1.write('f');
     sendFloat(waveMaker.freq, port1);
-    port1.write(50);
     //Sea State:
   } else if (waveMaker.mode == 3 && !mousePressed && (waveMaker.sigH != sigH.getValue() || waveMaker.peakF != peakF.getValue() || waveMaker.gamma != gamma.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
     waveMaker.sigH = sigH.getValue();
     waveMaker.peakF = peakF.getValue();
     waveMaker.gamma = gamma.getValue();
+    port1.write('s');
+    sendFloat(waveMaker.sigH, port1);
+    port1.write('p');
+    sendFloat(waveMaker.peakF, port1);
+    port1.write('g');
+    sendFloat(waveMaker.gamma, port1);    //gamma always needs to be the last sent
     //update the jonswap values with new inputs
-    jonswap.update(waveMaker.sigH, waveMaker.peakF, waveMaker.gamma);
+    //jonswap.update(waveMaker.sigH, waveMaker.peakF, waveMaker.gamma);
     //then send to arduino
-    thread("sendJonswap");    //put this in a thread to not slow down processing(maybe)
+    //thread("sendJonswap");    //put this in a thread to not slow down processing(maybe)
   }
   /////FFT section(move to fft tab eventually):
   if (millis() > previousMillis+fftInterval) {
@@ -120,66 +137,34 @@ void draw() {
     }
   }
   for (int i=0; i<queueSize*2; i++) {
-    line((width*3/6)+.5*i, height/2, (width*3/6)+.5*i, height/2 - 0.2*fftArr[i]);
+    line((width*2/6)+1.5*i, height*4/6, (width*2/6)+1.5*i, height*4/6 - 0.6*fftArr[i]);
   }
+  
   /////////testing section////
-
-  float val = 0;
+  /*
+  //amp graph:
+  for (int i=0; i<jonswap.getNum(); i++) {
+    line((width*2/6)+5*i, height*5/6, (width*2/6)+5*i, height*5/6 - 100*jonswap.getAmp()[i]);
+  }
+  ///
+  TSVal = 0;
   for (int i = 0; i < jonswap.getNum(); i++) {
-    val += jonswap.getAmp()[i] * sin(2.0 * PI * (millis()/1000.0 - 2.0) * jonswap.getF()[i] + jonswap.getPhase()[i]);
+    TSVal += jonswap.getAmp()[i] * sin(2.0 * PI * (millis()/1000.0 - 2.0) * jonswap.getF()[i] + jonswap.getPhase()[i]);
     //val = sin(2.0 * PI * millis()/1000.0);
   }
-  waveSig.push("incoming", val);
+  waveSig.push("incoming", TSVal);
   if (waveMaker.mode == 3) {
-    fftList.add(val);      //adds to the tail if in the right mode
-    sampleCount++;
+    fftList.add(TSVal);      //adds to the tail if in the right mode
     if (fftList.size() > queueSize)
     {
       fftList.remove();          //removes from the head
     }
-    /*
-    if (sampleCount < 11) {    //skips first 10
-    } else if (sampleCount < 111) {    //writes initial
-      baseSet[sampleCount-11] = val;
-    } else if (val - baseSet[matchCount] < 0.01) {
-      matchCount++;
-      if (matchCount > 50) {
-        println("match: "+ matchCount + " sample# "+sampleCount);
-      }
-    } else if (matchCount > 0) {
-      println("match failed " + sampleCount+"  "+matchCount);
-      matchCount = 0;
-    }
-    */
   }
-  //println(fftList.size());
 
   ///////////////////*/
 
-  readMegaSerial();
-  //thread("readMegaSerial");    //will run this funciton in parallel thread
+  //readMegaSerial();
+  thread("readMegaSerial");    //will run this funciton in parallel thread
   thread("readDueSerial");
   thread("logData");
 }
-
-
-/////Old but maybe useful:
-/*
-void serialEvent(Serial thisPort){
- if (thisPort == port1){
- readMegaSerial();
- }else if(thisPort == port2){
- readDueSerial();
- }
- }
- //Would work if you could guarantee that the last available character was '>'. Current version is the same but with a wait
- float altreadFloat(Serial port) {    //better, since a buffer is used, but then not all data is drawn. Either data needs to be stored or old method returned to
- if (port.readChar() == '<') {
- String str = port1.readStringUntil('>');
- str = str.substring(0, str.length()-1);    //removes the >
- return float(str);
- } else {
- return -1.0;
- }
- }
- */

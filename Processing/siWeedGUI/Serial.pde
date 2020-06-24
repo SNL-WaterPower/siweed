@@ -32,33 +32,14 @@ void sendFloat(float f, Serial port)
 {
   /* 
    For mega:
-   '!' indicates mode switch
+   /* '!' indicates mode switch, next int is mode
    j indicates jog position
-   
-   n indicates length of vectors/number of functions in sea state(starting at 1)
-   a indicates incoming amp vector
-   p indicates incoming phase vector
-   f indicates incoming frequency vector
-   
-   ex:  !<1>n<2>a<1.35><2.36>p<1.35><2.36>f<1.35><2.36>    
-   
-   with this function sending data will look something like this:
-   if(values have changed)    //or run certain lines on a button press
-   port1.write('!');    set mode(only needs to be done when switching)
-   sendFloat(1);
-   
-   port1.write('n');    set number of components(only needs to be done once)
-   sendFloat(30);        
-   
-   port1.write('a');
-   sendFloat(2.3);
-   sendFloat(1.2);
-   .
-   .
-   .
-   .
-   //needs to send n number of floats
-   
+   a indicates incoming amplitude
+   f indicates incoming frequency
+   s :sigH
+   p :peakF
+   g :gamma
+
    For Due:
    '!' indicates mode switch, next int is mode
    t indicates torque command
@@ -104,12 +85,13 @@ void readMegaSerial() {
       break;
     case 'd':
       debugData = readFloat(port1);
-      //waveSig.push("incoming", debugData);
-      //if (waveMaker.mode == 3) fftList.add(debugData);      //adds to the tail if in the right mode
-      //if (fftList.size() > queueSize)
-      //{
-      //  fftList.remove();          //removes from the head
-      //}
+      
+      waveSig.push("incoming", debugData);
+      if (waveMaker.mode == 3) fftList.add(debugData);      //adds to the tail if in the right mode
+      if (fftList.size() > queueSize)
+      {
+        fftList.remove();          //removes from the head
+      }
       break;
     }
   }

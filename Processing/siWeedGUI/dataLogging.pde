@@ -1,3 +1,7 @@
+Table table;  //table for data logging
+//Table FFTTable;
+//Table TSTable;
+String startTime;
 //Variables to be logged:
 public class UIData {        //an object for the WEC and Wavemaker portions of the UI to use
   public int mode;
@@ -35,6 +39,16 @@ void initializeDataLogging() {
   table.addColumn("wecPos");
   table.addColumn("wecTau");
   table.addColumn("wecPower");
+/*
+  //isolated .csv's
+  FFTTable = new Table();
+  for (int i = 0; i < queueSize *2; i++) {
+    FFTTable.addColumn("FFT "+Integer.toString(i));
+  }
+  TSTable = new Table();
+  TSTable.addColumn("time");
+  TSTable.addColumn("height");
+  */
 }
 //Funciton to test CSV functionality
 void logData() {     //will be called at the framerate
@@ -64,4 +78,20 @@ void logData() {     //will be called at the framerate
   newRow.setFloat("wecTau", tau);
   newRow.setFloat("wecPower", pow);
   saveTable(table, "data/"+startTime+".csv");
+
+  //isolated .csvs for testing:
+  /*
+  if (millis() > 40000 && millis() < 41000)    //save conditions(so not all data is captured)
+  {
+    TableRow FFTRow = FFTTable.addRow();
+    for (int i = 0; i < queueSize *2; i++) {
+      FFTRow.setFloat("FFT "+Integer.toString(i), fftArr[i]);
+    }
+    saveTable(FFTTable, "data/vars/FFT"+startTime+".csv");
+  }
+  TableRow TSRow = TSTable.addRow();
+  TSRow.setFloat("time", (millis()/1000.0 - 2.0));
+  TSRow.setFloat("height", TSVal);
+  saveTable(TSTable, "data/vars/TS"+startTime+".csv");
+  */
 } 
