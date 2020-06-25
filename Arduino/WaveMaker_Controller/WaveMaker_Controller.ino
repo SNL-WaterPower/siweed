@@ -76,6 +76,7 @@ void setup()
     freqs[i] = 0;
     phases[i] = 0;
   }
+  initInterupts();
 }
 
 void loop() {   //__ microseconds 
