@@ -1,17 +1,20 @@
+#include <miniWaveTankJonswap.h>
 #include <Encoder.h>
 #include<math.h>
 
-
+miniWaveTankJonswap jonswap(512.0 / 32.0, 0.5, 2.5); //period, low frequency, high frequency. frequencies will be rounded to multiples of df(=1/period)
+//^ISSUE. Acuracy seems to fall off after ~50 components when using higher frequencies(1,3 at 64 elements seems wrong).
 Encoder waveEnc(2, 3);   //pins 2 and 3(interupts)//for 800 ppr/3200 counts per revolution set dip switches(0100) //2048ppr/8192 counts per revolution max(0000)
 const int stepPin = 4, dirPin = 5, limitPin = A0, probe1Pin = A1, probe2Pin = A2;
 volatile double t = 0;    //time in seconds
 volatile float speedScalar = 0;
-volatile int mode = 0;     //-1 is stop, 0 is jog, 1 is seastate
-volatile int n = 1;            //number of functions for the sea state
-const int maxComponents = 60;   //max needed number of frequency components
+volatile int mode = 0;     //-1 is stop, 0 is jog, 1 is sine, 2 is sea state
+volatile int n = 1;            //number of functions for the time series(either 1 or jonswap.getNum())
+const int maxComponents = 100;   //max needed number of frequency components
 volatile float amps[maxComponents];
 volatile float phases[maxComponents];
 volatile float freqs[maxComponents];
+volatile float sigH, peakF, gamma;
 volatile float encPos = 0;
 volatile float desiredPos;   //used for jog mode
 const int buffSize = 10;    //number of data points buffered in the moving average filter
@@ -31,29 +34,30 @@ const float encStepsPerTurn = 3200.0;
 volatile float inputFnc(volatile float tm)   //inputs time in seconds //outputs position in mm
 {
   volatile float val = 0;
-  if (mode == 0)
+  if (mode == 0)    //jog
   {
     val = desiredPos;
   }
-  else if (mode == 1)
+  else if (mode > 0)    //1 or 2
   {
     for (volatile int i = 0; i < n; i++)
     {
       val += amps[i] * sin(2 * pi * tm * freqs[i] + phases[i]);
+      //Serial.println(amps[i]);// + " " + freqs[i]+" "+phases[i]);
+      //Serial.println(freqs[i]);
+      //Serial.println(phases[i]);
     }
   }
   return val;
 }
-//////////////////////////////////////////////////
-
-
+///////////////////////////////////////////////////////////////////////////////////////////////
 const float interval = .01;   //time between each interupt call in seconds //max value: 1.04
-const float serialInterval = .0333;//.0333;   //time between each interupt call in seconds //max value: 1.04    .0333 is ~30 times a second to match processing's speed(30hz)
+const float serialInterval = .03125;   //time between each interupt call in seconds //max value: 1.04    .03125 is 32 times a second to match processing's speed(32hz)
 const float maxRate = 500.0;   //max mm/seconds
 
 void setup()
 {
-  Serial.begin(19200);
+  Serial.begin(500000);
   pinMode(stepPin, OUTPUT);
   pinMode(dirPin, OUTPUT);
   pinMode(13, OUTPUT);
@@ -71,10 +75,17 @@ void setup()
     probe1Buffer[i] = 0;
     probe2Buffer[i] = 0;
   }
-
+  //fill amps freqs and phases with 0's:
+  for (int i = 0; i < maxComponents; i++)
+  {
+    amps[i] = 0;
+    freqs[i] = 0;
+    phases[i] = 0;
+  }
 
   //interupt setup:
   cli();//stop interrupts
+  
   TCCR4A = 0;// set entire TCCR4A register to 0
   TCCR4B = 0;// same for TCCR4B
   TCNT4  = 0;//initialize counter value to 0
@@ -82,7 +93,7 @@ void setup()
   TCCR4B |= (1 << WGM12);   // turn on CTC mode aka reset on positive compare(I think)
   TCCR4B |= (1 << CS42);// Set CS42 bit for 256 prescaler
   TIMSK4 |= (1 << OCIE4A);  // enable timer compare interrupt
-  
+
   //////timer 5 for serial sending
   TCCR5A = 0;// set entire TCCR5A register to 0
   TCCR5B = 0;// same for TCCR5B
@@ -113,9 +124,10 @@ void setup()
     phases[3] = 3.4;
     freqs[3] = .1;
   */
+  //noInterrupts();
 }
 
-void loop()   //60 microseconds
+void loop()   //__ microseconds
 {
   encPos = waveEnc.read() * (1 / encStepsPerTurn) * leadPitch; //steps*(turns/step)*(mm/turn)
   t = micros() / 1.0e6;
@@ -168,7 +180,7 @@ ISR(TIMER5_COMPA_vect)    //takes ___ milliseconds
     p: position
     d: other data for debugging
   */
-  //Serial.println(mapFloat(analogRead(probe1Pin), 0.0, 560.0, 0.0, 27.0));
+
   pushBuffer(probe1Buffer, mapFloat(analogRead(probe1Pin), 0.0, 560.0, 0.0, 27.0));     //maps to cm and adds to data buffer
   pushBuffer(probe2Buffer, mapFloat(analogRead(probe2Pin), 0.0, 560.0, 0.0, 27.0));
   Serial.write('1');    //to indicate wave probe data
@@ -179,98 +191,103 @@ ISR(TIMER5_COMPA_vect)    //takes ___ milliseconds
   sendFloat(encPos);
   Serial.write('d');    //to indicate alternate data
   sendFloat(futurePos);
+  Serial.println();
+  //Serial.println(mode);
 }
 /* '!' indicates mode switch, next int is mode
    j indicates jog position
-   n indicates length of vectors/number of functions in sea state(starting at 1)
-   a indicates incoming amp vector
-   p indicates incoming phase vector
-   f indicates incoming frequency vector
+   a indicates incoming amplitude
+   f indicates incoming frequency
+   s :sigH
+   p :peakF
+   g :gamma
 */
-void readSerial()
-{
-  if (Serial.available() > 0)
+void readSerial() {
+  if (Serial.available() >= 6)    //if a whole float is through: n+100>
   {
+    //delay(1000);
+    //Serial.print('b');
+    //Serial.println(Serial.available());
     speedScalar = 0;    //if anything happens, reset the speed scalar(and ramp up speed)
     char c = Serial.read();
+    //Serial.print('x');
+    //Serial.println(c);
     switch (c)
     {
       case '!':
         mode = (int)readFloat();
-        break;
-      case 'n':
-        n = (int)readFloat();
-        if (n > maxComponents)
-        {
-          n = maxComponents;     //to prevents reading invalid index
+        if (mode == 1) {
+          n = 1;    //sine wave
         }
         break;
       case 'j':
         desiredPos = readFloat();
         break;
       case 'a':
-        for (int i = 0; i < n; i++)
-        {
-          amps[i] = readFloat();
-        }
-        break;
-      case 'p':
-        for (int i = 0; i < n; i++)
-        {
-          phases[i] = readFloat();
-        }
+        amps[0] = readFloat();
         break;
       case 'f':
-        for (int i = 0; i < n; i++)
-        {
-          freqs[i] = readFloat();
+        freqs[0] = readFloat();
+        break;
+      case 's':
+        sigH = readFloat();
+        break;
+      case 'p':
+        peakF = readFloat();
+        break;
+      case 'g':     //should always be recieved after s and p
+        gamma = readFloat();
+        /*
+        //noInterrupts();
+        Serial.println("start");
+        //jonswap.update(sigH, peakF, gamma);
+        jonswap.update(5.0, 3.0, 7.0);
+        Serial.println("finished");
+        n = jonswap.getNum();
+        Serial.println(n);
+        for (int i = 0; i < n; i++) {
+          amps[i] = jonswap.getAmp()[i];
+          freqs[i] = jonswap.getF()[i];
+          phases[i] = jonswap.getPhase()[i];
+          Serial.println("copy");
         }
+        for (int i = 0; i < n; i++) {
+          Serial.println(jonswap.getAmp()[i]);
+        }
+        //interrupts();
+        */
         break;
     }
   }
-  /*
-    Serial.print("mode: ");
-    Serial.print(mode);
-    Serial.print(" ");
-    Serial.print("pos ");
-    Serial.print(desiredPos);
-    Serial.print(" ");
-    Serial.print("amp0 ");
-    Serial.print(amps[0]);
-    Serial.print(" ");
-    Serial.print("amp1 ");
-    Serial.print(amps[1]);
-    Serial.print(" ");
-    Serial.print("amp2 ");
-    Serial.print(amps[2]);
-    Serial.print(" ");
-    Serial.print("amp3 ");
-    Serial.print(amps[3]);
-    Serial.print(" ");
-    Serial.print("amp4 ");
-    Serial.println(amps[4]);
-  */
 }
 float readFloat()
 {
-  while (Serial.available() < 1) {}
-  if (Serial.read() == '<')
+  char charArr[5];    //+123\0
+  char c;
+  int i;
+  for (i = 0; Serial.available() > 0 && c != '>'; i++)
   {
-    String str = Serial.readStringUntil('>');
-    return str.toFloat();
+    c = Serial.read();
+    charArr[i] = c;
+  }
+  charArr[i] = '\0';
+  float f = atof(charArr) / 100.0;
+  return f;
+}
+
+volatile void sendFloat(volatile float f)
+{
+  volatile int i = (int)(f * 100.0);
+  if (i >= 0)
+  {
+    Serial.print('+');
   }
   else
   {
-    return 0.0;
+    Serial.print('-');
   }
-}
-volatile void sendFloat(volatile float f)
-{
-  f = round(f * 100.0) / 100.0; //limits to two decimal places
-  String dataStr = "<";    //starts the string
-  dataStr += String(f);
-  dataStr += ">";    //end of string
-  Serial.print(dataStr);
+  Serial.print(abs(i));
+  Serial.print('>');
 }
 void updateSpeedScalar()    //used to prevent jumps/smooth start
 {

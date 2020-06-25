@@ -19,14 +19,14 @@ const float interval = .01;    //interval of updateTau interupt in seconds
 const float serialInterval = .0333; //interval of serial interupt
 
 volatile int n = 1;            //number of components
-const int maxComponents = 60;   //max needed number of frequency components
+const int maxComponents = 100;   //max needed number of frequency components
 volatile float amps[maxComponents];
 volatile float phases[maxComponents];
 volatile float freqs[maxComponents];
 
 void setup()
 {
-  Serial.begin(19200);
+  Serial.begin(500000);
   analogWriteResolution(12);    //analog write now runs from 0 to 4095
   pinMode(enablePin, OUTPUT);
   digitalWrite(enablePin, LOW);
@@ -203,7 +203,7 @@ float readFloat()
   }
   else
   {
-    return 0.0;
+    return -1.0;
   }
 }
 volatile void sendFloat(volatile float f)
