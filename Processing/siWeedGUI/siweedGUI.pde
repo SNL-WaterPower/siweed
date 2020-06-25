@@ -50,6 +50,7 @@ void setup() {
   sendFloat(1, port2);    //initialize n at 1
   
   //testing
+  /*
   jonswap.update(5.0,3.0,7.0);
   println(jonswap.getNum());
   for(int i = 0; i<jonswap.getNum(); i++){
@@ -67,7 +68,7 @@ void setup() {
     print("  ");
   }
   println();
-  
+  */
 }
 
 void draw() {
@@ -116,7 +117,7 @@ void draw() {
     //then send to arduino
     //thread("sendJonswap");    //put this in a thread to not slow down processing(maybe)
   }
-  /////FFT section(move to fft tab eventually):
+  /////FFT section(move to fft tab eventually):  //!!needs to be activated and deactivated(maybe)
   if (millis() > previousMillis+fftInterval) {
     previousMillis = millis();
     Complex[] fftIn = new Complex[queueSize];

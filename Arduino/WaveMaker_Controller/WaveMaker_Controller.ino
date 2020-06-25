@@ -51,8 +51,8 @@ volatile float inputFnc(volatile float tm)   //inputs time in seconds //outputs 
   return val;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
-const float interval = 1.0;//.01;   //time between each interupt call in seconds //max value: 1.04
-const float serialInterval = 1.0;//.03125;   //time between each interupt call in seconds //max value: 1.04    .03125 is 32 times a second to match processing's speed(32hz)
+const float interval = .01;   //time between each interupt call in seconds //max value: 1.04
+const float serialInterval = .03125;   //time between each interupt call in seconds //max value: 1.04    .03125 is 32 times a second to match processing's speed(32hz)
 const float maxRate = 500.0;   //max mm/seconds
 
 void setup()
@@ -237,6 +237,7 @@ void readSerial() {
         break;
       case 'g':     //should always be recieved after s and p
         gamma = readFloat();
+        /*
         //noInterrupts();
         Serial.println("start");
         //jonswap.update(sigH, peakF, gamma);
@@ -254,6 +255,7 @@ void readSerial() {
           Serial.println(jonswap.getAmp()[i]);
         }
         //interrupts();
+        */
         break;
     }
   }
