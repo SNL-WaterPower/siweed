@@ -31,14 +31,11 @@ const float encStepsPerTurn = 3200.0;
 
 volatile float inputFnc(volatile float tm) {  //inputs time in seconds //outputs position in mm
   volatile float val = 0;
-  if (mode == 0)    //jog
-  {
+  if (mode == 0) {    //jog
     val = desiredPos;
   }
-  else if (mode > 0)    //1 or 2
-  {
-    for (volatile int i = 0; i < n; i++)
-    {
+  else if (mode > 0) {   //1 or 2
+    for (volatile int i = 0; i < n; i++) {
       val += amps[i] * sin(2 * pi * tm * freqs[i] + phases[i]);
       //Serial.println(amps[i]);// + " " + freqs[i]+" "+phases[i]);
       //Serial.println(freqs[i]);
@@ -49,8 +46,7 @@ volatile float inputFnc(volatile float tm) {  //inputs time in seconds //outputs
 }
 const float maxRate = 500.0;   //max mm/seconds
 
-void setup()
-{
+void setup() {
   initSerial();
   pinMode(stepPin, OUTPUT);
   pinMode(dirPin, OUTPUT);
@@ -64,14 +60,12 @@ void setup()
   waveEnc.write(0);     //zero encoder
 
   //fill probe buffers with 0's:
-  for (int i = 0; i < buffSize; i++)
-  {
+  for (int i = 0; i < buffSize; i++){
     probe1Buffer[i] = 0;
     probe2Buffer[i] = 0;
   }
   //fill amps freqs and phases with 0's:
-  for (int i = 0; i < maxComponents; i++)
-  {
+  for (int i = 0; i < maxComponents; i++){
     amps[i] = 0;
     freqs[i] = 0;
     phases[i] = 0;
