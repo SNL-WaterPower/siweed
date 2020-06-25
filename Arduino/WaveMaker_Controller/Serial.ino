@@ -43,25 +43,23 @@ void readSerial() {
         break;
       case 'g':     //should always be recieved after s and p
         gamma = readFloat();
-        /*
-          //noInterrupts();
-          Serial.println("start");
-          //jonswap.update(sigH, peakF, gamma);
-          jonswap.update(5.0, 3.0, 7.0);
-          Serial.println("finished");
-          n = jonswap.getNum();
-          Serial.println(n);
-          for (int i = 0; i < n; i++) {
+        //noInterrupts();
+        Serial.println("start");
+        //jonswap.update(sigH, peakF, gamma);
+        jonswap.update(5.0, 3.0, 7.0);
+        Serial.println("finished");
+        n = jonswap.getNum();
+        Serial.println(n);
+        for (int i = 0; i < n; i++) {
           amps[i] = jonswap.getAmp()[i];
           freqs[i] = jonswap.getF()[i];
           phases[i] = jonswap.getPhase()[i];
           Serial.println("copy");
-          }
-          for (int i = 0; i < n; i++) {
+        }
+        for (int i = 0; i < n; i++) {
           Serial.println(jonswap.getAmp()[i]);
-          }
-          //interrupts();
-        */
+        }
+        //interrupts();
         break;
     }
   }
