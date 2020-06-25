@@ -48,7 +48,6 @@ void setup() {
   sendFloat(-1, port2);    //off
   port2.write('n');
   sendFloat(1, port2);    //initialize n at 1
-  
   //testing
   /*
   jonswap.update(5.0,3.0,7.0);
@@ -80,14 +79,13 @@ void draw() {
   textLeading(15);
   textAlign(CENTER, TOP);
   text("CAPTURING the POWER of WAVES", width/6, 20);
-  //Sandia Labs logo
+
   tint(255, 126);  // Apply transparency without changing color
   image(snlLogo, 5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25);
   //dividing line
   stroke(green);
   strokeWeight(1.5);
   line(width/3, 75, width/3, height-75);
-
   //Jog:
   if (waveMaker.mode == 1 && position.getValue() != waveMaker.mag) {  //only sends if value has changed  
     waveMaker.mag = position.getValue();
