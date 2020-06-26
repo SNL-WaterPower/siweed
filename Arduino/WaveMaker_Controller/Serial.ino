@@ -49,12 +49,13 @@ void readSerial() {
         Serial.println("finished");
         n = jonswap.getNum();
         Serial.println(n);
+        /*
         for (int i = 0; i < n; i++) {
           amps[i] = jonswap.getAmp()[i];
           freqs[i] = jonswap.getF()[i];
           phases[i] = jonswap.getPhase()[i];
           Serial.println("copy");
-        }
+        }*/
         for (int i = 0; i < n; i++) {
           Serial.println(jonswap.getAmp()[i]);
         }

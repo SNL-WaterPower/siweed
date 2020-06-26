@@ -44,26 +44,28 @@ for (int i = 0; i < num_fs; i++)		//testing for loop
     //Serial.println(f[i]);
   }
 Serial.println(f.size());
-  Jonswap *S = new Jonswap(f, Tp, Hm0, gamma);
+  //Jonswap *S = new Jonswap(f, Tp, Hm0, gamma);
+  Jonswap J;
+  J.update(f, Tp, Hm0, gamma);
   for (int i = 0; i < f.size(); i++)
   { //reassign amplitude.
     //System.out.println(""+S.S[i]+"  "+S.f[i]+"  "+f[i]);    //this proves that f and S.f are the same
-    amp[i] = sqrt(2 * S->S[i] * 2 * M_PI * df) * 100; //meters to cm
-    Serial.print(S->S[i]);
+    amp[i] = sqrt(2 * J.S[i] * 2 * M_PI * df) * 100; //meters to cm
+    Serial.print(J.S[i]);
     Serial.print(" ");    
     Serial.print(df);
     Serial.print(" ");
     Serial.println(amp[i]);
   }
-
-  delete S;
+  Serial.println("d");
+  //delete S;
   Serial.println("updated");
 }
 
-miniWaveTankJonswap::Jonswap::Jonswap(std::vector<double> _f, double Tp, double Hm0, double gamma)
+void miniWaveTankJonswap::Jonswap::update(std::vector<double>& _f, double Tp, double Hm0, double gamma)
 {
   Serial.println('j');
-Serial.println(f.size());
+Serial.println(_f.size());
   double g = 9.81;
   double siga = 0.07;
   double sigb = 0.09;

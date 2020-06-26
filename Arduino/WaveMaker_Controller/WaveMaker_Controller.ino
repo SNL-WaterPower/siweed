@@ -4,7 +4,7 @@
 
 miniWaveTankJonswap jonswap(512.0 / 32.0, 0.5, 2.5); //period, low frequency, high frequency. frequencies will be rounded to multiples of df(=1/period)
 //^ISSUE. Acuracy seems to fall off after ~50 components when using higher frequencies(1,3 at 64 elements seems wrong).
-//Encoder waveEnc(2, 3);   //pins 2 and 3(interupts)//for 800 ppr/3200 counts per revolution set dip switches(0100) //2048ppr/8192 counts per revolution max(0000)
+Encoder waveEnc(2, 3);   //pins 2 and 3(interupts)//for 800 ppr/3200 counts per revolution set dip switches(0100) //2048ppr/8192 counts per revolution max(0000)
 const int stepPin = 4, dirPin = 5, limitPin = A0, probe1Pin = A1, probe2Pin = A2;
 volatile double t = 0;    //time in seconds
 volatile float speedScalar = 0;
@@ -56,7 +56,7 @@ void setup() {
   tone(stepPin, 100);   //start moving
   while (analogRead(limitPin) > 500) {}   //do nothing until the beam is broken
   noTone(stepPin);   //stop moving
-  //waveEnc.write(0);     //zero encoder
+  waveEnc.write(0);     //zero encoder
 
   //fill probe buffers with 0's:
   for (int i = 0; i < buffSize; i++){
@@ -69,14 +69,14 @@ void setup() {
     freqs[i] = 0;
     phases[i] = 0;
   }
-  //initInterupts();
+  initInterupts();
 }
 
 void loop() {   //__ microseconds 
   encPos = 0;//waveEnc.read() * (1 / encStepsPerTurn) * leadPitch; //steps*(turns/step)*(mm/turn)
   t = micros() / 1.0e6;
   readSerial();
-  //updateSpeedScalar();
+  updateSpeedScalar();
 }
 void updateSpeedScalar() {    //used to prevent jumps/smooth start
   //Serial.println(speedScalar);
