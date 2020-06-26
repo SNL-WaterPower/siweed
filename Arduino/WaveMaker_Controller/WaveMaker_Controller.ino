@@ -15,6 +15,7 @@ volatile float amps[maxComponents];
 volatile float phases[maxComponents];
 volatile float freqs[maxComponents];
 volatile float sigH, peakF, gamma;
+bool newJonswapData = false;
 volatile float encPos = 0;
 volatile float desiredPos;   //used for jog mode
 const int buffSize = 10;    //number of data points buffered in the moving average filter
@@ -34,6 +35,16 @@ volatile float inputFnc(volatile float tm) {  //inputs time in seconds //outputs
     val = desiredPos;
   }
   else if (mode > 0) {   //1 or 2
+    if (newJonswapData) {
+      newJonswapData = false;
+      jonswap.update(sigH, peakF, gamma);
+      n = jonswap.getNum();
+      for (int i = 0; i < n; i++) {
+        amps[i] = jonswap.getAmp()[i];
+        freqs[i] = jonswap.getF()[i];
+        phases[i] = jonswap.getPhase()[i];
+      }
+    }
     for (volatile int i = 0; i < n; i++) {
       val += amps[i] * sin(2 * M_PI * tm * freqs[i] + phases[i]);
       //Serial.println(amps[i]);// + " " + freqs[i]+" "+phases[i]);
@@ -59,12 +70,12 @@ void setup() {
   waveEnc.write(0);     //zero encoder
 
   //fill probe buffers with 0's:
-  for (int i = 0; i < buffSize; i++){
+  for (int i = 0; i < buffSize; i++) {
     probe1Buffer[i] = 0;
     probe2Buffer[i] = 0;
   }
   //fill amps freqs and phases with 0's:
-  for (int i = 0; i < maxComponents; i++){
+  for (int i = 0; i < maxComponents; i++) {
     amps[i] = 0;
     freqs[i] = 0;
     phases[i] = 0;
@@ -72,7 +83,7 @@ void setup() {
   initInterupts();
 }
 
-void loop() {   //__ microseconds 
+void loop() {   //__ microseconds
   encPos = 0;//waveEnc.read() * (1 / encStepsPerTurn) * leadPitch; //steps*(turns/step)*(mm/turn)
   t = micros() / 1.0e6;
   readSerial();
@@ -82,7 +93,7 @@ void updateSpeedScalar() {    //used to prevent jumps/smooth start
   //Serial.println(speedScalar);
   if (speedScalar < 1) {
     speedScalar += .005;
-  }else{
+  } else {
     speedScalar = 1.0;
   }
 }

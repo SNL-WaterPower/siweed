@@ -10,10 +10,10 @@ int miniWaveTankJonswap::num_fs = 0;
 std::vector<double> miniWaveTankJonswap::f;
 std::vector<double> miniWaveTankJonswap::amp;
 std::vector<double> miniWaveTankJonswap::phase;
+std::vector<double> miniWaveTankJonswap::S;
 
 miniWaveTankJonswap::miniWaveTankJonswap(double _period, double _low, double _high)
 { //constructor
-  Serial.println('i');
   df = 1 / _period;
   f_low = df * floor(_low / df); //round to the nearest multiple of df
   f_high = df * floor(_high / df);
@@ -31,37 +31,58 @@ miniWaveTankJonswap::miniWaveTankJonswap(double _period, double _low, double _hi
     f[i] = f_low + i * df;
     phase[i] = rand() % 1000 / 1000.0 * 2 * M_PI;
   }
-  Serial.println('o');
 }
 void miniWaveTankJonswap::update(double sigH, double peakF, double gamma)
 { //updates amp with new values. Called on button press
-  Serial.println("updating");
   double Hm0 = sigH / 100; //cm to meters
   double Tp = 1 / peakF;
   //gamma is the same;
-for (int i = 0; i < num_fs; i++)		//testing for loop
+  ///////////////////////////////////////////////start jonswap
+  double g = 9.81;
+  double siga = 0.07;
+  double sigb = 0.09;
+  double fp = 1 / Tp;
+  std::vector<double> S_temp(f.size());
+  std::vector<double> Gf(f.size());
+  std::vector<double> Sf(f.size());
+  double alpha_JS = 0;
+  double trapz = 0;
+  int i;
+
+  for (i = 0; i < f.size(); i++)
   {
-    //Serial.println(f[i]);
+    if (f[i] <= fp)
+    {
+      Gf[i] = pow(gamma, exp(-pow((f[i] - fp), 2) / (2 * (siga, 2) * pow(fp, 2))));
+    }
+    else
+    {
+      Gf[i] = pow(gamma, exp(-pow((f[i] - fp), 2) / (2 * pow(sigb, 2) * pow(fp, 2))));
+    }
+    S_temp[i] = pow(g, 2) * pow((2 * M_PI), -4) * pow(f[i], -5) * exp(-(5 / 4) * pow(f[i] / fp, -4));
   }
-Serial.println(f.size());
-  //Jonswap *S = new Jonswap(f, Tp, Hm0, gamma);
-  Jonswap J;
-  J.update(f, Tp, Hm0, gamma);
+
+  //trapezoidal rule
+
+  for (i = 0; i < f.size() - 1; i++)
+  {
+    trapz += (S_temp[i] * Gf[i] + S_temp[i + 1] * Gf[i + 1]) * (f[i + 1] - f[i]) / 2;
+  }
+  alpha_JS = (Hm0 * Hm0) / 16 / trapz;
+  for (i = 0; i < f.size(); i++)
+  {
+    Sf[i] = alpha_JS * S_temp[i] * Gf[i];
+  }
+  S = Sf;
+  
+  /////////////////////////////////////////////end jonswap
   for (int i = 0; i < f.size(); i++)
   { //reassign amplitude.
     //System.out.println(""+S.S[i]+"  "+S.f[i]+"  "+f[i]);    //this proves that f and S.f are the same
-    amp[i] = sqrt(2 * J.S[i] * 2 * M_PI * df) * 100; //meters to cm
-    Serial.print(J.S[i]);
-    Serial.print(" ");    
-    Serial.print(df);
-    Serial.print(" ");
-    Serial.println(amp[i]);
+    amp[i] = sqrt(2 * S[i] * 2 * M_PI * df) * 100; //meters to cm
   }
-  Serial.println("d");
-  //delete S;
-  Serial.println("updated");
 }
-
+/*
 void miniWaveTankJonswap::Jonswap::update(std::vector<double>& _f, double Tp, double Hm0, double gamma)
 {
   Serial.println('j');
@@ -107,7 +128,7 @@ Serial.println(_f.size());
   this->f = _f;
   Serial.println('J');
 }
-
+*/
 int miniWaveTankJonswap::getNum()
 {
   return num_fs;

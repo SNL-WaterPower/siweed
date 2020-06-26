@@ -1,5 +1,5 @@
-const float interval = 1.0;//.01;   //time between each interupt call in seconds //max value: 1.04
-const float serialInterval = 1.0;//.03125;   //time between each interupt call in seconds //max value: 1.04    .03125 is 32 times a second to match processing's speed(32hz)
+const float interval = .01;   //time between each interupt call in seconds //max value: 1.04
+const float serialInterval = .03125;   //time between each interupt call in seconds //max value: 1.04    .03125 is 32 times a second to match processing's speed(32hz)
 
 
 volatile float futurePos;
