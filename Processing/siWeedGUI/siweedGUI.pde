@@ -5,7 +5,7 @@ import java.lang.Math.*;
 import java.util.LinkedList;
 import java.util.Queue;
 
-int queueSize = 1024;    //power of 2 closest to 30 seconds at 32 samples/second    !!Needs to match arduino
+int queueSize = 512;    //power of 2 closest to 30(15) seconds at 32 samples/second    !!Needs to match arduino
 miniWaveTankJonswap jonswap;
 LinkedList fftList;
 FFTbase myFFT;
