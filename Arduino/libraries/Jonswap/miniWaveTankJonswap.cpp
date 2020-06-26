@@ -39,7 +39,11 @@ void miniWaveTankJonswap::update(double sigH, double peakF, double gamma)
   double Hm0 = sigH / 100; //cm to meters
   double Tp = 1 / peakF;
   //gamma is the same;
-
+for (int i = 0; i < num_fs; i++)		//testing for loop
+  {
+    //Serial.println(f[i]);
+  }
+Serial.println(f.size());
   Jonswap *S = new Jonswap(f, Tp, Hm0, gamma);
   for (int i = 0; i < f.size(); i++)
   { //reassign amplitude.
@@ -56,48 +60,49 @@ void miniWaveTankJonswap::update(double sigH, double peakF, double gamma)
   Serial.println("updated");
 }
 
-miniWaveTankJonswap::Jonswap::Jonswap(std::vector<double> &f, double Tp, double Hm0, double gamma)
+miniWaveTankJonswap::Jonswap::Jonswap(std::vector<double> _f, double Tp, double Hm0, double gamma)
 {
   Serial.println('j');
+Serial.println(f.size());
   double g = 9.81;
   double siga = 0.07;
   double sigb = 0.09;
   double fp = 1 / Tp;
-  std::vector<double> S_temp(f.size());
-  std::vector<double> Gf(f.size());
-  std::vector<double> Sf(f.size());
+  std::vector<double> S_temp(_f.size());
+  std::vector<double> Gf(_f.size());
+  std::vector<double> Sf(_f.size());
   double alpha_JS = 0;
   double trapz = 0;
   //;
   int i;
 
-  for (i = 0; i < f.size(); i++)
+  for (i = 0; i < _f.size(); i++)
   {
-    if (f[i] <= fp)
+    if (_f[i] <= fp)
     {
-      Gf[i] = pow(gamma, exp(-pow((f[i] - fp), 2) / (2 * (siga, 2) * pow(fp, 2))));
+      Gf[i] = pow(gamma, exp(-pow((_f[i] - fp), 2) / (2 * (siga, 2) * pow(fp, 2))));
     }
     else
     {
-      Gf[i] = pow(gamma, exp(-pow((f[i] - fp), 2) / (2 * pow(sigb, 2) * pow(fp, 2))));
+      Gf[i] = pow(gamma, exp(-pow((_f[i] - fp), 2) / (2 * pow(sigb, 2) * pow(fp, 2))));
     }
-    S_temp[i] = pow(g, 2) * pow((2 * M_PI), -4) * pow(f[i], -5) * exp(-(5 / 4) * pow(f[i] / fp, -4));
+    S_temp[i] = pow(g, 2) * pow((2 * M_PI), -4) * pow(_f[i], -5) * exp(-(5 / 4) * pow(_f[i] / fp, -4));
   }
 
   //trapezoidal rule
 
-  for (i = 0; i < f.size() - 1; i++)
+  for (i = 0; i < _f.size() - 1; i++)
   {
-    trapz += (S_temp[i] * Gf[i] + S_temp[i + 1] * Gf[i + 1]) * (f[i + 1] - f[i]) / 2;
+    trapz += (S_temp[i] * Gf[i] + S_temp[i + 1] * Gf[i + 1]) * (_f[i + 1] - _f[i]) / 2;
   }
   alpha_JS = (Hm0 * Hm0) / 16 / trapz;
-  for (i = 0; i < f.size(); i++)
+  for (i = 0; i < _f.size(); i++)
   {
-    Sf[i] = alpha_JS * S_temp[i] * Gf[i];
-    Serial.println(Sf[i]);	//??
+    Sf[i] = alpha_JS * S_temp[i] * Gf[i];	//nan ovf ovf
+    //Serial.println(Gf[i]);	//nan ovf ovf
   }
   this->S = Sf;
-  this->f = f;
+  this->f = _f;
   Serial.println('J');
 }
 

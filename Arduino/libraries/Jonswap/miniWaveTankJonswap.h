@@ -1,4 +1,6 @@
-#pragma once
+//#pragma once
+#ifndef miniWaveTankJonswap_h
+#define miniWaveTankJonswap_h
 
 #define _USE_MATH_DEFINES
 #include <StandardCplusplus.h>
@@ -31,7 +33,7 @@ public:
 	std::vector<double> f;
 	std::vector<double> S;
 
-	Jonswap(std::vector<double> &f, double Tp, double Hm0, double gamma);
+	Jonswap(std::vector<double> f, double Tp, double Hm0, double gamma);
   };
   public:
   virtual int getNum();
@@ -40,3 +42,4 @@ public:
   virtual std::vector<float> getF();
   virtual std::vector<float> copyArraydf(std::vector<double> &d);
 };
+#endif
