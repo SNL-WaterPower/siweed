@@ -6,10 +6,8 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 int queueSize = 512;    //power of 2 closest to 30(15) seconds at 32 samples/second    !!Needs to match arduino
-miniWaveTankJonswap jonswap;
 LinkedList fftList;
-FFTbase myFFT;
-fftNew myNewFFT;         //!!!rename class eventually
+fft myFFT;
 float[] fftArr;
 
 int previousMillis = 0;    //used to update fft 
@@ -24,12 +22,10 @@ void setup() {
   fullScreen(P2D);
   frameRate(32);    //sets draw() to run x times a second.
   ///////initialize objects
-  jonswap = new miniWaveTankJonswap();
   waveMaker = new UIData();
   wec = new UIData();
   fftList = new LinkedList();
-  myFFT = new FFTbase();
-  myNewFFT = new fftNew();
+  myFFT = new fft();
   fftArr = new float[queueSize*2];
   //fftComplexArr = new Complex[queueSize];
   waveMaker.mode = 1;    // 1 = jog, 2 = function, 3 = sea, 4 = off
@@ -129,7 +125,7 @@ void draw() {
     //fftIn[1] = new Complex(0,0);
     //fftIn[2] = new Complex(-1,0);
     //fftIn[3] = new Complex(0,0);
-    Complex[] fftOut = myNewFFT.fft(fftIn);
+    Complex[] fftOut = myFFT.fft(fftIn);
     for (int i = 0; i < queueSize; i++) {
       fftArr[i] = (float)Math.sqrt( fftOut[i].re()*fftOut[i].re() + fftOut[i].im()*fftOut[i].im() );      //magnitude
       //println(fftOut[i].re()+" + "+fftOut[i].im()+"i");

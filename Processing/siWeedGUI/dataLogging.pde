@@ -1,6 +1,6 @@
 Table table;  //table for data logging
 //Table FFTTable;
-//Table TSTable;
+Table TSTable;
 String startTime;
 //Variables to be logged:
 public class UIData {        //an object for the WEC and Wavemaker portions of the UI to use
@@ -45,10 +45,11 @@ void initializeDataLogging() {
   for (int i = 0; i < queueSize *2; i++) {
     FFTTable.addColumn("FFT "+Integer.toString(i));
   }
+  */
   TSTable = new Table();
   TSTable.addColumn("time");
   TSTable.addColumn("height");
-  */
+  
 }
 //Funciton to test CSV functionality
 void logData() {     //will be called at the framerate
@@ -89,9 +90,9 @@ void logData() {     //will be called at the framerate
     }
     saveTable(FFTTable, "data/vars/FFT"+startTime+".csv");
   }
+  */
   TableRow TSRow = TSTable.addRow();
   TSRow.setFloat("time", (millis()/1000.0 - 2.0));
-  TSRow.setFloat("height", TSVal);
+  TSRow.setFloat("height", debugData);
   saveTable(TSTable, "data/vars/TS"+startTime+".csv");
-  */
 } 

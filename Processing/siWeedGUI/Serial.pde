@@ -6,28 +6,6 @@ void initializeSerial() {
   port2 = new Serial(this, "COM5", 500000); // all communication with Due
   delay(2000);
 }
-void sendJonswap() {
-  port1.write('n');
-  sendFloat(jonswap.getNum(), port1);    //update n(redundant)
-  for (int i = 0; i < jonswap.getNum(); i++) {
-    port1.write('a');              //send amplitude vector
-    sendFloat(jonswap.getAmp()[i], port1);
-    port1.write(i+50);
-    delay(33);
-  }
-  for (int i = 0; i < jonswap.getNum(); i++) {
-    port1.write('p');              //send phase vector
-    sendFloat(jonswap.getPhase()[i], port1);
-    port1.write(i+50);
-    delay(33);
-  }
-  for (int i = 0; i < jonswap.getNum(); i++) {
-    port1.write('f');              //send frequency vector
-    sendFloat(jonswap.getF()[i], port1);
-    port1.write(i+50);
-    delay(33);
-  }
-}
 void sendFloat(float f, Serial port)
 {
   /* 
