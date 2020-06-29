@@ -16,7 +16,7 @@ int fftInterval = 100;    //in milliseconds
 ///test vars:
 /*
 float TSVal;
-*/
+ */
 void setup() {
   ////////
   fullScreen(P2D);
@@ -47,23 +47,23 @@ void setup() {
   //testing
   /*
   jonswap.update(5.0,3.0,7.0);
-  println(jonswap.getNum());
-  for(int i = 0; i<jonswap.getNum(); i++){
-    print(jonswap.getAmp()[i]);
-    print("  ");
-  }
-  println();println();
-  for(int i = 0; i<jonswap.getNum(); i++){
-    print(jonswap.getF()[i]);
-    print("  ");
-  }
-  println();println();
-  for(int i = 0; i<jonswap.getNum(); i++){
-    print(jonswap.getPhase()[i]);
-    print("  ");
-  }
-  println();
-  */
+   println(jonswap.getNum());
+   for(int i = 0; i<jonswap.getNum(); i++){
+   print(jonswap.getAmp()[i]);
+   print("  ");
+   }
+   println();println();
+   for(int i = 0; i<jonswap.getNum(); i++){
+   print(jonswap.getF()[i]);
+   print("  ");
+   }
+   println();println();
+   for(int i = 0; i<jonswap.getNum(); i++){
+   print(jonswap.getPhase()[i]);
+   print("  ");
+   }
+   println();
+   */
 }
 
 void draw() {
@@ -116,7 +116,7 @@ void draw() {
     previousMillis = millis();
     Complex[] fftIn = new Complex[queueSize];
     for (int i = 0; i < queueSize; i++) {    //fill with zeros
-      fftIn[i] = new Complex(0,0);
+      fftIn[i] = new Complex(0, 0);
     }
     for (int i = 0; i < fftList.size(); i++) {
       fftIn[i] = new Complex((float)fftList.get(i), 0);
@@ -130,33 +130,49 @@ void draw() {
       fftArr[i] = (float)Math.sqrt( fftOut[i].re()*fftOut[i].re() + fftOut[i].im()*fftOut[i].im() );      //magnitude
       //println(fftOut[i].re()+" + "+fftOut[i].im()+"i");
     }
+    //println("in: "+fftIn[16]);
+    //println("out: "+fftArr[16]);
   }
-  for (int i=0; i<queueSize*2; i++) {
-    line((width*2/6)+1.5*i, height*4/6, (width*2/6)+1.5*i, height*4/6 - 0.6*fftArr[i]);
+  int nyquist = (int)frameRate/2;    //sampling frequency/2 NOTE: framerate is not a constant variable
+  float initialX = 0;
+  float yScale = 0.3;
+  textSize(10);
+  for (int i=0; i<queueSize; i++) {      //cut in half
+    float x = (width*2.1/6)+1.5*i;    //x coordinate
+    float y = height*4/6;            //y coordinate
+    if (i == 0) {
+      initialX = x;
+    }
+    line(x, y, x, y - yScale*fftArr[i]);
+    if (i%32 == 0) {                                                                //should make 32 into a variable, but frameRate is not an int
+      text((int)(i*(1/((float)queueSize/32))), x, y);    //x-axis: frequency spacing is 1/T, where t is length of sample in seconds
+    }
+    if (i%50 == 0) {
+      text(i, initialX, y - yScale*i);    //y-axis
+    }
   }
-  
   /////////testing section////
   /*
   //amp graph:
-  for (int i=0; i<jonswap.getNum(); i++) {
-    line((width*2/6)+5*i, height*5/6, (width*2/6)+5*i, height*5/6 - 100*jonswap.getAmp()[i]);
-  }
-  ///
-  TSVal = 0;
-  for (int i = 0; i < jonswap.getNum(); i++) {
-    TSVal += jonswap.getAmp()[i] * sin(2.0 * PI * (millis()/1000.0 - 2.0) * jonswap.getF()[i] + jonswap.getPhase()[i]);
-    //val = sin(2.0 * PI * millis()/1000.0);
-  }
-  waveSig.push("incoming", TSVal);
-  if (waveMaker.mode == 3) {
-    fftList.add(TSVal);      //adds to the tail if in the right mode
-    if (fftList.size() > queueSize)
-    {
-      fftList.remove();          //removes from the head
-    }
-  }
-
-  ///////////////////*/
+   for (int i=0; i<jonswap.getNum(); i++) {
+   line((width*2/6)+5*i, height*5/6, (width*2/6)+5*i, height*5/6 - 100*jonswap.getAmp()[i]);
+   }
+   ///
+   TSVal = 0;
+   for (int i = 0; i < jonswap.getNum(); i++) {
+   TSVal += jonswap.getAmp()[i] * sin(2.0 * PI * (millis()/1000.0 - 2.0) * jonswap.getF()[i] + jonswap.getPhase()[i]);
+   //val = sin(2.0 * PI * millis()/1000.0);
+   }
+   waveSig.push("incoming", TSVal);
+   if (waveMaker.mode == 3) {
+   fftList.add(TSVal);      //adds to the tail if in the right mode
+   if (fftList.size() > queueSize)
+   {
+   fftList.remove();          //removes from the head
+   }
+   }
+   
+   ///////////////////*/
 
   //readMegaSerial();
   thread("readMegaSerial");    //will run this funciton in parallel thread
