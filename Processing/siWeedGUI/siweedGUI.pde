@@ -39,11 +39,12 @@ void setup() {
   sendFloat(0, port1);    //jog mode
   port1.write('j');
   sendFloat(0, port1);    //at position 0
-
+/*
   port2.write('!');
   sendFloat(-1, port2);    //off
   port2.write('n');
   sendFloat(1, port2);    //initialize n at 1
+  */
   //testing
   /*
   jonswap.update(5.0,3.0,7.0);
@@ -127,7 +128,7 @@ void draw() {
     //fftIn[3] = new Complex(0,0);
     Complex[] fftOut = myFFT.fft(fftIn);
     for (int i = 0; i < queueSize; i++) {
-      fftArr[i] = (float)Math.sqrt( fftOut[i].re()*fftOut[i].re() + fftOut[i].im()*fftOut[i].im() );      //magnitude
+      fftArr[i] = (float)Math.sqrt( fftOut[i].re()*fftOut[i].re() + fftOut[i].im()*fftOut[i].im() )/queueSize;      //magnitude
       //println(fftOut[i].re()+" + "+fftOut[i].im()+"i");
     }
     //println("in: "+fftIn[16]);
@@ -135,11 +136,11 @@ void draw() {
   }
   int nyquist = (int)frameRate/2;    //sampling frequency/2 NOTE: framerate is not a constant variable
   float initialX = 0;
-  float yScale = 0.3;
+  float yScale = 50;
   textSize(10);
-  for (int i=0; i<queueSize; i++) {      //cut in half
-    float x = (width*2.1/6)+1.5*i;    //x coordinate
-    float y = height*4/6;            //y coordinate
+  for (int i=0; i<=queueSize/2; i++) {      //cut in half
+    float x = (width*4.5/6)+1.5*i;    //x coordinate
+    float y = height*1.5/6;            //y coordinate
     if (i == 0) {
       initialX = x;
     }
@@ -147,7 +148,7 @@ void draw() {
     if (i%32 == 0) {                                                                //should make 32 into a variable, but frameRate is not an int
       text((int)(i*(1/((float)queueSize/32))), x, y);    //x-axis: frequency spacing is 1/T, where t is length of sample in seconds
     }
-    if (i%50 == 0) {
+    if (i%1 == 0 && i<=5) {
       text(i, initialX, y - yScale*i);    //y-axis
     }
   }

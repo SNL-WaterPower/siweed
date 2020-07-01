@@ -3,7 +3,7 @@ Serial port2;    //arduino Due
 void initializeSerial() {
   ///////////initialize Serial
   port1 = new Serial(this, "COM4", 500000); // all communication with Megas
-  port2 = new Serial(this, "COM5", 500000); // all communication with Due
+  //port2 = new Serial(this, "COM5", 500000); // all communication with Due
   delay(2000);
 }
 void sendFloat(float f, Serial port)
