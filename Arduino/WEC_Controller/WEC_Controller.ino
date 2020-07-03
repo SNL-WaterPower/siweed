@@ -1,7 +1,7 @@
 #include <Encoder.h>
 #include<DueTimer.h>
 #include<math.h>
-volatile int mode = -1;    //-1 stop, 0 torque control, 1 feedback control, 2 function mode
+volatile int mode = -1;    //-1 stop, 0 torque control, 1 feedback control, 2 function mode // should function mode be sea state? 
 volatile double t = 0;    //time in seconds
 volatile float tau = 0, kp = 0, kd = 0, power = 0, vel = 0;
 volatile float tauCommand = 0;   //tau after any modifications

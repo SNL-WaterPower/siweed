@@ -21,7 +21,7 @@ float TSVal;
 */
 void setup() {
   ////////
-  fullScreen(P2D);
+ // fullScreen(P2D);
   frameRate(32);    //sets draw() to run x times a second.
   ///////initialize objects
   jonswap = new miniWaveTankJonswap();
@@ -70,6 +70,10 @@ void setup() {
   */
 }
 
+public void settings() {
+  fullScreen(2);
+}
+
 void draw() {
   // Background color
   background(dblue);
@@ -78,7 +82,19 @@ void draw() {
   fill(green);
   textLeading(15);
   textAlign(CENTER, TOP);
-  text("CAPTURING the POWER of WAVES", width/6, 20);
+  text("CAPTURING the POWER of WAVES", width/2, 20);
+  
+  textFont(fb, 20);
+  fill(green);
+  textLeading(15);
+  textAlign(CENTER, TOP);
+  text("Change Wave Dimensions", 150, 100);
+  
+  textFont(fb, 20);
+  fill(green);
+  textLeading(15);
+  textAlign(CENTER, TOP);
+  text("Change WEC Controls", 150, 400);
 
   tint(255, 126);  // Apply transparency without changing color
   image(snlLogo, 5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25);
@@ -115,6 +131,7 @@ void draw() {
     //then send to arduino
     //thread("sendJonswap");    //put this in a thread to not slow down processing(maybe)
   }
+  
   /////FFT section(move to fft tab eventually):  //!!needs to be activated and deactivated(maybe)
   if (millis() > previousMillis+fftInterval) {
     previousMillis = millis();

@@ -63,8 +63,9 @@ void logData() {     //will be called at the framerate
   newRow.setFloat("UIWaveMakergamma", waveMaker.gamma);
   newRow.setFloat("UIWecMode", wec.mode);
   newRow.setFloat("UIWecTorque", wec.mag);
-  newRow.setFloat("UIWeckP", torque.getValue());
-  newRow.setFloat("UIWeckD", other.getValue()); 
+ // newRow.setFloat("UIWeckP", positionTorque.getValue()); //may want to change these names
+ // newRow.setFloat("UIWeckS", spring.getValue()); //may want to change these names
+ // newRow.setFloat("UIWeckD", damper.getValue()); //may want to change these names
   newRow.setFloat("UIWecHeight", wec.amp);
   newRow.setFloat("UIWecFrequency", wec.freq);
   newRow.setFloat("UIWecSigH", wec.sigH);
