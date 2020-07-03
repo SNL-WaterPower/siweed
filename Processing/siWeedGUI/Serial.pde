@@ -2,8 +2,14 @@ Serial port1;    //arduino mega
 Serial port2;    //arduino Due
 void initializeSerial() {
   ///////////initialize Serial
-  port1 = new Serial(this, "COM4", 500000); // all communication with Megas
+ 
+  //port1 = new Serial(this, "COM4", 500000); // all communication with Megas
   //port2 = new Serial(this, "COM5", 500000); // all communication with Due
+  
+  //mac serial com
+  printArray(Serial.list()); 
+  port1 = new Serial(this, Serial.list()[2], 500000); // all communication with Megas
+  port2 = new Serial(this, Serial.list()[1], 500000);; // all communication with Due
   delay(2000);
 }
 void sendFloat(float f, Serial port)
