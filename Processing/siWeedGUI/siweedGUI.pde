@@ -19,7 +19,6 @@ float TSVal;
  */
 void setup() {
   ////////
-  fullScreen(P2D,2); // changes for two screen display
   frameRate(32);    //sets draw() to run x times a second.
   ///////initialize objects
   waveMaker = new UIData();
