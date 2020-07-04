@@ -29,7 +29,7 @@
  *
  ******************************************************************************/
 
-public class fftNew {
+public class fft {
 
     // compute the FFT of x[], assuming its length n is a power of 2
     public static Complex[] fft(Complex[] x) {

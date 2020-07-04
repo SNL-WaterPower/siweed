@@ -5,11 +5,9 @@ import java.lang.Math.*;
 import java.util.LinkedList;
 import java.util.Queue;
 
-int queueSize = 1024;    //power of 2 closest to 30 seconds at 32 samples/second    !!Needs to match arduino
-miniWaveTankJonswap jonswap;
+int queueSize = 512;    //power of 2 closest to 30(15) seconds at 32 samples/second    !!Needs to match arduino
 LinkedList fftList;
-FFTbase myFFT;
-fftNew myNewFFT;         //!!!rename class eventually
+fft myFFT;
 float[] fftArr;
 
 int previousMillis = 0;    //used to update fft 
@@ -18,18 +16,16 @@ int fftInterval = 100;    //in milliseconds
 ///test vars:
 /*
 float TSVal;
-*/
+ */
 void setup() {
   ////////
- // fullScreen(P2D);
+  fullScreen(P2D,2); // changes for two screen display
   frameRate(32);    //sets draw() to run x times a second.
   ///////initialize objects
-  jonswap = new miniWaveTankJonswap();
   waveMaker = new UIData();
   wec = new UIData();
   fftList = new LinkedList();
-  myFFT = new FFTbase();
-  myNewFFT = new fftNew();
+  myFFT = new fft();
   fftArr = new float[queueSize*2];
   //fftComplexArr = new Complex[queueSize];
   waveMaker.mode = 1;    // 1 = jog, 2 = function, 3 = sea, 4 = off
@@ -43,31 +39,32 @@ void setup() {
   sendFloat(0, port1);    //jog mode
   port1.write('j');
   sendFloat(0, port1);    //at position 0
-
+/*
   port2.write('!');
   sendFloat(-1, port2);    //off
   port2.write('n');
   sendFloat(1, port2);    //initialize n at 1
+  */
   //testing
   /*
   jonswap.update(5.0,3.0,7.0);
-  println(jonswap.getNum());
-  for(int i = 0; i<jonswap.getNum(); i++){
-    print(jonswap.getAmp()[i]);
-    print("  ");
-  }
-  println();println();
-  for(int i = 0; i<jonswap.getNum(); i++){
-    print(jonswap.getF()[i]);
-    print("  ");
-  }
-  println();println();
-  for(int i = 0; i<jonswap.getNum(); i++){
-    print(jonswap.getPhase()[i]);
-    print("  ");
-  }
-  println();
-  */
+   println(jonswap.getNum());
+   for(int i = 0; i<jonswap.getNum(); i++){
+   print(jonswap.getAmp()[i]);
+   print("  ");
+   }
+   println();println();
+   for(int i = 0; i<jonswap.getNum(); i++){
+   print(jonswap.getF()[i]);
+   print("  ");
+   }
+   println();println();
+   for(int i = 0; i<jonswap.getNum(); i++){
+   print(jonswap.getPhase()[i]);
+   print("  ");
+   }
+   println();
+   */
 }
 
 public void settings() {
@@ -137,7 +134,7 @@ void draw() {
     previousMillis = millis();
     Complex[] fftIn = new Complex[queueSize];
     for (int i = 0; i < queueSize; i++) {    //fill with zeros
-      fftIn[i] = new Complex(0,0);
+      fftIn[i] = new Complex(0, 0);
     }
     for (int i = 0; i < fftList.size(); i++) {
       fftIn[i] = new Complex((float)fftList.get(i), 0);
@@ -146,38 +143,54 @@ void draw() {
     //fftIn[1] = new Complex(0,0);
     //fftIn[2] = new Complex(-1,0);
     //fftIn[3] = new Complex(0,0);
-    Complex[] fftOut = myNewFFT.fft(fftIn);
+    Complex[] fftOut = myFFT.fft(fftIn);
     for (int i = 0; i < queueSize; i++) {
-      fftArr[i] = (float)Math.sqrt( fftOut[i].re()*fftOut[i].re() + fftOut[i].im()*fftOut[i].im() );      //magnitude
+      fftArr[i] = (float)Math.sqrt( fftOut[i].re()*fftOut[i].re() + fftOut[i].im()*fftOut[i].im() )/queueSize;      //magnitude
       //println(fftOut[i].re()+" + "+fftOut[i].im()+"i");
     }
+    //println("in: "+fftIn[16]);
+    //println("out: "+fftArr[16]);
   }
-  for (int i=0; i<queueSize*2; i++) {
-    line((width*2/6)+1.5*i, height*4/6, (width*2/6)+1.5*i, height*4/6 - 0.6*fftArr[i]);
+  int nyquist = (int)frameRate/2;    //sampling frequency/2 NOTE: framerate is not a constant variable
+  float initialX = 0;
+  float yScale = 50;
+  textSize(10);
+  for (int i=0; i<=queueSize/2; i++) {      //cut in half
+    float x = (width*4.5/6)+1.5*i;    //x coordinate
+    float y = height*1.5/6;            //y coordinate
+    if (i == 0) {
+      initialX = x;
+    }
+    line(x, y, x, y - yScale*fftArr[i]);
+    if (i%32 == 0) {                                                                //should make 32 into a variable, but frameRate is not an int
+      text((int)(i*(1/((float)queueSize/32))), x, y);    //x-axis: frequency spacing is 1/T, where t is length of sample in seconds
+    }
+    if (i%1 == 0 && i<=5) {
+      text(i, initialX, y - yScale*i);    //y-axis
+    }
   }
-  
   /////////testing section////
   /*
   //amp graph:
-  for (int i=0; i<jonswap.getNum(); i++) {
-    line((width*2/6)+5*i, height*5/6, (width*2/6)+5*i, height*5/6 - 100*jonswap.getAmp()[i]);
-  }
-  ///
-  TSVal = 0;
-  for (int i = 0; i < jonswap.getNum(); i++) {
-    TSVal += jonswap.getAmp()[i] * sin(2.0 * PI * (millis()/1000.0 - 2.0) * jonswap.getF()[i] + jonswap.getPhase()[i]);
-    //val = sin(2.0 * PI * millis()/1000.0);
-  }
-  waveSig.push("incoming", TSVal);
-  if (waveMaker.mode == 3) {
-    fftList.add(TSVal);      //adds to the tail if in the right mode
-    if (fftList.size() > queueSize)
-    {
-      fftList.remove();          //removes from the head
-    }
-  }
-
-  ///////////////////*/
+   for (int i=0; i<jonswap.getNum(); i++) {
+   line((width*2/6)+5*i, height*5/6, (width*2/6)+5*i, height*5/6 - 100*jonswap.getAmp()[i]);
+   }
+   ///
+   TSVal = 0;
+   for (int i = 0; i < jonswap.getNum(); i++) {
+   TSVal += jonswap.getAmp()[i] * sin(2.0 * PI * (millis()/1000.0 - 2.0) * jonswap.getF()[i] + jonswap.getPhase()[i]);
+   //val = sin(2.0 * PI * millis()/1000.0);
+   }
+   waveSig.push("incoming", TSVal);
+   if (waveMaker.mode == 3) {
+   fftList.add(TSVal);      //adds to the tail if in the right mode
+   if (fftList.size() > queueSize)
+   {
+   fftList.remove();          //removes from the head
+   }
+   }
+   
+   ///////////////////*/
 
   //readMegaSerial();
   thread("readMegaSerial");    //will run this funciton in parallel thread

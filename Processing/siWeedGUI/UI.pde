@@ -163,6 +163,8 @@ void initializeUI() {
   waveSig.addDataSet("incoming");
   waveSig.setData("incoming", new float[360]);    //use to set the domain of the plot. This value is = desired domain(secnods) * 30
 
+  h.setValue(5);
+  freq.setValue(1.0);
   sigH.setValue(2.5);
   peakF.setValue(3.0);
   gamma.setValue(7.0);
