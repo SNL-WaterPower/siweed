@@ -1,0 +1,320 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=latex 2020.4.7)  6 JUL 2020 15:28
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**20180806_HardwareX_Latex_Template.tex
+(./20180806_HardwareX_Latex_Template.tex
+LaTeX2e <2020-02-02> patch level 5
+L3 programming layer <2020-03-06>
+(/usr/local/texlive/2020/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2019/12/20 v1.4l Standard LaTeX document class
+(/usr/local/texlive/2020/texmf-dist/tex/latex/base/size11.clo
+File: size11.clo 2019/12/20 v1.4l Standard LaTeX file (size option)
+)
+\c@part=\count167
+\c@section=\count168
+\c@subsection=\count169
+\c@subsubsection=\count170
+\c@paragraph=\count171
+\c@subparagraph=\count172
+\c@figure=\count173
+\c@table=\count174
+\abovecaptionskip=\skip47
+\belowcaptionskip=\skip48
+\bibindent=\dimen134
+)
+(/usr/local/texlive/2020/texmf-dist/tex/latex/base/inputenc.sty
+Package: inputenc 2018/08/11 v1.3c Input encoding file
+\inpenc@prehook=\toks15
+\inpenc@posthook=\toks16
+)
+(/usr/local/texlive/2020/texmf-dist/tex/latex/geometry/geometry.sty
+Package: geometry 2020/01/02 v5.9 Page Geometry
+
+(/usr/local/texlive/2020/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks17
+)
+(/usr/local/texlive/2020/texmf-dist/tex/generic/iftex/ifvtex.sty
+Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
+
+(/usr/local/texlive/2020/texmf-dist/tex/generic/iftex/iftex.sty
+Package: iftex 2020/03/06 v1.0d TeX engine tests
+))
+\Gm@cnth=\count175
+\Gm@cntv=\count176
+\c@Gm@tempcnt=\count177
+\Gm@bindingoffset=\dimen135
+\Gm@wd@mp=\dimen136
+\Gm@odd@mp=\dimen137
+\Gm@even@mp=\dimen138
+\Gm@layoutwidth=\dimen139
+\Gm@layoutheight=\dimen140
+\Gm@layouthoffset=\dimen141
+\Gm@layoutvoffset=\dimen142
+\Gm@dimlist=\toks18
+)
+(/usr/local/texlive/2020/texmf-dist/tex/latex/titlesec/titlesec.sty
+Package: titlesec 2019/10/16 v2.13 Sectioning titles
+\ttl@box=\box45
+\beforetitleunit=\skip49
+\aftertitleunit=\skip50
+\ttl@plus=\dimen143
+\ttl@minus=\dimen144
+\ttl@toksa=\toks19
+\titlewidth=\dimen145
+\titlewidthlast=\dimen146
+\titlewidthfirst=\dimen147
+)
+(/usr/local/texlive/2020/texmf-dist/tex/latex/tabu/tabu.sty
+Package: tabu 2019/01/11 v2.9 - flexible LaTeX tabulars (FC+tabu-fixed)
+
+(/usr/local/texlive/2020/texmf-dist/tex/latex/tools/array.sty
+Package: array 2019/08/31 v2.4l Tabular extension package (FMi)
+\col@sep=\dimen148
+\ar@mcellbox=\box46
+\extrarowheight=\dimen149
+\NC@list=\toks20
+\extratabsurround=\skip51
+\backup@length=\skip52
+\ar@cellbox=\box47
+)
+(/usr/local/texlive/2020/texmf-dist/tex/latex/varwidth/varwidth.sty
+Package: varwidth 2009/03/30 ver 0.92;  Variable-width minipages
+\@vwid@box=\box48
+\sift@deathcycles=\count178
+\@vwid@loff=\dimen150
+\@vwid@roff=\dimen151
+)
+\c@taburow=\count179
+\tabu@nbcols=\count180
+\tabu@cnt=\count181
+\tabu@Xcol=\count182
+\tabu@alloc=\count183
+\tabu@nested=\count184
+\tabu@target=\dimen152
+\tabu@spreadtarget=\dimen153
+\tabu@naturalX=\dimen154
+\tabucolX=\dimen155
+\tabu@Xsum=\dimen156
+\extrarowdepth=\dimen157
+\abovetabulinesep=\dimen158
+\belowtabulinesep=\dimen159
+\tabustrutrule=\dimen160
+\tabu@thebody=\toks21
+\tabu@footnotes=\toks22
+\tabu@box=\box49
+\tabu@arstrutbox=\box50
+\tabu@hleads=\box51
+\tabu@vleads=\box52
+\tabu@cellskip=\skip53
+)
+(/usr/local/texlive/2020/texmf-dist/tex/latex/enumitem/enumitem.sty
+Package: enumitem 2019/06/20 v3.9 Customized lists
+\labelindent=\skip54
+\enit@outerparindent=\dimen161
+\enit@toks=\toks23
+\enit@inbox=\box53
+\enit@count@id=\count185
+\enitdp@description=\count186
+)
+(/usr/local/texlive/2020/texmf-dist/tex/latex/amsfonts/amssymb.sty
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
+
+(/usr/local/texlive/2020/texmf-dist/tex/latex/amsfonts/amsfonts.sty
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+\@emptytoks=\toks24
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+))
+\enitdp@selectlist=\count187
+
+(/usr/local/texlive/2020/texmf-dist/tex/latex/l3backend/l3backend-dvips.def
+File: l3backend-dvips.def 2020-03-12 L3 backend support: dvips
+\l__pdf_internal_box=\box54
+\g__pdf_backend_object_int=\count188
+\l__pdf_backend_content_box=\box55
+\l__pdf_backend_model_box=\box56
+\g__pdf_backend_annotation_int=\count189
+\g__pdf_backend_link_int=\count190
+\g__pdf_backend_link_sf_int=\count191
+)
+No file 20180806_HardwareX_Latex_Template.aux.
+\openout1 = `20180806_HardwareX_Latex_Template.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+*geometry* driver: auto-detecting
+*geometry* detected driver: dvips
+*geometry* verbose mode - [ preamble ] result:
+* driver: dvips
+* paper: letterpaper
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(72.26999pt, 469.75502pt, 72.26999pt)
+* v-part:(T,H,B)=(72.26999pt, 650.43001pt, 72.26999pt)
+* \paperwidth=614.295pt
+* \paperheight=794.96999pt
+* \textwidth=469.75502pt
+* \textheight=650.43001pt
+* \oddsidemargin=0.0pt
+* \evensidemargin=0.0pt
+* \topmargin=-37.0pt
+* \headheight=12.0pt
+* \headsep=25.0pt
+* \topskip=11.0pt
+* \footskip=30.0pt
+* \marginparwidth=59.0pt
+* \marginparsep=10.0pt
+* \columnsep=10.0pt
+* \skip\footins=10.0pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+LaTeX Font Info:    Trying to load font information for U+msa on input line 53.
+
+(/usr/local/texlive/2020/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 53.
+
+
+(/usr/local/texlive/2020/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+Underfull \hbox (badness 2556) in paragraph at lines 93--93
+[]\OT1/cmr/bx/n/10.95 Source file repos-i-
+ []
+
+[1
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 106--108
+\OT1/cmr/m/it/10.95 of fur-ther de-signs in a par-tic-u-lar area, and so on.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 106--108
+
+ []
+
+[2]
+Underfull \hbox (badness 10000) in paragraph at lines 146--146
+[]\OT1/cmr/bx/n/10.95 Design file-
+ []
+
+
+Underfull \hbox (badness 1062) in paragraph at lines 146--146
+\OT1/cmr/m/it/10.95 ware li-cense. En-ter the
+ []
+
+
+Underfull \hbox (badness 1668) in paragraph at lines 146--146
+\OT1/cmr/m/it/10.95 lo-ca-tion or the sen-tence:
+ []
+
+[3]
+Overfull \hbox (5.0355pt too wide) in paragraph at lines 172--172
+[]\OT1/cmr/bx/n/10.95 Designator| 
+ []
+
+
+Overfull \hbox (9.18582pt too wide) in paragraph at lines 172--172
+[]\OT1/cmr/bx/n/10.95 Component| 
+ []
+
+
+Underfull \hbox (badness 3536) in paragraph at lines 172--172
+[]\OT1/cmr/bx/n/10.95 Cost per
+ []
+
+
+Underfull \hbox (badness 2435) in paragraph at lines 172--172
+\OT1/cmr/bx/n/10.95 unit cur-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 172--172
+[]\OT1/cmr/bx/n/10.95 Material
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 172--172
+[]\OT1/cmr/m/it/10.95 Designator
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 172--172
+[]\OT1/cmr/m/it/10.95 Name of
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 172--172
+\OT1/cmr/m/it/10.95 Com-po-nent
+ []
+
+
+Underfull \hbox (badness 2158) in paragraph at lines 172--172
+[]\OT1/cmr/m/it/10.95 Number of
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 172--172
+[]\OT1/cmr/m/it/10.95 Cost per
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 172--172
+[]\OT1/cmr/m/it/10.95 Material
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 172--172
+[]\OT1/cmr/m/it/10.95 Designator
+ []
+
+
+Overfull \hbox (17.00002pt too wide) in paragraph at lines 164--173
+[][] 
+ []
+
+[4]
+Underfull \hbox (badness 10000) in paragraph at lines 221--222
+\OT1/cmr/m/it/10.95 [a state-ment must be in-cluded even if there is no con-fli
+ct of in-ter-est]
+ []
+
+[5] (./20180806_HardwareX_Latex_Template.aux) ) 
+Here is how much of TeX's memory you used:
+ 2869 strings out of 480609
+ 40738 string characters out of 5903657
+ 293915 words of memory out of 5000000
+ 18779 multiletter control sequences out of 15000+600000
+ 537981 words of font info for 45 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 30i,14n,34p,1241b,540s stack positions out of 5000i,500n,10000p,200000b,80000s
+
+Output written on 20180806_HardwareX_Latex_Template.dvi (5 pages, 15820 bytes).
+
