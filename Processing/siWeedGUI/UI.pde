@@ -5,7 +5,9 @@ Slider h, freq; //sliders for function mode
 Slider sigH, peakF, gamma;  //sliders for sea state mode
 Slider pGain, dGain, torqueSlider, sigHWEC, peakFWEC, gammaWEC; // WEC sliders
 Button jog, function, sea, off, torque, feedback, seaWEC, offWec; // mode buttons
-// Custom colors
+Button wecQs, waveQs;
+Textarea wecText, waveText;
+  // Custom colors
 color green = color(190, 214, 48);
 color turq = color(0, 173, 208);
 color dblue = color(0, 83, 118);
@@ -21,7 +23,15 @@ void initializeUI() {
   //Fonts
   f = createFont("Arial", 16, true);
   fb = createFont("Arial Bold Italic", 32, true);
+  
   // Buttons //
+  
+  waveQs = cp5.addButton("waveQs")
+    .setPosition(275, 90)
+    .setSize(15, 15)
+    .setLabel("?");
+    
+  // wave maker buttons
   jog = cp5.addButton("jog")
     .setPosition(100, 150)
     .setSize(100, 50)
@@ -41,40 +51,40 @@ void initializeUI() {
     .setPosition(400, 150)
     .setSize(100, 50)
     .setLabel("OFF"); 
-    
+
   ///  Slider pGain, dGain, positionTorque, torque; // WEC sliders
-///Button jog, function, sea, off, torque, feedback, jogWEC, offWec; 
-     
+  ///Button jog, function, sea, off, torque, feedback, jogWEC, offWec; 
+
   torque = cp5.addButton("torque")
     .setPosition(100, 450)
     .setSize(100, 50)
     .setLabel("Torque");   
-    
+
   feedback = cp5.addButton("feedback")
     .setPosition(200, 450)
     .setSize(100, 50)
     .setLabel("Feedback"); 
   //spring, jogWEC, offWec 
-  
+
   seaWEC = cp5.addButton("seaWEC")
     .setPosition(300, 450)
     .setSize(100, 50)
     .setLabel("Sea State");    
-    
+
   offWec = cp5.addButton("offWec")
     .setPosition(400, 450)
     .setSize(100, 50)
     .setLabel("Off"); 
-    
-    
+
+
   // Sliders // 
-  
+
   // Motor Jog Mode Sliders
   position = cp5.addSlider("Position (CM)")  //name slider
     .setRange(-10, 10) //slider range
     .setPosition(150, 225) //x and y coordinates of upper left corner of button
     .setSize(300, 20); //size (width, height)
-    
+
   // Motor Function Mode Sliders
   h = cp5.addSlider("Height (CM)")  //name slider
     .setRange(0, 10) //slider range
@@ -89,7 +99,7 @@ void initializeUI() {
     .hide(); //size (width, height)
 
 
-// Motor Sea State Mode Sliders
+  // Motor Sea State Mode Sliders
   sigH = cp5.addSlider("Significant Height (CM)")  //name slider
     .setRange(0, 10) //slider range
     .setPosition(150, 225) //x and y coordinates of upper left corner of button
@@ -113,40 +123,51 @@ void initializeUI() {
     .setRange(0, 0.5)
     .setPosition(150, 525) //x and y coordinates of upper left corner of button
     .setSize(300, 20); //size (width, height)
-    
+
   // WEC Feedback Sliders   
   pGain = cp5.addSlider("P Gain")  //name of button
     .setRange(0, 0.5)
     .setPosition(150, 525) //x and y coordinates of upper left corner of button
     .setSize(300, 20) //size (width, height)
     .hide();
-    
- dGain = cp5.addSlider("D Gain")  //name of button
+
+  dGain = cp5.addSlider("D Gain")  //name of button
     .setRange(0, 0.5)
     .setPosition(150, 575) //x and y coordinates of upper left corner of button
     .setSize(300, 20) //size (width, height)
     .hide();
-    
+
   //WEC Seastate Sliders 
-  
- sigHWEC = cp5.addSlider("WEC Significant Height (CM)")  //name of button
+
+  sigHWEC = cp5.addSlider("WEC Significant Height (CM)")  //name of button
     .setRange(0, 0.5)
     .setPosition(150, 525) //x and y coordinates of upper left corner of button
     .setSize(300, 20) //size (width, height)
     .hide();
-    
- peakFWEC = cp5.addSlider("WEC Peak Frequency (Hz)")  //name of button
+
+  peakFWEC = cp5.addSlider("WEC Peak Frequency (Hz)")  //name of button
     .setRange(0, 0.5)
     .setPosition(150, 575) //x and y coordinates of upper left corner of button
     .setSize(300, 20) //size (width, height)
     .hide();
-    
+
   gammaWEC = cp5.addSlider("WEC Peakedness)")  //name of button
     .setRange(0, 0.5)
     .setPosition(150, 625) //x and y coordinates of upper left corner of button
     .setSize(300, 20) //size (width, height)
-    .hide();
-    
+    .hide()
+    ;
+
+  waveText = cp5.addTextarea("More Infromation")
+    .setPosition(275, 150)
+    .setSize(400, 400)
+    .setFont(createFont("arial", 12))
+    .setLineHeight(14)
+    .setColor(dblue)
+    .setColorBackground(turq)
+    .setColorForeground(color(255, 100))
+    .hide()
+    ;
 
   // Charts //
   waveSig =  cp5.addChart("Sin Wave")
@@ -168,7 +189,7 @@ void initializeUI() {
   sigH.setValue(2.5);
   peakF.setValue(3.0);
   gamma.setValue(7.0);
-  
+
   snlLogo = loadImage("SNL_Stacked_White.png");
 }
 //button functions:
@@ -242,9 +263,9 @@ void torque() {
   peakFWEC.hide();
   gammaWEC.hide();
   port2.write('!');
-  sendFloat(0, port2); 
+  sendFloat(0, port2);
 }   
-   
+
 void feedback() {
   wec.mode = 2; 
   torqueSlider.hide();
@@ -254,11 +275,11 @@ void feedback() {
   peakFWEC.hide();
   gammaWEC.hide();
   port2.write('!');
-  sendFloat(1, port2); 
+  sendFloat(1, port2);
 }
 
-   // Slider pGain, dGain, torqueSlider, sigHWEC, peakFWEC, gammaWEC; 
-   //torque, feedback, seaWEC, offWec 
+// Slider pGain, dGain, torqueSlider, sigHWEC, peakFWEC, gammaWEC; 
+//torque, feedback, seaWEC, offWec 
 
 
 void seaWEC() {
@@ -270,7 +291,7 @@ void seaWEC() {
   peakFWEC.show();
   gammaWEC.show();
   port2.write('!');
-  sendFloat(2, port2); 
+  sendFloat(2, port2);
 }
 
 void offWEC() {
@@ -282,5 +303,14 @@ void offWEC() {
   peakFWEC.setValue(0);
   gammaWEC.setValue(0);
   port2.write('!');
-  sendFloat(-1, port2); 
+  sendFloat(-1, port2);
+}
+
+void waveQs() {
+  if (waveText.isVisible()){
+    waveText.hide();
+  }
+  else{
+    waveText.show();
+  }
 }
