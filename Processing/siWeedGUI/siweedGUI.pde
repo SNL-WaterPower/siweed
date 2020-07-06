@@ -98,6 +98,15 @@ void draw() {
   stroke(green);
   strokeWeight(1.5);
   line(width/3, 75, width/3, height-75);
+  
+  //controls button pop up behavior
+  if (mousePressed && waveText.isVisible()){
+    waveText.hide();
+  }
+  //controls button pop up behavior
+  if (mousePressed && wecText.isVisible()){
+    wecText.hide();
+  }
   //Jog:
   if (waveMaker.mode == 1 && position.getValue() != waveMaker.mag) {  //only sends if value has changed  
     waveMaker.mag = position.getValue();
