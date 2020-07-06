@@ -30,6 +30,11 @@ void initializeUI() {
     .setPosition(275, 90)
     .setSize(15, 15)
     .setLabel("?");
+  
+  wecQs = cp5.addButton("wecQs")
+    .setPosition(255, 390)
+    .setSize(15, 15)
+    .setLabel("?");
     
   // wave maker buttons
   jog = cp5.addButton("jog")
@@ -158,8 +163,19 @@ void initializeUI() {
     .hide()
     ;
 
-  waveText = cp5.addTextarea("More Infromation")
+  waveText = cp5.addTextarea("Wave Infromation")
     .setPosition(275, 150)
+    .setSize(400, 400)
+    .setFont(createFont("arial", 12))
+    .setLineHeight(14)
+    .setColor(dblue)
+    .setColorBackground(turq)
+    .setColorForeground(color(255, 100))
+    .hide()
+    ;
+    
+  wecText = cp5.addTextarea("WEC Infromation")
+    .setPosition(275, 410)
     .setSize(400, 400)
     .setFont(createFont("arial", 12))
     .setLineHeight(14)
@@ -312,5 +328,14 @@ void waveQs() {
   }
   else{
     waveText.show();
+  }
+}
+
+void wecQs() {
+  if (wecText.isVisible()){
+    wecText.hide();
+  }
+  else{
+    wecText.show();
   }
 }
