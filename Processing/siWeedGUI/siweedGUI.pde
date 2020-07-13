@@ -144,7 +144,7 @@ void draw() {
     //fftIn[3] = new Complex(0,0);
     Complex[] fftOut = myFFT.fft(fftIn);
     for (int i = 0; i < queueSize; i++) {
-      fftArr[i] = (float)Math.sqrt( fftOut[i].re()*fftOut[i].re() + fftOut[i].im()*fftOut[i].im() )/queueSize;      //magnitude
+      fftArr[i] = 2.0*(float)Math.sqrt( fftOut[i].re()*fftOut[i].re() + fftOut[i].im()*fftOut[i].im() )/queueSize;      //magnitude
       //println(fftOut[i].re()+" + "+fftOut[i].im()+"i");
     }
     //println("in: "+fftIn[16]);
