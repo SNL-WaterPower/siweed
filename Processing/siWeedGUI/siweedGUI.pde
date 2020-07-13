@@ -38,12 +38,12 @@ void setup() {
   sendFloat(0, port1);    //jog mode
   port1.write('j');
   sendFloat(0, port1);    //at position 0
-/*
+  
   port2.write('!');
   sendFloat(-1, port2);    //off
   port2.write('n');
   sendFloat(1, port2);    //initialize n at 1
-  */
+  
   //testing
   /*
   jonswap.update(5.0,3.0,7.0);
