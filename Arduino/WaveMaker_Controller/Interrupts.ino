@@ -4,7 +4,7 @@ const float serialInterval = .03125;   //time between each interupt call in seco
 
 volatile float futurePos;
 volatile float error;
-void initInterupts() {
+void initInterrupts() {
   //interupt setup:
   cli();//stop interrupts
 

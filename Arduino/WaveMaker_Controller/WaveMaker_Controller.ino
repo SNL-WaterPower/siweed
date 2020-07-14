@@ -80,7 +80,7 @@ void setup() {
     freqs[i] = 0;
     phases[i] = 0;
   }
-  initInterupts();
+  initInterrupts();
 }
 
 void loop() {   //__ microseconds

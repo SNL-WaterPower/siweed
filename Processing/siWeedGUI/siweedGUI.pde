@@ -41,29 +41,6 @@ void setup() {
   
   port2.write('!');
   sendFloat(-1, port2);    //off
-  port2.write('n');
-  sendFloat(1, port2);    //initialize n at 1
-  
-  //testing
-  /*
-  jonswap.update(5.0,3.0,7.0);
-   println(jonswap.getNum());
-   for(int i = 0; i<jonswap.getNum(); i++){
-   print(jonswap.getAmp()[i]);
-   print("  ");
-   }
-   println();println();
-   for(int i = 0; i<jonswap.getNum(); i++){
-   print(jonswap.getF()[i]);
-   print("  ");
-   }
-   println();println();
-   for(int i = 0; i<jonswap.getNum(); i++){
-   print(jonswap.getPhase()[i]);
-   print("  ");
-   }
-   println();
-   */
 }
 
 public void settings() {

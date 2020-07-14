@@ -68,7 +68,7 @@ void readSerial() {
   }
 }
 float readFloat() {
-  char charArr[5];    //+123\0
+  char charArr[7];    //+123\0
   char c;
   int i;
   for (i = 0; Serial.available() > 0 && c != '>'; i++) {

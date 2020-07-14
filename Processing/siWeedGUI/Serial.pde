@@ -9,8 +9,8 @@ void initializeSerial() {
   
   //mac serial com
   printArray(Serial.list()); 
-  port1 = new Serial(this, Serial.list()[2], 500000); // all communication with Megas
-  port2 = new Serial(this, Serial.list()[1], 500000);; // all communication with Due
+  port1 = new Serial(this, Serial.list()[1], 500000); // all communication with Megas
+  port2 = new Serial(this, Serial.list()[2], 500000);; // all communication with Due
   delay(2000);
 }
 void sendFloat(float f, Serial port)
