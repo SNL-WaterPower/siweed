@@ -3,3 +3,8 @@ Processing/siWeedGUI/data
 *.class
 Processing/siWeedGUI/build-tmp
 .csv
+*.log
+*.synctex.gz
+*.fls
+*.aux
+*.fdb_latexmk
