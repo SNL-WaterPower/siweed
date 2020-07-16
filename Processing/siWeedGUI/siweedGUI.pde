@@ -17,6 +17,12 @@ int fftInterval = 100;    //in milliseconds
 /*
 float TSVal;
  */
+ 
+// meter set up  
+Meter m;
+int sensorValue;
+int minIn, maxIn;
+
 void setup() {
   ////////
   frameRate(32);    //sets draw() to run x times a second.
@@ -41,6 +47,14 @@ void setup() {
   
   port2.write('!');
   sendFloat(-1, port2);    //off
+  
+  //adding meter 
+  m = new Meter(this, 1120, 850);
+  m.setTitle("Power");
+  m.setFrameColor(color(turq));
+  // Use the default values for testing, 0 - 255.
+  minIn = m.getMinInputSignal();
+  maxIn = m.getMaxInputSignal();
 }
 
 public void settings() {
@@ -75,6 +89,13 @@ void draw() {
   stroke(green);
   strokeWeight(1.5);
   line(width/3, 75, width/3, height-75);
+  
+  //meter
+  // Input for testing.
+  sensorValue = (int)random(minIn, maxIn);
+  // Update the sensor value to the meter.
+  m.updateMeter(sensorValue);
+  // Use a delay to see the changes.
   
   //controls button pop up behavior
   if (mousePressed && waveText.isVisible()){
