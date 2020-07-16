@@ -11,6 +11,9 @@ Textarea wecText, waveText;
 color green = color(190, 214, 48);
 color turq = color(0, 173, 208);
 color dblue = color(0, 83, 118);
+color buttonblue = color(0, 45, 90);
+color hoverblue = color(0, 116, 217);
+
 
 // Fonts
 PFont f; // Regular font
@@ -27,12 +30,12 @@ void initializeUI() {
   // Buttons //
   
   waveQs = cp5.addButton("waveQs")
-    .setPosition(275, 90)
+    .setPosition(275, 120)
     .setSize(15, 15)
     .setLabel("?");
   
   wecQs = cp5.addButton("wecQs")
-    .setPosition(255, 390)
+    .setPosition(255, 620)
     .setSize(15, 15)
     .setLabel("?");
     
@@ -166,23 +169,23 @@ void initializeUI() {
 
   waveText = cp5.addTextarea("Wave Infromation")
     .setPosition(275, 150)
-    .setSize(400, 400)
+    .setSize(550, 400)
     .setFont(createFont("arial", 12))
     .setLineHeight(14)
-    .setColor(dblue)
-    .setColorBackground(turq)
+    .setColor(turq)
+    .setColorBackground(buttonblue)
     .setColorForeground(color(255, 100))
     .hide()
     ;
 
     
   wecText = cp5.addTextarea("WEC Infromation")
-    .setPosition(275, 410)
-    .setSize(400, 400)
+    .setPosition(260, 650)
+    .setSize(550, 400)
     .setFont(createFont("arial", 12))
     .setLineHeight(14)
-    .setColor(dblue)
-    .setColorBackground(turq)
+    .setColor(turq)
+    .setColorBackground(buttonblue)
     .setColorForeground(color(255, 100))
     .hide()
     ;
