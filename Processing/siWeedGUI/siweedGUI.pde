@@ -38,32 +38,9 @@ void setup() {
   sendFloat(0, port1);    //jog mode
   port1.write('j');
   sendFloat(0, port1);    //at position 0
-/*
+  
   port2.write('!');
   sendFloat(-1, port2);    //off
-  port2.write('n');
-  sendFloat(1, port2);    //initialize n at 1
-  */
-  //testing
-  /*
-  jonswap.update(5.0,3.0,7.0);
-   println(jonswap.getNum());
-   for(int i = 0; i<jonswap.getNum(); i++){
-   print(jonswap.getAmp()[i]);
-   print("  ");
-   }
-   println();println();
-   for(int i = 0; i<jonswap.getNum(); i++){
-   print(jonswap.getF()[i]);
-   print("  ");
-   }
-   println();println();
-   for(int i = 0; i<jonswap.getNum(); i++){
-   print(jonswap.getPhase()[i]);
-   print("  ");
-   }
-   println();
-   */
 }
 
 public void settings() {
@@ -84,13 +61,13 @@ void draw() {
   fill(green);
   textLeading(15);
   textAlign(CENTER, TOP);
-  text("Change Wave Dimensions", 150, 100);
+  text("Change Wave Dimensions", 150, 120);
   
   textFont(fb, 20);
   fill(green);
   textLeading(15);
   textAlign(CENTER, TOP);
-  text("Change WEC Controls", 150, 400);
+  text("Change WEC Controls", 150, 620);
 
   tint(255, 126);  // Apply transparency without changing color
   image(snlLogo, 5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25);
@@ -153,7 +130,7 @@ void draw() {
     //fftIn[3] = new Complex(0,0);
     Complex[] fftOut = myFFT.fft(fftIn);
     for (int i = 0; i < queueSize; i++) {
-      fftArr[i] = (float)Math.sqrt( fftOut[i].re()*fftOut[i].re() + fftOut[i].im()*fftOut[i].im() )/queueSize;      //magnitude
+      fftArr[i] = 2.0*(float)Math.sqrt( fftOut[i].re()*fftOut[i].re() + fftOut[i].im()*fftOut[i].im() )/queueSize;      //magnitude
       //println(fftOut[i].re()+" + "+fftOut[i].im()+"i");
     }
     //println("in: "+fftIn[16]);
