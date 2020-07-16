@@ -61,13 +61,13 @@ void draw() {
   fill(green);
   textLeading(15);
   textAlign(CENTER, TOP);
-  text("Change Wave Dimensions", 150, 100);
+  text("Change Wave Dimensions", 150, 120);
   
   textFont(fb, 20);
   fill(green);
   textLeading(15);
   textAlign(CENTER, TOP);
-  text("Change WEC Controls", 150, 400);
+  text("Change WEC Controls", 150, 620);
 
   tint(255, 126);  // Apply transparency without changing color
   image(snlLogo, 5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25);
