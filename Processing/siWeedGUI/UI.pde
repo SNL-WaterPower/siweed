@@ -83,15 +83,6 @@ void initializeUI() {
 
 
   // Sliders // 
-<<<<<<< HEAD
-
-  // Motor Jog Mode Sliders
-  position = cp5.addSlider("Position (CM)")  //name slider
-    .setRange(-10, 10) //slider range
-    .setPosition(150, 225) //x and y coordinates of upper left corner of button
-    .setSize(300, 20); //size (width, height)
-
-=======
   //distance between slider and buttons is 150, distance between each slider is 75
   
   // Motor Jog Mode Sliders
@@ -100,7 +91,6 @@ void initializeUI() {
     .setPosition(150, 350) //x and y coordinates of upper left corner of button
     .setSize(300, 50); //size (width, height)
     
->>>>>>> a2ccaf96bada9b1a2ea354cd8164acb1b71d3b03
   // Motor Function Mode Sliders
   h = cp5.addSlider("Height (CM)")  //name slider
     .setRange(0, 10) //slider range
@@ -137,15 +127,9 @@ void initializeUI() {
   // WEC Torque Sliders
   torqueSlider = cp5.addSlider("Torque")  //name of button
     .setRange(0, 0.5)
-<<<<<<< HEAD
-    .setPosition(150, 525) //x and y coordinates of upper left corner of button
-    .setSize(300, 20); //size (width, height)
-
-=======
     .setPosition(150, 850) //x and y coordinates of upper left corner of button
     .setSize(300, 50); //size (width, height)
-    
->>>>>>> a2ccaf96bada9b1a2ea354cd8164acb1b71d3b03
+
   // WEC Feedback Sliders   
   pGain = cp5.addSlider("P Gain")  //name of button
     .setRange(0, 0.5)
@@ -175,11 +159,10 @@ void initializeUI() {
 
   gammaWEC = cp5.addSlider("WEC Peakedness)")  //name of button
     .setRange(0, 0.5)
-<<<<<<< HEAD
-    .setPosition(150, 625) //x and y coordinates of upper left corner of button
-    .setSize(300, 20) //size (width, height)
-    .hide()
-    ;
+    .setPosition(150, 1000) //x and y coordinates of upper left corner of button
+    .setSize(300, 50) //size (width, height)
+    .hide();
+ 
 
   waveText = cp5.addTextarea("Wave Infromation")
     .setPosition(275, 150)
@@ -191,11 +174,7 @@ void initializeUI() {
     .setColorForeground(color(255, 100))
     .hide()
     ;
-=======
-    .setPosition(150, 1000) //x and y coordinates of upper left corner of button
-    .setSize(300, 50) //size (width, height)
-    .hide();
->>>>>>> a2ccaf96bada9b1a2ea354cd8164acb1b71d3b03
+
     
   wecText = cp5.addTextarea("WEC Infromation")
     .setPosition(275, 410)
