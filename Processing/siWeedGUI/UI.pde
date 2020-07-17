@@ -35,7 +35,7 @@ void initializeUI() {
     .setLabel("?");
   
   wecQs = cp5.addButton("wecQs")
-    .setPosition(255, 620)
+    .setPosition(255, 720)
     .setSize(15, 15)
     .setLabel("?");
     
@@ -64,23 +64,23 @@ void initializeUI() {
   ///Button jog, function, sea, off, torque, feedback, jogWEC, offWec; 
 
   torque = cp5.addButton("torque")
-    .setPosition(100, 700)
+    .setPosition(100, 780)
     .setSize(150, 100)
     .setLabel("Torque");   
 
   feedback = cp5.addButton("feedback")
-    .setPosition(250, 700)
+    .setPosition(250, 780)
     .setSize(150, 100)
     .setLabel("Feedback"); 
   //spring, jogWEC, offWec 
 
   seaWEC = cp5.addButton("seaWEC")
-    .setPosition(400, 700)
+    .setPosition(400, 780)
     .setSize(150, 100)
     .setLabel("Sea State");    
 
   offWec = cp5.addButton("offWec")
-    .setPosition(550, 700)
+    .setPosition(550, 780)
     .setSize(150, 100)
     .setLabel("Off"); 
 
@@ -130,19 +130,19 @@ void initializeUI() {
   // WEC Torque Sliders
   torqueSlider = cp5.addSlider("Torque")  //name of button
     .setRange(0, 0.5)
-    .setPosition(150, 850) //x and y coordinates of upper left corner of button
+    .setPosition(150, 950) //x and y coordinates of upper left corner of button
     .setSize(450, 50); //size (width, height)
 
   // WEC Feedback Sliders   
   pGain = cp5.addSlider("P Gain")  //name of button
     .setRange(0, 0.5)
-    .setPosition(150, 850) //x and y coordinates of upper left corner of button
+    .setPosition(150, 950) //x and y coordinates of upper left corner of button
     .setSize(450, 50) //size (width, height)
     .hide();
 
   dGain = cp5.addSlider("D Gain")  //name of button
     .setRange(0, 0.5)
-    .setPosition(150, 925) //x and y coordinates of upper left corner of button
+    .setPosition(150, 1050) //x and y coordinates of upper left corner of button
     .setSize(450, 50) //size (width, height)
     .hide();
 
@@ -150,19 +150,19 @@ void initializeUI() {
 
   sigHWEC = cp5.addSlider("WEC Significant Height (CM)")  //name of button
     .setRange(0, 0.5)
-    .setPosition(150, 850) //x and y coordinates of upper left corner of button
+    .setPosition(150, 950) //x and y coordinates of upper left corner of button
     .setSize(450, 50) //size (width, height)
     .hide();
 
   peakFWEC = cp5.addSlider("WEC Peak Frequency (Hz)")  //name of button
     .setRange(0, 0.5)
-    .setPosition(150, 925) //x and y coordinates of upper left corner of button
+    .setPosition(150, 1050) //x and y coordinates of upper left corner of button
     .setSize(450, 50) //size (width, height)
     .hide();
 
   gammaWEC = cp5.addSlider("WEC Peakedness)")  //name of button
     .setRange(0, 0.5)
-    .setPosition(150, 1000) //x and y coordinates of upper left corner of button
+    .setPosition(150, 1150) //x and y coordinates of upper left corner of button
     .setSize(450, 50) //size (width, height)
     .hide();
  
