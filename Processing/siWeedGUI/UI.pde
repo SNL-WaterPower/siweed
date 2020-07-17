@@ -30,12 +30,12 @@ void initializeUI() {
   // Buttons //
   
   waveQs = cp5.addButton("waveQs")
-    .setPosition(275, 120)
+    .setPosition(280, 120)
     .setSize(15, 15)
     .setLabel("?");
   
   wecQs = cp5.addButton("wecQs")
-    .setPosition(255, 720)
+    .setPosition(260, 700)
     .setSize(15, 15)
     .setLabel("?");
     
@@ -180,7 +180,7 @@ void initializeUI() {
 
     
   wecText = cp5.addTextarea("WEC Infromation")
-    .setPosition(260, 650)
+    .setPosition(260, 750)
     .setSize(550, 400)
     .setFont(createFont("arial", 12))
     .setLineHeight(14)
