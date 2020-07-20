@@ -7,7 +7,7 @@ Slider pGain, dGain, torqueSlider, sigHWEC, peakFWEC, gammaWEC; // WEC sliders
 Button jog, function, sea, off, torque, feedback, seaWEC, offWec; // mode buttons
 Button wecQs, waveQs;
 Textarea wecText, waveText;
-  // Custom colors
+// Custom colors
 color green = color(190, 214, 48);
 color turq = color(0, 173, 208);
 color dblue = color(0, 83, 118);
@@ -26,19 +26,19 @@ void initializeUI() {
   //Fonts
   f = createFont("Arial", 16, true);
   fb = createFont("Arial Bold Italic", 32, true);
-  
+
   // Buttons //
-  
+
   waveQs = cp5.addButton("waveQs")
     .setPosition(280, 120)
     .setSize(15, 15)
     .setLabel("?");
-  
+
   wecQs = cp5.addButton("wecQs")
     .setPosition(260, 700)
     .setSize(15, 15)
     .setLabel("?");
-    
+
   // wave maker buttons
   jog = cp5.addButton("jog")
     .setPosition(100, 200)
@@ -87,13 +87,13 @@ void initializeUI() {
 
   // Sliders // 
   //distance between slider and buttons is 150, distance between each slider is 100
-  
+
   // Motor Jog Mode Sliders
   position = cp5.addSlider("Position (CM)")  //name slider
     .setRange(-10, 10) //slider range
     .setPosition(150, 375) //x and y coordinates of upper left corner of button
     .setSize(450, 50); //size (width, height)
-    
+
   // Motor Function Mode Sliders
   h = cp5.addSlider("Height (CM)")  //name slider
     .setRange(0, 10) //slider range
@@ -165,7 +165,7 @@ void initializeUI() {
     .setPosition(150, 1150) //x and y coordinates of upper left corner of button
     .setSize(450, 50) //size (width, height)
     .hide();
- 
+
 
   waveText = cp5.addTextarea("Wave Infromation")
     .setPosition(275, 150)
@@ -178,7 +178,7 @@ void initializeUI() {
     .hide()
     ;
 
-    
+
   wecText = cp5.addTextarea("WEC Infromation")
     .setPosition(260, 750)
     .setSize(550, 400)
@@ -328,19 +328,37 @@ void offWEC() {
 }
 
 void waveQs() {
-  if (waveText.isVisible()){
+  if (waveText.isVisible()) {
     waveText.hide();
-  }
-  else{
+  } else {
     waveText.show();
   }
 }
 
 void wecQs() {
-  if (wecText.isVisible()){
+  if (wecText.isVisible()) {
     wecText.hide();
-  }
-  else{
+  } else {
     wecText.show();
+  }
+}
+void drawFFT() {
+  int nyquist = (int)frameRate/2;    //sampling frequency/2 NOTE: framerate is not a constant variable
+  float initialX = 0;
+  float yScale = 50;
+  textSize(10);
+  for (int i=0; i<=queueSize/2; i++) {      //cut in half
+    float x = (width*0.75)+1.5*i;    //x coordinate
+    float y = height*.35;            //y coordinate
+    if (i == 0) {
+      initialX = x;
+    }
+    line(x, y, x, y - yScale*fftArr[i]);
+    if (i%32 == 0) {                                                                //should make 32 into a variable, but frameRate is not an int
+      text((int)(i*(1/((float)queueSize/32))), x, y);    //x-axis: frequency spacing is 1/T, where t is length of sample in seconds
+    }
+    if (i%1 == 0 && i<=5) {
+      text(i, initialX, y - yScale*i);    //y-axis
+    }
   }
 }

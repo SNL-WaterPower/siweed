@@ -129,10 +129,6 @@ void draw() {
     sendFloat(waveMaker.peakF, port1);
     port1.write('g');
     sendFloat(waveMaker.gamma, port1);    //gamma always needs to be the last sent
-    //update the jonswap values with new inputs
-    //jonswap.update(waveMaker.sigH, waveMaker.peakF, waveMaker.gamma);
-    //then send to arduino
-    //thread("sendJonswap");    //put this in a thread to not slow down processing(maybe)
   }
   
   /////FFT section(move to fft tab eventually):  //!!needs to be activated and deactivated(maybe)
@@ -157,48 +153,7 @@ void draw() {
     //println("in: "+fftIn[16]);
     //println("out: "+fftArr[16]);
   }
-  int nyquist = (int)frameRate/2;    //sampling frequency/2 NOTE: framerate is not a constant variable
-  float initialX = 0;
-  float yScale = 50;
-  textSize(10);
-  for (int i=0; i<=queueSize/2; i++) {      //cut in half
-    float x = (width*4.5/6)+1.5*i;    //x coordinate
-    float y = height*1.5/6;            //y coordinate
-    if (i == 0) {
-      initialX = x;
-    }
-    line(x, y, x, y - yScale*fftArr[i]);
-    if (i%32 == 0) {                                                                //should make 32 into a variable, but frameRate is not an int
-      text((int)(i*(1/((float)queueSize/32))), x, y);    //x-axis: frequency spacing is 1/T, where t is length of sample in seconds
-    }
-    if (i%1 == 0 && i<=5) {
-      text(i, initialX, y - yScale*i);    //y-axis
-    }
-  }
-  /////////testing section////
-  /*
-  //amp graph:
-   for (int i=0; i<jonswap.getNum(); i++) {
-   line((width*2/6)+5*i, height*5/6, (width*2/6)+5*i, height*5/6 - 100*jonswap.getAmp()[i]);
-   }
-   ///
-   TSVal = 0;
-   for (int i = 0; i < jonswap.getNum(); i++) {
-   TSVal += jonswap.getAmp()[i] * sin(2.0 * PI * (millis()/1000.0 - 2.0) * jonswap.getF()[i] + jonswap.getPhase()[i]);
-   //val = sin(2.0 * PI * millis()/1000.0);
-   }
-   waveSig.push("incoming", TSVal);
-   if (waveMaker.mode == 3) {
-   fftList.add(TSVal);      //adds to the tail if in the right mode
-   if (fftList.size() > queueSize)
-   {
-   fftList.remove();          //removes from the head
-   }
-   }
-   
-   ///////////////////*/
-
-  //readMegaSerial();
+  drawFFT();
   thread("readMegaSerial");    //will run this funciton in parallel thread
   thread("readDueSerial");
   thread("logData");
