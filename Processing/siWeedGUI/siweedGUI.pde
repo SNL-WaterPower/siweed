@@ -55,6 +55,7 @@ void setup() {
   // Use the default values for testing, 0 - 255.
   minIn = m.getMinInputSignal();
   maxIn = m.getMaxInputSignal();
+  
 }
 
 public void settings() {
@@ -71,24 +72,32 @@ void draw() {
   textAlign(CENTER, TOP);
   text("CAPTURING the POWER of WAVES", width/2, 20);
   
-  textFont(fb, 20);
-  fill(green);
-  textLeading(15);
-  textAlign(CENTER, TOP);
-  text("Change Wave Dimensions", 150, 120);
+  rect(25, 100, 800, 550, 7);
+  rect(25, 680, 800, 550, 7);
   
   textFont(fb, 20);
-  fill(green);
+  fill(buttonblue);
   textLeading(15);
   textAlign(CENTER, TOP);
-  text("Change WEC Controls", 150, 700);
+  text("Change Wave Dimensions", 175, 120);
+  
+  textFont(fb, 20);
+  fill(buttonblue);
+  textLeading(15);
+  textAlign(CENTER, TOP);
+  text("Change WEC Controls", 175, 700);
 
   tint(255, 126);  // Apply transparency without changing color
   image(snlLogo, 5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25);
+
   //dividing line
   stroke(green);
-  strokeWeight(1.5);
-  line(width/3, 75, width/3, height-75);
+  strokeWeight(2);
+  strokeCap(ROUND);
+  line(width/3, 150, width/3, height-150);
+  
+
+  
   
   //meter
   // Input for testing.
