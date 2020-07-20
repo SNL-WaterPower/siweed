@@ -1,9 +1,11 @@
 const float interval = .01;   //time between each interupt call in seconds //max value: 1.04
 const float serialInterval = .03125;   //time between each interupt call in seconds //max value: 1.04    .03125 is 32 times a second to match processing's speed(32hz)
 
-
 volatile float futurePos;
 volatile float error;
+volatile float sampleT = 0;  //timestamp in microseconds of sample
+volatile float prevSampleT;  //previous timestamp in microseconds
+volatile float prevVal;   //value of sample at prevSampleT
 void initInterrupts() {
   //interupt setup:
   cli();//stop interrupts
@@ -30,6 +32,9 @@ void initInterrupts() {
 ISR(TIMER4_COMPA_vect) {    //function called by interupt     //Takes about .4 milliseconds
   volatile float pos = encPos;
   error = futurePos - pos;   //where we told it to go vs where it is
+  prevSampleT = sampleT;
+  sampleT = micros();
+  prevVal = futurePos;
   futurePos = inputFnc(t + interval);// + error;  //time plus delta time plus previous error. maybe error should scale as a percentage of speed? !!!!!!!!!!!!!!NEEDS TESTING
   volatile float vel = speedScalar * (futurePos - pos) / interval; //desired velocity in mm/second   //ramped up over about a second   //LIKELY NEEDS TUNING
   if (vel > 0) {
@@ -53,6 +58,7 @@ ISR(TIMER4_COMPA_vect) {    //function called by interupt     //Takes about .4 m
     noTone(stepPin);
   }
 }
+
 ISR(TIMER5_COMPA_vect) {   //takes ___ milliseconds
   /*
     1: probe 1
@@ -70,7 +76,8 @@ ISR(TIMER5_COMPA_vect) {   //takes ___ milliseconds
   Serial.write('p');    //to indicate position
   sendFloat(encPos);
   Serial.write('d');    //to indicate alternate data
-  sendFloat(futurePos);
+  float lerpVal = lerp(prevVal, futurePos, (interval*1.0e6)/(sampleT-prevSampleT));   //linear interpolate(initial value, final value, percentatge)//percentage is desired interval/actual interval
+  sendFloat(lerpVal);
   Serial.println();
   //Serial.println(mode);
 }

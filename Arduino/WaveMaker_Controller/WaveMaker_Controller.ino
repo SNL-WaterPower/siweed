@@ -117,3 +117,7 @@ volatile void pushBuffer(volatile float* arr, volatile float f) {
   }
   arr[0] = f;
 }
+float lerp(float a, float b, float f)
+{
+    return a + f * (b - a);
+}
