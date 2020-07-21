@@ -32,12 +32,12 @@ void initializeUI() {
   // Buttons //
 
   waveQs = cp5.addButton("waveQs")
-    .setPosition(300, 120)
+    .setPosition(300, 170)
     .setSize(15, 15)
     .setLabel("?");
 
   wecQs = cp5.addButton("wecQs")
-    .setPosition(280, 700)
+    .setPosition(280, 750)
     .setSize(15, 15)
     .setLabel("?");
 
