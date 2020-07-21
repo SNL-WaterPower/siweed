@@ -20,6 +20,7 @@ PFont f; // Regular font
 PFont fb; // Bold font
 // Sandia logo
 PImage snlLogo;
+PImage wavePic;
 void initializeUI() {
 
   // starting ControlP5 stuff
@@ -215,6 +216,7 @@ void initializeUI() {
   gamma.setValue(7.0);
 
   snlLogo = loadImage("SNL_Stacked_White.png");
+  wavePic = loadImage("stillwater.jpg");
 }
 //button functions:
 /////////////////// MAKES BUTTONS DO THINGS ////////////////////////////////////

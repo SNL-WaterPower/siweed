@@ -27,6 +27,7 @@ void setup() {
   ////////
   frameRate(32);    //sets draw() to run x times a second.
   ///////initialize objects
+ // size(1920,1200);
   waveMaker = new UIData();
   wec = new UIData();
   fftList = new LinkedList();
@@ -70,7 +71,7 @@ void draw() {
   fill(green);
   textLeading(15);
   textAlign(CENTER, TOP);
-  text("CAPTURING the POWER of WAVES", width/2, 20);
+  text("CAPTURING the POWER of WAVES", width/2, 50);
   
   rect(25, 100, 800, 550, 7);
   rect(25, 680, 800, 550, 7);
@@ -88,13 +89,17 @@ void draw() {
   text("Change WEC Controls", 175, 700);
 
   tint(255, 126);  // Apply transparency without changing color
+  image(wavePic, 5, 5, width, 100);
   image(snlLogo, 5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25);
 
   //dividing line
   stroke(green);
   strokeWeight(2);
   strokeCap(ROUND);
-  line(width/3, 150, width/3, height-150);
+  line(width/3, 150, width/3, height-150); //height = 1440
+  
+  
+  
   
 
   
