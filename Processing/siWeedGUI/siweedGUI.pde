@@ -20,9 +20,6 @@ float TSVal;
  
 // meter set up  
 Meter m;
-int sensorValue;
-int minIn, maxIn;
-
 void setup() {
   ////////
   frameRate(32);    //sets draw() to run x times a second.
@@ -53,9 +50,11 @@ void setup() {
   m = new Meter(this, 1120, 850);
   m.setTitle("Power");
   m.setFrameColor(color(turq));
-  // Use the default values for testing, 0 - 255.
-  minIn = m.getMinInputSignal();
-  maxIn = m.getMaxInputSignal();
+  m.setMinInputSignal(0);
+  m.setMaxInputSignal(500);
+  //// Use the default values for testing, 0 - 255.
+  //minIn = m.getMinInputSignal();
+  //maxIn = m.getMaxInputSignal();
   
 }
 
@@ -106,9 +105,8 @@ void draw() {
   
   //meter
   // Input for testing.
-  sensorValue = (int)random(minIn, maxIn);
   // Update the sensor value to the meter.
-  m.updateMeter(sensorValue);
+  m.updateMeter((int)(100*pow));
   // Use a delay to see the changes.
   
   //controls button pop up behavior
