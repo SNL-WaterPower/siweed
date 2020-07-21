@@ -20,6 +20,7 @@ float TSVal;
  
 // meter set up  
 Meter m;
+
 void setup() {
   ////////
   frameRate(32);    //sets draw() to run x times a second.
@@ -70,38 +71,33 @@ void draw() {
   fill(green);
   textLeading(15);
   textAlign(CENTER, TOP);
-  text("CAPTURING the POWER of WAVES", width/2, 50);
-  
-  rect(25, 100, 800, 550, 7);
-  rect(25, 680, 800, 550, 7);
-  
-  textFont(fb, 20);
-  fill(buttonblue);
-  textLeading(15);
-  textAlign(CENTER, TOP);
-  text("Change Wave Dimensions", 175, 120);
+  // header image
+  image(wavePic, 0, 0, width, 150);
+  text("Sandia Interactive Wave Energy Educational Display", width/2, 50);
+   
+  rect(25, 150, 800, 550, 7);
+  rect(25, 740, 800, 550, 7);
   
   textFont(fb, 20);
   fill(buttonblue);
   textLeading(15);
   textAlign(CENTER, TOP);
-  text("Change WEC Controls", 175, 700);
+  text("Change Wave Dimensions", 175, 170);
+  
+  textFont(fb, 20);
+  fill(buttonblue);
+  textLeading(15);
+  textAlign(CENTER, TOP);
+  text("Change WEC Controls", 175, 750);
 
   tint(255, 126);  // Apply transparency without changing color
-  image(wavePic, 5, 5, width, 100);
   image(snlLogo, 5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25);
 
   //dividing line
   stroke(green);
   strokeWeight(2);
   strokeCap(ROUND);
-  line(width/3, 150, width/3, height-150); //height = 1440
-  
-  
-  
-  
-
-  
+  line(width/2.5, 150, width/2.5, height-150); //height = 1440
   
   //meter
   // Input for testing.
