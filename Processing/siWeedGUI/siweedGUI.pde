@@ -73,10 +73,16 @@ void draw() {
   textAlign(CENTER, TOP);
   // header image
   image(wavePic, 0, 0, width, height);
+    
+  fill(buttonblue);
+  stroke(buttonblue);
+  rect(0, 0, width, 80);
+  
+  fill(green);
   text("Sandia Interactive Wave Energy Educational Display", width/2, 35);
    
  // rect(25, 150, 800, 550, 7);
-   
+
   fill(turq);
   stroke(buttonblue);
   rect(25, 150, 705, 1920, 7);
@@ -102,7 +108,7 @@ void draw() {
   text("Change WEC Controls", 170, 710);
 
   tint(255, 126);  // Apply transparency without changing color
-  image(snlLogo, 5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25);
+  image(snlLogo, width-snlLogo.width*0.25-5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25);
 
   
   //meter
