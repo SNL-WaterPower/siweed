@@ -25,7 +25,7 @@ void setup() {
   ////////
   frameRate(32);    //sets draw() to run x times a second.
   ///////initialize objects
- // size(1920,1200);
+  size(1920,1200);
   waveMaker = new UIData();
   wec = new UIData();
   fftList = new LinkedList();
@@ -58,10 +58,10 @@ void setup() {
   //maxIn = m.getMaxInputSignal();
   
 }
-
+/*
 public void settings() {
   fullScreen(2);
-}
+}*/
 
 void draw() {
   // Background color
@@ -72,11 +72,13 @@ void draw() {
   textLeading(15);
   textAlign(CENTER, TOP);
   // header image
-  image(wavePic, 0, 0, width, 150);
-  text("Sandia Interactive Wave Energy Educational Display", width/2, 50);
+  image(wavePic, 0, 0, width, 100);
+  text("Sandia Interactive Wave Energy Educational Display", width/2, 35);
    
-  rect(25, 150, 800, 550, 7);
-  rect(25, 740, 800, 550, 7);
+ // rect(25, 150, 800, 550, 7);
+  rect(25, 150, 705, 960, 7);
+  fill(turq);
+  rect(25, 115, 300, 100, 7);
   
   textFont(fb, 20);
   fill(buttonblue);
@@ -95,9 +97,9 @@ void draw() {
 
   //dividing line
   stroke(green);
-  strokeWeight(2);
+  strokeWeight(3);
   strokeCap(ROUND);
-  line(width/2.5, 150, width/2.5, height-150); //height = 1440
+  line(640, 480, 640, height-150); //height = 1440
   
   //meter
   // Input for testing.

@@ -43,22 +43,22 @@ void initializeUI() {
 
   // wave maker buttons
   jog = cp5.addButton("jog")
-    .setPosition(100, 200)
+    .setPosition(45, 300)
     .setSize(150, 100)
     .setLabel("Jog Mode");
 
   function = cp5.addButton("fun")
-    .setPosition(250, 200)
+    .setPosition(215, 300)
     .setSize(150, 100)
     .setLabel("Function Mode"); 
 
   sea = cp5.addButton("sea")
-    .setPosition(400, 200)
+    .setPosition(385, 300)
     .setSize(150, 100)
     .setLabel("Sea State"); 
 
   off = cp5.addButton("off")
-    .setPosition(550, 200)
+    .setPosition(555, 300)
     .setSize(150, 100)
     .setLabel("OFF"); 
 
@@ -196,8 +196,8 @@ void initializeUI() {
 
   // Charts //
   waveSig =  cp5.addChart("Sin Wave")
-    .setPosition(933.375, 150 )
-    .setSize(800, 450)
+    .setPosition(960, 150 )
+    .setSize(400, 250)
     .setRange(-10, 10)
     .setView(Chart.LINE) // use Chart.LINE, Chart.PIE, Chart.AREA, Chart.BAR_CENTERED
     .setStrokeWeight(4)
