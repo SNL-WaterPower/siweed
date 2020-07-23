@@ -352,6 +352,7 @@ void drawFFT() {
   float initialX = 0;
   float yScale = 50;
   textSize(10);
+  fill(green);
   stroke(green);
   for (int i=0; i<=queueSize/2; i++) {      //cut in half
     float x = (width*0.75)+1.5*i;    //x coordinate
@@ -360,7 +361,7 @@ void drawFFT() {
       initialX = x;
     }
     line(x, y, x, y - yScale*fftArr[i]);
-    if (i%32 == 0) {                                                                //should make 32 into a variable, but frameRate is not an int
+    if (i%32 == 0) {        //should make 32 into a variable, but frameRate is not an int
       text((int)(i*(1/((float)queueSize/32))), x, y);    //x-axis: frequency spacing is 1/T, where t is length of sample in seconds
     }
     if (i%1 == 0 && i<=5) {
