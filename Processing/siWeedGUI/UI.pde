@@ -32,12 +32,12 @@ void initializeUI() {
   // Buttons //
 
   waveQs = cp5.addButton("waveQs")
-    .setPosition(300, 170)
+    .setPosition(300, 250)
     .setSize(15, 15)
     .setLabel("?");
 
   wecQs = cp5.addButton("wecQs")
-    .setPosition(280, 750)
+    .setPosition(280, 710)
     .setSize(15, 15)
     .setLabel("?");
 
@@ -66,23 +66,23 @@ void initializeUI() {
   ///Button jog, function, sea, off, torque, feedback, jogWEC, offWec; 
 
   torque = cp5.addButton("torque")
-    .setPosition(100, 780)
+    .setPosition(45, 760)
     .setSize(150, 100)
     .setLabel("Torque");   
 
   feedback = cp5.addButton("feedback")
-    .setPosition(250, 780)
+    .setPosition(215, 760)
     .setSize(150, 100)
     .setLabel("Feedback"); 
   //spring, jogWEC, offWec 
 
   seaWEC = cp5.addButton("seaWEC")
-    .setPosition(400, 780)
+    .setPosition(385, 760)
     .setSize(150, 100)
     .setLabel("Sea State");    
 
   offWec = cp5.addButton("offWec")
-    .setPosition(550, 780)
+    .setPosition(555, 760)
     .setSize(150, 100)
     .setLabel("Off"); 
 
@@ -93,19 +93,19 @@ void initializeUI() {
   // Motor Jog Mode Sliders
   position = cp5.addSlider("Position (CM)")  //name slider
     .setRange(-10, 10) //slider range
-    .setPosition(150, 425) //x and y coordinates of upper left corner of button
+    .setPosition(150, 445) //x and y coordinates of upper left corner of button
     .setSize(450, 50); //size (width, height)
 
   // Motor Function Mode Sliders
   h = cp5.addSlider("Height (CM)")  //name slider
     .setRange(0, 10) //slider range
-    .setPosition(150, 425) //x and y coordinates of upper left corner of button
+    .setPosition(150, 445) //x and y coordinates of upper left corner of button
     .setSize(450, 50)
     .hide(); //size (width, height)
 
   freq = cp5.addSlider("Frequency (Hz)")  //name of button
     .setRange(0, 4)
-    .setPosition(150, 500) //x and y coordinates of upper left corner of button
+    .setPosition(150, 530) //x and y coordinates of upper left corner of button
     .setSize(450, 50)
     .hide(); //size (width, height)
 
@@ -113,38 +113,38 @@ void initializeUI() {
   // Motor Sea State Mode Sliders
   sigH = cp5.addSlider("Significant Height (CM)")  //name slider
     .setRange(0, 10) //slider range
-    .setPosition(150, 425) //x and y coordinates of upper left corner of button
+    .setPosition(150, 445) //x and y coordinates of upper left corner of button
     .setSize(450, 50)
     .hide(); //size (width, height)
 
   peakF = cp5.addSlider("Peak Frequency (Hz)")  //name of button
     .setRange(0, 4)
-    .setPosition(150, 500) //x and y coordinates of upper left corner of button
+    .setPosition(150, 530) //x and y coordinates of upper left corner of button
     .setSize(450, 50)
     .hide(); //size (width, height)
 
   gamma = cp5.addSlider("Peakedness")  //name of button
     .setRange(0, 7)
-    .setPosition(150, 575) //x and y coordinates of upper left corner of button
+    .setPosition(150, 610) //x and y coordinates of upper left corner of button
     .setSize(450, 50)
     .hide(); //size (width, height)
 
   // WEC Torque Sliders
   torqueSlider = cp5.addSlider("Torque")  //name of button
     .setRange(0, 0.5)
-    .setPosition(150, 950) //x and y coordinates of upper left corner of button
+    .setPosition(150, 905) //x and y coordinates of upper left corner of button
     .setSize(450, 50); //size (width, height)
 
   // WEC Feedback Sliders   
   pGain = cp5.addSlider("P Gain")  //name of button
     .setRange(0, 0.5)
-    .setPosition(150, 950) //x and y coordinates of upper left corner of button
+    .setPosition(150, 905) //x and y coordinates of upper left corner of button
     .setSize(450, 50) //size (width, height)
     .hide();
 
   dGain = cp5.addSlider("D Gain")  //name of button
     .setRange(0, 0.5)
-    .setPosition(150, 1050) //x and y coordinates of upper left corner of button
+    .setPosition(150, 990) //x and y coordinates of upper left corner of button
     .setSize(450, 50) //size (width, height)
     .hide();
 
@@ -152,19 +152,19 @@ void initializeUI() {
 
   sigHWEC = cp5.addSlider("WEC Significant Height (CM)")  //name of button
     .setRange(0, 0.5)
-    .setPosition(150, 950) //x and y coordinates of upper left corner of button
+    .setPosition(150, 905) //x and y coordinates of upper left corner of button
     .setSize(450, 50) //size (width, height)
     .hide();
 
   peakFWEC = cp5.addSlider("WEC Peak Frequency (Hz)")  //name of button
     .setRange(0, 0.5)
-    .setPosition(150, 1050) //x and y coordinates of upper left corner of button
+    .setPosition(150, 990) //x and y coordinates of upper left corner of button
     .setSize(450, 50) //size (width, height)
     .hide();
 
   gammaWEC = cp5.addSlider("WEC Peakedness)")  //name of button
     .setRange(0, 0.5)
-    .setPosition(150, 1150) //x and y coordinates of upper left corner of button
+    .setPosition(150, 1075) //x and y coordinates of upper left corner of button
     .setSize(450, 50) //size (width, height)
     .hide();
 
@@ -216,7 +216,7 @@ void initializeUI() {
   gamma.setValue(7.0);
 
   snlLogo = loadImage("SNL_Stacked_White.png");
-  wavePic = loadImage("stillwater.jpg");
+  wavePic = loadImage("ocean.jpg");
 }
 //button functions:
 /////////////////// MAKES BUTTONS DO THINGS ////////////////////////////////////
@@ -352,6 +352,7 @@ void drawFFT() {
   float initialX = 0;
   float yScale = 50;
   textSize(10);
+  stroke(green);
   for (int i=0; i<=queueSize/2; i++) {      //cut in half
     float x = (width*0.75)+1.5*i;    //x coordinate
     float y = height*.35;            //y coordinate

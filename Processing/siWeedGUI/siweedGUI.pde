@@ -72,34 +72,38 @@ void draw() {
   textLeading(15);
   textAlign(CENTER, TOP);
   // header image
-  image(wavePic, 0, 0, width, 100);
+  image(wavePic, 0, 0, width, height);
   text("Sandia Interactive Wave Energy Educational Display", width/2, 35);
    
  // rect(25, 150, 800, 550, 7);
-  rect(25, 150, 705, 1920, 7);
+   
   fill(turq);
+  stroke(buttonblue);
+  rect(25, 150, 705, 1920, 7);
+  fill(green);
   rect(25, 115, 300, 100, 7);
+  
+  textFont(fb, 30);
+  fill(buttonblue);
+  textLeading(15);
+  textAlign(CENTER, TOP);
+  text("Mission Control", 175, 150);
   
   textFont(fb, 20);
   fill(buttonblue);
   textLeading(15);
   textAlign(CENTER, TOP);
-  text("Change Wave Dimensions", 175, 170);
+  text("Change Wave Dimensions", 175, 250);
   
   textFont(fb, 20); 
   fill(buttonblue);
   textLeading(15);
   textAlign(CENTER, TOP);
-  text("Change WEC Controls", 175, 750);
+  text("Change WEC Controls", 170, 710);
 
   tint(255, 126);  // Apply transparency without changing color
   image(snlLogo, 5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25);
 
-  //dividing line
-  stroke(green);
-  strokeWeight(3);
-  strokeCap(ROUND);
-  line(640, 480, 640, height-150); //height = 1440
   
   //meter
   // Input for testing.
