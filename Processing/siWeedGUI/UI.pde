@@ -93,19 +93,19 @@ void initializeUI() {
   // Motor Jog Mode Sliders
   position = cp5.addSlider("Position (CM)")  //name slider
     .setRange(-10, 10) //slider range
-    .setPosition(150, 375) //x and y coordinates of upper left corner of button
+    .setPosition(150, 425) //x and y coordinates of upper left corner of button
     .setSize(450, 50); //size (width, height)
 
   // Motor Function Mode Sliders
   h = cp5.addSlider("Height (CM)")  //name slider
     .setRange(0, 10) //slider range
-    .setPosition(150, 375) //x and y coordinates of upper left corner of button
+    .setPosition(150, 425) //x and y coordinates of upper left corner of button
     .setSize(450, 50)
     .hide(); //size (width, height)
 
   freq = cp5.addSlider("Frequency (Hz)")  //name of button
     .setRange(0, 4)
-    .setPosition(150, 475) //x and y coordinates of upper left corner of button
+    .setPosition(150, 500) //x and y coordinates of upper left corner of button
     .setSize(450, 50)
     .hide(); //size (width, height)
 
@@ -113,13 +113,13 @@ void initializeUI() {
   // Motor Sea State Mode Sliders
   sigH = cp5.addSlider("Significant Height (CM)")  //name slider
     .setRange(0, 10) //slider range
-    .setPosition(150, 375) //x and y coordinates of upper left corner of button
+    .setPosition(150, 425) //x and y coordinates of upper left corner of button
     .setSize(450, 50)
     .hide(); //size (width, height)
 
   peakF = cp5.addSlider("Peak Frequency (Hz)")  //name of button
     .setRange(0, 4)
-    .setPosition(150, 475) //x and y coordinates of upper left corner of button
+    .setPosition(150, 500) //x and y coordinates of upper left corner of button
     .setSize(450, 50)
     .hide(); //size (width, height)
 

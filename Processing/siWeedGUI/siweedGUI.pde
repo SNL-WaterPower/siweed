@@ -76,7 +76,7 @@ void draw() {
   text("Sandia Interactive Wave Energy Educational Display", width/2, 35);
    
  // rect(25, 150, 800, 550, 7);
-  rect(25, 150, 705, 960, 7);
+  rect(25, 150, 705, 1920, 7);
   fill(turq);
   rect(25, 115, 300, 100, 7);
   
@@ -86,7 +86,7 @@ void draw() {
   textAlign(CENTER, TOP);
   text("Change Wave Dimensions", 175, 170);
   
-  textFont(fb, 20);
+  textFont(fb, 20); 
   fill(buttonblue);
   textLeading(15);
   textAlign(CENTER, TOP);
