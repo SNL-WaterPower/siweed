@@ -25,7 +25,7 @@ void setup() {
   ////////
   frameRate(32);    //sets draw() to run x times a second.
   ///////initialize objects
-  size(1920,1200);
+  size(1920,1200, P2D);
   waveMaker = new UIData();
   wec = new UIData();
   fftList = new LinkedList();
@@ -48,9 +48,9 @@ void setup() {
   sendFloat(-1, port2);    //off
   
   //adding meter 
-  m = new Meter(this, 1120, 850);
+  m = new Meter(this, 805, 750);
   m.setTitle("Power");
-  m.setFrameColor(color(turq));
+  m.setFrameColor(color(buttonblue));
   m.setMinInputSignal(0);
   m.setMaxInputSignal(500);
   //// Use the default values for testing, 0 - 255.
@@ -74,11 +74,11 @@ void draw() {
   
   image(wavePic, 0, 0, width, height); //background
  // tint(255, 126);  // Apply transparency without changing color
-  image(snlLogo, width-snlLogo.width*0.25-5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25); //Logo
-  //Banner
   fill(buttonblue);
   stroke(buttonblue);
-  rect(0, 0, width, 95); 
+  rect(0, 1120, width, 80); //bottom banner
+  image(snlLogo, width-snlLogo.width*0.25-5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25); //Logo
+  rect(0, 0, width, 95); // Top Banner
   //banner text
   fill(green);
   text("Sandia Interactive Wave Energy Educational Display", width/2, 30);
@@ -87,7 +87,7 @@ void draw() {
   //Mission Control
   fill(turq, 150);
   stroke(buttonblue);
-  rect(25, 175, 705, 1200, 7); // background
+  rect(25, 175, 705, 930, 7); // background
   fill(green);
   rect(25, 150, 225, 75, 7); //Mission Control Title Box 
   //Mission Control Text
@@ -97,24 +97,12 @@ void draw() {
   textAlign(CENTER, TOP);
   text("Mission Control", 140, 175);
   
-  textFont(fb, 20);
-  fill(buttonblue);
-  textLeading(15);
-  textAlign(CENTER, TOP);
-  text("Change Wave Dimensions", 175, 250);
-  
-  textFont(fb, 20); 
-  fill(buttonblue);
-  textLeading(15);
-  textAlign(CENTER, TOP);
-  text("Change WEC Controls", 170, 710);
-  
   // System Status
   fill(turq, 150);
   stroke(buttonblue);
-  rect(780, 175, 1115, 1200, 7); // background
+  rect(780, 150, 1115, 930, 7); // background
   fill(green);
-  rect(780, 150, 225, 75, 7); //system title
+  rect(780, 130, 225, 75, 7); //system title
   fill(buttonblue);
   rect(805, 300, 1065, 360, 7); //graph background
   //System Status Text
@@ -123,7 +111,18 @@ void draw() {
   textLeading(15);
   textAlign(CENTER, TOP);
   text("System Status", 895, 175);
-
+  
+  textFont(fb, 20);
+  fill(255,255,255);
+  textLeading(15);
+  textAlign(CENTER, TOP);
+  text("Change Wave Dimensions", 175, 250);
+  
+  textFont(fb, 20); 
+  fill(255,255,255);
+  textLeading(15);
+  textAlign(CENTER, TOP);
+  text("Change WEC Controls", 170, 710);
   
   //meter
   // Input for testing.
