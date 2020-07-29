@@ -74,9 +74,9 @@ void draw() {
   textAlign(CENTER, TOP);
   
   image(wavePic, 0, 0, width, height); //background
- // tint(255, 126);  // Apply transparency without changing color
   fill(buttonblue);
   stroke(buttonblue);
+  strokeWeight(0);
   rect(0, 1120, width, 80); //bottom banner
   image(snlLogo, width-snlLogo.width*0.25-5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25); //Logo
   rect(0, 0, width, 95); // Top Banner
@@ -90,9 +90,11 @@ void draw() {
  
   //Mission Control
   fill(turq, 150);
-  stroke(buttonblue);
+  stroke(buttonblue, 150);
+  strokeWeight(3);
   rect(25, 150, 705, 930, 7); // background
   fill(green);
+  stroke(buttonblue);
   rect(25, 130, 225, 75, 7); //Mission Control Title Box 
   //Mission Control Text
   textFont(fb, 25);
@@ -103,9 +105,10 @@ void draw() {
   
   // System Status
   fill(turq, 150);
-  stroke(buttonblue);
+  stroke(buttonblue, 150);
   rect(780, 150, 1115, 930, 7); // background
   fill(green);
+  stroke(buttonblue);
   rect(780, 130, 225, 75, 7); //system title
   fill(buttonblue);
   rect(805, 610, 1065, 420, 7); //graph background
@@ -114,6 +117,7 @@ void draw() {
   fill(buttonblue);
   textLeading(15);
   textAlign(CENTER, TOP);
+  stroke(buttonblue);
   text("System Status", 895, 155);
   stroke(green);
   rect(1387, 400, 100, 75);
