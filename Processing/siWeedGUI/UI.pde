@@ -30,59 +30,66 @@ void initializeUI() {
   fb = createFont("Arial Bold Italic", 32, true);
 
   // Buttons //
-
+ int qX, qY;
+ qX = 300;
+ qY = 250;
   waveQs = cp5.addButton("waveQs")
-    .setPosition(300, 250)
+    .setPosition(qX, qY)
     .setSize(15, 15)
     .setLabel("?");
 
   wecQs = cp5.addButton("wecQs")
-    .setPosition(280, 710)
+    .setPosition(qX, qY + 410)
     .setSize(15, 15)
     .setLabel("?");
 
   // wave maker buttons
+  int buttonX, buttonY;
+  buttonX = 45;
+  buttonY = 300;
   jog = cp5.addButton("jog")
-    .setPosition(45, 300)
+    .setPosition(buttonX, buttonY)
     .setSize(150, 100)
     .setLabel("Jog Mode");
 
   function = cp5.addButton("fun")
-    .setPosition(215, 300)
+    .setPosition(buttonX + 170, buttonY)
     .setSize(150, 100)
     .setLabel("Function Mode"); 
 
   sea = cp5.addButton("sea")
-    .setPosition(385, 300)
+    .setPosition(buttonX + 340, buttonY)
     .setSize(150, 100)
     .setLabel("Sea State"); 
 
   off = cp5.addButton("off")
-    .setPosition(555, 300)
+    .setPosition(buttonX + 510, buttonY)
     .setSize(150, 100)
     .setLabel("OFF"); 
 
   ///  Slider pGain, dGain, positionTorque, torque; // WEC sliders
   ///Button jog, function, sea, off, torque, feedback, jogWEC, offWec; 
-
+  
+  buttonY = 760;
+  
   torque = cp5.addButton("torque")
-    .setPosition(45, 760)
+    .setPosition(buttonX, buttonY)
     .setSize(150, 100)
     .setLabel("Torque");   
 
   feedback = cp5.addButton("feedback")
-    .setPosition(215, 760)
+    .setPosition(buttonX + 170, buttonY)
     .setSize(150, 100)
     .setLabel("Feedback"); 
   //spring, jogWEC, offWec 
 
   seaWEC = cp5.addButton("seaWEC")
-    .setPosition(385, 760)
+    .setPosition(buttonX + 340, buttonY)
     .setSize(150, 100)
     .setLabel("Sea State");    
 
   offWec = cp5.addButton("offWec")
-    .setPosition(555, 760)
+    .setPosition(buttonX + 510, buttonY)
     .setSize(150, 100)
     .setLabel("Off"); 
 
