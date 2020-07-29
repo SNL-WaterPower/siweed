@@ -125,13 +125,13 @@ void draw() {
   fill(255,255,255);
   textLeading(15);
   textAlign(CENTER, TOP);
-  text("Change Wave Dimensions", 175, 250);
+  text("Change Wave Dimensions", 175, 230);
   
   textFont(fb, 20); 
   fill(255,255,255);
   textLeading(15);
   textAlign(CENTER, TOP);
-  text("Change WEC Controls", 170, 710);
+  text("Change WEC Controls", 175, 680);
   
   //meter
   // Input for testing.
