@@ -73,7 +73,7 @@ void draw() {
   textAlign(CENTER, TOP);
   
   image(wavePic, 0, 0, width, height); //background
-  tint(255, 126);  // Apply transparency without changing color
+ // tint(255, 126);  // Apply transparency without changing color
   image(snlLogo, width-snlLogo.width*0.25-5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25); //Logo
   //Banner
   fill(buttonblue);
@@ -85,7 +85,7 @@ void draw() {
 
   
   //Mission Control
-  fill(turq);
+  fill(turq, 150);
   stroke(buttonblue);
   rect(25, 175, 705, 1200, 7); // background
   fill(green);
@@ -110,7 +110,7 @@ void draw() {
   text("Change WEC Controls", 170, 710);
   
   // System Status
-  fill(turq);
+  fill(turq, 150);
   stroke(buttonblue);
   rect(780, 175, 1115, 1200, 7); // background
   fill(green);
