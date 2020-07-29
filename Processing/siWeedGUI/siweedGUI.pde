@@ -20,6 +20,7 @@ float TSVal;
  
 // meter set up  
 Meter m;
+String fundingState = "Sandia National Laboratories is a multi-mission laboratory managed and operated by National Technology and Engineering Solutions of Sandia, LLC., a wholly owned subsidiary \n of Honeywell International, Inc., for the U.S. Department of Energy's National Nuclear Security Administration under contract DE-NA0003525.";
 
 void setup() {
   ////////
@@ -48,7 +49,7 @@ void setup() {
   sendFloat(-1, port2);    //off
   
   //adding meter 
-  m = new Meter(this, 805, 750);
+  m = new Meter(this, 805, 300);
   m.setTitle("Power");
   m.setFrameColor(color(buttonblue));
   m.setMinInputSignal(0);
@@ -82,20 +83,23 @@ void draw() {
   //banner text
   fill(green);
   text("Sandia Interactive Wave Energy Educational Display", width/2, 30);
-
-  
+  fill(255,255,255);
+  textSize(12);
+  textLeading(14);
+  text(fundingState, width/2, 1150);
+ 
   //Mission Control
   fill(turq, 150);
   stroke(buttonblue);
-  rect(25, 175, 705, 930, 7); // background
+  rect(25, 150, 705, 930, 7); // background
   fill(green);
-  rect(25, 150, 225, 75, 7); //Mission Control Title Box 
+  rect(25, 130, 225, 75, 7); //Mission Control Title Box 
   //Mission Control Text
   textFont(fb, 25);
   fill(buttonblue);
   textLeading(15);
   textAlign(CENTER, TOP);
-  text("Mission Control", 140, 175);
+  text("Mission Control", 140, 155);
   
   // System Status
   fill(turq, 150);
@@ -104,13 +108,18 @@ void draw() {
   fill(green);
   rect(780, 130, 225, 75, 7); //system title
   fill(buttonblue);
-  rect(805, 300, 1065, 360, 7); //graph background
+  rect(805, 610, 1065, 420, 7); //graph background
   //System Status Text
   textFont(fb, 25);
   fill(buttonblue);
   textLeading(15);
   textAlign(CENTER, TOP);
-  text("System Status", 895, 175);
+  text("System Status", 895, 155);
+  stroke(green);
+  rect(1387, 400, 100, 75);
+  rect(1487, 400, 100, 75);
+  rect(1587, 400, 100, 75);
+  rect(1687, 400, 100, 75);
   
   textFont(fb, 20);
   fill(255,255,255);

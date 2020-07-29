@@ -196,7 +196,7 @@ void initializeUI() {
 
   // Charts //
   waveSig =  cp5.addChart("Sin Wave")
-    .setPosition(830, 350)
+    .setPosition(830, 750)
     .setSize(400, 250)
     .setRange(-10, 10)
     .setView(Chart.LINE) // use Chart.LINE, Chart.PIE, Chart.AREA, Chart.BAR_CENTERED
@@ -356,7 +356,7 @@ void drawFFT() {
   stroke(green);
   for (int i=0; i<=queueSize/2; i++) {      //cut in half
     float x = 1400+1.5*i;    //x coordinate
-    float y = 600;            //y coordinate
+    float y = 1000;            //y coordinate
     if (i == 0) {
       initialX = x;
     }
