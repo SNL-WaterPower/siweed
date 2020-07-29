@@ -355,8 +355,6 @@ void drawFFT() {
   fill(green);
   stroke(green);
   for (int i=0; i<=queueSize/2; i++) {      //cut in half
-//    float x = (width*0.75)+1.5*i;    //x coordinate
-//    float y = height*.35;            //y coordinate
     float x = 1400+1.5*i;    //x coordinate
     float y = 600;            //y coordinate
     if (i == 0) {

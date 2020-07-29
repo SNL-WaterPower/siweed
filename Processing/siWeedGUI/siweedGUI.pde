@@ -67,34 +67,35 @@ void draw() {
   // Background color
   background(dblue);
   //Title 
-  textFont(fb, 32);
+  textFont(fb, 40);
   fill(green);
   textLeading(15);
   textAlign(CENTER, TOP);
   
   image(wavePic, 0, 0, width, height); //background
-//  tint(255, 126);  // Apply transparency without changing color
+  tint(255, 126);  // Apply transparency without changing color
   image(snlLogo, width-snlLogo.width*0.25-5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25); //Logo
   //Banner
   fill(buttonblue);
   stroke(buttonblue);
-  rect(0, 0, width, 80); 
+  rect(0, 0, width, 95); 
   //banner text
   fill(green);
-  text("Sandia Interactive Wave Energy Educational Display", width/2, 35);
- 
+  text("Sandia Interactive Wave Energy Educational Display", width/2, 30);
+
+  
   //Mission Control
   fill(turq);
   stroke(buttonblue);
-  rect(25, 150, 705, 1200, 7); // background
+  rect(25, 175, 705, 1200, 7); // background
   fill(green);
-  rect(25, 115, 300, 100, 7); //Mission Control Box 
-   //Mission Control Text
-  textFont(fb, 30);
+  rect(25, 150, 225, 75, 7); //Mission Control Title Box 
+  //Mission Control Text
+  textFont(fb, 25);
   fill(buttonblue);
   textLeading(15);
   textAlign(CENTER, TOP);
-  text("Mission Control", 175, 150);
+  text("Mission Control", 140, 175);
   
   textFont(fb, 20);
   fill(buttonblue);
@@ -108,14 +109,20 @@ void draw() {
   textAlign(CENTER, TOP);
   text("Change WEC Controls", 170, 710);
   
-  // Output
+  // System Status
   fill(turq);
   stroke(buttonblue);
-  rect(780, 150, 1115, 1200, 7); // background
+  rect(780, 175, 1115, 1200, 7); // background
   fill(green);
-  rect(780, 115, 300, 100, 7); //Output Box 
+  rect(780, 150, 225, 75, 7); //system title
   fill(buttonblue);
-  rect(805, 300, 1065, 360, 7); //Output Box 
+  rect(805, 300, 1065, 360, 7); //graph background
+  //System Status Text
+  textFont(fb, 25);
+  fill(buttonblue);
+  textLeading(15);
+  textAlign(CENTER, TOP);
+  text("System Status", 895, 175);
 
   
   //meter
