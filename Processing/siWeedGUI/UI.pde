@@ -39,7 +39,7 @@ void initializeUI() {
     .setLabel("?");
 
   wecQs = cp5.addButton("wecQs")
-    .setPosition(qX, qY + 410)
+    .setPosition(qX - 45, qY + 410)
     .setSize(15, 15)
     .setLabel("?");
 
