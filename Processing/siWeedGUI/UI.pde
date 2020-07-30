@@ -32,7 +32,7 @@ void initializeUI() {
   // Buttons //
  int qX, qY;
  qX = 300;
- qY = 230;
+ qY = 210;
   waveQs = cp5.addButton("waveQs")
     .setPosition(qX, qY)
     .setSize(15, 15)
@@ -46,51 +46,51 @@ void initializeUI() {
   // wave maker buttons
   int buttonX, buttonY;
   buttonX = 45;
-  buttonY = 270;
+  buttonY = 260;
   jog = cp5.addButton("jog")
     .setPosition(buttonX, buttonY)
-    .setSize(150, 100)
+    .setSize(150, 65)
     .setLabel("Jog Mode");
 
   function = cp5.addButton("fun")
     .setPosition(buttonX + 170, buttonY)
-    .setSize(150, 100)
+    .setSize(150, 65)
     .setLabel("Function Mode"); 
 
   sea = cp5.addButton("sea")
     .setPosition(buttonX + 340, buttonY)
-    .setSize(150, 100)
+    .setSize(150, 65)
     .setLabel("Sea State"); 
 
   off = cp5.addButton("off")
     .setPosition(buttonX + 510, buttonY)
-    .setSize(150, 100)
+    .setSize(150, 65)
     .setLabel("OFF"); 
 
   ///  Slider pGain, dGain, positionTorque, torque; // WEC sliders
   ///Button jog, function, sea, off, torque, feedback, jogWEC, offWec; 
   
-  buttonY = 720;
+  buttonY = 660;
   
   torque = cp5.addButton("torque")
     .setPosition(buttonX, buttonY)
-    .setSize(150, 100)
+    .setSize(150, 65)
     .setLabel("Torque");   
 
   feedback = cp5.addButton("feedback")
     .setPosition(buttonX + 170, buttonY)
-    .setSize(150, 100)
+    .setSize(150, 65)
     .setLabel("Feedback"); 
   //spring, jogWEC, offWec 
 
   seaWEC = cp5.addButton("seaWEC")
     .setPosition(buttonX + 340, buttonY)
-    .setSize(150, 100)
+    .setSize(150, 65)
     .setLabel("Sea State");    
 
   offWec = cp5.addButton("offWec")
     .setPosition(buttonX + 510, buttonY)
-    .setSize(150, 100)
+    .setSize(150, 65)
     .setLabel("Off"); 
 
 
@@ -99,7 +99,7 @@ void initializeUI() {
    
   int sliderX, sliderY;
   sliderX = 150;
-  sliderY = 420; // button Y lcation (270) + size of button + 50 
+  sliderY = 240 + 65 + 50; // button Y lcation (240) + size of button + 50 
 
   // Motor Jog Mode Sliders
   position = cp5.addSlider("Position (CM)")  //name slider
@@ -140,7 +140,7 @@ void initializeUI() {
     .setSize(450, 50)
     .hide(); //size (width, height)
 
-  sliderY = buttonY +150; //button y coordinate + 150
+  sliderY = buttonY + 65 + 50 ; //button y coordinate + button size + 50 (offset)
 
   // WEC Torque Sliders
   torqueSlider = cp5.addSlider("Torque")  //name of button

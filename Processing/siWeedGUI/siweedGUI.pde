@@ -100,8 +100,8 @@ void draw() {
   textFont(fb, 25);
   fill(buttonblue);
   textLeading(15);
-  textAlign(CENTER, TOP);
-  text("Mission Control", 140, 155);
+  textAlign(LEFT, TOP);
+  text("Mission Control", 45, 155);
   
   // System Status
   fill(turq, 150);
@@ -116,9 +116,9 @@ void draw() {
   textFont(fb, 25);
   fill(buttonblue);
   textLeading(15);
-  textAlign(CENTER, TOP);
+  textAlign(LEFT, TOP);
   stroke(buttonblue);
-  text("System Status", 895, 155);
+  text("System Status", 805, 155);
   stroke(green);
   rect(1387, 400, 100, 75);
   rect(1487, 400, 100, 75);
@@ -128,14 +128,14 @@ void draw() {
   textFont(fb, 20);
   fill(255,255,255);
   textLeading(15);
-  textAlign(CENTER, TOP);
-  text("Change Wave Dimensions", 175, 230);
+  textAlign(LEFT, TOP);
+  text("Change Wave Dimensions", 45, 220);
   
   textFont(fb, 20); 
   fill(255,255,255);
   textLeading(15);
-  textAlign(CENTER, TOP);
-  text("Change WEC Controls", 175, 680);
+  textAlign(LEFT, TOP);
+  text("Change WEC Controls", 45, 620);
   
   //meter
   // Input for testing.
