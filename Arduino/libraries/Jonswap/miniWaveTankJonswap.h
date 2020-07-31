@@ -3,10 +3,15 @@
 #define miniWaveTankJonswap_h
 
 #define _USE_MATH_DEFINES
+/*
 #include <StandardCplusplus.h>
 #include <vector>
 #include <iostream>
 #include <cmath>
+*/
+#include <ArduinoSTL.h>
+
+using namespace std;
 
 class miniWaveTankJonswap
 {
