@@ -3,22 +3,23 @@
 #define miniWaveTankJonswap_h
 
 #define _USE_MATH_DEFINES
+//#include <ArxContainer.h>
+
+//#include <StandardCplusplus.h>
+//#include <vector>
+//#include <iostream>
+//#include <cmath>
 /*
-#include <StandardCplusplus.h>
-#include <vector>
-#include <iostream>
-#include <cmath>
-*/
 #include <ArduinoSTL.h>
 
 using namespace std;
-
+*/
 class miniWaveTankJonswap
 {
   public:
   static double period;
   static double df;
-  static double f_low; //round to the nearest multiple of df
+  static double f_low;
   static double f_high;
 
   static int num_fs;
@@ -28,19 +29,7 @@ class miniWaveTankJonswap
   static std::vector<double> S;
   miniWaveTankJonswap(double period, double low, double high);
   static void update(double sigH, double peakF, double gamma);
-	
-/*
-  private:
-  class Jonswap
-  {
-public:
-	std::vector<double> f;
-	std::vector<double> S;
 
-	void update(std::vector<double>& f, double Tp, double Hm0, double gamma);
-  };
-Jonswap J;
-*/
   public:
   virtual int getNum();
   virtual std::vector<float> getAmp();

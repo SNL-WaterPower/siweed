@@ -1,7 +1,5 @@
 #include "miniWaveTankJonswap.h"
 
-//using Random = java::util::Random;
-//using Math = java::lang::Math;
 double miniWaveTankJonswap::period = 0;
 double miniWaveTankJonswap::df = 0;
 double miniWaveTankJonswap::f_low = 0;
@@ -21,8 +19,6 @@ miniWaveTankJonswap::miniWaveTankJonswap(double _period, double _low, double _hi
   f = std::vector<double>(num_fs);
   amp = std::vector<double>(num_fs);
   phase = std::vector<double>(num_fs);
-
-  //std::wcout << f_low << L"  " << f_high << L"  " << num_fs << L"=?" << (f_high - f_low) / df << std::endl;
 
   // f and phase are assigned upon construction
   srand(123);//randomSeed(123); //uses a defined seed, so the sequence is the same between runs
@@ -82,53 +78,7 @@ void miniWaveTankJonswap::update(double sigH, double peakF, double gamma)
     amp[i] = sqrt(2 * S[i] * 2 * M_PI * df) * 100; //meters to cm
   }
 }
-/*
-void miniWaveTankJonswap::Jonswap::update(std::vector<double>& _f, double Tp, double Hm0, double gamma)
-{
-  Serial.println('j');
-Serial.println(_f.size());
-  double g = 9.81;
-  double siga = 0.07;
-  double sigb = 0.09;
-  double fp = 1 / Tp;
-  std::vector<double> S_temp(_f.size());
-  std::vector<double> Gf(_f.size());
-  std::vector<double> Sf(_f.size());
-  double alpha_JS = 0;
-  double trapz = 0;
-  //;
-  int i;
 
-  for (i = 0; i < _f.size(); i++)
-  {
-    if (_f[i] <= fp)
-    {
-      Gf[i] = pow(gamma, exp(-pow((_f[i] - fp), 2) / (2 * (siga, 2) * pow(fp, 2))));
-    }
-    else
-    {
-      Gf[i] = pow(gamma, exp(-pow((_f[i] - fp), 2) / (2 * pow(sigb, 2) * pow(fp, 2))));
-    }
-    S_temp[i] = pow(g, 2) * pow((2 * M_PI), -4) * pow(_f[i], -5) * exp(-(5 / 4) * pow(_f[i] / fp, -4));
-  }
-
-  //trapezoidal rule
-
-  for (i = 0; i < _f.size() - 1; i++)
-  {
-    trapz += (S_temp[i] * Gf[i] + S_temp[i + 1] * Gf[i + 1]) * (_f[i + 1] - _f[i]) / 2;
-  }
-  alpha_JS = (Hm0 * Hm0) / 16 / trapz;
-  for (i = 0; i < _f.size(); i++)
-  {
-    Sf[i] = alpha_JS * S_temp[i] * Gf[i];	//nan ovf ovf
-    //Serial.println(Gf[i]);	//nan ovf ovf
-  }
-  this->S = Sf;
-  this->f = _f;
-  Serial.println('J');
-}
-*/
 int miniWaveTankJonswap::getNum()
 {
   return num_fs;

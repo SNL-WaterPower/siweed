@@ -7,6 +7,7 @@
 
 #if defined(ARDUINO_ARCH_AVR)\
  || defined(ARDUINO_ARCH_MEGAAVR)\
+ || defined(ARDUINO_ARCH_SAM)\
  || defined(ARDUINO_ARCH_SAMD)\
  || defined(ARDUINO_spresense_ast)
     #define ARX_CONTAINER_DISABLED
@@ -443,6 +444,17 @@ namespace arx {
             return this->end();
         }
 
+        iterator find(const Key& key)
+        {
+            for (size_t i = 0; i < this->size(); ++i)
+            {
+                iterator it = this->begin() + i;
+                if (key == it->first)
+                    return it;
+            }
+            return this->end();
+        }
+
         pair<iterator, bool> insert(const Key& key, const T& t)
         {
             bool b {false};
@@ -515,9 +527,9 @@ namespace arx {
             return this->end();
         }
 
-        const T& operator[] (const Key& key)
+        T& operator[] (const Key& key)
         {
-            const_iterator it = find(key);
+            iterator it = find(key);
             if (it != this->end()) return it->second;
 
             insert(::arx::make_pair(key, T()));
