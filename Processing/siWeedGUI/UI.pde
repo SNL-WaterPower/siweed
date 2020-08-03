@@ -6,6 +6,8 @@ Slider sigH, peakF, gamma;  //sliders for sea state mode
 Slider pGain, dGain, torqueSlider, sigHWEC, peakFWEC, gammaWEC; // WEC sliders
 Button jog, function, sea, off, torque, feedback, seaWEC, offWec; // mode buttons
 Button wecQs, waveQs;
+Button quad1, quad2, quad3, quad4;
+RadioButton wavePos, waveEl, wecPosRB, wecVel, wecTorq, wecPow;
 Textarea wecText, waveText;
 // Custom colors
 color green = color(190, 214, 48);
@@ -30,6 +32,32 @@ void initializeUI() {
   fb = createFont("Arial Bold Italic", 32, true);
 
   // Buttons //
+  
+  int powerX, powerY;
+  powerX = 1387;
+  powerY = 500;
+  
+  quad1 = cp5.addButton("quad1")
+    .setPosition(powerX, powerY)
+    .setSize(100, 50)
+    .setLabel("25%");  
+    
+  quad2 = cp5.addButton("quad2")
+    .setPosition(powerX + 100, powerY)
+    .setSize(100, 50)
+    .setLabel("50%"); 
+
+  quad3 = cp5.addButton("quad3")
+    .setPosition(powerX + 200, powerY)
+    .setSize(100, 50)
+    .setLabel("75%"); 
+
+  quad3 = cp5.addButton("quad4")
+    .setPosition(powerX + 300, powerY)
+    .setSize(100, 50)
+    .setLabel("100%");
+
+  
  int qX, qY;
  qX = 300;
  qY = 210;
@@ -207,6 +235,10 @@ void initializeUI() {
     .hide()
     ;
 
+  //RADIO BUTTONS 
+  //RadioButton wavePos, waveEl, wecPos, wecVel, wecTorq, wecPow;
+  int radButtonX, radButtonY;
+  
   // Charts //
   waveSig =  cp5.addChart("Sin Wave")
     .setPosition(830, 750)

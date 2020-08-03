@@ -49,11 +49,17 @@ void setup() {
   sendFloat(-1, port2);    //off
   
   //adding meter 
-  m = new Meter(this, 805, 300);
+  m = new Meter(this, 1387, 225);
+  m.setMeterWidth(400);
   m.setTitle("Power");
-  m.setFrameColor(color(buttonblue));
+  m.setFrameColor(green);
   m.setMinInputSignal(0);
   m.setMaxInputSignal(500);
+  m.setTitleFontColor(buttonblue);
+  m.setPivotPointColor(buttonblue);
+  m.setArcColor(buttonblue);
+  m.setScaleFontColor(buttonblue);
+  m.setTicMarkColor(buttonblue);
   //// Use the default values for testing, 0 - 255.
   //minIn = m.getMinInputSignal();
   //maxIn = m.getMaxInputSignal();
@@ -120,11 +126,7 @@ void draw() {
   stroke(buttonblue);
   text("System Status", 805, 155);
   stroke(green);
-  rect(1387, 400, 100, 75);
-  rect(1487, 400, 100, 75);
-  rect(1587, 400, 100, 75);
-  rect(1687, 400, 100, 75);
-  
+    
   textFont(fb, 20);
   fill(255,255,255);
   textLeading(15);
@@ -138,10 +140,28 @@ void draw() {
   text("Change WEC Controls", 45, 620);
   
   //meter
-  // Input for testing.
-  // Update the sensor value to the meter.
+  
   m.updateMeter((int)(100*pow));
   // Use a delay to see the changes.
+  pow = 1.25;
+  if (pow >= 1.25 && pow < 3){
+    quad1.setColorBackground(green);
+  }
+  if (pow >= 3 && pow < 4.25){
+    quad1.setColorBackground(green);
+    quad2.setColorBackground(green);
+  }
+  if (pow >= 4.25 && pow < 5){
+    quad1.setColorBackground(green);
+    quad2.setColorBackground(green);
+    quad3.setColorBackground(green);
+  }
+  if (pow >= 5){
+    quad1.setColorBackground(green);
+    quad2.setColorBackground(green);
+    quad3.setColorBackground(green);
+    quad4.setColorBackground(green);
+  }
   
   //controls button pop up behavior
   if (mousePressed && waveText.isVisible()){
