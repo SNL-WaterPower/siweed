@@ -16,11 +16,6 @@ miniWaveTankJonswap::miniWaveTankJonswap(double _period, double _low, double _hi
   f_low = df * floor(_low / df); //round to the nearest multiple of df
   f_high = df * floor(_high / df);
   num_fs = (int)((f_high - f_low) / df);
-  /*
-  f = std::vector<double>(num_fs);
-  amp = std::vector<double>(num_fs);
-  phase = std::vector<double>(num_fs);
-  */
   if(num_fs > max_num_fs)
   {
 	  Serial.print("Error: num_fs greater than max elements: ");
