@@ -6,7 +6,7 @@ Had an issue where jonswap.update would not run properly in a switch statement
 miniWaveTankJonswap jonswap(512.0 / 32.0, 0.5, 2.5); //period, low frequency, high frequency. frequencies will be rounded to multiples of df(=1/period)
 //^ISSUE. Acuracy seems to fall off after ~50 components when using higher frequencies(1,3 at 64 elements seems wrong).
 void setup() {
-  Serial.begin(500000);
+  Serial.begin(9600);
 
 }
 void loop() {
