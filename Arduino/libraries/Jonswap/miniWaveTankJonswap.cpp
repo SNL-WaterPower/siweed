@@ -1,50 +1,44 @@
 #include "miniWaveTankJonswap.h"
-
+const int max_num_fs = 100;
 double miniWaveTankJonswap::period = 0;
 double miniWaveTankJonswap::df = 0;
 double miniWaveTankJonswap::f_low = 0;
 double miniWaveTankJonswap::f_high = 0;
 int miniWaveTankJonswap::num_fs = 0;
-/*
-std::vector<double> miniWaveTankJonswap::f;
-std::vector<double> miniWaveTankJonswap::amp;
-std::vector<double> miniWaveTankJonswap::phase;
-std::vector<double> miniWaveTankJonswap::S;
-*/
-double miniWaveTankJonswap::f[100];
-double miniWaveTankJonswap::amp[100];
-double miniWaveTankJonswap::phase[100];
-double miniWaveTankJonswap::S[100];
+double miniWaveTankJonswap::f[max_num_fs];
+double miniWaveTankJonswap::amp[max_num_fs];
+double miniWaveTankJonswap::phase[max_num_fs];
+double miniWaveTankJonswap::S[max_num_fs];
 
 miniWaveTankJonswap::miniWaveTankJonswap(double _period, double _low, double _high)
 { //constructor
   df = 1 / _period;
   f_low = df * floor(_low / df); //round to the nearest multiple of df
   f_high = df * floor(_high / df);
-  num_fs = static_cast<int>((f_high - f_low) / df);
+  num_fs = (int)((f_high - f_low) / df);
   /*
   f = std::vector<double>(num_fs);
   amp = std::vector<double>(num_fs);
   phase = std::vector<double>(num_fs);
   */
-  if(num_fs > 100)
+  if(num_fs > max_num_fs)
   {
-	  //throw error
+	  Serial.print("Error: num_fs greater than max elements: ");
+	  Serial.println(max_num_fs);
 	  return;
   }
 
   // f and phase are assigned upon construction
-  //srand(123);//randomSeed(123); //uses a defined seed, so the sequence is the same between runs
-  randomSeed(123);
+  randomSeed(123); //uses a defined seed, so the sequence is the same between runs. !Note: The same seed will produce different results on Atmel and ARM processors.
   for (int i = 0; i < num_fs; i++)
   { //f increments by df
     f[i] = f_low + i * df;
-    //phase[i] = rand() % 1000 / 1000.0 * 2 * M_PI;
     phase[i] = random(0,1000)/ 1000.0 * 2 * M_PI;
   }
 }
 void miniWaveTankJonswap::update(double sigH, double peakF, double gamma)
-{ //updates amp with new values. Called on button press
+{ 
+  //updates amp with new values. Called on button press
   double Hm0 = sigH / 100; //cm to meters
   double Tp = 1 / peakF;
   //gamma is the same;
@@ -53,14 +47,9 @@ void miniWaveTankJonswap::update(double sigH, double peakF, double gamma)
   double siga = 0.07;
   double sigb = 0.09;
   double fp = 1 / Tp;
-  /*
-  std::vector<double> S_temp(f.size());
-  std::vector<double> Gf(f.size());
-  std::vector<double> Sf(f.size());
-  */
-  double S_temp[100];
-  double Gf[100];
-  double Sf[100];
+  double S_temp[max_num_fs];
+  double Gf[max_num_fs];
+  double Sf[max_num_fs];
   double alpha_JS = 0;
   double trapz = 0;
   int i;

@@ -2,8 +2,9 @@
 Had an issue where jonswap.update would not run properly in a switch statement
 */
 
-#include <miniWaveTankJonswap.h>    //dependent on <StandardCplusplus.h>
+#include <miniWaveTankJonswap.h>
 miniWaveTankJonswap jonswap(512.0 / 32.0, 0.5, 2.5); //period, low frequency, high frequency. frequencies will be rounded to multiples of df(=1/period)
+//Num_fs is (f_high - f_low) / df). df is 1/period. Num_fs needs to be less than 100.
 //^ISSUE. Acuracy seems to fall off after ~50 components when using higher frequencies(1,3 at 64 elements seems wrong).
 void setup() {
   Serial.begin(9600);
