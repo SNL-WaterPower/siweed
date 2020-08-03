@@ -1,5 +1,5 @@
 void initSerial() {
-  Serial.begin(500000);
+  Serial.begin(250000);
 }
 void readSerial() {
   /* '!' indicates mode switch, next int is mode

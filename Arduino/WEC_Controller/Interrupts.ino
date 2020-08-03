@@ -59,4 +59,5 @@ void sendSerial()   //called by interrupt
   sendFloat(tauCommand);
   Serial.write('p');
   sendFloat(power);
+  Serial.println();
 }
