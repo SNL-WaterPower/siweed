@@ -118,6 +118,10 @@ void draw() {
   rect(780, 130, 225, 75, 7); //system title
   fill(buttonblue);
   rect(805, 610, 1065, 420, 7); //graph background
+  rect(805, 275, 550, 250); // explainer box
+  fill(255,255,255);
+  textFont(fb, 20);
+  text("Can you save the town from its power outage? \n Change the demension and type \n of wave to see how the power changes! \n Change the wave energy converter's controls \n to harvest more power. \n How quickly can you light up all four quadrants", 810, 290);
   //System Status Text
   textFont(fb, 25);
   fill(buttonblue);
