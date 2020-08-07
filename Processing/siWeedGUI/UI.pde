@@ -32,28 +32,32 @@ void initializeUI() {
   fb = createFont("Arial Bold Italic", 32, true);
 
   // Buttons //
-  
+  //1387
   int powerX, powerY;
-  powerX = 1387;
+  powerX = 1420;
   powerY = 500;
   
   quad1 = cp5.addButton("quad1")
     .setPosition(powerX, powerY)
+    .setColorBackground(color(180, 190, 191))
     .setSize(100, 50)
     .setLabel("25%");  
     
   quad2 = cp5.addButton("quad2")
     .setPosition(powerX + 100, powerY)
+    .setColorBackground(color(180, 190, 191))
     .setSize(100, 50)
     .setLabel("50%"); 
 
   quad3 = cp5.addButton("quad3")
     .setPosition(powerX + 200, powerY)
+    .setColorBackground(color(180, 190, 191))
     .setSize(100, 50)
     .setLabel("75%"); 
 
   quad3 = cp5.addButton("quad4")
     .setPosition(powerX + 300, powerY)
+    .setColorBackground(color(180, 190, 191))
     .setSize(100, 50)
     .setLabel("100%");
 
