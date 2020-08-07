@@ -6,6 +6,7 @@ void initInterrupts() {
   delay(50);
   Timer.getAvailable().attachInterrupt(updateTau).start(interval * 1.0e6);
 }
+
 volatile float pos;
 void updateTau()    //called by interupt
 {
@@ -24,20 +25,7 @@ void updateTau()    //called by interupt
       tauCommand = kp * pos + kd * vel;      //PD feedback control
       break;
     case 2:
-      if (newJonswapData) {
-        newJonswapData = false;
-        jonswap.update(sigH, peakF, _gamma);
-        for (int i = 0; i < jonswap.getNum(); i++) {
-          amps[i] = jonswap.getAmp()[i];
-          freqs[i] = jonswap.getF()[i];
-          phases[i] = jonswap.getPhase()[i];
-        }
-      }
-      tauCommand = 0;
-      for (volatile int i = 0; i < jonswap.getNum(); i++)           //function mode
-      {
-        tauCommand += amps[i] * sin(2 * pi * t * freqs[i] + phases[i]);
-      }
+      tauCommand = calcTS(t);
       break;
   }
   if (mode != -1)
@@ -46,7 +34,8 @@ void updateTau()    //called by interupt
     digitalWrite(enablePin, HIGH);
   }
 }
-void sendSerial()   //called by interrupt
+
+void sendSerial()   //called by interupt
 {
   /*
     e: encoder position

@@ -49,6 +49,8 @@ void setup() {
   port2.write('!');
   sendFloat(-1, port2);    //off
   
+  unitTests();
+  
   //adding meter 
   m = new Meter(this, 1425, 240);
   m.setMeterWidth(400);
@@ -206,27 +208,30 @@ void draw() {
   /////FFT section(move to fft tab eventually):  //!!needs to be activated and deactivated(maybe)
   if (millis() > previousMillis+fftInterval) {
     previousMillis = millis();
-    Complex[] fftIn = new Complex[queueSize];
-    for (int i = 0; i < queueSize; i++) {    //fill with zeros
-      fftIn[i] = new Complex(0, 0);
-    }
-    for (int i = 0; i < fftList.size(); i++) {
-      fftIn[i] = new Complex((float)fftList.get(i), 0);
-    }
-    //fftIn[0] = new Complex(1,0);
-    //fftIn[1] = new Complex(0,0);
-    //fftIn[2] = new Complex(-1,0);
-    //fftIn[3] = new Complex(0,0);
-    Complex[] fftOut = myFFT.fft(fftIn);
-    for (int i = 0; i < queueSize; i++) {
-      fftArr[i] = 2.0*(float)Math.sqrt( fftOut[i].re()*fftOut[i].re() + fftOut[i].im()*fftOut[i].im() )/queueSize;      //magnitude
-      //println(fftOut[i].re()+" + "+fftOut[i].im()+"i");
-    }
-    //println("in: "+fftIn[16]);
-    //println("out: "+fftArr[16]);
+    updateFFT();
   }
   drawFFT();
   thread("readMegaSerial");    //will run this funciton in parallel thread
   thread("readDueSerial");
   thread("logData");
+}
+void updateFFT() {
+  Complex[] fftIn = new Complex[queueSize];
+  for (int i = 0; i < queueSize; i++) {    //fill with zeros
+    fftIn[i] = new Complex(0, 0);
+  }
+  for (int i = 0; i < fftList.size(); i++) {
+    fftIn[i] = new Complex((float)fftList.get(i), 0);
+  }
+  //fftIn[0] = new Complex(1,0);
+  //fftIn[1] = new Complex(0,0);
+  //fftIn[2] = new Complex(-1,0);
+  //fftIn[3] = new Complex(0,0);
+  Complex[] fftOut = myFFT.fft(fftIn);
+  for (int i = 0; i < queueSize; i++) {
+    fftArr[i] = (float)Math.sqrt( fftOut[i].re()*fftOut[i].re() + fftOut[i].im()*fftOut[i].im() )/queueSize;      //magnitude
+    //println(fftOut[i].re()+" + "+fftOut[i].im()+"i");
+  }
+  //println("in: "+fftIn[16]);
+  //println("out: "+fftArr[16]);
 }

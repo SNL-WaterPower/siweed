@@ -3,37 +3,32 @@ Serial port2;    //arduino Due
 void initializeSerial() {
   ///////////initialize Serial
 
- 
-  //port1 = new Serial(this, "COM4", 500000); // all communication with Megas
-  //port2 = new Serial(this, "COM5", 500000); // all communication with Due
-  
   //mac serial com
   printArray(Serial.list()); 
   port1 = new Serial(this, Serial.list()[1], 500000); // all communication with Megas
-  port2 = new Serial(this, Serial.list()[2], 500000);; // all communication with Due
+  port2 = new Serial(this, Serial.list()[2], 250000); // all communication with Due
   delay(2000);
 }
 void sendFloat(float f, Serial port)
 {
   /* 
    For mega:
-   /* '!' indicates mode switch, next int is mode
+  /* '!' indicates mode switch, next int is mode
    j indicates jog position
    a indicates incoming amplitude
    f indicates incoming frequency
    s :sigH
    p :peakF
    g :gamma
-
+   
    For Due:
    '!' indicates mode switch, next int is mode
    t indicates torque command
    k indicates kp -p was taken
    d indicates kd
-   n indicates length of vectors/number of functions in sea state(starting at 1)
-   a indicates incoming amp vector
-   p indicates incoming phase vector
-   f indicates incoming frequency vector
+   s :sigH
+   p :peakF
+   g :gamma
    
    EDIT: numbers are now in this format:  p1234>  has a scalar of 100, so no decimal, and no start char
    */
@@ -69,15 +64,20 @@ void readMegaSerial() {
       waveMakerPos = readFloat(port1);
       break;
     case 'd':
+      megaUnitTests[0] = true;      //for unit testing;
       debugData = readFloat(port1);
-      
+
       waveSig.push("incoming", debugData);
-      waveSig2.push("incoming2", debugData + 5);
-      waveSig2.push("incoming", debugData);
       if (waveMaker.mode == 3||waveMaker.mode == 2) fftList.add(debugData);      //adds to the tail if in the right mode
       if (fftList.size() > queueSize)
       {
         fftList.remove();          //removes from the head
+      }
+      break;
+    case 'u':
+      int testNum = (int)readFloat(port1);    //indicates which jonswap test passed(1 or 2). Negative means that test failed.
+      if (testNum > 0) {    //only changes if test was passed
+        megaUnitTests[testNum] = true;
       }
       break;
     }
@@ -100,7 +100,14 @@ void readDueSerial() {
       tau = readFloat(port2);
       break;
     case 'p':
+      dueUnitTests[0] = true;
       pow = readFloat(port2);
+      break;
+    case 'u':
+      int testNum = (int)readFloat(port2);    //indicates which jonswap test passed(1 or 2)
+      if (testNum > 0) {    //only changes if test was passed
+        dueUnitTests[testNum] = true;
+      }   
       break;
     }
   }

@@ -10,7 +10,7 @@ void initSerial() {
    g :gamma
 */
 void readSerial() {
-  if (Serial.available() >= 6) {   //if a whole float is through: n+100>
+  if (Serial.available() > 0) {   //if a whole float is through: n+100>
     //delay(1000);
     //Serial.print('b');
     //Serial.println(Serial.available());
@@ -43,26 +43,22 @@ void readSerial() {
       case 'g':     //should always be recieved after s and p
         gamma = readFloat();
         newJonswapData = true;
-        //noInterrupts();
-        /*
-        Serial.println("start");
-        //jonswap.update(sigH, peakF, gamma);
-        jonswap.update(5.0, 3.0, 7.0);
-        Serial.println("finished");
-        n = jonswap.getNum();
-        Serial.println(n);
-        
-        for (int i = 0; i < n; i++) {
-          amps[i] = jonswap.getAmp()[i];
-          freqs[i] = jonswap.getF()[i];
-          phases[i] = jonswap.getPhase()[i];
-          Serial.println("copy");
+        break;
+      case 'u':
+        if (ampUnitTest) {
+          Serial.write('u');
+          sendFloat(1);       //this may get interupted by the send serial interupt, which might cause an issue
+        } else {
+          Serial.write('u');
+          sendFloat(-1);
         }
-        for (int i = 0; i < n; i++) {
-          Serial.println(jonswap.getAmp()[i]);
+        if (TSUnitTest) {
+          Serial.write('u');
+          sendFloat(2);
+        } else {
+          Serial.write('u');
+          sendFloat(-2);
         }
-        //interrupts();
-        */
         break;
     }
   }

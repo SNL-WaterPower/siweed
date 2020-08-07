@@ -1,8 +1,10 @@
 void initSerial() {
   Serial.begin(250000);
 }
-void readSerial() {
-  /* '!' indicates mode switch, next int is mode
+void readSerial()
+{
+  /*
+    '!' indicates mode switch, next int is mode
     t indicates torque command
     k indicates kp -p was taken
     d indicates kd
@@ -10,7 +12,8 @@ void readSerial() {
     p :peakF
     g :gamma
   */
-  if (Serial.available() >= 6) {   //if a whole float is through: n+100>
+  if (Serial.available() > 0)
+  {
     char c = Serial.read();
     switch (c)
     {
@@ -36,9 +39,26 @@ void readSerial() {
         _gamma = readFloat();
         newJonswapData = true;
         break;
+      case 'u':
+        if (ampUnitTest) {
+          Serial.write('u');
+          sendFloat(1);       //this may get interupted by the send serial interupt, which might cause an issue
+        } else {
+          Serial.write('u');
+          sendFloat(-1);
+        }
+        if (TSUnitTest) {
+          Serial.write('u');
+          sendFloat(2);
+        } else {
+          Serial.write('u');
+          sendFloat(-2);
+        }
+        break;
     }
   }
 }
+
 float readFloat() {
   char charArr[7];    //+123\0
   char c;

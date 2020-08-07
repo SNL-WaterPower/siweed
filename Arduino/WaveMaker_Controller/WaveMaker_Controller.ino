@@ -35,7 +35,7 @@ volatile float inputFnc(volatile float tm) {  //inputs time in seconds //outputs
     val = desiredPos;
   }
   else if (mode > 0) {   //1 or 2
-    if (newJonswapData) {
+    if (newJonswapData && mode == 2) {
       newJonswapData = false;
       jonswap.update(sigH, peakF, gamma);
       n = jonswap.getNum();
@@ -80,6 +80,7 @@ void setup() {
     freqs[i] = 0;
     phases[i] = 0;
   }
+  unitTests();
   initInterrupts();
 }
 
@@ -117,7 +118,36 @@ volatile void pushBuffer(volatile float* arr, volatile float f) {
   }
   arr[0] = f;
 }
-float lerp(float a, float b, float f)
-{
-    return a + f * (b - a);
+float lerp(float a, float b, float f) {
+  return a + f * (b - a);
+}
+bool ampUnitTest = true;
+bool TSUnitTest = true;
+float exampleAmps[] = {0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.01, 0.02, 0.05, 0.11, 0.20, 0.33, 0.48, 0.67, 0.87, 1.09, 1.30, 1.51, 1.70, 1.88, 2.03, 2.16};
+float exampleTS[] = {4.07, -3.45, 1.12, 1.56, 0.69, -2.25, -1.17, -6.01, 0.74, 2.85, -4.79, 5.71, -1.66, -3.66, -2.78, 1.38, 4.07, -3.45, 1.12, 1.56, 0.69, -2.25, -1.17, -6.01, 0.74, 2.85, -4.79, 5.71, -1.66, -3.66, -2.78, 1.38};
+void unitTests() {
+  newJonswapData = true;
+  int oldMode = mode;
+  //miniWaveTankJonswap jonswapTest(16.0, 1.0, 2.0)
+  mode = 2;
+  //jonswap.update(5.0, 3.0, 7.0);
+  sigH = 5.0;
+  peakF = 3.0;
+  gamma = 7.0;
+  inputFnc(0);   //assign amps and update jonswap
+  for (int i = 0; i < jonswap.getNum(); i++) {
+    //test amplitude array:
+    if (abs(amps[i] - exampleAmps[i]) > 0.01) {
+      ampUnitTest = false;
+    }
+
+    //test time series:
+    if (abs(inputFnc(i) - exampleTS[i]) > 0.01) {      //i acts as an arbitrary time
+      TSUnitTest = false;
+    }
+    //Serial.print(amps[i]);    //To get the data that fills the example arrays
+    //Serial.print(inputFnc(i));
+    //Serial.print(", ");
+  }
+  mode = oldMode;   //reset mode to what it was before unit tests
 }
