@@ -73,6 +73,7 @@ public void settings() {
 
 void draw() {
   // Background color
+  println("draw");
   background(dblue);
   //Title 
   textFont(fb, 40);
