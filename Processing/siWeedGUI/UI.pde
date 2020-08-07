@@ -241,9 +241,6 @@ void initializeUI() {
     .hide()
     ;
 
-  //RADIO BUTTONS 
-  //RadioButton wavePos, waveEl, wecPos, wecVel, wecTorq, wecPow;
-  int radButtonX, radButtonY;
   
   // Charts //
   waveSig =  cp5.addChart("Sin Wave")
@@ -258,7 +255,7 @@ void initializeUI() {
     ;
 
   waveSig2 =  cp5.addChart("Other Graph")
-    .setPosition(830, 680)
+    .setPosition(830, 660)
     .setSize(450, 150)
     .setRange(-10, 10)
     .setView(Chart.LINE) // use Chart.LINE, Chart.PIE, Chart.AREA, Chart.BAR_CENTERED
