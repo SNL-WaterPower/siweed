@@ -27,6 +27,7 @@ void setup() {
   frameRate(32);    //sets draw() to run x times a second.
   ///////initialize objects
   size(1920,1200, P2D);
+  surface.setTitle("SIWEED");
   waveMaker = new UIData();
   wec = new UIData();
   fftList = new LinkedList();

@@ -1,13 +1,13 @@
 ControlP5 cp5; 
-Chart waveSig; //wave Signal chart
+Chart waveSig, waveSig2; //wave Signal chart
 Slider position; //slider for position mode
 Slider h, freq; //sliders for function mode
 Slider sigH, peakF, gamma;  //sliders for sea state mode
 Slider pGain, dGain, torqueSlider, sigHWEC, peakFWEC, gammaWEC; // WEC sliders
-Button jog, function, sea, off, torque, feedback, seaWEC, offWec; // mode buttons
+Button jog, function, sea, off, offWec, torque, feedback, seaWEC; // mode buttons
 Button wecQs, waveQs;
 Button quad1, quad2, quad3, quad4;
-RadioButton wavePos, waveEl, wecPosRB, wecVel, wecTorq, wecPow;
+// RadioButton wavePos, waveEl, wecPosRB, wecVel, wecTorq, wecPow;
 Textarea wecText, waveText;
 // Custom colors
 color green = color(190, 214, 48);
@@ -99,6 +99,9 @@ void initializeUI() {
   ///Button jog, function, sea, off, torque, feedback, jogWEC, offWec; 
   
   buttonY = 660;
+  
+  //RadioButton offWec, torque, feedback, seaWEC;
+  
   
   torque = cp5.addButton("torque")
     .setPosition(buttonX, buttonY)
@@ -241,8 +244,19 @@ void initializeUI() {
   
   // Charts //
   waveSig =  cp5.addChart("Sin Wave")
-    .setPosition(830, 750)
-    .setSize(400, 250)
+    .setPosition(830, 830)
+    .setSize(450, 150)
+    .setRange(-10, 10)
+    .setView(Chart.LINE) // use Chart.LINE, Chart.PIE, Chart.AREA, Chart.BAR_CENTERED
+    .setStrokeWeight(4)
+    .setColorCaptionLabel(color(40))
+    .setColorBackground(turq)
+    .setColorLabel(green)
+    ;
+
+  waveSig2 =  cp5.addChart("Other Graph")
+    .setPosition(830, 680)
+    .setSize(450, 150)
     .setRange(-10, 10)
     .setView(Chart.LINE) // use Chart.LINE, Chart.PIE, Chart.AREA, Chart.BAR_CENTERED
     .setStrokeWeight(4)
@@ -253,6 +267,9 @@ void initializeUI() {
 
   waveSig.addDataSet("incoming");
   waveSig.setData("incoming", new float[360]);    //use to set the domain of the plot. This value is = desired domain(secnods) * 30
+
+  waveSig2.addDataSet("incoming");
+  waveSig2.setData("incoming", new float[360]);    //use to set the domain of the plot. This value is = desired domain(secnods) * 30
 
   h.setValue(5);
   freq.setValue(1.0);
@@ -269,6 +286,10 @@ void initializeUI() {
 // Motor Buttons 
 
 void jog() {
+  jog.setColorBackground(hoverblue);
+  function.setColorBackground(buttonblue);
+  sea.setColorBackground(buttonblue);
+  off.setColorBackground(buttonblue);
   waveMaker.mode = 1;
   h.hide();
   freq.hide();
@@ -282,6 +303,10 @@ void jog() {
 }
 
 void fun() {
+  jog.setColorBackground(buttonblue);
+  function.setColorBackground(hoverblue);
+  sea.setColorBackground(buttonblue);
+  off.setColorBackground(buttonblue);
   waveMaker.mode = 2;
   position.hide();
   gamma.hide();
@@ -297,6 +322,10 @@ void fun() {
 }
 
 void sea() {
+  jog.setColorBackground(buttonblue);
+  function.setColorBackground(buttonblue);
+  sea.setColorBackground(hoverblue);
+  off.setColorBackground(buttonblue);
   waveMaker.mode = 3;
   h.hide();
   freq.hide();
@@ -311,6 +340,10 @@ void sea() {
 }
 
 void off() {
+  jog.setColorBackground(buttonblue);
+  function.setColorBackground(buttonblue);
+  sea.setColorBackground(buttonblue);
+  off.setColorBackground(hoverblue);
   waveMaker.mode = 4;
   h.setValue(0);
   freq.setValue(0);
