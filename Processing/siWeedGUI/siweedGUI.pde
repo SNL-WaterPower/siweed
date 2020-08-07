@@ -21,7 +21,7 @@ float TSVal;
 // meter set up  
 Meter m;
 String fundingState = "Sandia National Laboratories is a multi-mission laboratory managed and operated by National Technology and Engineering Solutions of Sandia, LLC., a wholly owned subsidiary \n of Honeywell International, Inc., for the U.S. Department of Energy's National Nuclear Security Administration under contract DE-NA0003525.";
-
+String welcome = "Can you save the town from its power outage? \n Change the demension and type \n of wave to see how the power changes! \n Change the wave energy converter's controls \n to harvest more power. \n How quickly can you light up all four quadrants?";
 void setup() {
   ////////
   frameRate(32);    //sets draw() to run x times a second.
@@ -122,7 +122,7 @@ void draw() {
   rect(805, 275, 550, 250); // explainer box
   fill(255,255,255);
   textFont(fb, 20);
-  text("Can you save the town from its power outage? \n Change the demension and type \n of wave to see how the power changes! \n Change the wave energy converter's controls \n to harvest more power. \n How quickly can you light up all four quadrants", 810, 290);
+  text(welcome, 810, 290);
   //System Status Text
   textFont(fb, 25);
   fill(buttonblue);
