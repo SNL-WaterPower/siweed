@@ -34,7 +34,7 @@ void initializeUI() {
   // Buttons //
   //1387
   int powerX, powerY;
-  powerX = 1420;
+  powerX = 1425;
   powerY = 500;
   
   quad1 = cp5.addButton("quad1")
