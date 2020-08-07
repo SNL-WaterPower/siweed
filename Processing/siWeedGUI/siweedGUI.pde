@@ -89,7 +89,7 @@ void draw() {
   rect(0, 0, width, 95); // Top Banner
   //banner text
   fill(green);
-  text("Sandia Interactive Wave Energy Educational Display", width/2, 30);
+  text("Sandia Interactive Wave Energy Educational Display (SIWEED)", width/2, 30);
   fill(255,255,255);
   textSize(12);
   textLeading(14);
@@ -102,13 +102,13 @@ void draw() {
   rect(25, 150, 705, 930, 7); // background
   fill(green);
   stroke(buttonblue);
-  rect(25, 130, 225, 75, 7); //Mission Control Title Box 
+  rect(15, 130, 225, 75, 7); //Mission Control Title Box 
   //Mission Control Text
   textFont(fb, 25);
   fill(buttonblue);
   textLeading(15);
   textAlign(LEFT, TOP);
-  text("Mission Control", 45, 155);
+  text("Mission Control", 35, 155);
   
   // System Status
   fill(turq, 150);
@@ -116,7 +116,7 @@ void draw() {
   rect(780, 150, 1115, 930, 7); // background
   fill(green);
   stroke(buttonblue);
-  rect(780, 130, 225, 75, 7); //system title
+  rect(770, 130, 225, 75, 7); //system title
   fill(buttonblue);
   rect(805, 610, 1065, 420, 7); //graph background
   rect(805, 275, 550, 250); // explainer box
@@ -129,7 +129,7 @@ void draw() {
   textLeading(15);
   textAlign(LEFT, TOP);
   stroke(buttonblue);
-  text("System Status", 805, 155);
+  text("System Status", 795, 155);
   stroke(green);
     
   textFont(fb, 20);
