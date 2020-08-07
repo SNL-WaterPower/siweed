@@ -1,6 +1,0 @@
-# Wiring .gitignore
-# For Libraries and Sketches
-
-*.bak
-*~
-build/
