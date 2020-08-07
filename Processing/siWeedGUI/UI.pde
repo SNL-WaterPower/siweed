@@ -7,7 +7,6 @@ Slider pGain, dGain, torqueSlider, sigHWEC, peakFWEC, gammaWEC; // WEC sliders
 Button jog, function, sea, off, offWEC, torque, feedback, seaWEC; // mode buttons
 Button wecQs, waveQs;
 Button quad1, quad2, quad3, quad4;
-// RadioButton wavePos, waveEl, wecPosRB, wecVel, wecTorq, wecPow;
 Textarea wecText, waveText;
 // Custom colors
 color green = color(190, 214, 48);
@@ -269,6 +268,8 @@ void initializeUI() {
   waveSig.setData("incoming", new float[360]);    //use to set the domain of the plot. This value is = desired domain(secnods) * 30
 
   waveSig2.addDataSet("incoming2");
+  waveSig2.addDataSet("incoming");
+  waveSig2.setData("incoming", new float[360]); 
   waveSig2.setData("incoming2", new float[360]);    //use to set the domain of the plot. This value is = desired domain(secnods) * 30
 
   h.setValue(5);
