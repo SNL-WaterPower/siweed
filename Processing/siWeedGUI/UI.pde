@@ -244,7 +244,7 @@ void initializeUI() {
   
   // Charts //
   waveSig =  cp5.addChart("Sin Wave")
-    .setPosition(830, 830)
+    .setPosition(830, 835)
     .setSize(450, 150)
     .setRange(-10, 10)
     .setView(Chart.LINE) // use Chart.LINE, Chart.PIE, Chart.AREA, Chart.BAR_CENTERED
@@ -268,8 +268,8 @@ void initializeUI() {
   waveSig.addDataSet("incoming");
   waveSig.setData("incoming", new float[360]);    //use to set the domain of the plot. This value is = desired domain(secnods) * 30
 
-  waveSig2.addDataSet("incoming");
-  waveSig2.setData("incoming", new float[360]);    //use to set the domain of the plot. This value is = desired domain(secnods) * 30
+  waveSig2.addDataSet("incoming2");
+  waveSig2.setData("incoming2", new float[360]);    //use to set the domain of the plot. This value is = desired domain(secnods) * 30
 
   h.setValue(5);
   freq.setValue(1.0);
