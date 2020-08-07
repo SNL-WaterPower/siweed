@@ -4,7 +4,7 @@ Slider position; //slider for position mode
 Slider h, freq; //sliders for function mode
 Slider sigH, peakF, gamma;  //sliders for sea state mode
 Slider pGain, dGain, torqueSlider, sigHWEC, peakFWEC, gammaWEC; // WEC sliders
-Button jog, function, sea, off, offWec, torque, feedback, seaWEC; // mode buttons
+Button jog, function, sea, off, offWEC, torque, feedback, seaWEC; // mode buttons
 Button wecQs, waveQs;
 Button quad1, quad2, quad3, quad4;
 // RadioButton wavePos, waveEl, wecPosRB, wecVel, wecTorq, wecPow;
@@ -96,12 +96,11 @@ void initializeUI() {
     .setLabel("OFF"); 
 
   ///  Slider pGain, dGain, positionTorque, torque; // WEC sliders
-  ///Button jog, function, sea, off, torque, feedback, jogWEC, offWec; 
+  ///Button jog, function, sea, off, torque, feedback, jogWEC, offWEC; 
   
   buttonY = 660;
   
-  //RadioButton offWec, torque, feedback, seaWEC;
-  
+
   
   torque = cp5.addButton("torque")
     .setPosition(buttonX, buttonY)
@@ -112,14 +111,14 @@ void initializeUI() {
     .setPosition(buttonX + 170, buttonY)
     .setSize(150, 65)
     .setLabel("Feedback"); 
-  //spring, jogWEC, offWec 
+  //spring, jogWEC, offWEC 
 
   seaWEC = cp5.addButton("seaWEC")
     .setPosition(buttonX + 340, buttonY)
     .setSize(150, 65)
     .setLabel("Sea State");    
 
-  offWec = cp5.addButton("offWec")
+  offWEC = cp5.addButton("offWEC")
     .setPosition(buttonX + 510, buttonY)
     .setSize(150, 65)
     .setLabel("Off"); 
@@ -359,6 +358,10 @@ void off() {
 // WEC Buttons 
 
 void torque() {
+  torque.setColorBackground(hoverblue);
+  feedback.setColorBackground(buttonblue);
+  seaWEC.setColorBackground(buttonblue);
+  offWEC.setColorBackground(buttonblue);
   wec.mode = 1; 
   torqueSlider.show();
   pGain.hide();
@@ -371,6 +374,10 @@ void torque() {
 }   
 
 void feedback() {
+  torque.setColorBackground(buttonblue);
+  feedback.setColorBackground(hoverblue);
+  seaWEC.setColorBackground(buttonblue);
+  offWEC.setColorBackground(buttonblue);
   wec.mode = 2; 
   torqueSlider.hide();
   pGain.show();
@@ -383,10 +390,14 @@ void feedback() {
 }
 
 // Slider pGain, dGain, torqueSlider, sigHWEC, peakFWEC, gammaWEC; 
-//torque, feedback, seaWEC, offWec 
+//torque, feedback, seaWEC, offWEC 
 
 
 void seaWEC() {
+  torque.setColorBackground(buttonblue);
+  feedback.setColorBackground(buttonblue);
+  seaWEC.setColorBackground(hoverblue);
+  offWEC.setColorBackground(buttonblue);
   wec.mode = 3; 
   torqueSlider.hide();
   pGain.hide();
@@ -399,6 +410,10 @@ void seaWEC() {
 }
 
 void offWEC() {
+  torque.setColorBackground(buttonblue);
+  feedback.setColorBackground(buttonblue);
+  seaWEC.setColorBackground(buttonblue);
+  offWEC.setColorBackground(hoverblue);
   wec.mode = 4; 
   torqueSlider.setValue(0);
   pGain.setValue(0);
