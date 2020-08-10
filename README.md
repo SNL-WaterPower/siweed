@@ -11,3 +11,5 @@ The Sandia Interactive Wave Energy Education Display (SIWEED) is a small portabl
  	- Diameter: 6 cm
    	- Mass: 0.04 kg list item
    	- Natural frequency: ~3.4 Hz list item
+
+![system layout](documentation/diagrams/systemLayoutPNG.png)
