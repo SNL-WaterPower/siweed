@@ -67,7 +67,9 @@ void readMegaSerial() {
       megaUnitTests[0] = true;      //for unit testing;
       debugData = readFloat(port1);
 
-      waveSig.push("incoming", debugData);
+      waveChart.push("incoming", debugData);
+      wecChart.push("incoming", debugData);
+      wecChart.push("incoming2", debugData - 5);
       if (waveMaker.mode == 3||waveMaker.mode == 2) fftList.add(debugData);      //adds to the tail if in the right mode
       if (fftList.size() > queueSize)
       {

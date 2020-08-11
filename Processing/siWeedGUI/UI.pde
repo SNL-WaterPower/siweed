@@ -1,5 +1,5 @@
 ControlP5 cp5; 
-Chart waveSig, waveSig2; //wave Signal chart
+Chart waveChart, wecChart; //wave Signal chart
 Slider position; //slider for position mode
 Slider h, freq; //sliders for function mode
 Slider sigH, peakF, gamma;  //sliders for sea state mode
@@ -240,20 +240,8 @@ void initializeUI() {
     .hide()
     ;
 
-  
   // Charts //
-  waveSig =  cp5.addChart("Sin Wave")
-    .setPosition(830, 835)
-    .setSize(450, 150)
-    .setRange(-10, 10)
-    .setView(Chart.LINE) // use Chart.LINE, Chart.PIE, Chart.AREA, Chart.BAR_CENTERED
-    .setStrokeWeight(4)
-    .setColorCaptionLabel(color(40))
-    .setColorBackground(turq)
-    .setColorLabel(green)
-    ;
-
-  waveSig2 =  cp5.addChart("Other Graph")
+  waveChart =  cp5.addChart("Wave Information")
     .setPosition(830, 660)
     .setSize(450, 150)
     .setRange(-10, 10)
@@ -264,13 +252,26 @@ void initializeUI() {
     .setColorLabel(green)
     ;
 
-  waveSig.addDataSet("incoming");
-  waveSig.setData("incoming", new float[360]);    //use to set the domain of the plot. This value is = desired domain(secnods) * 30
+  wecChart =  cp5.addChart("WEC Information")
+    .setPosition(830, 835)
+    .setSize(450, 150)
+    .setRange(-10, 10)
+    .setView(Chart.LINE) // use Chart.LINE, Chart.PIE, Chart.AREA, Chart.BAR_CENTERED
+    .setStrokeWeight(4)
+    .setColorCaptionLabel(color(40))
+    .setColorBackground(turq)
+    .setColorLabel(green)
+    ;
 
-  waveSig2.addDataSet("incoming2");
-  waveSig2.addDataSet("incoming");
-  waveSig2.setData("incoming", new float[360]); 
-  waveSig2.setData("incoming2", new float[360]);    //use to set the domain of the plot. This value is = desired domain(secnods) * 30
+  waveChart.addDataSet("incoming");
+  waveChart.setData("incoming", new float[360]);    //use to set the domain of the plot. This value is = desired domain(secnods) * 30
+
+  
+  wecChart.addDataSet("incoming2");
+  wecChart.setColors("incoming2", green);
+  wecChart.addDataSet("incoming");
+  wecChart.setData("incoming", new float[360]); 
+  wecChart.setData("incoming2", new float[360]);    //use to set the domain of the plot. This value is = desired domain(secnods) * 30
 
   h.setValue(5);
   freq.setValue(1.0);
