@@ -120,9 +120,10 @@ void draw() {
   stroke(buttonblue);
   rect(770, 130, 225, 75, 7); //system title
   fill(buttonblue);
-  rect(805, 610, 1065, 420, 7); //graph background
   rect(1387, 185, 480, 400, 7); //power box
   rect(805, 275, 550, 250, 7); // explainer box
+  rect(805, 575, 550, 474, 7); //graph background 610
+  rect(1387, 635, 480, 400, 7); //FFT background 
   fill(255,255,255);
   textFont(fb, 20);
   text(welcome, 810, 290);
