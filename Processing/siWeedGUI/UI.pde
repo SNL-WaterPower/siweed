@@ -263,16 +263,24 @@ void initializeUI() {
     .setColorLabel(green)
     ;
 
-  waveChart.addDataSet("incoming");
-  waveChart.setData("incoming", new float[360]);    //use to set the domain of the plot. This value is = desired domain(secnods) * 30
-
+  waveChart.addDataSet("waveMakerPosition");
+  waveChart.setData("waveMakerPosition", new float[360]);   //use to set the domain of the plot. This value is = desired domain(secnods) * 30
+  waveChart.addDataSet("waveElevation");
+  waveChart.setColors("waveElevation", green);
+  waveChart.setData("waveMakerPosition", new float[360]);
   
-  wecChart.addDataSet("incoming2");
-  wecChart.setColors("incoming2", green);
-  wecChart.addDataSet("incoming");
-  wecChart.setData("incoming", new float[360]); 
-  wecChart.setData("incoming2", new float[360]);    //use to set the domain of the plot. This value is = desired domain(secnods) * 30
-
+  wecChart.addDataSet("wecPosition");
+  wecChart.setData("wecPosition", new float[360]); 
+  wecChart.addDataSet("wecVelocity");
+  wecChart.setColors("wecVelocity", green);
+  wecChart.setData("wecVelocity", new float[360]);    //use to set the domain of the plot. This value is = desired domain(secnods) * 30
+  wecChart.addDataSet("wecTorque");
+  wecChart.setColors("wecTorque", color(255, 255, 255));
+  wecChart.setData("wecTorque", new float[360]);
+  wecChart.addDataSet("wecPower");
+  wecChart.setColors("wecPower", color(209, 18, 4));
+  wecChart.setData("wecPower", new float[360]);
+  
   h.setValue(5);
   freq.setValue(1.0);
   sigH.setValue(2.5);

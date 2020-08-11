@@ -67,9 +67,15 @@ void readMegaSerial() {
       megaUnitTests[0] = true;      //for unit testing;
       debugData = readFloat(port1);
 
-      waveChart.push("incoming", debugData);
-      wecChart.push("incoming", debugData);
-      wecChart.push("incoming2", debugData - 5);
+      //wave data
+      waveChart.push("waveMakerPosition", debugData);
+      waveChart.push("waveElevation", debugData - 5);
+      //wec data
+      wecChart.push("wecPosition", debugData);
+      wecChart.push("wecVelocity", debugData - 5);
+      wecChart.push("wecTorque", 2*debugData);
+      wecChart.push("wecPower", (2 * debugData) - 5);
+      
       if (waveMaker.mode == 3||waveMaker.mode == 2) fftList.add(debugData);      //adds to the tail if in the right mode
       if (fftList.size() > queueSize)
       {
