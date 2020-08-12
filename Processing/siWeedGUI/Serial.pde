@@ -68,8 +68,13 @@ void readMegaSerial() {
       debugData = readFloat(port1);
 
       //wave data
-      waveChart.push("waveMakerPosition", debugData);
-      waveChart.push("waveElevation", debugData - 5);
+      if (wavePosClicked == true){
+        waveChart.push("waveMakerPosition", debugData);
+      }
+      if(waveElClicked == true){
+        waveChart.push("waveElevation", debugData - 5);
+      }
+      
       //wec data
       wecChart.push("wecPosition", debugData);
       wecChart.push("wecVelocity", debugData - 5);

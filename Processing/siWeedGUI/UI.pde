@@ -5,8 +5,9 @@ Slider h, freq; //sliders for function mode
 Slider sigH, peakF, gamma;  //sliders for sea state mode
 Slider pGain, dGain, torqueSlider, sigHWEC, peakFWEC, gammaWEC; // WEC sliders
 Button jog, function, sea, off, offWEC, torque, feedback, seaWEC; // mode buttons
-Button wecQs, waveQs;
-Button quad1, quad2, quad3, quad4;
+Button wecQs, waveQs; // popup buttons
+Button wavePosData, waveElData, wecPosData, wecVelData, wecTorqData, wecPowData;
+Button quad1, quad2, quad3, quad4; // power bar
 Textarea wecText, waveText;
 // Custom colors
 color green = color(190, 214, 48);
@@ -14,7 +15,7 @@ color turq = color(0, 173, 208);
 color dblue = color(0, 83, 118);
 color buttonblue = color(0, 45, 90);
 color hoverblue = color(0, 116, 217);
-
+color grey = color(180, 190, 191);
 
 // Fonts
 PFont f; // Regular font
@@ -38,25 +39,25 @@ void initializeUI() {
   
   quad1 = cp5.addButton("quad1")
     .setPosition(powerX, powerY)
-    .setColorBackground(color(180, 190, 191))
+    .setColorBackground(grey)
     .setSize(100, 50)
     .setLabel("25%");  
     
   quad2 = cp5.addButton("quad2")
     .setPosition(powerX + 100, powerY)
-    .setColorBackground(color(180, 190, 191))
+    .setColorBackground(grey)
     .setSize(100, 50)
     .setLabel("50%"); 
 
   quad3 = cp5.addButton("quad3")
     .setPosition(powerX + 200, powerY)
-    .setColorBackground(color(180, 190, 191))
+    .setColorBackground(grey)
     .setSize(100, 50)
     .setLabel("75%"); 
 
   quad3 = cp5.addButton("quad4")
     .setPosition(powerX + 300, powerY)
-    .setColorBackground(color(180, 190, 191))
+    .setColorBackground(grey)
     .setSize(100, 50)
     .setLabel("100%");
 
@@ -98,12 +99,7 @@ void initializeUI() {
     .setSize(150, 65)
     .setLabel("OFF"); 
 
-  ///  Slider pGain, dGain, positionTorque, torque; // WEC sliders
-  ///Button jog, function, sea, off, torque, feedback, jogWEC, offWEC; 
-  
   buttonY = 660;
-  
-
   
   torque = cp5.addButton("torque")
     .setPosition(buttonX, buttonY)
@@ -125,8 +121,50 @@ void initializeUI() {
     .setPosition(buttonX + 510, buttonY)
     .setSize(150, 65)
     .setLabel("Off"); 
+    
+//Button wavePosData, waveElData, wecPosData, wecVelData, wecTorqData, wecPowData;
+int dataButtonX, dataButtonY;
+dataButtonX = 970;
+dataButtonY = 735;
 
+wavePosData = cp5.addButton("wavePosData")
+    .setPosition(dataButtonX, dataButtonY)
+    .setColorBackground(grey)
+    .setSize(100, 50)
+    .setLabel("Wave Maker Position"); 
 
+waveElData = cp5.addButton("waveElData")
+    .setPosition(dataButtonX + 125, dataButtonY)
+    .setColorBackground(grey)
+    .setSize(100, 50)
+    .setLabel("Wave Elevation"); 
+    
+dataButtonY = 990;
+
+wecPosData = cp5.addButton("wecPosData")
+    .setPosition(dataButtonX - 125, dataButtonY)
+    .setColorBackground(grey)
+    .setSize(100, 50)
+    .setLabel("Wec Position"); 
+    
+wecVelData = cp5.addButton("wecVelData")
+    .setPosition(dataButtonX, dataButtonY)
+    .setColorBackground(grey)
+    .setSize(100, 50)
+    .setLabel("WEC Velocity");
+
+wecTorqData = cp5.addButton("wecTorqData")
+    .setPosition(dataButtonX + 125, dataButtonY)
+    .setColorBackground(grey)
+    .setSize(100, 50)
+    .setLabel("WEC Torque");
+    
+wecPowData = cp5.addButton("wecPowData")
+    .setPosition(dataButtonX + 250, dataButtonY)
+    .setColorBackground(grey)
+    .setSize(100, 50)
+    .setLabel("WEC Power");
+    
   // Sliders // 
   //distance between slider and buttons is 150, distance between each slider is 100
    
@@ -242,45 +280,27 @@ void initializeUI() {
 
   // Charts //
   waveChart =  cp5.addChart("Wave Information")
-    .setPosition(830, 660)
-    .setSize(450, 150)
+    .setPosition(830, 540)
+    .setSize(500, 175)
     .setRange(-10, 10)
     .setView(Chart.LINE) // use Chart.LINE, Chart.PIE, Chart.AREA, Chart.BAR_CENTERED
-    .setStrokeWeight(4)
+    .setStrokeWeight(10)
     .setColorCaptionLabel(color(40))
     .setColorBackground(turq)
     .setColorLabel(green)
     ;
 
   wecChart =  cp5.addChart("WEC Information")
-    .setPosition(830, 835)
-    .setSize(450, 150)
+    .setPosition(830, 795)
+    .setSize(500, 175)
     .setRange(-10, 10)
     .setView(Chart.LINE) // use Chart.LINE, Chart.PIE, Chart.AREA, Chart.BAR_CENTERED
-    .setStrokeWeight(4)
+    .setStrokeWeight(10)
     .setColorCaptionLabel(color(40))
     .setColorBackground(turq)
     .setColorLabel(green)
     ;
 
-  waveChart.addDataSet("waveMakerPosition");
-  waveChart.setData("waveMakerPosition", new float[360]);   //use to set the domain of the plot. This value is = desired domain(secnods) * 30
-  waveChart.addDataSet("waveElevation");
-  waveChart.setColors("waveElevation", green);
-  waveChart.setData("waveMakerPosition", new float[360]);
-  
-  wecChart.addDataSet("wecPosition");
-  wecChart.setData("wecPosition", new float[360]); 
-  wecChart.addDataSet("wecVelocity");
-  wecChart.setColors("wecVelocity", green);
-  wecChart.setData("wecVelocity", new float[360]);    //use to set the domain of the plot. This value is = desired domain(secnods) * 30
-  wecChart.addDataSet("wecTorque");
-  wecChart.setColors("wecTorque", color(255, 255, 255));
-  wecChart.setData("wecTorque", new float[360]);
-  wecChart.addDataSet("wecPower");
-  wecChart.setColors("wecPower", color(209, 18, 4));
-  wecChart.setData("wecPower", new float[360]);
-  
   h.setValue(5);
   freq.setValue(1.0);
   sigH.setValue(2.5);
@@ -435,6 +455,69 @@ void offWEC() {
   port2.write('!');
   sendFloat(-1, port2);
 }
+
+boolean wavePosClicked = false; 
+void wavePosData() {
+  if(wavePosClicked == false){
+    wavePosClicked = true;
+    wavePosData.setColorBackground(hoverblue);
+    waveChart.addDataSet("waveMakerPosition");
+    waveChart.setData("waveMakerPosition", new float[360]); 
+  } 
+  else {
+     wavePosClicked = false;  
+     wavePosData.setColorBackground(grey);
+     waveChart.removeDataSet("waveMakerPosition");
+  }
+}
+
+boolean waveElClicked = false; 
+void waveElData() {
+  if(waveElClicked == false){
+    waveElClicked = true;
+    waveElData.setColorBackground(green);
+    waveChart.addDataSet("waveElevation");
+    waveChart.setColors("waveElevation", green);
+    waveChart.setData("waveElevation", new float[360]);
+    
+  } 
+  else {
+     waveElClicked = false;  
+     waveElData.setColorBackground(grey);
+     waveChart.removeDataSet("waveElevation");
+  }
+}
+
+//Button wavePosData, waveElData, wecPosData, wecVelData, wecTorqData, wecPowData;
+
+boolean wecPosClicked = false; 
+void wecPosData() {
+  if(wecPosClicked == false){
+    wecPosClicked = true;
+    wecPosData.setColorBackground(hoverblue);
+    wecChart.addDataSet("wecPosition");
+    wecChart.setColors("wecPosition", hoverblue);
+  } 
+  else {
+     wecPosClicked = false;  
+     waveElData.setColorBackground(grey);
+     wecChart.removeDataSet("wecPosition");
+  }
+}
+
+/*   
+  wecChart.addDataSet("wecPosition");
+  wecChart.setData("wecPosition", new float[360]); 
+  wecChart.addDataSet("wecVelocity");
+  wecChart.setColors("wecVelocity", green);
+  wecChart.setData("wecVelocity", new float[360]);    //use to set the domain of the plot. This value is = desired domain(secnods) * 30
+  wecChart.addDataSet("wecTorque");
+  wecChart.setColors("wecTorque", color(255, 255, 255));
+  wecChart.setData("wecTorque", new float[360]);
+  wecChart.addDataSet("wecPower");
+  wecChart.setColors("wecPower", color(209, 18, 4));
+  wecChart.setData("wecPower", new float[360]);
+  */
 
 void waveQs() {
   if (waveText.isVisible()) {
