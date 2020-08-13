@@ -56,6 +56,9 @@ void readMegaSerial() {
     switch(port1.readChar()) {
     case '1':
       probe1 = readFloat(port1);
+      if (waveElClicked == true) {
+        waveChart.push("waveElevation", probe1);
+      }
       break;
     case '2':
       probe2 = readFloat(port1);
@@ -66,30 +69,9 @@ void readMegaSerial() {
     case 'd':
       megaUnitTests[0] = true;      //for unit testing;
       debugData = readFloat(port1);
-
-      //wave data
-      if(wavePosClicked == true){
+      if (wavePosClicked == true) {
         waveChart.push("waveMakerPosition", debugData);
       }
-      if(waveElClicked == true){
-        waveChart.push("waveElevation", debugData - 5);
-      }
-      
-      //wec data
-      if(wecPosClicked == true){
-        wecChart.push("wecPosition", debugData);
-      }
-      if(wecVelClicked == true){
-        wecChart.push("wecVelocity", debugData - 5);
-      }
-      if(wecTorqClicked == true){
-        wecChart.push("wecTorque", 2*debugData);
-      }
-      if(wecPowClicked == true){
-        wecChart.push("wecPower", (2 * debugData) - 5);      
-      }
-
-
       if (waveMaker.mode == 3||waveMaker.mode == 2) fftList.add(debugData);      //adds to the tail if in the right mode
       if (fftList.size() > queueSize)
       {
@@ -111,19 +93,36 @@ void readDueSerial() {
    e: encoder position
    t: tau commanded to motor
    p: power
+   v: velocity
    */
   while (port2.available() > 0)
   {
     switch(port2.readChar()) {
     case 'e':
       wecPos = readFloat(port2);
+      //wec data
+      if (wecPosClicked == true) {
+        wecChart.push("wecPosition", wecPos);
+      }
       break;
     case 't':
       tau = readFloat(port2);
+      if (wecTorqClicked == true) {
+        wecChart.push("wecTorque", tau);
+      }
       break;
     case 'p':
       dueUnitTests[0] = true;
       pow = readFloat(port2);
+      if (wecPowClicked == true) {
+        wecChart.push("wecPower", pow);
+      }
+      break;
+    case 'v':
+      wecVel = readFloat(port2);
+      if (wecVelClicked == true) {
+        wecChart.push("wecVelocity", wecVel);
+      }      
       break;
     case 'u':
       int testNum = (int)readFloat(port2);    //indicates which jonswap test passed(1 or 2)

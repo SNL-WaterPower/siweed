@@ -41,6 +41,7 @@ void sendSerial()   //called by interupt
     e: encoder position
     t: tau commanded to motor
     p: power
+    v: velocity
   */
   Serial.write('e');
   sendFloat(encPos);
@@ -48,5 +49,7 @@ void sendSerial()   //called by interupt
   sendFloat(tauCommand);
   Serial.write('p');
   sendFloat(power);
+  Serial.write('v');
+  sendFloat(vel);
   Serial.println();
 }

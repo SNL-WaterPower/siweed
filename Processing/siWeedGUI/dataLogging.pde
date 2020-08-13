@@ -8,7 +8,7 @@ public class UIData {        //an object for the WEC and Wavemaker portions of t
   public float mag, amp, freq, sigH, peakF, gamma;
 }
 //data not held in the class(not in the UI):
-float probe1, probe2, waveMakerPos, debugData, wecPos, tau, pow;
+float probe1, probe2, waveMakerPos, debugData, wecPos, tau, pow, wecVel;
 UIData waveMaker;
 UIData wec;
 void initializeDataLogging() {
@@ -39,6 +39,7 @@ void initializeDataLogging() {
   table.addColumn("wecPos");
   table.addColumn("wecTau");
   table.addColumn("wecPower");
+  table.addColumn("wecVel");
 /*
   //isolated .csv's
   FFTTable = new Table();
@@ -79,6 +80,7 @@ void logData() {     //will be called at the framerate
   newRow.setFloat("wecPos", wecPos);
   newRow.setFloat("wecTau", tau);
   newRow.setFloat("wecPower", pow);
+  newRow.setFloat("wecVel", wecVel);
   saveTable(table, "data/"+startTime+".csv");
 
   //isolated .csvs for testing:

@@ -17,7 +17,7 @@ void unitTests() {
       break;
     }
   }
-  if (fftList.size() > 0)    //empty list
+  while (fftList.size() > 0)    //empty list
   {
     fftList.remove();          //removes from the head
   }
