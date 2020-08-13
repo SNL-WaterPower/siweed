@@ -497,26 +497,70 @@ void wecPosData() {
     wecPosData.setColorBackground(hoverblue);
     wecChart.addDataSet("wecPosition");
     wecChart.setColors("wecPosition", hoverblue);
+    wecChart.setData("wecPosition", new float[360]);
   } 
   else {
      wecPosClicked = false;  
-     waveElData.setColorBackground(grey);
+     wecPosData.setColorBackground(grey);
      wecChart.removeDataSet("wecPosition");
   }
 }
 
+boolean wecVelClicked = false;
+void wecVelData() {
+  if(wecVelClicked == false){
+    wecVelClicked = true;
+    wecVelData.setColorBackground(green);
+    wecChart.addDataSet("wecVelocity");
+    wecChart.setColors("wecVelocity", green);
+    wecChart.setData("wecVelocity", new float[360]);
+  } 
+  else {
+     wecVelClicked = false;  
+     wecVelData.setColorBackground(grey);
+     wecChart.removeDataSet("wecVelocity");
+  }
+}
+
+boolean wecTorqClicked = false; 
+void wecTorqData() {
+  if(wecTorqClicked == false){
+    wecTorqClicked = true;
+    wecTorqData.setColorBackground(color(0,0,0));
+    wecChart.addDataSet("wecTorque");
+    wecChart.setColors("wecTorque", color(0,0,0));
+    wecChart.setData("wecTorque", new float[360]);
+  } 
+  else {
+     wecTorqClicked = false;  
+     wecTorqData.setColorBackground(grey);
+     wecChart.removeDataSet("wecTorque");
+  }
+}
+
+boolean wecPowClicked = false;
+void wecPowData() {
+  if(wecPowClicked == false){
+    wecPowClicked = true;
+    wecPowData.setColorBackground(color(209, 18, 4));
+    wecChart.addDataSet("wecPower");
+    wecChart.setColors("wecPower", color(209, 18, 4));
+    wecChart.setData("wecPower", new float[360]);
+  } 
+  else {
+     wecPowClicked = false;  
+     wecPowData.setColorBackground(grey);
+     wecChart.removeDataSet("wecPower");
+  }
+}
 /*   
   wecChart.addDataSet("wecPosition");
   wecChart.setData("wecPosition", new float[360]); 
-  wecChart.addDataSet("wecVelocity");
-  wecChart.setColors("wecVelocity", green);
+  
   wecChart.setData("wecVelocity", new float[360]);    //use to set the domain of the plot. This value is = desired domain(secnods) * 30
   wecChart.addDataSet("wecTorque");
-  wecChart.setColors("wecTorque", color(255, 255, 255));
-  wecChart.setData("wecTorque", new float[360]);
-  wecChart.addDataSet("wecPower");
-  wecChart.setColors("wecPower", color(209, 18, 4));
-  wecChart.setData("wecPower", new float[360]);
+
+
   */
 
 void waveQs() {

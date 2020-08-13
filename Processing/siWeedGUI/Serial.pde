@@ -68,7 +68,7 @@ void readMegaSerial() {
       debugData = readFloat(port1);
 
       //wave data
-      if (wavePosClicked == true){
+      if(wavePosClicked == true){
         waveChart.push("waveMakerPosition", debugData);
       }
       if(waveElClicked == true){
@@ -76,11 +76,20 @@ void readMegaSerial() {
       }
       
       //wec data
-      wecChart.push("wecPosition", debugData);
-      wecChart.push("wecVelocity", debugData - 5);
-      wecChart.push("wecTorque", 2*debugData);
-      wecChart.push("wecPower", (2 * debugData) - 5);
-      
+      if(wecPosClicked == true){
+        wecChart.push("wecPosition", debugData);
+      }
+      if(wecVelClicked == true){
+        wecChart.push("wecVelocity", debugData - 5);
+      }
+      if(wecTorqClicked == true){
+        wecChart.push("wecTorque", 2*debugData);
+      }
+      if(wecPowClicked == true){
+        wecChart.push("wecPower", (2 * debugData) - 5);      
+      }
+
+
       if (waveMaker.mode == 3||waveMaker.mode == 2) fftList.add(debugData);      //adds to the tail if in the right mode
       if (fftList.size() > queueSize)
       {
