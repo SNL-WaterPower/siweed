@@ -17,7 +17,7 @@ int fftInterval = 100;    //in milliseconds
 /*
 float TSVal;
  */
- 
+
 // meter set up  
 Meter m;
 String fundingState = "Sandia National Laboratories is a multi-mission laboratory managed and operated by National Technology and Engineering Solutions of Sandia, LLC., a wholly owned subsidiary \n of Honeywell International, Inc., for the U.S. Department of Energy's National Nuclear Security Administration under contract DE-NA0003525.";
@@ -26,7 +26,7 @@ void setup() {
   ////////
   frameRate(32);    //sets draw() to run x times a second.
   ///////initialize objects
-  size(1920,1200, P2D);
+  size(1920, 1200, P2D);
   surface.setTitle("SIWEED");
   waveMaker = new UIData();
   wec = new UIData();
@@ -40,17 +40,8 @@ void setup() {
   initializeSerial();    //has a 2 second delay
   initializeUI();
 
-  //initialize the modes on the arduinos:
-  port1.write('!');
-  sendFloat(0, port1);    //jog mode
-  port1.write('j');
-  sendFloat(0, port1);    //at position 0
-  
-  port2.write('!');
-  sendFloat(-1, port2);    //off
-  
   unitTests();
-  
+
   //adding meter 
   m = new Meter(this, 1425, 240);
   m.setMeterWidth(400);
@@ -66,12 +57,11 @@ void setup() {
   //// Use the default values for testing, 0 - 255.
   //minIn = m.getMinInputSignal();
   //maxIn = m.getMaxInputSignal();
-  
 }
 /*
 public void settings() {
-  fullScreen(2);
-}*/
+ fullScreen(2);
+ }*/
 
 void draw() {
   // Background color
@@ -81,7 +71,7 @@ void draw() {
   fill(green);
   textLeading(15);
   textAlign(CENTER, TOP);
-  
+
   image(wavePic, 0, 0, width, height); //background
   fill(buttonblue);
   stroke(buttonblue);
@@ -92,11 +82,11 @@ void draw() {
   //banner text
   fill(green);
   text("Sandia Interactive Wave Energy Educational Display (SIWEED)", width/2, 30);
-  fill(255,255,255);
+  fill(255, 255, 255);
   textSize(12);
   textLeading(14);
   text(fundingState, width/2, 1150);
- 
+
   //Mission Control
   fill(turq, 150);
   stroke(buttonblue, 150);
@@ -111,7 +101,7 @@ void draw() {
   textLeading(15);
   textAlign(LEFT, TOP);
   text("Mission Control", 35, 155);
-  
+
   // System Status
   fill(turq, 150);
   stroke(buttonblue, 150);
@@ -124,7 +114,7 @@ void draw() {
   rect(805, 225, 550, 225, 7); // explainer box
   rect(805, 475, 550, 575, 7); //graph background
   rect(1387, 610, 480, 440, 7); //FFT background 
-  fill(255,255,255);
+  fill(255, 255, 255);
   textFont(fb, 20);
   text(welcome, 810, 250);
   //System Status Text
@@ -135,53 +125,56 @@ void draw() {
   stroke(buttonblue);
   text("System Status", 795, 155);
   stroke(green);
-    
+
   textFont(fb, 20);
-  fill(255,255,255);
+  fill(255, 255, 255);
   textLeading(15);
   textAlign(LEFT, TOP);
   text("Change Wave Dimensions", 45, 220);
-  
+
   textFont(fb, 20); 
-  fill(255,255,255);
+  fill(255, 255, 255);
   textLeading(15);
   textAlign(LEFT, TOP);
   text("Change WEC Controls", 45, 620);
-  
+
   //meter
-  
+
   m.updateMeter((int)(100*pow));
   // Use a delay to see the changes.
   pow = 1.25;
-  if (pow >= 1.25 && pow < 3){
+  if (pow >= 1.25 && pow < 3) {
     quad1.setColorBackground(green);
   }
-  if (pow >= 3 && pow < 4.25){
+  if (pow >= 3 && pow < 4.25) {
     quad1.setColorBackground(green);
     quad2.setColorBackground(green);
   }
-  if (pow >= 4.25 && pow < 5){
+  if (pow >= 4.25 && pow < 5) {
     quad1.setColorBackground(green);
     quad2.setColorBackground(green);
     quad3.setColorBackground(green);
   }
-  if (pow >= 5){
+  if (pow >= 5) {
     quad1.setColorBackground(green);
     quad2.setColorBackground(green);
     quad3.setColorBackground(green);
     quad4.setColorBackground(green);
   }
-  
+
   //controls button pop up behavior
-  if (mousePressed && waveText.isVisible()){
+  if (mousePressed && waveText.isVisible()) {
     waveText.hide();
   }
   //controls button pop up behavior
-  if (mousePressed && wecText.isVisible()){
+  if (mousePressed && wecText.isVisible()) {
     wecText.hide();
   }
-  //Jog:
-  if (waveMaker.mode == 1 && position.getValue() != waveMaker.mag) {  //only sends if value has changed  
+
+  if (!serialConnected) {
+    //do nothing
+  } else if (waveMaker.mode == 1 && position.getValue() != waveMaker.mag) {  //only sends if value has changed  
+    //Jog:
     waveMaker.mag = position.getValue();
     port1.write('j');
     sendFloat(waveMaker.mag, port1);
@@ -205,7 +198,7 @@ void draw() {
     port1.write('g');
     sendFloat(waveMaker.gamma, port1);    //gamma always needs to be the last sent
   }
-  
+
   /////FFT section(move to fft tab eventually):  //!!needs to be activated and deactivated(maybe)
   if (millis() > previousMillis+fftInterval) {
     previousMillis = millis();

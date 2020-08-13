@@ -36,13 +36,13 @@ void initializeUI() {
   int powerX, powerY;
   powerX = 1425;
   powerY = 500;
-  
+
   quad1 = cp5.addButton("quad1")
     .setPosition(powerX, powerY)
     .setColorBackground(grey)
     .setSize(100, 50)
     .setLabel("25%");  
-    
+
   quad2 = cp5.addButton("quad2")
     .setPosition(powerX + 100, powerY)
     .setColorBackground(grey)
@@ -61,10 +61,10 @@ void initializeUI() {
     .setSize(100, 50)
     .setLabel("100%");
 
-  
- int qX, qY;
- qX = 300;
- qY = 210;
+
+  int qX, qY;
+  qX = 300;
+  qY = 210;
   waveQs = cp5.addButton("waveQs")
     .setPosition(qX, qY)
     .setSize(15, 15)
@@ -100,7 +100,7 @@ void initializeUI() {
     .setLabel("OFF"); 
 
   buttonY = 660;
-  
+
   torque = cp5.addButton("torque")
     .setPosition(buttonX, buttonY)
     .setSize(150, 65)
@@ -121,53 +121,53 @@ void initializeUI() {
     .setPosition(buttonX + 510, buttonY)
     .setSize(150, 65)
     .setLabel("Off"); 
-    
-//Button wavePosData, waveElData, wecPosData, wecVelData, wecTorqData, wecPowData;
-int dataButtonX, dataButtonY;
-dataButtonX = 970;
-dataButtonY = 735;
 
-wavePosData = cp5.addButton("wavePosData")
+  //Button wavePosData, waveElData, wecPosData, wecVelData, wecTorqData, wecPowData;
+  int dataButtonX, dataButtonY;
+  dataButtonX = 970;
+  dataButtonY = 735;
+
+  wavePosData = cp5.addButton("wavePosData")
     .setPosition(dataButtonX, dataButtonY)
     .setColorBackground(grey)
     .setSize(100, 50)
     .setLabel("Wave Maker Position"); 
 
-waveElData = cp5.addButton("waveElData")
+  waveElData = cp5.addButton("waveElData")
     .setPosition(dataButtonX + 125, dataButtonY)
     .setColorBackground(grey)
     .setSize(100, 50)
     .setLabel("Wave Elevation"); 
-    
-dataButtonY = 990;
 
-wecPosData = cp5.addButton("wecPosData")
+  dataButtonY = 990;
+
+  wecPosData = cp5.addButton("wecPosData")
     .setPosition(dataButtonX - 125, dataButtonY)
     .setColorBackground(grey)
     .setSize(100, 50)
     .setLabel("Wec Position"); 
-    
-wecVelData = cp5.addButton("wecVelData")
+
+  wecVelData = cp5.addButton("wecVelData")
     .setPosition(dataButtonX, dataButtonY)
     .setColorBackground(grey)
     .setSize(100, 50)
     .setLabel("WEC Velocity");
 
-wecTorqData = cp5.addButton("wecTorqData")
+  wecTorqData = cp5.addButton("wecTorqData")
     .setPosition(dataButtonX + 125, dataButtonY)
     .setColorBackground(grey)
     .setSize(100, 50)
     .setLabel("WEC Torque");
-    
-wecPowData = cp5.addButton("wecPowData")
+
+  wecPowData = cp5.addButton("wecPowData")
     .setPosition(dataButtonX + 250, dataButtonY)
     .setColorBackground(grey)
     .setSize(100, 50)
     .setLabel("WEC Power");
-    
+
   // Sliders // 
   //distance between slider and buttons is 150, distance between each slider is 100
-   
+
   int sliderX, sliderY;
   sliderX = 150;
   sliderY = 240 + 65 + 50; // button Y lcation (240) + size of button + 50 
@@ -328,8 +328,10 @@ void jog() {
   gamma.hide();
   position.show();
   //set mode on arduino:
-  port1.write('!');
-  sendFloat(0, port1);
+  if (serialConnected) {
+    port1.write('!');
+    sendFloat(0, port1);
+  }
 }
 
 void fun() {
@@ -347,8 +349,10 @@ void fun() {
   h.show();
   freq.show();
   //set mode on arduino:
-  port1.write('!');
-  sendFloat(1, port1);
+  if (serialConnected) {
+    port1.write('!');
+    sendFloat(1, port1);
+  }
 }
 
 void sea() {
@@ -365,8 +369,10 @@ void sea() {
   peakF.show();
   gamma.show();
   //set mode on arduino:
-  port1.write('!');
-  sendFloat(2, port1);
+  if (serialConnected) {
+    port1.write('!');
+    sendFloat(2, port1);
+  }
 }
 
 void off() {
@@ -382,8 +388,10 @@ void off() {
   gamma.setValue(0);
   position.setValue(0);
   //set mode on arduino:
-  port1.write('!');
-  sendFloat(-1, port1);
+  if (serialConnected) {
+    port1.write('!');
+    sendFloat(-1, port1);
+  }
 }
 
 // WEC Buttons 
@@ -400,8 +408,10 @@ void torque() {
   sigHWEC.hide();
   peakFWEC.hide();
   gammaWEC.hide();
-  port2.write('!');
-  sendFloat(0, port2);
+  if (serialConnected) {
+    port2.write('!');
+    sendFloat(0, port2);
+  }
 }   
 
 void feedback() {
@@ -416,8 +426,10 @@ void feedback() {
   sigHWEC.hide();
   peakFWEC.hide();
   gammaWEC.hide();
-  port2.write('!');
-  sendFloat(1, port2);
+  if (serialConnected) {
+    port2.write('!');
+    sendFloat(1, port2);
+  }
 }
 
 // Slider pGain, dGain, torqueSlider, sigHWEC, peakFWEC, gammaWEC; 
@@ -436,8 +448,10 @@ void seaWEC() {
   sigHWEC.show();
   peakFWEC.show();
   gammaWEC.show();
-  port2.write('!');
-  sendFloat(2, port2);
+  if (serialConnected) {
+    port2.write('!');
+    sendFloat(2, port2);
+  }
 }
 
 void offWEC() {
@@ -452,39 +466,38 @@ void offWEC() {
   sigHWEC.setValue(0);
   peakFWEC.setValue(0);
   gammaWEC.setValue(0);
-  port2.write('!');
-  sendFloat(-1, port2);
+  if (serialConnected) {
+    port2.write('!');
+    sendFloat(-1, port2);
+  }
 }
 
 boolean wavePosClicked = false; 
 void wavePosData() {
-  if(wavePosClicked == false){
+  if (wavePosClicked == false) {
     wavePosClicked = true;
     wavePosData.setColorBackground(hoverblue);
     waveChart.addDataSet("waveMakerPosition");
-    waveChart.setData("waveMakerPosition", new float[360]); 
-  } 
-  else {
-     wavePosClicked = false;  
-     wavePosData.setColorBackground(grey);
-     waveChart.removeDataSet("waveMakerPosition");
+    waveChart.setData("waveMakerPosition", new float[360]);
+  } else {
+    wavePosClicked = false;  
+    wavePosData.setColorBackground(grey);
+    waveChart.removeDataSet("waveMakerPosition");
   }
 }
 
 boolean waveElClicked = false; 
 void waveElData() {
-  if(waveElClicked == false){
+  if (waveElClicked == false) {
     waveElClicked = true;
     waveElData.setColorBackground(green);
     waveChart.addDataSet("waveElevation");
     waveChart.setColors("waveElevation", green);
     waveChart.setData("waveElevation", new float[360]);
-    
-  } 
-  else {
-     waveElClicked = false;  
-     waveElData.setColorBackground(grey);
-     waveChart.removeDataSet("waveElevation");
+  } else {
+    waveElClicked = false;  
+    waveElData.setColorBackground(grey);
+    waveChart.removeDataSet("waveElevation");
   }
 }
 
@@ -492,76 +505,72 @@ void waveElData() {
 
 boolean wecPosClicked = false; 
 void wecPosData() {
-  if(wecPosClicked == false){
+  if (wecPosClicked == false) {
     wecPosClicked = true;
     wecPosData.setColorBackground(hoverblue);
     wecChart.addDataSet("wecPosition");
     wecChart.setColors("wecPosition", hoverblue);
     wecChart.setData("wecPosition", new float[360]);
-  } 
-  else {
-     wecPosClicked = false;  
-     wecPosData.setColorBackground(grey);
-     wecChart.removeDataSet("wecPosition");
+  } else {
+    wecPosClicked = false;  
+    wecPosData.setColorBackground(grey);
+    wecChart.removeDataSet("wecPosition");
   }
 }
 
 boolean wecVelClicked = false;
 void wecVelData() {
-  if(wecVelClicked == false){
+  if (wecVelClicked == false) {
     wecVelClicked = true;
     wecVelData.setColorBackground(green);
     wecChart.addDataSet("wecVelocity");
     wecChart.setColors("wecVelocity", green);
     wecChart.setData("wecVelocity", new float[360]);
-  } 
-  else {
-     wecVelClicked = false;  
-     wecVelData.setColorBackground(grey);
-     wecChart.removeDataSet("wecVelocity");
+  } else {
+    wecVelClicked = false;  
+    wecVelData.setColorBackground(grey);
+    wecChart.removeDataSet("wecVelocity");
   }
 }
 
 boolean wecTorqClicked = false; 
 void wecTorqData() {
-  if(wecTorqClicked == false){
+  if (wecTorqClicked == false) {
     wecTorqClicked = true;
-    wecTorqData.setColorBackground(color(0,0,0));
+    wecTorqData.setColorBackground(color(0, 0, 0));
     wecChart.addDataSet("wecTorque");
-    wecChart.setColors("wecTorque", color(0,0,0));
+    wecChart.setColors("wecTorque", color(0, 0, 0));
     wecChart.setData("wecTorque", new float[360]);
-  } 
-  else {
-     wecTorqClicked = false;  
-     wecTorqData.setColorBackground(grey);
-     wecChart.removeDataSet("wecTorque");
+  } else {
+    wecTorqClicked = false;  
+    wecTorqData.setColorBackground(grey);
+    wecChart.removeDataSet("wecTorque");
   }
 }
 
 boolean wecPowClicked = false;
 void wecPowData() {
-  if(wecPowClicked == false){
+  if (wecPowClicked == false) {
     wecPowClicked = true;
     wecPowData.setColorBackground(color(209, 18, 4));
     wecChart.addDataSet("wecPower");
     wecChart.setColors("wecPower", color(209, 18, 4));
     wecChart.setData("wecPower", new float[360]);
-  } 
-  else {
-     wecPowClicked = false;  
-     wecPowData.setColorBackground(grey);
-     wecChart.removeDataSet("wecPower");
+  } else {
+    wecPowClicked = false;  
+    wecPowData.setColorBackground(grey);
+    wecChart.removeDataSet("wecPower");
   }
 }
 /*   
-  wecChart.addDataSet("wecPosition");
-  wecChart.setData("wecPosition", new float[360]); 
-  
-  wecChart.setData("wecVelocity", new float[360]);    //use to set the domain of the plot. This value is = desired domain(secnods) * 30
-  wecChart.addDataSet("wecTorque");
-
-
-  */
+ wecChart.addDataSet("wecPosition");
+ wecChart.setData("wecPosition", new float[360]); 
+ 
+ wecChart.setData("wecVelocity", new float[360]);    //use to set the domain of the plot. This value is = desired domain(secnods) * 30
+ wecChart.addDataSet("wecTorque");
+ 
+ 
+ */
 
 void waveQs() {
   if (waveText.isVisible()) {
