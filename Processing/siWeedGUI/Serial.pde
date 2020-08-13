@@ -1,6 +1,6 @@
 Serial port1;    //arduino mega
 Serial port2;    //arduino Due
-boolean serialConnected;
+boolean megaConnected, dueConnected;
 void initializeSerial() {
   ///////////initialize Serial
 
@@ -8,20 +8,29 @@ void initializeSerial() {
   printArray(Serial.list()); 
   try {
     port1 = new Serial(this, Serial.list()[1], 500000); // all communication with Megas
+    megaConnected = true;
+  }
+  catch(Exception e) {
+    megaConnected = false;
+  }
+  try {
     port2 = new Serial(this, Serial.list()[2], 250000); // all communication with Due
-    delay(2000);
-    serialConnected = true;
-    //initialize the modes on the arduinos:
+    dueConnected = true;
+  }
+  catch(Exception e) {
+    dueConnected = false;
+  }
+  delay(2000);
+  //initialize the modes on the arduinos:
+  if (megaConnected) {
     port1.write('!');
     sendFloat(0, port1);    //jog mode
     port1.write('j');
     sendFloat(0, port1);    //at position 0
-
+  }
+  if (dueConnected) {
     port2.write('!');
     sendFloat(-1, port2);    //off
-  }
-  catch(Exception e) {
-    serialConnected = false;
   }
 }
 void sendFloat(float f, Serial port)
@@ -67,7 +76,7 @@ void readMegaSerial() {
    p:position
    d:other data for debugging
    */
-  while (serialConnected && port1.available() > 0) {    //recieves until buffer is empty. Since it runs 30 times a second, the arduino will send many samples per execution.
+  while (megaConnected && port1.available() > 0) {    //recieves until buffer is empty. Since it runs 30 times a second, the arduino will send many samples per execution.
     switch(port1.readChar()) {
     case '1':
       probe1 = readFloat(port1);
@@ -110,7 +119,7 @@ void readDueSerial() {
    p: power
    v: velocity
    */
-  while (serialConnected && port2.available() > 0)
+  while (dueConnected && port2.available() > 0)
   {
     switch(port2.readChar()) {
     case 'e':

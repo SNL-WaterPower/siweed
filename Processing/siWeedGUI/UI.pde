@@ -328,7 +328,7 @@ void jog() {
   gamma.hide();
   position.show();
   //set mode on arduino:
-  if (serialConnected) {
+  if (megaConnected) {
     port1.write('!');
     sendFloat(0, port1);
   }
@@ -349,7 +349,7 @@ void fun() {
   h.show();
   freq.show();
   //set mode on arduino:
-  if (serialConnected) {
+  if (megaConnected) {
     port1.write('!');
     sendFloat(1, port1);
   }
@@ -369,7 +369,7 @@ void sea() {
   peakF.show();
   gamma.show();
   //set mode on arduino:
-  if (serialConnected) {
+  if (megaConnected) {
     port1.write('!');
     sendFloat(2, port1);
   }
@@ -388,7 +388,7 @@ void off() {
   gamma.setValue(0);
   position.setValue(0);
   //set mode on arduino:
-  if (serialConnected) {
+  if (megaConnected) {
     port1.write('!');
     sendFloat(-1, port1);
   }
@@ -408,7 +408,7 @@ void torque() {
   sigHWEC.hide();
   peakFWEC.hide();
   gammaWEC.hide();
-  if (serialConnected) {
+  if (dueConnected) {
     port2.write('!');
     sendFloat(0, port2);
   }
@@ -426,7 +426,7 @@ void feedback() {
   sigHWEC.hide();
   peakFWEC.hide();
   gammaWEC.hide();
-  if (serialConnected) {
+  if (dueConnected) {
     port2.write('!');
     sendFloat(1, port2);
   }
@@ -448,7 +448,7 @@ void seaWEC() {
   sigHWEC.show();
   peakFWEC.show();
   gammaWEC.show();
-  if (serialConnected) {
+  if (dueConnected) {
     port2.write('!');
     sendFloat(2, port2);
   }
@@ -466,7 +466,7 @@ void offWEC() {
   sigHWEC.setValue(0);
   peakFWEC.setValue(0);
   gammaWEC.setValue(0);
-  if (serialConnected) {
+  if (dueConnected) {
     port2.write('!');
     sendFloat(-1, port2);
   }

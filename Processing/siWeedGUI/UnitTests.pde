@@ -42,7 +42,7 @@ void unitTests() {
   }
   ////////////verify mega jonswap:
   readMegaSerial();    //clear buffer
-  if (serialConnected) port1.write('u');    //sends to begin test
+  if (megaConnected) port1.write('u');    //sends to begin test
   delay(100);          //give time to complete
   readMegaSerial();
   if (megaUnitTests[1]) {
@@ -57,7 +57,7 @@ void unitTests() {
   }
   ////////////verify due jonswap:
   readDueSerial();    //clear buffer
-  if(serialConnected)port2.write('u');    //sends to begin test
+  if(dueConnected)port2.write('u');    //sends to begin test
   delay(100);          //give time to complete
   readDueSerial();
   if (dueUnitTests[1]) {

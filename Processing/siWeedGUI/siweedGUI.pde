@@ -171,7 +171,7 @@ void draw() {
     wecText.hide();
   }
 
-  if (!serialConnected) {
+  if (!megaConnected) {
     //do nothing
   } else if (waveMaker.mode == 1 && position.getValue() != waveMaker.mag) {  //only sends if value has changed  
     //Jog:
