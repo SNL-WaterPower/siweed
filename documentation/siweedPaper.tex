@@ -7,6 +7,8 @@
 \usepackage{tabu}
 \usepackage{enumitem}
 \usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage[square,numbers,sort&compress]{natbib}
 \newlist{selectlist}{itemize}{2}
 \setlist[selectlist]{label=$\square$,leftmargin=*,noitemsep,topsep=0pt}
 
@@ -19,7 +21,7 @@
 \begin{flushleft}
 
 % Remove all text in italics when filling out the template and replace with your manuscripts corresponding text in regular font.
-\textit{Text in italics are template instructions. Remove and replace all instructions with regular font text.}
+% \textit{Text in italics are template instructions. Remove and replace all instructions with regular font text.}
 
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{10pt}
@@ -33,7 +35,7 @@
 \textbf{Authors:} \textit{Author one, author two, and author three}
 
 %Insert Affiliations
-\textbf{Affiliations:} \textit{Affiliation one, affiliation two}
+\textbf{Affiliations:} Sandia National Laboratories, University of New Mexico
 
 %Insert Contact Email
 %Include institutional email address of the corresponding author
@@ -41,11 +43,13 @@
 
 %Insert Abstract
 %Max. 200 words. Remember that the abstract is what readers see first in electronic abstracting and indexing services. This is the advertisement of your article. Make it interesting, and easy to be understood. Be accurate and specific, keep it as brief as possible.
-\textbf{Abstract:} \textit{Max. 200 words. Remember that the abstract is what readers see first in electronic abstracting and indexing services. This is the advertisement of your article. Make it interesting, and easy to be understood. Be accurate and specific, keep it as brief as possible.}
+\textbf{Abstract:} Wave energy converters are a nascent energy generation technology that harness the power in ocean waves.
+To assist in communicating both fundamental and complex concepts of wave energy, a small scale portable wave tank and wave energy converter have been developed.
+The system has been designed using commercial off-the-shelf components and the all design hardware and software are openly available for replication.
 
 %Insert Keywords
 % At least 3 keywords. There is no limit on the no. of keywords you can list. Please remember that effective keywords should not repeat words appearing in your title, and should be neither too general nor too narrow.
-\textbf{Keywords:} \textit{At least 3 keywords. There is no limit on the no. of keywords you can list. Please remember that effective keywords should not repeat words appearing in your title, and should be neither too general nor too narrow.}
+\textbf{Keywords:} wave energy, educational, outreach
 
 \textbf{Specifications table:}
 
@@ -69,13 +73,13 @@
   \\
   \hline \textbf{Hardware type} &
   \begin{itemize}
-  \item \textit{Imaging tools}
-  \item \textit{Measuring physical properties and in-lab sensors}
-  \item \textit{Biological sample handling and preparation}
-  \item \textit{Field measurements and sensors}
+  % \item \textit{Imaging tools}
+  % \item \textit{Measuring physical properties and in-lab sensors}
+  % \item \textit{Biological sample handling and preparation}
+  % \item \textit{Field measurements and sensors}
   \item \textit{Electrical engineering and computer science}
   \item \textit{Mechanical engineering and materials science}
-  \item \textit{Other (please specify)}
+  \item \textit{Other (please specify) - Ocean engineering}
   \end{itemize}
   \\ 
 \hline \textbf{Open source license} &
@@ -96,20 +100,32 @@
 % create the main body of the paper
 
 \section{Hardware in context} % Include a short description of the hardware, putting into context of similar open hardware and proprietary equipment in the field.
-SIWEED is a small scale wave tank that is designed to be portable and serve in outreach and dissemination of wave energy research.
-XX\dots{}
+The SIWEED is a small scale wave tank that is designed to be portable and serve in outreach and dissemination of wave energy research.
+The development of this system was inspired by previous research at Sandia National Labs in the areas of wave energy converter (WEC) device and control design and testing.
+Specifically, the SIWEED demonstrates the causal feedback control and device design principles described in \citet{Bacelli2020} and \citet{Coe2020a}.
+
+
+A wide variety of similar educational wave tanks and tow tanks have been built, but few have been documented.
+\citet{unger2006creating} reworked the a tow tank at MIT to enable remote operation via the internet.
+
+This is a novel expansion on similar small-scale educational wave tanks, as the user is able to control both the waves and the WEC device.
+
 
 \section{Hardware description} % Describe the hardware, highlighting the customization rather than the steps of the procedure. Highlight how it differs/which advantage it offers over pre-existing methods. For example, how could this hardware: be compared to other hardware in terms of cost or ease of use, be used in the development of further designs in a particular area, and so on. Add 3-5 bulleted points to broadly explain to other researchers how the hardware could be potentially useful to them, for either standard or novel laboratory tasks, inside or outside of the original user community.
+The SIWEED is composed of a 1.5\,m $\times{}$ 0.3\,m $\times{}$ 0.5\,m (filled to roughly 0.3\,m deep) acrylic tank, housing a vertical plunger style wave maker (see, e.g., \cite{hyun1976simplified}), and a single body WEC modeled on the WaveBot~\cite{Coe2016a}.
+A system diagram is shown in \figurename~XX.
+The system is controlled by a Windows PC running a graphical user interface (GUI) developed using Processing\footnote{\url{https://processing.org}} and the controlP5 library\footnote{\url{http://www.sojamo.de/libraries/controlP5/}}.
+Two Arduino microcontrollers, one Due and one Mega, are used to control and acquire signals from the WEC and wave maker.
 
+A number of key factors of SIWEED are:
 
-% > 
-
-% \textit{Describe the hardware, highlighting the customization rather than the steps of the procedure. Highlight how it differs/which advantage it offers over pre-existing methods. For example, how could this hardware: be compared to other hardware in terms of cost or ease of use, be used in the development of further designs in a particular area, and so on. \linebreak \linebreak Add 3-5 bulleted points to broadly explain to other researchers how the hardware could be potentially useful to them, for either standard or novel laboratory tasks, inside or outside of the original user community.}
-% \begin{itemize}
-% \item \dots
-% \item \dots
-% \item \dots
-% \end{itemize}
+\begin{itemize}
+  \item \textbf{Open-source and documented design:} To our knowledge, the SIWEED is the first educational wave tank and WEC system to be fully documented with an open-source design and software package.
+  This will enabled interested researchers and students to efficiently develop replicates and variations of the SIWEED design for their own purposes.
+  \item \textbf{Portability:} To allow for transport to conferences and outreach events, the SIWEED has been specifically designed to allow for easy transportation.
+  \item \textbf{WEC control:} In addition to demonstrating the physics of ocean waves, the SIWEED allows users to interact with a WEC control system to better understand the principles of reactive feedback control to maximize power absorption for the waves.
+  \item \textbf{Student-led design:} The SIWEED project has been a student-led design project involving XX undergraduate engineering students.
+\end{itemize}
 
 \section{Design files}
 %The complete design files must be either uploaded to an approved online repository, uploaded at the time of submission on the online Elsevier submission interface as supplementary materials (CAD files, videos…), or included in the body of the manuscript (e.g. figures). The two approved online repositories are Mendeley Data and the Open Science Framework (OSF instructions).
@@ -215,21 +231,25 @@ XX\dots{}
 \end{itemize}}
 
 \section{Declaration of interest}
+Declarations of interest: none
 % a statement must be included even if there is no conflict of interest
 % All authors must disclose any financial and personal relationships with other people or organizations that could inappropriately influence (bias) their work. Examples of potential conflicts of interest include employment, consultancies, stock ownership, honoraria, paid expert testimony, patent applications/registrations, and grants or other funding. Authors must disclose any interests in a summary declaration of interest statement in the manuscript file. If there are no interests to declare then please state this: 'Declarations of interest: none'. This summary statement will be ultimately published if the article is accepted. More information.}
 
-\textit{[a statement must be included even if there is no conflict of interest] \linebreak
-All authors must disclose any financial and personal relationships with other people or organizations that could inappropriately influence (bias) their work. Examples of potential conflicts of interest include employment, consultancies, stock ownership, honoraria, paid expert testimony, patent applications/registrations, and grants or other funding. Authors must disclose any interests in a summary declaration of interest statement in the manuscript file. If there are no interests to declare then please state this: 'Declarations of interest: none'. This summary statement will be ultimately published if the article is accepted. More information.}
+\section*{Acknowledgment}
+Sandia National Laboratories is a multi-mission laboratory managed and operated by National Technology and Engineering Solutions of Sandia, LLC., a wholly owned subsidiary of Honeywell International, Inc., for the U.S. Department of Energy's National Nuclear Security Administration under contract DE-NA0003525. This paper describes objective technical results and analysis. Any subjective views or opinions that might be expressed in the paper do not necessarily represent the views of the U.S. Department of Energy or the United States Government.
 
-\section{Human and animal rights}
+% \section{Human and animal rights}
 
-\textit{
-\begin{itemize}
-\item If the work involves the use of human subjects, the author should ensure that the work described has been carried out in accordance with the appropriate ethical guidelines. \item If the work involves the use of human subjects, the author should ensure that the work described has been carried out in accordance with The Code of Ethics of the World Medical Association (Declaration of Helsinki) for experiments involving humans; Uniform Requirements for manuscripts submitted to Biomedical journals. Authors should include a statement in the manuscript that informed consent was obtained for experimentation with human subjects. The privacy rights of human subjects must always be observed. \item All animal experiments should comply with the ARRIVE guidelines and should be carried out in accordance with the U.K. Animals (Scientific Procedures) Act, 1986 and associated guidelines, EU Directive 2010/63/EU for animal experiments, or the National Institutes of Health guide for the care and use of Laboratory animals (NIH Publications No. 8023, revised 1978) and the authors should clearly indicate in the manuscript that such guidelines have been followed.\end{itemize}}
+% \textit{
+% \begin{itemize}
+% \item If the work involves the use of human subjects, the author should ensure that the work described has been carried out in accordance with the appropriate ethical guidelines. \item If the work involves the use of human subjects, the author should ensure that the work described has been carried out in accordance with The Code of Ethics of the World Medical Association (Declaration of Helsinki) for experiments involving humans; Uniform Requirements for manuscripts submitted to Biomedical journals. Authors should include a statement in the manuscript that informed consent was obtained for experimentation with human subjects. The privacy rights of human subjects must always be observed. \item All animal experiments should comply with the ARRIVE guidelines and should be carried out in accordance with the U.K. Animals (Scientific Procedures) Act, 1986 and associated guidelines, EU Directive 2010/63/EU for animal experiments, or the National Institutes of Health guide for the care and use of Laboratory animals (NIH Publications No. 8023, revised 1978) and the authors should clearly indicate in the manuscript that such guidelines have been followed.\end{itemize}}
 
-\section*{References} 
-%> Include at least one reference, to the original publication of the hardware you customized.
-%> Include other references as required. Include references to put your device in context in the literature. For more information on the reference format in HardwareX please see the Guide for Authors at: https://www.elsevier.com/journals/hardwarex/2468-0672/guide-for-authors
+% \section*{References} 
+% %> Include at least one reference, to the original publication of the hardware you customized.
+% %> Include other references as required. Include references to put your device in context in the literature. For more information on the reference format in HardwareX please see the Guide for Authors at: https://www.elsevier.com/journals/hardwarex/2468-0672/guide-for-authors
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
 
 \textit{\begin{itemize}
 \item Include at least one reference, to the original publication of the hardware you customized.
