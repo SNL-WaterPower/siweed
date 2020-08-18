@@ -1,5 +1,5 @@
 void initSerial() {
-  Serial.begin(500000);
+  Serial.begin(250000);
 }
 /* '!' indicates mode switch, next int is mode
    j indicates jog position
@@ -10,7 +10,7 @@ void initSerial() {
    g :gamma
 */
 void readSerial() {
-  if (Serial.available() > 0) {   //if a whole float is through: n+100>
+  if (Serial.available() > 5) {   //if a whole float is through: n+100>
     //delay(1000);
     //Serial.print('b');
     //Serial.println(Serial.available());

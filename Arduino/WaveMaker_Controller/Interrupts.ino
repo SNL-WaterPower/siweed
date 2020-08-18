@@ -43,16 +43,17 @@ ISR(TIMER4_COMPA_vect) {    //function called by interupt     //Takes about .4 m
     digitalWrite(dirPin, LOW);
   }
   volatile float sp = abs(vel);     //steping is always positive, so convert to speed
-  if (sp < 2.6) {   //31hz is the lowest frequency of tone(), in mm/s this is 2.6
+  /*if (sp < 2.6) {   //31hz is the lowest frequency of tone(), in mm/s this is 2.6
     sp = 2.6;
+    noTone(stepPin);
     //Serial.println("min");
-  }
-  else if (sp > maxRate) {  //max speed
+  }*/
+  if (sp > maxRate) {  //max speed
     sp = maxRate;
     digitalWrite(13, HIGH);   //on board led turns on if max speed was reached
     //Serial.println("max");
   }
-  if (mode != -1) {  //only plays a tone if mode is not STOP
+  if (mode != -1 && sp > 2.6) {  //only plays a tone if mode is not STOP, and greater than lowest frequency of tone //31hz is the lowest frequency of tone(), in mm/s this is 2.6
     tone(stepPin, mmToSteps(sp));     //steps per second
   } else {
     noTone(stepPin);

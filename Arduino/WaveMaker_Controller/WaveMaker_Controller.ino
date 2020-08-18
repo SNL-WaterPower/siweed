@@ -21,7 +21,7 @@ volatile float desiredPos;   //used for jog mode
 const int buffSize = 10;    //number of data points buffered in the moving average filter
 volatile float probe1Buffer[buffSize];
 volatile float probe2Buffer[buffSize];
-
+const float maxRate = 50.0;   //max mm/seconds
 ////////////////////////////////////////////////
 //Derived funciton here:
 const float leadPitch = 10.0;     //mm/turn
@@ -54,7 +54,7 @@ volatile float inputFnc(volatile float tm) {  //inputs time in seconds //outputs
   }
   return val;
 }
-const float maxRate = 500.0;   //max mm/seconds
+
 
 void setup() {
   initSerial();
@@ -85,18 +85,21 @@ void setup() {
 }
 
 void loop() {   //__ microseconds
-  encPos = 0;//waveEnc.read() * (1 / encStepsPerTurn) * leadPitch; //steps*(turns/step)*(mm/turn)
+  encPos = waveEnc.read() * (1 / encStepsPerTurn) * leadPitch; //steps*(turns/step)*(mm/turn)
   t = micros() / 1.0e6;
   readSerial();
   updateSpeedScalar();
 }
 void updateSpeedScalar() {    //used to prevent jumps/smooth start
   //Serial.println(speedScalar);
+  /*
   if (speedScalar < 1) {
     speedScalar += .005;
   } else {
     speedScalar = 1.0;
   }
+  */
+  speedScalar = 1.0;
 }
 volatile float mmToSteps(volatile float mm) {
   return mm * (1 / leadPitch) * (1 / gearRatio) * motorStepsPerTurn; //mm*(lead turns/mm)*(motor turns/lead turn)*(steps per motor turn)

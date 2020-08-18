@@ -289,7 +289,9 @@ void initializeUI() {
     .setColorBackground(turq)
     .setColorLabel(green)
     ;
-
+  waveChart.addDataSet("debug");
+  waveChart.setData("debug", new float[360]);
+  
   wecChart =  cp5.addChart("WEC Information")
     .setPosition(830, 795)
     .setSize(500, 175)

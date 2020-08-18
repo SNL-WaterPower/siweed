@@ -7,7 +7,7 @@ void initializeSerial() {
   //mac serial com
   printArray(Serial.list()); 
   try {
-    port1 = new Serial(this, Serial.list()[1], 500000); // all communication with Megas
+    port1 = new Serial(this, Serial.list()[1], 250000); // all communication with Megas
     megaConnected = true;
   }
   catch(Exception e) {
@@ -89,13 +89,14 @@ void readMegaSerial() {
       break;
     case 'p':
       waveMakerPos = readFloat(port1);
+      if (wavePosClicked == true) {
+        waveChart.push("waveMakerPosition", waveMakerPos);
+      }
       break;
     case 'd':
       megaUnitTests[0] = true;      //for unit testing;
       debugData = readFloat(port1);
-      if (wavePosClicked == true) {
-        waveChart.push("waveMakerPosition", debugData);
-      }
+      waveChart.push("debug", debugData);
       if (waveMaker.mode == 3||waveMaker.mode == 2) fftList.add(debugData);      //adds to the tail if in the right mode
       if (fftList.size() > queueSize)
       {
