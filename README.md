@@ -1,8 +1,8 @@
 # SIWEED
-The Sandia Interactive Wave Energy Education Display (SIWEED) is a small portable wave tank to be used for outreach and engagement on wave energy converters (WECs), and in particular WEC control.
+The Sandia Interactive Wave Energy Education Display (SIWEED) is a small portable wave tank to be used for outreach and engagement on wave energy converters (WECs) and, in particular, WEC control.
 
 ## System layout
-SIWEED uses a PC to control two Arduinos: (1) an Ardunio Mega to run the wave maker and (2) an Ardunio Due to run the WEC.
+SIWEED uses a PC to control two Arduinos: (1) an Arduino Mega to run the wave maker and (2) an Arduino Due to run the WEC.
 A detailed illustration of the system layout is shown in the diagram below.
 
 ![system layout](documentation/diagrams/systemLayoutPNG.png)
