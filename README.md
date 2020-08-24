@@ -27,6 +27,20 @@ A detailed illustration of the system layout is shown in the diagram below.
  		- WEC (Due)
  			- General: 100 Hz
  			- Serial communication: 30 Hz
+## Requirements
+- SIWEED requires 
+	- [Arduino IDE 1.8.13](https://www.arduino.cc/en/main/software) or higher for programming Arduinos
+		- Libraries 
+			- DueTimer(1.4.7)
+			- Encoder (1.4.1)
+			- Jonswan
+	- [Processing IDE 3.5.4](https://processing.org/download/) or higher for programming the GU
+		- Libraries
+			- Sound
+			- Console
+			- Meter
+			- controlP5
+
 
 ## Contributing
 Except for very minor changes, we aim to follow a [gitflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) workflow.
