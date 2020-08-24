@@ -47,16 +47,22 @@ ISR(TIMER4_COMPA_vect) {    //function called by interupt     //Takes about .4 m
     sp = 2.6;
     noTone(stepPin);
     //Serial.println("min");
-  }*/
+    }*/
   if (sp > maxRate) {  //max speed
     sp = maxRate;
     digitalWrite(13, HIGH);   //on board led turns on if max speed was reached
     //Serial.println("max");
   }
-  if (mode != -1 && sp > 2.6) {  //only plays a tone if mode is not STOP, and greater than lowest frequency of tone //31hz is the lowest frequency of tone(), in mm/s this is 2.6
-    tone(stepPin, mmToSteps(sp));     //steps per second
-  } else {
+  volatile float stepsPerSecond = mmToSteps(sp);
+  if (mode == -1) {  //no tone if stopped
     noTone(stepPin);
+    stepper.stop();
+  } else if (stepsPerSecond > 31) {    //tone needs to be greater than 31hz
+    stepper.stop();
+    tone(stepPin, stepsPerSecond);
+  } else {    //if speed is too slow, run through library       !!need to test if tone and stepper conflict
+    stepper.setSpeed(stepsPerSecond);
+    stepper.runSpeed();
   }
 }
 
@@ -77,7 +83,7 @@ ISR(TIMER5_COMPA_vect) {   //takes ___ milliseconds
   Serial.write('p');    //to indicate position
   sendFloat(encPos);
   Serial.write('d');    //to indicate alternate data
-  float lerpVal = lerp(prevVal, futurePos, (interval*1.0e6)/(sampleT-prevSampleT));   //linear interpolate(initial value, final value, percentatge)//percentage is desired interval/actual interval
+  float lerpVal = lerp(prevVal, futurePos, (interval * 1.0e6) / (sampleT - prevSampleT)); //linear interpolate(initial value, final value, percentatge)//percentage is desired interval/actual interval
   sendFloat(lerpVal);
   Serial.println();
   //Serial.println(mode);

@@ -1,11 +1,13 @@
 #include <miniWaveTankJonswap.h>
 #include <Encoder.h>
 #include<math.h>
+#include <AccelStepper.h>
 
 miniWaveTankJonswap jonswap(512.0 / 32.0, 0.5, 2.5); //period, low frequency, high frequency. frequencies will be rounded to multiples of df(=1/period)
 //^ISSUE. Acuracy seems to fall off after ~50 components when using higher frequencies(1,3 at 64 elements seems wrong).
 Encoder waveEnc(2, 3);   //pins 2 and 3(interupts)//for 800 ppr/3200 counts per revolution set dip switches(0100) //2048ppr/8192 counts per revolution max(0000)
 const int stepPin = 4, dirPin = 5, limitPin = A0, probe1Pin = A1, probe2Pin = A2;
+AccelStepper stepper = AccelStepper(1, stepPin, dirPin);
 volatile double t = 0;    //time in seconds
 volatile float speedScalar = 0;
 volatile int mode = 0;     //-1 is stop, 0 is jog, 1 is sine, 2 is sea state
@@ -63,6 +65,7 @@ void setup() {
   pinMode(13, OUTPUT);
   digitalWrite(13, LOW);    //initialization of maxRate indicator led
   digitalWrite(dirPin, HIGH);
+  stepper.setMaxSpeed(31);    //31hz max speed(minimum of tone())
   /////////Zero encoder:
   tone(stepPin, 100);   //start moving
   while (analogRead(limitPin) > 500) {}   //do nothing until the beam is broken
