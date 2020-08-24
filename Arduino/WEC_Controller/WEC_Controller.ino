@@ -6,7 +6,7 @@ miniWaveTankJonswap jonswap(512.0 / 32.0, 0.5, 2.5); //period, low frequency, hi
 //^ISSUE. Acuracy seems to fall off after ~50 components when using higher frequencies(1,3 at 64 elements seems wrong).
 bool newJonswapData = false;
 volatile float sigH, peakF, _gamma;
-volatile int mode = -1;    //-1 stop, 0 torque control, 1 feedback control, 2 function mode // should function mode be sea state?
+volatile int mode = -1;    //-1 stop, 0 torque control, 1 feedback control, 2 sea state
 volatile int n;   //number of components
 bool ampUnitTest = true, TSUnitTest = true;
 volatile double t = 0;    //time in seconds

@@ -35,7 +35,7 @@ void setup() {
   fftArr = new float[queueSize*2];
   //fftComplexArr = new Complex[queueSize];
   waveMaker.mode = 1;    // 1 = jog, 2 = function, 3 = sea, 4 = off
-  wec.mode = 3;  //1 = torque, 2 = "sea", 3 = off
+  wec.mode = 4;  //1 = torque, 2= feedback, 3 = "sea", 4 = off
   initializeDataLogging();
   initializeSerial();    //has a 2 second delay
   initializeUI();
@@ -197,6 +197,34 @@ void draw() {
     sendFloat(waveMaker.peakF, port1);
     port1.write('g');
     sendFloat(waveMaker.gamma, port1);    //gamma always needs to be the last sent
+  }
+  
+  if (!dueConnected) {
+    //do nothing
+  } else if (wec.mode == 1 && torque.getValue() != wec.mag) {  //only sends if value has changed  
+    //Jog:
+    wec.mag = torque.getValue();
+    port2.write('t');
+    sendFloat(wec.mag, port2);
+    //feedback:
+  } else if (wec.mode == 2 && !mousePressed && (wec.amp != pGain.getValue() || wec.freq != dGain.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition) //for wec, amp is kp and freq is kd;
+    wec.amp = pGain.getValue();
+    wec.freq = dGain.getValue();
+    port1.write('k');
+    sendFloat(wec.amp, port2);
+    port1.write('d');
+    sendFloat(wec.freq, port2);
+    //Sea State:
+  } else if (wec.mode == 3 && !mousePressed && (wec.sigH != sigHWEC.getValue() || wec.peakF != peakFWEC.getValue() || wec.gamma != gammaWEC.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
+    wec.sigH = sigHWEC.getValue();
+    wec.peakF = peakFWEC.getValue();
+    wec.gamma = gammaWEC.getValue();
+    port1.write('s');
+    sendFloat(wec.sigH, port2);
+    port1.write('p');
+    sendFloat(wec.peakF, port2);
+    port1.write('g');
+    sendFloat(wec.gamma, port2);    //gamma always needs to be the last sent
   }
 
   /////FFT section(move to fft tab eventually):  //!!needs to be activated and deactivated(maybe)
