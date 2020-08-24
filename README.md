@@ -39,7 +39,7 @@ A detailed illustration of the system layout is shown in the diagram below.
 			- Sound
 			- Console
 			- Meter
-			- controlP5
+			- ControlP5
 
 
 ## Contributing
