@@ -61,6 +61,7 @@ ISR(TIMER4_COMPA_vect) {    //function called by interupt     //Takes about .4 m
     stepper.stop();
     tone(stepPin, stepsPerSecond);
   } else {    //if speed is too slow, run through library       !!need to test if tone and stepper conflict
+    noTone(stepPin);
     stepper.setSpeed(stepsPerSecond);
     stepper.runSpeed();
   }
