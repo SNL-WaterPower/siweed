@@ -28,8 +28,8 @@ void initializeUI() {
   // starting ControlP5 stuff
   cp5 = new ControlP5(this);
   //Fonts
-  f = createFont("Arial", 16, true);
-  fb = createFont("Arial Bold Italic", 32, true);
+  f = createFont("ArialNarrow", 16, true);
+  fb = createFont("Arial-BoldMT", 32, true);
 
   // Buttons //
   //1387

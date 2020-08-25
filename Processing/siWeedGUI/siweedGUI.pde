@@ -24,6 +24,7 @@ String fundingState = "Sandia National Laboratories is a multi-mission laborator
 String welcome = "Can you save the town from its power outage? \nChange the demension and type \n of wave to see how the power changes! \n Change the wave energy converter's controls \n to harvest more power. \n How quickly can you light up all four quadrants?";
 void setup() {
   ////////
+  
   frameRate(32);    //sets draw() to run x times a second.
   ///////initialize objects
   size(1920,1200, P2D);
