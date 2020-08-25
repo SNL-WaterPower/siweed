@@ -529,7 +529,7 @@ void wecTorqData() {
     wecTorqData.setColorBackground(color(0,0,0));
     wecChart.addDataSet("wecTorque");
     wecChart.setColors("wecTorque", color(0,0,0));
-    wecChart.setData("wecTorque", new float[360]);
+    wecChart.setData("wecTorque", new float[360]); 
   } 
   else {
      wecTorqClicked = false;  
