@@ -20,8 +20,6 @@ The Sandia Interactive Wave Energy Education Display (SIWEED) is a small portabl
 <!-- GETTING STARTED -->
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
-
 ### Prerequisites
 - SIWEED requires 
 	- [Arduino IDE 1.8.13](https://www.arduino.cc/en/main/software) or higher for programming Arduinos
@@ -111,21 +109,21 @@ Thank you for creating them.
 
 Pull requests are, a great way to get your ideas into this repository.
 
-When deciding if I merge in a pull request I look at the following things:
+When deciding to merge in a pull request, look at the following things:
 
 #### Does it state intent
 
-You should be clear which problem you're trying to solve with your contribution.
+Be clear which problem is trying to be solved with your contribution.
 
 For example:
 
 > Add link to code of conduct in README.md
 
-Doesn't tell me anything about why you're doing that
+Doesn't tell anything about why you're doing that
 
 > Add link to code of conduct in README.md because users don't always look in the CONTRIBUTING.md
 
-Tells me the problem that you have found, and the pull request shows me the action you have taken to solve it.
+Tells the problem found, and the pull request shows the action taken to solve it.
 
 
 #### Is it of good quality
@@ -144,17 +142,17 @@ The aim of this repository is:
 
 #### Does it follow the contributor covenant
 
-This repository has a [code of conduct](CODE_OF_CONDUCT.md), This repository has a code of conduct, I will remove things that do not respect it.
+This repository has a [code of conduct](CODE_OF_CONDUCT.md), This repository has a code of conduct, things that do not respect it will be removed.
 
 
 <!-- Authors -->
 ## Authors
 
 * **Ryan Coe** - [ryancoe](https://github.com/ryancoe)
-* **Delaney Heilman** - [delaneyheileman]https://github.com/delaneyheileman
-* **Nicholas Ross** - [nickross4444]https://github.com/nickross4444
-* **Gerrit Motes** - [DeepFriedDerp]https://github.com/DeepFriedDerp
-* **Sean Pluemer** - [seanpluemer]https://github.com/SeanPluemer
+* **Delaney Heilman** - [delaneyheileman](https://github.com/delaneyheileman)
+* **Nicholas Ross** - [nickross4444](https://github.com/nickross4444)
+* **Gerrit Motes** - [DeepFriedDerp](https://github.com/DeepFriedDerp)
+* **Sean Pluemer** - [seanpluemer](https://github.com/SeanPluemer)
 
 
 
