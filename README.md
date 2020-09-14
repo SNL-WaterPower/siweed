@@ -9,7 +9,7 @@
 * [System Specifications](#System-Specifications)
 * [Roadmap](#roadmap)
 * [Contributing](#contributing)
-* [Authors](#Authors)
+
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
@@ -140,19 +140,8 @@ The aim of this repository is:
 * The content is usable by someone who hasn't written something like this before
 * Foster a culture of respect and gratitude in the open-source community.
 
-#### Does it follow the contributor covenant
-
-This repository has a [code of conduct](CODE_OF_CONDUCT.md), This repository has a code of conduct, things that do not respect it will be removed.
 
 
-<!-- Authors -->
-## Authors
-
-* **Ryan Coe** - [ryancoe](https://github.com/ryancoe)
-* **Delaney Heilman** - [delaneyheileman](https://github.com/delaneyheileman)
-* **Nicholas Ross** - [nickross4444](https://github.com/nickross4444)
-* **Gerrit Motes** - [DeepFriedDerp](https://github.com/DeepFriedDerp)
-* **Sean Pluemer** - [seanpluemer](https://github.com/SeanPluemer)
 
 
 
