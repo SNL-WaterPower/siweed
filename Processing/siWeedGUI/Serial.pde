@@ -5,9 +5,45 @@ void initializeSerial() {
   ///////////initialize Serial
 
   printArray(Serial.list()); 
-  //for(int i = 0; i < Serial.list().length; i++) {
-    
-  //}
+  for (int i = 0; i < Serial.list().length; i++) {
+    if (!megaConnected) {
+      try {
+        port1 = new Serial(this, Serial.list()[i], 250000); // all communication with Megas
+        megaConnected = true;
+      }
+      catch(Exception e) {
+        megaConnected = false;
+      }
+      if (megaConnected) {
+        delay(2000);
+        readMegaSerial();    //reads serial buffer and sets bool true if recieving normal results
+        if (megaUnitTests[0]) {
+          //correct board found
+        } else {
+          megaConnected = false;
+        }
+      }
+    }
+    if (!dueConnected) {
+      try {
+        port2 = new Serial(this, Serial.list()[i], 250000); // all communication with Due
+        dueConnected = true;
+      }
+      catch(Exception e) {
+        dueConnected = false;
+      }
+      if (dueConnected) {
+        delay(2000);
+        readDueSerial();    //reads serial buffer and sets bool true if recieving normal results
+        if (dueUnitTests[0]) {
+          //correct board found
+        } else {
+          dueConnected = false;
+        }
+      }
+    }
+  }
+  /*
   try {
     port1 = new Serial(this, Serial.list()[1], 250000); // all communication with Megas
     megaConnected = true;
@@ -23,6 +59,7 @@ void initializeSerial() {
     dueConnected = false;
   }
   delay(2000);
+  */
   //initialize the modes on the arduinos:
   if (megaConnected) {
     port1.write('!');
@@ -59,7 +96,7 @@ void sendFloat(float f, Serial port)
    EDIT: numbers are now in this format:  p1234>  has a scalar of 100, so no decimal, and no start char
    */
   int i = (int)(f*100);    //convert to int(so decimal place does not need to be sent)
-  if(i == 0) {              //zero breaks this method, since 0*100 is still 0
+  if (i == 0) {              //zero breaks this method, since 0*100 is still 0
     port.write("+000>");
     return;
   }

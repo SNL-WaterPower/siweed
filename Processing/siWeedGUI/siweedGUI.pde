@@ -37,10 +37,10 @@ void setup() {
   waveMaker.mode = 1;    // 1 = jog, 2 = function, 3 = sea, 4 = off
   wec.mode = 4;  //1 = torque, 2= feedback, 3 = "sea", 4 = off
   initializeDataLogging();
-  initializeSerial();    //has a 2 second delay
   initializeUI();
-
-  unitTests();
+  //Because these take too long, they need to be run in draw(setup cannot take more that 5 seconds.)
+  //initializeSerial();    //has a 2 second delay
+  //unitTests();
 
   //adding meter 
   m = new Meter(this, 1425, 240);
@@ -62,8 +62,13 @@ void setup() {
 public void settings() {
  fullScreen(2);
  }*/
-
+boolean initialized = false;
 void draw() {
+  if (!initialized) {
+    initializeSerial();    //has a 2 second delay
+    unitTests();
+    initialized = true;
+  }
   // Background color
   background(dblue);
   //Title 
@@ -198,7 +203,7 @@ void draw() {
     port1.write('g');
     sendFloat(waveMaker.gamma, port1);    //gamma always needs to be the last sent
   }
-  
+
   if (!dueConnected) {
     //do nothing
   } else if (wec.mode == 1 && torque.getValue() != wec.mag) {  //only sends if value has changed  
