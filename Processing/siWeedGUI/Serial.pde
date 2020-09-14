@@ -4,8 +4,10 @@ boolean megaConnected, dueConnected;
 void initializeSerial() {
   ///////////initialize Serial
 
-  //mac serial com
   printArray(Serial.list()); 
+  //for(int i = 0; i < Serial.list().length; i++) {
+    
+  //}
   try {
     port1 = new Serial(this, Serial.list()[1], 250000); // all communication with Megas
     megaConnected = true;
@@ -57,6 +59,10 @@ void sendFloat(float f, Serial port)
    EDIT: numbers are now in this format:  p1234>  has a scalar of 100, so no decimal, and no start char
    */
   int i = (int)(f*100);    //convert to int(so decimal place does not need to be sent)
+  if(i == 0) {              //zero breaks this method, since 0*100 is still 0
+    port.write("+000>");
+    return;
+  }
   String posStr = "";    //starts the string
   if (f >= 0) {
     posStr = posStr.concat("+");

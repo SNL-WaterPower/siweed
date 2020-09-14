@@ -42,7 +42,10 @@ void unitTests() {
   }
   ////////////verify mega jonswap:
   readMegaSerial();    //clear buffer
-  if (megaConnected) port1.write('u');    //sends to begin test
+  if (dueConnected) {
+    port2.write('u');    //sends to begin test
+    sendFloat(0, port2);    //placeholder float to maintain format of letter>number
+  }
   delay(100);          //give time to complete
   readMegaSerial();
   if (megaUnitTests[1]) {
@@ -57,7 +60,10 @@ void unitTests() {
   }
   ////////////verify due jonswap:
   readDueSerial();    //clear buffer
-  if(dueConnected)port2.write('u');    //sends to begin test
+  if (dueConnected) {
+    port2.write('u');    //sends to begin test
+    sendFloat(0, port1);    //placeholder float to maintain format of letter>number
+  }
   delay(100);          //give time to complete
   readDueSerial();
   if (dueUnitTests[1]) {

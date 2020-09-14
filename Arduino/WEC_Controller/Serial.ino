@@ -12,8 +12,7 @@ void readSerial()
     p :peakF
     g :gamma
   */
-  if (Serial.available() > 0)
-  {
+  if (Serial.available() > 5) {   //if a whole float is through: n+100>
     char c = Serial.read();
     switch (c)
     {
@@ -40,6 +39,7 @@ void readSerial()
         newJonswapData = true;
         break;
       case 'u':
+        readFloat();    //get rid of placeholder float
         if (ampUnitTest) {
           Serial.write('u');
           sendFloat(1);       //this may get interupted by the send serial interupt, which might cause an issue

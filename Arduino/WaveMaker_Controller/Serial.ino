@@ -45,6 +45,7 @@ void readSerial() {
         newJonswapData = true;
         break;
       case 'u':
+        readFloat();    //get rid of placeholder float
         if (ampUnitTest) {
           Serial.write('u');
           sendFloat(1);       //this may get interupted by the send serial interupt, which might cause an issue
