@@ -26,6 +26,16 @@ void unitTests() {
   } else {
     println("FFT Test FAILED");
   }
+  ////////////////////Byte conversions:
+  float testFloat = 123.456789;
+  byte[] byteArray = floatToByteArray(testFloat);
+  println(byteArray);
+  float resultFloat = byteArrayToFloat(byteArray);
+  if (testFloat == resultFloat) {
+    println("Byte Conversion Test PASSED");
+  } else {
+    println("Byte Conversion Test FAILED");
+  }
   /////////////verify mega serial:    //maybe change method to : send value -> recieve value
   readMegaSerial();    //reads serial buffer and sets bool true if recieving normal results
   if (megaUnitTests[0]) {

@@ -238,9 +238,11 @@ void draw() {
     updateFFT();
   }
   drawFFT();
-  thread("readMegaSerial");    //will run this funciton in parallel thread
-  thread("readDueSerial");
-  thread("logData");
+  if (initialized) {
+    thread("readMegaSerial");    //will run this funciton in parallel thread
+    thread("readDueSerial");
+    thread("logData");
+  }
 }
 void updateFFT() {
   Complex[] fftIn = new Complex[queueSize];

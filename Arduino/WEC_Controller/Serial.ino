@@ -59,25 +59,39 @@ void readSerial()
   }
 }
 
-float readFloat() {
-  char charArr[7];    //+123\0
-  char c;
-  int i;
-  for (i = 0; Serial.available() > 0 && c != '>'; i++) {
-    c = Serial.read();
-    charArr[i] = c;
+volatile float readFloat() {
+  volatile byte byteArray[4];
+  for (volatile int i = 0; i < 4; i++) {
+    byteArray[i] = Serial.read();
   }
-  charArr[i] = '\0';
-  float f = atof(charArr) / 100.0;
+  volatile float f = bin2float((byte*)&byteArray); 
   return f;
 }
+
 volatile void sendFloat(volatile float f) {
-  volatile int i = (int)(f * 100.0);
-  if (i >= 0) {
-    Serial.print('+');
-  } else {
-    Serial.print('-');
+  volatile byte byteArray[4];
+  float2bin(f,(byte*)&byteArray);
+  for (volatile int i = 0; i < 4; i++) {
+    Serial.write(byteArray[i]);
   }
-  Serial.print(abs(i));
-  Serial.print('>');
+}
+
+volatile void float2bin(volatile float target, volatile byte *byteArray){
+  volatile uint32_t temp32;
+  memcpy(&temp32,&target,4);
+  for(volatile int i = 0; i<4; i++){
+    byteArray[i] = (byte)(temp32 >> (8*(3-i)));
+  }
+}
+
+volatile float bin2float(volatile byte *byteArray){
+  volatile uint32_t temp32;
+
+  for(volatile int i = 0; i<4; i++){
+    temp32 = temp32 | ((uint32_t)byteArray[i] << (8*(3-i)));
+  }
+
+  float returnFloat;
+  memcpy(&returnFloat,&temp32,4);
+  return returnFloat;
 }

@@ -45,21 +45,21 @@ void initializeSerial() {
   }
   /*
   try {
-    port1 = new Serial(this, Serial.list()[1], 250000); // all communication with Megas
-    megaConnected = true;
-  }
-  catch(Exception e) {
-    megaConnected = false;
-  }
-  try {
-    port2 = new Serial(this, Serial.list()[2], 250000); // all communication with Due
-    dueConnected = true;
-  }
-  catch(Exception e) {
-    dueConnected = false;
-  }
-  delay(2000);
-  */
+   port1 = new Serial(this, Serial.list()[1], 250000); // all communication with Megas
+   megaConnected = true;
+   }
+   catch(Exception e) {
+   megaConnected = false;
+   }
+   try {
+   port2 = new Serial(this, Serial.list()[2], 250000); // all communication with Due
+   dueConnected = true;
+   }
+   catch(Exception e) {
+   dueConnected = false;
+   }
+   delay(2000);
+   */
   //initialize the modes on the arduinos:
   if (megaConnected) {
     port1.write('!');
@@ -95,21 +95,9 @@ void sendFloat(float f, Serial port)
    
    EDIT: numbers are now in this format:  p1234>  has a scalar of 100, so no decimal, and no start char
    */
-  int i = (int)(f*100);    //convert to int(so decimal place does not need to be sent)
-  if (i == 0) {              //zero breaks this method, since 0*100 is still 0
-    port.write("+000>");
-    return;
-  }
-  String posStr = "";    //starts the string
-  if (f >= 0) {
-    posStr = posStr.concat("+");
-  } else {
-    posStr = posStr.concat("-");
-  }
-  posStr = posStr.concat(Integer.toString(abs(i)));
-  posStr = posStr.concat(">");    //end of string "keychar"
-  port.write(posStr);
-  //println(posStr);
+  byte[] byteArray = floatToByteArray(f);
+
+  port.write(byteArray);
 }
 void readMegaSerial() {
   /*
@@ -139,6 +127,7 @@ void readMegaSerial() {
     case 'd':
       megaUnitTests[0] = true;      //for unit testing;
       debugData = readFloat(port1);
+      println(debugData);
       waveChart.push("debug", debugData);
       if (waveMaker.mode == 3||waveMaker.mode == 2) fftList.add(debugData);      //adds to the tail if in the right mode
       if (fftList.size() > queueSize)
@@ -202,17 +191,26 @@ void readDueSerial() {
   }
 }
 float readFloat(Serial port) {
-  waitForSerial(port);
-  String str = "";    //port.readStringUntil('>');
-  do {
-    waitForSerial(port);
-    str += port.readChar();
-  } while (str.charAt(str.length()-1) != '>');
-  str = str.substring(0, str.length()-1);    //removes the '>'
-  return float(str)/100.0;
-}
-void waitForSerial(Serial port) {
-  while (port.available() < 1) {    //wait for port to not be empty
+  while (port.available() <= 4) {    //wait for full array to be in buffer
     delay(1);    //give serial some time to come through
-  }
+  }  
+  byte[] byteArray = new byte[4];
+  //for (int i = 0; i < 4; i++) {
+  //inBuffer = myPort.readBytes();
+  port.readBytes(byteArray);
+  //}
+  //float f = ByteBuffer.wrap(byteArray).getFloat();
+  float f = byteArrayToFloat(byteArray);
+  return f;
 }
+
+public static byte[] floatToByteArray(float value) {
+  int intBits =  Float.floatToIntBits(value);
+  return new byte[] {
+    (byte) (intBits >> 24), (byte) (intBits >> 16), (byte) (intBits >> 8), (byte) (intBits) };
+}
+public static float byteArrayToFloat(byte[] bytes) {
+      int intBits = 
+        bytes[0] << 24 | (bytes[1] & 0xFF) << 16 | (bytes[2] & 0xFF) << 8 | (bytes[3] & 0xFF);
+      return Float.intBitsToFloat(intBits);  
+  }
