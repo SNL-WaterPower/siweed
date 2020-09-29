@@ -57,6 +57,8 @@ Ex: C:\Users\user\Documents\GitHub\siweed\Processing
 ```
 This can be found at Tools > Board > Arduino Mega or Mega 2560
 ```
+NOTE: When programming the Arduino DUE board, make sure to change the selected board to: Arduino DUE (Progamming Port).
+Also, make sure that the microUSB is plugged into the programming port of the DUE
 <!-- Running the GUI -->
 ### Running the GUI
 1. Open processing.exe 
@@ -75,7 +77,7 @@ A detailed illustration of the system layout is shown in the diagram below.
  - Tank
  	- 3/4 inch acrylic tank
  	- Inner dimension: 1.5m x 0.3m x 0.5m (filled to ~0.3m deep)
- 	- Mass of water: 135 kg (~300lbs)
+ 	- Mass of water: 135 kg (~300lbs
  	- Mass of dry tank: ?
  	- Volume: 135 L (~36 gal)
  - WEC: 
