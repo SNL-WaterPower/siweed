@@ -1,11 +1,14 @@
 #include <miniWaveTankJonswap.h>
-#include <Encoder.h>
+#include <SuperDroidEncoderBuffer.h>
 #include<math.h>
 #include <AccelStepper.h>
 
 miniWaveTankJonswap jonswap(512.0 / 32.0, 0.5, 2.5); //period, low frequency, high frequency. frequencies will be rounded to multiples of df(=1/period)
 //^ISSUE. Acuracy seems to fall off after ~50 components when using higher frequencies(1,3 at 64 elements seems wrong).
-Encoder waveEnc(2, 3);   //pins 2 and 3(interupts)//for 800 ppr/3200 counts per revolution set dip switches(0100) //2048ppr/8192 counts per revolution max(0000)
+SuperDroidEncoderBuffer encoderBuff = SuperDroidEncoderBuffer(42);
+bool encoderBuffInit, didItWork_MDR0, didItWork_MDR1, didItWork_DTR;   //variables for unit testing
+unsigned char MDR0_settings = MDRO_x4Quad | MDRO_freeRunningCountMode | MDRO_indexDisable | MDRO_syncIndex | MDRO_filterClkDivFactor_1;
+unsigned char MDR1_settings = MDR1_4ByteCounterMode | MDR1_enableCounting | MDR1_FlagOnIDX_NOP | MDR1_FlagOnCMP_NOP | MDR1_FlagOnBW_NOP | MDR1_FlagOnCY_NOP;
 const int stepPin = 4, dirPin = 5, limitPin = A0, probe1Pin = A1, probe2Pin = A2;
 AccelStepper stepper = AccelStepper(1, stepPin, dirPin);
 volatile double t = 0;    //time in seconds
@@ -18,7 +21,6 @@ volatile float phases[maxComponents];
 volatile float freqs[maxComponents];
 volatile float sigH, peakF, gamma;
 bool newJonswapData = false;
-volatile float encPos = 0;
 volatile float desiredPos;   //used for jog mode
 const int buffSize = 10;    //number of data points buffered in the moving average filter
 volatile float probe1Buffer[buffSize];
@@ -60,6 +62,11 @@ volatile float inputFnc(volatile float tm) {  //inputs time in seconds //outputs
 
 void setup() {
   initSerial();
+
+  encoderBuffInit = encoderBuff.begin();    //configure encoder buffer and assign bools for unit testing
+  didItWork_MDR0 = encoderBuff.setMDR0(MDR0_settings);
+  didItWork_MDR1 = encoderBuff.setMDR1(MDR1_settings);
+
   pinMode(stepPin, OUTPUT);
   pinMode(dirPin, OUTPUT);
   pinMode(13, OUTPUT);
@@ -70,7 +77,7 @@ void setup() {
   tone(stepPin, 100);   //start moving
   while (analogRead(limitPin) > 500) {}   //do nothing until the beam is broken
   noTone(stepPin);   //stop moving
-  waveEnc.write(0);     //zero encoder
+  encoderBuff.command2Reg(CNTR, IR_RegisterAction_CLR); //zero encoder
 
   //fill probe buffers with 0's:
   for (int i = 0; i < buffSize; i++) {
@@ -86,9 +93,11 @@ void setup() {
   unitTests();
   initInterrupts();
 }
-
+volatile float encPos() {
+  return encoderBuff.readCNTR() * (1 / encStepsPerTurn) * leadPitch; //steps*(turns/step)*(mm/turn)
+}
 void loop() {   //__ microseconds
-  encPos = waveEnc.read() * (1 / encStepsPerTurn) * leadPitch; //steps*(turns/step)*(mm/turn)
+  //encPos = waveEnc.read() * (1 / encStepsPerTurn) * leadPitch; //steps*(turns/step)*(mm/turn)
   t = micros() / 1.0e6;
   readSerial();
   updateSpeedScalar();
@@ -96,11 +105,11 @@ void loop() {   //__ microseconds
 void updateSpeedScalar() {    //used to prevent jumps/smooth start
   //Serial.println(speedScalar);
   /*
-  if (speedScalar < 1) {
+    if (speedScalar < 1) {
     speedScalar += .005;
-  } else {
+    } else {
     speedScalar = 1.0;
-  }
+    }
   */
   speedScalar = 1.0;
 }
@@ -129,6 +138,7 @@ float lerp(float a, float b, float f) {
 }
 bool ampUnitTest = true;
 bool TSUnitTest = true;
+bool encoderTest = true;
 float exampleAmps[] = {0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.01, 0.02, 0.05, 0.11, 0.20, 0.33, 0.48, 0.67, 0.87, 1.09, 1.30, 1.51, 1.70, 1.88, 2.03, 2.16};
 float exampleTS[] = {4.07, -3.45, 1.12, 1.56, 0.69, -2.25, -1.17, -6.01, 0.74, 2.85, -4.79, 5.71, -1.66, -3.66, -2.78, 1.38, 4.07, -3.45, 1.12, 1.56, 0.69, -2.25, -1.17, -6.01, 0.74, 2.85, -4.79, 5.71, -1.66, -3.66, -2.78, 1.38};
 void unitTests() {
@@ -156,4 +166,12 @@ void unitTests() {
     //Serial.print(", ");
   }
   mode = oldMode;   //reset mode to what it was before unit tests
+
+  //////////////////test encoder buffer:
+  //If the initialization and setting functions worked, move on, otherwise, throw error and halt execution.
+  if (encoderBuffInit && didItWork_MDR0 && didItWork_MDR1) {
+    //passed
+  } else {
+    encoderTest = false;
+  }
 }
