@@ -1,7 +1,7 @@
 /*! @file SuperDroidEncoderBuffer)_Defs.h
 *	@brief	The main source of macro definitions for SuperDroidEncoderBuffer library
 	@details	Contains all of the binary macros used to build bit-register commands
-	See the LM3766 datasheet for details
+	See the LS7366R datasheet for details
 	
 	\author		Austin Motes
 	\version	1.0

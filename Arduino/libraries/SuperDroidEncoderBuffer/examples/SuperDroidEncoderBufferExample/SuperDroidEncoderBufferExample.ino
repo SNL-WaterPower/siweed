@@ -84,7 +84,7 @@ void setup(){
 
   // create a couple of 8-bit settings bit-register values to be written to MDR0 and MDR1 registers
   // This is done by bitwise OR-ing several macros defined in SuperDroidEncoderBuffer_Def.h together
-  unsigned char MDR0_settings = MDRO_x4Quad | MDRO_singleCarryCountMode | MDRO_indexResetCNTR | MDRO_syncIndex | MDRO_filterClkDivFactor_1;
+  unsigned char MDR0_settings = MDRO_x4Quad | MDRO_freeRunningCountMode | MDRO_indexDisable | MDRO_syncIndex | MDRO_filterClkDivFactor_1;
   unsigned char MDR1_settings = MDR1_4ByteCounterMode | MDR1_enableCounting | MDR1_FlagOnIDX_NOP | MDR1_FlagOnCMP_NOP | MDR1_FlagOnBW_NOP | MDR1_FlagOnCY_NOP;
 
   //Set the MDR0 and MDR1 bit registers
