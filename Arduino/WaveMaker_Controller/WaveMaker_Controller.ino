@@ -19,7 +19,6 @@ volatile float phases[maxComponents];
 volatile float freqs[maxComponents];
 volatile float sigH, peakF, gamma;
 bool newJonswapData = false;
-volatile float encPos = 0;
 volatile float desiredPos;   //used for jog mode
 const int buffSize = 10;    //number of data points buffered in the moving average filter
 volatile float probe1Buffer[buffSize];
@@ -75,7 +74,7 @@ void setup() {
   tone(stepPin, 100);   //start moving
   while (analogRead(limitPin) > 500) {}   //do nothing until the beam is broken
   noTone(stepPin);   //stop moving
-  waveEnc.write(0);     //zero encoder
+  encoderBuff.command2Reg(CNTR, IR_RegisterAction_CLR); //zero encoder
 
   //fill probe buffers with 0's:
   for (int i = 0; i < buffSize; i++) {
@@ -91,9 +90,11 @@ void setup() {
   unitTests();
   initInterrupts();
 }
-
+volatile float encPos() {
+  return encoderBuff.readCNTR() * (1 / encStepsPerTurn) * leadPitch; //steps*(turns/step)*(mm/turn)
+}
 void loop() {   //__ microseconds
-  encPos = waveEnc.read() * (1 / encStepsPerTurn) * leadPitch; //steps*(turns/step)*(mm/turn)
+  //encPos = waveEnc.read() * (1 / encStepsPerTurn) * leadPitch; //steps*(turns/step)*(mm/turn)
   t = micros() / 1.0e6;
   readSerial();
   updateSpeedScalar();
@@ -165,42 +166,9 @@ void unitTests() {
 
   //////////////////test encoder buffer:
   //If the initialization and setting functions worked, move on, otherwise, throw error and halt execution.
-  if (encoderBuffInit && didItWork_MDR0 && didItWork_MDR0) {
-    //Serial.println(F("Encoder Buffer Settings Applied Successfully!"));
+  if (encoderBuffInit && didItWork_MDR0 && didItWork_MDR1) {
+    //passed
   } else {
-    //Serial.println(F("Encoder Buffer Settings Failed to Apply! :'("));
     encoderTest = false;
-  }
-
-  // Set the MDR0 to 0x00 in order to enable writing to register DTR
-  encoderBuff.setMDR0(0x00);
-  // Then write a 4-byte test value to DTR
-  bool didItWork_DTR = encoderBuff.setDTR(0x12131415);
-
-  // If the write to DTR worked, then reset DTR to 0 and re-apply MDR0 settings back to the desired value
-  // Otherwise, throw error and halt execution
-  if (didItWork_DTR) {
-    Serial.println(F("DTR write functions completed successfully!"));
-    didItWork_DTR = encoderBuff.setDTR(0x00000000);
-    didItWork_MDR0 = encoderBuff.setMDR0(MDR0_settings);
-  } else {
-    Serial.println(F("DTR write functions failed to complete :'("));
-    while (1) {}
-  }
-
-  // Check to see if the resets of both DTR and MDR0 were successful, and indicate that unit testing is complete!
-  // Otherwise, throw error and halt execution
-  if (didItWork_DTR && didItWork_MDR0) {
-    Serial.println(F("DTR set back to zero, and MDR0 settings reapplied!"));
-    Serial.println(F("Encoder buffer testing completed successfully! :)"));
-  }
-  else {
-    if (didItWork_DTR) {
-      Serial.println(F("MDR0 settings reapplication failed! :'("));
-    }
-    else {
-      Serial.println(F("DTR reset to zero failed! :'("));
-    }
-    while (1) {}
   }
 }
