@@ -56,14 +56,8 @@ ISR(TIMER4_COMPA_vect) {    //function called by interupt     //Takes about .4 m
   volatile float stepsPerSecond = mmToSteps(sp);
   if (mode == -1) {  //no tone if stopped
     noTone(stepPin);
-    stepper.stop();
-  } else if (stepsPerSecond > 31) {    //tone needs to be greater than 31hz
-    stepper.stop();
-    tone(stepPin, stepsPerSecond);
-  } else {    //if speed is too slow, run through library       !!need to test if tone and stepper conflict
-    noTone(stepPin);
-    stepper.setSpeed(stepsPerSecond);
-    stepper.runSpeed();
+  } else {    
+    //signal geerator here
   }
 }
 
@@ -87,5 +81,6 @@ ISR(TIMER5_COMPA_vect) {   //takes ___ milliseconds
   float lerpVal = lerp(prevVal, futurePos, (interval * 1.0e6) / (sampleT - prevSampleT)); //linear interpolate(initial value, final value, percentatge)//percentage is desired interval/actual interval
   sendFloat(lerpVal);
   Serial.println();
+
   //Serial.println(mode);
 }
