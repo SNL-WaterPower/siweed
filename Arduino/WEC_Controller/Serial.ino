@@ -77,8 +77,8 @@ volatile void sendFloat(volatile float f) {
 }
 
 volatile void float2bin(volatile float target, volatile byte *byteArray){
-  volatile uint32_t temp32;
-  memcpy(&temp32,&target,4);
+  volatile uint32_t temp32 = target;
+  //memcpy(&temp32,&target,4);
   for(volatile int i = 0; i<4; i++){
     byteArray[i] = (byte)(temp32 >> (8*(3-i)));
   }
@@ -91,7 +91,7 @@ volatile float bin2float(volatile byte *byteArray){
     temp32 = temp32 | ((uint32_t)byteArray[i] << (8*(3-i)));
   }
 
-  float returnFloat;
-  memcpy(&returnFloat,&temp32,4);
+  float returnFloat = temp32;
+  //memcpy(&returnFloat,&temp32,4);
   return returnFloat;
 }
