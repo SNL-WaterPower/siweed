@@ -847,7 +847,7 @@ public final class ControlWindow {
 		return this;
 	}
 
-	public ControlWindow toggleUndecorated( ) {
+/*	public ControlWindow toggleUndecorated( ) {
 		setUndecorated( !isUndecorated( ) );
 		return this;
 	}
@@ -868,7 +868,7 @@ public final class ControlWindow {
 	public boolean isUndecorated( ) {
 		return isUndecorated;
 	}
-
+*/
 	public ControlWindow setPosition( int theX , int theY ) {
 		return setLocation( theX , theY );
 	}

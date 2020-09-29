@@ -146,7 +146,7 @@ public class ControlP5 extends ControlP5Base {
 	protected boolean isAnnotation;
 	boolean isAndroid = false;
 
-        public boolean isTouch = false;
+        public boolean isTouch = true;
 
 	/**
 	 * Create a new instance of controlP5.
