@@ -1,10 +1,13 @@
 #include <miniWaveTankJonswap.h>
-#include <Encoder.h>
+#include <SuperDroidEncoderBuffer.h>
 #include<math.h>
 
 miniWaveTankJonswap jonswap(512.0 / 32.0, 0.5, 2.5); //period, low frequency, high frequency. frequencies will be rounded to multiples of df(=1/period)
 //^ISSUE. Acuracy seems to fall off after ~50 components when using higher frequencies(1,3 at 64 elements seems wrong).
-Encoder waveEnc(2, 3);   //pins 2 and 3(interupts)//for 800 ppr/3200 counts per revolution set dip switches(0100) //2048ppr/8192 counts per revolution max(0000)
+SuperDroidEncoderBuffer encoderBuff = SuperDroidEncoderBuffer(42);
+bool encoderBuffInit, didItWork_MDR0, didItWork_MDR1, didItWork_DTR;   //variables for unit testing
+unsigned char MDR0_settings = MDRO_x4Quad | MDRO_freeRunningCountMode | MDRO_indexDisable | MDRO_syncIndex | MDRO_filterClkDivFactor_1;
+unsigned char MDR1_settings = MDR1_4ByteCounterMode | MDR1_enableCounting | MDR1_FlagOnIDX_NOP | MDR1_FlagOnCMP_NOP | MDR1_FlagOnBW_NOP | MDR1_FlagOnCY_NOP;
 const int stepPin = 4, dirPin = 5, limitPin = A0, probe1Pin = A1, probe2Pin = A2;
 volatile double t = 0;    //time in seconds
 volatile float speedScalar = 0;
@@ -58,6 +61,11 @@ volatile float inputFnc(volatile float tm) {  //inputs time in seconds //outputs
 
 void setup() {
   initSerial();
+
+  encoderBuffInit = encoderBuff.begin();    //configure encoder buffer and assign bools for unit testing
+  didItWork_MDR0 = encoderBuff.setMDR0(MDR0_settings);
+  didItWork_MDR1 = encoderBuff.setMDR1(MDR1_settings);
+
   pinMode(stepPin, OUTPUT);
   pinMode(dirPin, OUTPUT);
   pinMode(13, OUTPUT);
@@ -93,11 +101,11 @@ void loop() {   //__ microseconds
 void updateSpeedScalar() {    //used to prevent jumps/smooth start
   //Serial.println(speedScalar);
   /*
-  if (speedScalar < 1) {
+    if (speedScalar < 1) {
     speedScalar += .005;
-  } else {
+    } else {
     speedScalar = 1.0;
-  }
+    }
   */
   speedScalar = 1.0;
 }
@@ -126,6 +134,7 @@ float lerp(float a, float b, float f) {
 }
 bool ampUnitTest = true;
 bool TSUnitTest = true;
+bool encoderTest = true;
 float exampleAmps[] = {0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.01, 0.02, 0.05, 0.11, 0.20, 0.33, 0.48, 0.67, 0.87, 1.09, 1.30, 1.51, 1.70, 1.88, 2.03, 2.16};
 float exampleTS[] = {4.07, -3.45, 1.12, 1.56, 0.69, -2.25, -1.17, -6.01, 0.74, 2.85, -4.79, 5.71, -1.66, -3.66, -2.78, 1.38, 4.07, -3.45, 1.12, 1.56, 0.69, -2.25, -1.17, -6.01, 0.74, 2.85, -4.79, 5.71, -1.66, -3.66, -2.78, 1.38};
 void unitTests() {
@@ -153,4 +162,45 @@ void unitTests() {
     //Serial.print(", ");
   }
   mode = oldMode;   //reset mode to what it was before unit tests
+
+  //////////////////test encoder buffer:
+  //If the initialization and setting functions worked, move on, otherwise, throw error and halt execution.
+  if (encoderBuffInit && didItWork_MDR0 && didItWork_MDR0) {
+    //Serial.println(F("Encoder Buffer Settings Applied Successfully!"));
+  } else {
+    //Serial.println(F("Encoder Buffer Settings Failed to Apply! :'("));
+    encoderTest = false;
+  }
+
+  // Set the MDR0 to 0x00 in order to enable writing to register DTR
+  encoderBuff.setMDR0(0x00);
+  // Then write a 4-byte test value to DTR
+  bool didItWork_DTR = encoderBuff.setDTR(0x12131415);
+
+  // If the write to DTR worked, then reset DTR to 0 and re-apply MDR0 settings back to the desired value
+  // Otherwise, throw error and halt execution
+  if (didItWork_DTR) {
+    Serial.println(F("DTR write functions completed successfully!"));
+    didItWork_DTR = encoderBuff.setDTR(0x00000000);
+    didItWork_MDR0 = encoderBuff.setMDR0(MDR0_settings);
+  } else {
+    Serial.println(F("DTR write functions failed to complete :'("));
+    while (1) {}
+  }
+
+  // Check to see if the resets of both DTR and MDR0 were successful, and indicate that unit testing is complete!
+  // Otherwise, throw error and halt execution
+  if (didItWork_DTR && didItWork_MDR0) {
+    Serial.println(F("DTR set back to zero, and MDR0 settings reapplied!"));
+    Serial.println(F("Encoder buffer testing completed successfully! :)"));
+  }
+  else {
+    if (didItWork_DTR) {
+      Serial.println(F("MDR0 settings reapplication failed! :'("));
+    }
+    else {
+      Serial.println(F("DTR reset to zero failed! :'("));
+    }
+    while (1) {}
+  }
 }
