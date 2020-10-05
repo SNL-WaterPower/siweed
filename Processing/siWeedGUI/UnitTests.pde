@@ -29,7 +29,7 @@ void unitTests() {
   ////////////////////Byte conversions:
   float testFloat = 123.456789;
   byte[] byteArray = floatToByteArray(testFloat);
-  println(byteArray);
+  //println(byteArray);
   float resultFloat = byteArrayToFloat(byteArray);
   if (testFloat == resultFloat) {
     println("Byte Conversion Test PASSED");

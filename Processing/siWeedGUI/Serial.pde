@@ -127,7 +127,6 @@ void readMegaSerial() {
     case 'd':
       megaUnitTests[0] = true;      //for unit testing;
       debugData = readFloat(port1);
-      println(debugData);
       waveChart.push("debug", debugData);
       if (waveMaker.mode == 3||waveMaker.mode == 2) fftList.add(debugData);      //adds to the tail if in the right mode
       if (fftList.size() > queueSize)
@@ -201,6 +200,7 @@ float readFloat(Serial port) {
   //}
   //float f = ByteBuffer.wrap(byteArray).getFloat();
   float f = byteArrayToFloat(byteArray);
+  println(f);
   return f;
 }
 
