@@ -54,42 +54,46 @@ void setup()
   //  will be 100Hz.
   gen.reset();
   delay(2000);
-  
+
   // SQUARE wave at the current output frequency.
   gen.setMode(MiniGen::SQUARE);
-  delay(10000);
-  
+  delay(500);
+  /*
   // SQUARE_2 is at half the normal output frequency.
   gen.setMode(MiniGen::SQUARE_2);
   delay(10000);
   
   // Triangle wave at the current output frequency.
-  gen.setMode(MiniGen::TRIANGLE);
-  delay(3000);
+  //gen.setMode(MiniGen::TRIANGLE);
+  //delay(3000);
   
   // Sine wave at the output frequency
-  gen.setMode(MiniGen::SINE);
-  
+  gen.setMode(MiniGen::SQUARE);
+  */
   // The choices are FULL, COARSE, and FINE. FULL writes takes longer but writes the entire frequency word,
   // so you can change from any frequency to any other frequency. COARSE allows you to change the upper bits;
   // the lower bits remain unchanged, so you can do a fast write of a large step size.
   // FINE is the opposite; quick writes but smaller steps.
 
   gen.setFreqAdjustMode(MiniGen::FULL);
+  Serial.begin(9600);
 }
 
 void loop()
 {
   // Loop increases the frequency in steps of 10Hz. Upper limit is 3MHz
   //  
-  static float frequency = 10.0;  
+  float frequency = 500.0* (sin((millis()/1000.0)*2.0*PI*.05)+1.0)+10.0;  
+  //float frequency = 30.0;
   // freqCalc() makes a useful 32-bit value out of the frequency value (in
   //  Hz) passed to it.
+  //float frequency = millis()
+  Serial.println(frequency);
   
   unsigned long freqReg = gen.freqCalc(frequency);
   
   // Adjust the frequency. This is a full 32-bit write.
   gen.adjustFreq(MiniGen::FREQ0, freqReg);
-  delay(100);
-  frequency += 10.0;
+  delay(10);
+ //frequency += 1.0;
 }
