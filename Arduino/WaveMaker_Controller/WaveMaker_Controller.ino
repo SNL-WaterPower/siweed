@@ -2,7 +2,10 @@
 #include <SuperDroidEncoderBuffer.h>
 #include<math.h>
 #include <AccelStepper.h>
+#include <SPI.h>
+#include <SparkFun_MiniGen.h>
 
+MiniGen gen; //initalize signal generator
 miniWaveTankJonswap jonswap(512.0 / 32.0, 0.5, 2.5); //period, low frequency, high frequency. frequencies will be rounded to multiples of df(=1/period)
 //^ISSUE. Acuracy seems to fall off after ~50 components when using higher frequencies(1,3 at 64 elements seems wrong).
 SuperDroidEncoderBuffer encoderBuff = SuperDroidEncoderBuffer(42);
@@ -60,9 +63,16 @@ volatile float inputFnc(volatile float tm) {  //inputs time in seconds //outputs
 }
 
 
-void setup() {
+void setup() {  
   initSerial();
-
+  gen.reset(); //reset signal generator, that way we have a known starting location. 
+  //At power up, the singal generator will output 100hz
+  gen.setMode(MiniGen::SQUARE); //setting signal generator to make a square wave.
+  gen.setFreqAdjustMode(MiniGen::FULL); //Full takes the longest longer to write, but allows to change from any frequency to any other frequency
+  float initalFrequency = 0;
+  unsigned long freqReg = gen.freqCalc(initialFrequency);
+  gen.adjustFreq(MiniGen::FREQ0, freqReg); //Making sure the signal generator isnt making the motor move at start
+  
   encoderBuffInit = encoderBuff.begin();    //configure encoder buffer and assign bools for unit testing
   didItWork_MDR0 = encoderBuff.setMDR0(MDR0_settings);
   didItWork_MDR1 = encoderBuff.setMDR1(MDR1_settings);
@@ -75,6 +85,7 @@ void setup() {
   stepper.setMaxSpeed(31);    //31hz max speed(minimum of tone())
   /////////Zero encoder:
   tone(stepPin, 100);   //start moving
+  
   while (analogRead(limitPin) > 500) {}   //do nothing until the beam is broken
   noTone(stepPin);   //stop moving
   encoderBuff.command2Reg(CNTR, IR_RegisterAction_CLR); //zero encoder
