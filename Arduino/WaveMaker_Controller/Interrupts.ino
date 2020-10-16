@@ -30,6 +30,7 @@ void initInterrupts() {
   sei();//allow interrupts
 }
 ISR(TIMER4_COMPA_vect) {    //function called by interupt     //Takes about .4 milliseconds
+  unsigned long freqReg = gen.freqCalc(0);
   volatile float pos = encPos();
   error = futurePos - pos;   //where we told it to go vs where it is
   prevSampleT = sampleT;
@@ -55,16 +56,16 @@ ISR(TIMER4_COMPA_vect) {    //function called by interupt     //Takes about .4 m
   }
   volatile float stepsPerSecond = mmToSteps(sp);
   if (mode == -1) {  //no tone if stopped
-    noTone(stepPin);
-    stepper.stop();
-  } else if (stepsPerSecond > 31) {    //tone needs to be greater than 31hz
-    stepper.stop();
-    tone(stepPin, stepsPerSecond);
-  } else {    //if speed is too slow, run through library       !!need to test if tone and stepper conflict
-    noTone(stepPin);
-    stepper.setSpeed(stepsPerSecond);
-    stepper.runSpeed();
+      stepper.stop();
+     freqReg = gen.freqCalc(0); 
+      gen.adjustFreq(MiniGen::FREQ0, freqReg); //stop moving
+  } 
+  else {    //tone needs to be greater than 31hz
+    stepper.stop(); //is this 
+    freqReg = gen.freqCalc(stepsPerSecond); //setting the signal generator to 10hz
+    gen.adjustFreq(MiniGen::FREQ0, freqReg); //start moving
   }
+
 }
 
 ISR(TIMER5_COMPA_vect) {   //takes ___ milliseconds
