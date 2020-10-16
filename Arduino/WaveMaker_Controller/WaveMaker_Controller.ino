@@ -12,7 +12,9 @@ SuperDroidEncoderBuffer encoderBuff = SuperDroidEncoderBuffer(42);
 bool encoderBuffInit, didItWork_MDR0, didItWork_MDR1, didItWork_DTR;   //variables for unit testing
 unsigned char MDR0_settings = MDRO_x4Quad | MDRO_freeRunningCountMode | MDRO_indexDisable | MDRO_syncIndex | MDRO_filterClkDivFactor_1;
 unsigned char MDR1_settings = MDR1_4ByteCounterMode | MDR1_enableCounting | MDR1_FlagOnIDX_NOP | MDR1_FlagOnCMP_NOP | MDR1_FlagOnBW_NOP | MDR1_FlagOnCY_NOP;
-const int stepPin = 4, dirPin = 5, limitPin = A0, probe1Pin = A1, probe2Pin = A2;
+const int  dirPin = 5, limitPin = A0, probe1Pin = A1, probe2Pin = A2; 
+
+
 AccelStepper stepper = AccelStepper(1, stepPin, dirPin);
 volatile double t = 0;    //time in seconds
 volatile float speedScalar = 0;
@@ -77,18 +79,26 @@ void setup() {
   didItWork_MDR0 = encoderBuff.setMDR0(MDR0_settings);
   didItWork_MDR1 = encoderBuff.setMDR1(MDR1_settings);
 
-  pinMode(stepPin, OUTPUT);
+
   pinMode(dirPin, OUTPUT);
   pinMode(13, OUTPUT);
   digitalWrite(13, LOW);    //initialization of maxRate indicator led
   digitalWrite(dirPin, HIGH);
-  stepper.setMaxSpeed(31);    //31hz max speed(minimum of tone())
+
+  stepper.setMaxSpeed(10);    //10hz max speed for setting home
   /////////Zero encoder:
-  tone(stepPin, 100);   //start moving
+ 
+
+  freqReg = gen.freqCalc(10); //setting the signal generator to 10hz
+  gen.adjustFreq(MiniGen::FREQ0, freqReg); //start moving
   
   while (analogRead(limitPin) > 500) {}   //do nothing until the beam is broken
-  noTone(stepPin);   //stop moving
+  
+  freqReg = gen.freqCalc(0); //stop moving motor
+  gen.adjustFreq(MiniGen::FREQ0, freqReg); 
   encoderBuff.command2Reg(CNTR, IR_RegisterAction_CLR); //zero encoder
+  
+
 
   //fill probe buffers with 0's:
   for (int i = 0; i < buffSize; i++) {
