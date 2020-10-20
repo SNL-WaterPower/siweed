@@ -1,7 +1,7 @@
 #include <miniWaveTankJonswap.h>
 #include <SuperDroidEncoderBuffer.h>
 #include<math.h>
-//#include <AccelStepper.h> // not needed 
+//#include <AccelStepper.h> // not needed
 #include <SPI.h>
 #include <SparkFun_MiniGen.h>
 
@@ -12,7 +12,7 @@ SuperDroidEncoderBuffer encoderBuff = SuperDroidEncoderBuffer(42);
 bool encoderBuffInit, didItWork_MDR0, didItWork_MDR1, didItWork_DTR;   //variables for unit testing
 unsigned char MDR0_settings = MDRO_x4Quad | MDRO_freeRunningCountMode | MDRO_indexDisable | MDRO_syncIndex | MDRO_filterClkDivFactor_1;
 unsigned char MDR1_settings = MDR1_4ByteCounterMode | MDR1_enableCounting | MDR1_FlagOnIDX_NOP | MDR1_FlagOnCMP_NOP | MDR1_FlagOnBW_NOP | MDR1_FlagOnCY_NOP;
-const int  dirPin = 5, limitPin = A0, probe1Pin = A1, probe2Pin = A2; 
+const int  dirPin = 5, limitPin = A0, probe1Pin = A1, probe2Pin = A2;
 
 
 //AccelStepper stepper = AccelStepper(1, 4, dirPin); //I am not sure about this, replaceing stepPin with pin 4, but not needed? //not needed
@@ -65,16 +65,16 @@ volatile float inputFnc(volatile float tm) {  //inputs time in seconds //outputs
 }
 
 
-void setup() {  
+void setup() {
   initSerial();
-  gen.reset(); //reset signal generator, that way we have a known starting location. 
+  gen.reset(); //reset signal generator, that way we have a known starting location.
   //At power up, the singal generator will output 100hz
   gen.setMode(MiniGen::SQUARE); //setting signal generator to make a square wave.
   gen.setFreqAdjustMode(MiniGen::FULL); //Full takes the longest longer to write, but allows to change from any frequency to any other frequency
 
-  unsigned long freqReg = gen.freqCalc(0);
+  unsigned long freqReg = gen.freqCalc(100);
   gen.adjustFreq(MiniGen::FREQ0, freqReg); //Making sure the signal generator isnt making the motor move at start
-  
+
   encoderBuffInit = encoderBuff.begin();    //configure encoder buffer and assign bools for unit testing
   didItWork_MDR0 = encoderBuff.setMDR0(MDR0_settings);
   didItWork_MDR1 = encoderBuff.setMDR1(MDR1_settings);
@@ -83,21 +83,22 @@ void setup() {
   pinMode(dirPin, OUTPUT);
   pinMode(13, OUTPUT);
   digitalWrite(13, LOW);    //initialization of maxRate indicator led
-  digitalWrite(dirPin, HIGH);
 
 
   /////////Zero encoder:
- 
 
+  digitalWrite(dirPin, HIGH);
   freqReg = gen.freqCalc(10); //setting the signal generator to 10hz
   gen.adjustFreq(MiniGen::FREQ0, freqReg); //start moving
-  
-  while (analogRead(limitPin) > 500) {}   //do nothing until the beam is broken
-  
+
+  while (analogRead(limitPin) > 500) {}   //move up until the beam is broken
+  digitalWrite(dirPin, LOW);
+  while (analogRead(limitPin) < 500) {}   //move down until the beam is unbroken
+
   freqReg = gen.freqCalc(0); //stop moving motor
-  gen.adjustFreq(MiniGen::FREQ0, freqReg); 
+  gen.adjustFreq(MiniGen::FREQ0, freqReg);
   encoderBuff.command2Reg(CNTR, IR_RegisterAction_CLR); //zero encoder
-  
+
 
 
   //fill probe buffers with 0's:
