@@ -71,7 +71,7 @@ Also, make sure that the microUSB is plugged into the programming port of the DU
 SIWEED uses a PC to control two Arduinos: (1) an Arduino Mega to run the wavemaker and (2) an Arduino Due to run the WEC.
 A detailed illustration of the system layout is shown in the diagram below.
 
-![system layout](documentation/diagrams/systemLayoutPNG.png)
+![system layout](https://github.com/SNL-WaterPower/siweed/blob/develop/documentation/diagrams/systemLayoutPNG.png)
 <!-- System Specifications -->
 ## System specifications
  - Tank
