@@ -1,7 +1,7 @@
 #include <miniWaveTankJonswap.h>
 #include <SuperDroidEncoderBuffer.h>
 #include<math.h>
-#include <AccelStepper.h>
+//#include <AccelStepper.h> // not needed 
 #include <SPI.h>
 #include <SparkFun_MiniGen.h>
 
@@ -15,7 +15,7 @@ unsigned char MDR1_settings = MDR1_4ByteCounterMode | MDR1_enableCounting | MDR1
 const int  dirPin = 5, limitPin = A0, probe1Pin = A1, probe2Pin = A2; 
 
 
-AccelStepper stepper = AccelStepper(1, 4, dirPin); //I am not sure about this, replaceing stepPin with pin 4, but not needed? 
+//AccelStepper stepper = AccelStepper(1, 4, dirPin); //I am not sure about this, replaceing stepPin with pin 4, but not needed? //not needed
 volatile double t = 0;    //time in seconds
 volatile float speedScalar = 0;
 volatile int mode = 0;     //-1 is stop, 0 is jog, 1 is sine, 2 is sea state
@@ -85,7 +85,7 @@ void setup() {
   digitalWrite(13, LOW);    //initialization of maxRate indicator led
   digitalWrite(dirPin, HIGH);
 
-  stepper.setMaxSpeed(10);    //10hz max speed for setting home
+
   /////////Zero encoder:
  
 

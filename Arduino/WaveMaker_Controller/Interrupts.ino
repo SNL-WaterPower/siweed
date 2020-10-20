@@ -56,12 +56,12 @@ ISR(TIMER4_COMPA_vect) {    //function called by interupt     //Takes about .4 m
   }
   volatile float stepsPerSecond = mmToSteps(sp);
   if (mode == -1) {  //no tone if stopped
-      stepper.stop();
+//      stepper.stop();
      freqReg = gen.freqCalc(0); 
       gen.adjustFreq(MiniGen::FREQ0, freqReg); //stop moving
   } 
   else {    //tone needs to be greater than 31hz
-    stepper.stop(); //is this 
+//    stepper.stop(); //is this 
     freqReg = gen.freqCalc(stepsPerSecond); //setting the signal generator to 10hz
     gen.adjustFreq(MiniGen::FREQ0, freqReg); //start moving
   }
