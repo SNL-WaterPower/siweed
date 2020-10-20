@@ -30,7 +30,7 @@ void initInterrupts() {
   sei();//allow interrupts
 }
 ISR(TIMER4_COMPA_vect) {    //function called by interupt     //Takes about .4 milliseconds
-  unsigned long freqReg = gen.freqCalc(0);
+  volatile unsigned long freqReg = gen.freqCalc(0);
   volatile float pos = encPos();
   error = futurePos - pos;   //where we told it to go vs where it is
   prevSampleT = sampleT;
@@ -56,13 +56,13 @@ ISR(TIMER4_COMPA_vect) {    //function called by interupt     //Takes about .4 m
   }
   volatile float stepsPerSecond = mmToSteps(sp);
   if (mode == -1) {  //stop
-//      stepper.stop();
-     freqReg = gen.freqCalc(0); 
-      gen.adjustFreq(MiniGen::FREQ0, freqReg); //stop moving
-  } 
-  else {    
-//    stepper.stop(); //
-    freqReg = gen.freqCalc(stepsPerSecond); //setting the signal generator to 10hz
+    //      stepper.stop();
+    freqReg = gen.freqCalc(0);
+    gen.adjustFreq(MiniGen::FREQ0, freqReg); //stop moving
+  }
+  else {
+    freqReg = gen.freqCalc(stepsPerSecond); 
+    Serial.println(stepsPerSecond);
     gen.adjustFreq(MiniGen::FREQ0, freqReg); //start moving
   }
 
