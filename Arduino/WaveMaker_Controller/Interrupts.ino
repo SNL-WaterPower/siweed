@@ -62,7 +62,7 @@ ISR(TIMER4_COMPA_vect) {    //function called by interupt     //Takes about .4 m
   }
   else {
     freqReg = gen.freqCalc(stepsPerSecond); 
-    Serial.println(stepsPerSecond);
+    //Serial.println(stepsPerSecond);
     gen.adjustFreq(MiniGen::FREQ0, freqReg); //start moving
   }
 

@@ -19,6 +19,7 @@ Code developed in Arduino 1.0.5, on an Arduino Pro Mini 5V.
 MiniGen::MiniGen()
 {
   _FSYNCPin = 10;
+  _SPI_CLK_FREQ = 2000000;
   configSPIPeripheral();
 }
 
@@ -27,6 +28,14 @@ MiniGen::MiniGen()
 MiniGen::MiniGen(int16_t FSYNCPin)
 {
   _FSYNCPin = FSYNCPin;
+  _SPI_CLK_FREQ = 2000000;
+  configSPIPeripheral();
+}
+
+MiniGen::MiniGen(int16_t FSYNCPin, int16_t SPI_CLK_FREQ)
+{
+  _FSYNCPin = FSYNCPin;
+  _SPI_CLK_FREQ = SPI_CLK_FREQ;
   configSPIPeripheral();
 }
 
@@ -77,6 +86,10 @@ void MiniGen::setMode(MODE newMode)
       configReg |=0x0000;
     break;
   }
+
+  // Make sure to clear the top two bit to make sure we're writing the config register:
+  configReg &= ~0xC000;
+
   SPIWrite(configReg); // Now write our shadow copy to the part.
 }
 
@@ -90,6 +103,10 @@ void MiniGen::selectFreqReg(FREQREG reg)
   if (reg == FREQ0) configReg &= ~0x0800;
   // Otherwise, set bit 11.
   else              configReg |= 0x0800;
+
+  // Make sure to clear the top two bit to make sure we're writing the config register:
+  configReg &= ~0xC000;
+
   SPIWrite(configReg);
 }
 
@@ -99,6 +116,10 @@ void MiniGen::selectPhaseReg(PHASEREG reg)
 {
   if (reg == PHASE0) configReg &= ~0x0400;
   else               configReg |= 0x0400;
+
+  // Make sure to clear the top two bit to make sure we're writing the config register:
+  configReg &= ~0xC000;
+
   SPIWrite(configReg);
 }
 
@@ -128,6 +149,10 @@ void MiniGen::setFreqAdjustMode(FREQADJUSTMODE newMode)
       configReg |= 0x2000;
     break;
   }
+
+  // Make sure to clear the top two bit to make sure we're writing the config register:
+  configReg &= ~0xC000;
+
   SPIWrite(configReg);
 }
 
@@ -174,7 +199,7 @@ void MiniGen::adjustFreq(FREQREG reg, FREQADJUSTMODE mode, uint16_t newFreq)
 //  happen- the coarse or fine register will be updated with the contents of
 //  the upper 14 bits of the 28 bits you *meant* to send.
 void MiniGen::adjustFreq(FREQREG reg, uint32_t newFreq)
-{  
+{
   // We need to split the 32-bit input into two 16-bit values, blank the top
   //  two bits of those values, and set the top two bits according to the
   //  value of reg.

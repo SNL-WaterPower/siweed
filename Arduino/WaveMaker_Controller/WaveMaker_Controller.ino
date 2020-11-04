@@ -1,3 +1,4 @@
+#define MINIGEN_COMPATIBILITY_MODE
 #include <miniWaveTankJonswap.h>
 #include <SuperDroidEncoderBuffer.h>
 #include<math.h>
@@ -5,7 +6,7 @@
 #include <SPI.h>
 #include <SparkFun_MiniGen.h>
 
-MiniGen gen; //initalize signal generator
+MiniGen gen(10); //initalize signal generator with FSYNC pin 10
 miniWaveTankJonswap jonswap(512.0 / 32.0, 0.5, 2.5); //period, low frequency, high frequency. frequencies will be rounded to multiples of df(=1/period)
 //^ISSUE. Acuracy seems to fall off after ~50 components when using higher frequencies(1,3 at 64 elements seems wrong).
 SuperDroidEncoderBuffer encoderBuff = SuperDroidEncoderBuffer(42);
@@ -14,8 +15,6 @@ unsigned char MDR0_settings = MDRO_x4Quad | MDRO_freeRunningCountMode | MDRO_ind
 unsigned char MDR1_settings = MDR1_4ByteCounterMode | MDR1_enableCounting | MDR1_FlagOnIDX_NOP | MDR1_FlagOnCMP_NOP | MDR1_FlagOnBW_NOP | MDR1_FlagOnCY_NOP;
 const int  dirPin = 5, limitPin = A0, probe1Pin = A1, probe2Pin = A2;
 
-
-//AccelStepper stepper = AccelStepper(1, 4, dirPin); //I am not sure about this, replaceing stepPin with pin 4, but not needed? //not needed
 volatile double t = 0;    //time in seconds
 volatile float speedScalar = 0;
 volatile int mode = 0;     //-1 is stop, 0 is jog, 1 is sine, 2 is sea state
@@ -72,7 +71,7 @@ void setup() {
   gen.setMode(MiniGen::SQUARE); //setting signal generator to make a square wave.
   gen.setFreqAdjustMode(MiniGen::FULL); //Full takes the longest longer to write, but allows to change from any frequency to any other frequency
 
-  unsigned long freqReg = gen.freqCalc(100);
+  unsigned long freqReg = gen.freqCalc(0);
   gen.adjustFreq(MiniGen::FREQ0, freqReg); //Making sure the signal generator isnt making the motor move at start
 
   encoderBuffInit = encoderBuff.begin();    //configure encoder buffer and assign bools for unit testing
@@ -88,9 +87,8 @@ void setup() {
   /////////Zero encoder:
 
   digitalWrite(dirPin, HIGH);
-  freqReg = gen.freqCalc(10); //setting the signal generator to 10hz
+  freqReg = gen.freqCalc(100); //setting the signal generator to 10hz
   gen.adjustFreq(MiniGen::FREQ0, freqReg); //start moving
-
   while (analogRead(limitPin) > 500) {}   //move up until the beam is broken
   digitalWrite(dirPin, LOW);
   while (analogRead(limitPin) < 500) {}   //move down until the beam is unbroken
@@ -98,8 +96,7 @@ void setup() {
   freqReg = gen.freqCalc(0); //stop moving motor
   gen.adjustFreq(MiniGen::FREQ0, freqReg);
   encoderBuff.command2Reg(CNTR, IR_RegisterAction_CLR); //zero encoder
-
-
+//while(1){}
 
   //fill probe buffers with 0's:
   for (int i = 0; i < buffSize; i++) {
@@ -116,7 +113,7 @@ void setup() {
   initInterrupts();
 }
 volatile float encPos() {
-  return encoderBuff.readCNTR() * (1 / encStepsPerTurn) * leadPitch; //steps*(turns/step)*(mm/turn)
+  return encoderBuff.readCNTR() * (1 / encStepsPerTurn) * leadPitch * -1.0; //steps*(turns/step)*(mm/turn)
 }
 void loop() {   //__ microseconds
   //encPos = waveEnc.read() * (1 / encStepsPerTurn) * leadPitch; //steps*(turns/step)*(mm/turn)
