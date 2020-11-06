@@ -27,7 +27,7 @@ const float maxRate = 50.0;   //max mm/seconds
 ////////////////////////////////////////////////
 //Derived funciton here:
 const float leadPitch = 10.0;     //mm/turn
-const float gearRatio = 40.0 / 12.0; //motor turns per lead screw turns
+const float gearRatio = 60.0 / 12.0; //motor turns per lead screw turns
 const float motorStepsPerTurn = 400.0;   //steps per motor revolution
 const float encStepsPerTurn = 3200.0;
 
