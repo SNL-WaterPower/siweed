@@ -2,13 +2,15 @@
 #include <miniWaveTankJonswap.h>
 #include <SuperDroidEncoderBuffer.h>
 #include<math.h>
-//#include <AccelStepper.h> // not needed
+#include <PID_v1.h> // not needed
 #include <SPI.h>
 #include <SparkFun_MiniGen.h>
 
 MiniGen gen(10); //initalize signal generator with FSYNC pin 10
 miniWaveTankJonswap jonswap(512.0 / 32.0, 0.5, 2.5); //period, low frequency, high frequency. frequencies will be rounded to multiples of df(=1/period)
 //^ISSUE. Acuracy seems to fall off after ~50 components when using higher frequencies(1,3 at 64 elements seems wrong).
+volatile double pidOut, pidPos, pidIn;
+PID myPID(&pidPos, &pidOut, &pidIn,1,0,0, P_ON_M, DIRECT);
 SuperDroidEncoderBuffer encoderBuff = SuperDroidEncoderBuffer(42);
 bool encoderBuffInit, didItWork_MDR0, didItWork_MDR1, didItWork_DTR;   //variables for unit testing
 unsigned char MDR0_settings = MDRO_x4Quad | MDRO_freeRunningCountMode | MDRO_indexDisable | MDRO_syncIndex | MDRO_filterClkDivFactor_1;
@@ -30,6 +32,10 @@ const int buffSize = 10;    //number of data points buffered in the moving avera
 volatile float probe1Buffer[buffSize];
 volatile float probe2Buffer[buffSize];
 const float maxRate = 50.0;   //max mm/seconds
+//const float minRate = 10.0;
+////////////////////////
+const float interval = .01;   //time between each interupt call in seconds //max value: 1.04
+const float serialInterval = .03125;   //time between each interupt call in seconds //max value: 1.04    .03125 is 32 times a second to match processing's speed(32hz)
 ////////////////////////////////////////////////
 //Derived funciton here:
 const float leadPitch = 10.0;     //mm/turn
@@ -78,6 +84,8 @@ void setup() {
   didItWork_MDR0 = encoderBuff.setMDR0(MDR0_settings);
   didItWork_MDR1 = encoderBuff.setMDR1(MDR1_settings);
 
+  myPID.SetMode(AUTOMATIC);   //starts pid
+  myPID.SetSampleTime((int)(interval * 1000));    //pid interval in milliseconds
 
   pinMode(dirPin, OUTPUT);
   pinMode(13, OUTPUT);
@@ -96,7 +104,7 @@ void setup() {
   freqReg = gen.freqCalc(0); //stop moving motor
   gen.adjustFreq(MiniGen::FREQ0, freqReg);
   encoderBuff.command2Reg(CNTR, IR_RegisterAction_CLR); //zero encoder
-//while(1){}
+  //while(1){}
 
   //fill probe buffers with 0's:
   for (int i = 0; i < buffSize; i++) {
@@ -123,13 +131,13 @@ void loop() {   //__ microseconds
 }
 void updateSpeedScalar() {    //used to prevent jumps/smooth start
   //Serial.println(speedScalar);
-  /*
-    if (speedScalar < 1) {
+/*
+  if (speedScalar < 1) {
     speedScalar += .005;
-    } else {
+  } else {
     speedScalar = 1.0;
-    }
-  */
+  }
+*/
   speedScalar = 1.0;
 }
 volatile float mmToSteps(volatile float mm) {

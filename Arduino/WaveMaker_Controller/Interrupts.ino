@@ -1,6 +1,3 @@
-const float interval = .01;   //time between each interupt call in seconds //max value: 1.04
-const float serialInterval = .03125;   //time between each interupt call in seconds //max value: 1.04    .03125 is 32 times a second to match processing's speed(32hz)
-
 volatile float futurePos;
 volatile float error;
 volatile float sampleT = 0;  //timestamp in microseconds of sample
@@ -37,7 +34,10 @@ ISR(TIMER4_COMPA_vect) {    //function called by interupt     //Takes about .4 m
   sampleT = micros();
   prevVal = futurePos;
   futurePos = inputFnc(t + interval);// + error;  //time plus delta time plus previous error. maybe error should scale as a percentage of speed? !!!!!!!!!!!!!!NEEDS TESTING
-  volatile float vel = speedScalar * (futurePos - pos) / interval; //desired velocity in mm/second   //ramped up over about a second   //LIKELY NEEDS TUNING
+  pidPos = pos;
+  pidIn = futurePos;
+  myPID.Compute();    //sets pidOut
+  volatile float vel = speedScalar * (pidOut - pos) / interval; //desired velocity in mm/second   //ramped up over about a second   //LIKELY NEEDS TUNING
   if (vel > 0) {
     digitalWrite(dirPin, HIGH);
   } else {
@@ -54,6 +54,10 @@ ISR(TIMER4_COMPA_vect) {    //function called by interupt     //Takes about .4 m
     digitalWrite(13, HIGH);   //on board led turns on if max speed was reached
     //Serial.println("max");
   }
+//  if (mode >= 0 && abs(futurePos - pos) < 1.0)  //deadzone: don't move if near target in jog
+//  {
+//    sp = 0;
+//  }
   volatile float stepsPerSecond = mmToSteps(sp);
   if (mode == -1) {  //stop
     //      stepper.stop();
@@ -61,7 +65,7 @@ ISR(TIMER4_COMPA_vect) {    //function called by interupt     //Takes about .4 m
     gen.adjustFreq(MiniGen::FREQ0, freqReg); //stop moving
   }
   else {
-    freqReg = gen.freqCalc(stepsPerSecond); 
+    freqReg = gen.freqCalc(stepsPerSecond);
     //Serial.println(stepsPerSecond);
     gen.adjustFreq(MiniGen::FREQ0, freqReg); //start moving
   }
@@ -87,6 +91,11 @@ ISR(TIMER5_COMPA_vect) {   //takes ___ milliseconds
   Serial.write('d');    //to indicate alternate data
   float lerpVal = lerp(prevVal, futurePos, (interval * 1.0e6) / (sampleT - prevSampleT)); //linear interpolate(initial value, final value, percentatge)//percentage is desired interval/actual interval
   sendFloat(lerpVal);
-  Serial.println();
+  Serial.print("n");
+  Serial.print(n);
+  Serial.print("f");
+  Serial.print(freqs[0]);
+  Serial.print("a");
+  Serial.println(amps[0]);
   //Serial.println(mode);
 }
