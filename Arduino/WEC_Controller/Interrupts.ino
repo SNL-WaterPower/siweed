@@ -11,10 +11,9 @@ volatile float pos;
 void updateTau()    //called by interupt
 {
   volatile float prevPos = pos;
-  pos = encPos;
+  pos = encPos();
   vel = (pos - prevPos) / interval;
-  switch (mode)
-  {
+  switch (mode) {
     case -1:
       digitalWrite(enablePin, LOW);   //stop
       break;
@@ -28,15 +27,25 @@ void updateTau()    //called by interupt
       tauCommand = calcTS(t);
       break;
   }
-  if (mode != -1)
-  {
-    analogWrite(tauPin, mapFloat(tauCommand, minTau, maxTau, 0, 4095));    //!!!!!!!NEEDS TO ACCOUNT FOR EDGE ZONES//sends to the motor controller after mapping from newtom/meters to analog
+  if (mode != -1) {
+    //arduino needs to write a pwm signal to the motor controller with a duty cycle between 10% and 90%
+    if (tauCommand > 0) {   //write direction
+      digitalWrite(dirPin, HIGH);
+    } else {
+      digitalWrite(dirPin, LOW);
+    }
+    tauCommand = abs(tauCommand);
+    if (tauCommand > maxTau) {    //ensure that maxTau is max, so that duty cycle does not exceed 90%
+      tauCommand = maxTau;
+    }
+    float minCommand = mapFloat(10, 0, 100, 0, 255);    //maps 10% to 0-255 for analogWrite   //!could be a constant
+    float maxCommand = mapFloat(90, 0, 100, 0, 255);    //maps 10% to 0-255 for analogWrite   //!could be a constant
+    analogWrite(tauPin, mapFloat(tauCommand, minTau, maxTau, minCommand, maxCommand));    //sends to the motor controller after mapping from newtom/meters to pwm
     digitalWrite(enablePin, HIGH);
   }
 }
 
-void sendSerial()   //called by interupt
-{
+void sendSerial() {  //called by interupt
   /*
     e: encoder position
     t: tau commanded to motor
@@ -44,7 +53,7 @@ void sendSerial()   //called by interupt
     v: velocity
   */
   Serial.write('e');
-  sendFloat(encPos);
+  sendFloat(encPos());
   Serial.write('t');
   sendFloat(tauCommand);
   Serial.write('p');

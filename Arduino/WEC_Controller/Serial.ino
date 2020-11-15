@@ -54,6 +54,13 @@ void readSerial()
           Serial.write('u');
           sendFloat(-2);
         }
+        if (encoderTest) {
+          Serial.write('u');
+          sendFloat(3);
+        } else {
+          Serial.write('u');
+          sendFloat(-3);
+        }
         break;
     }
   }
