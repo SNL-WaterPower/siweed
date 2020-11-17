@@ -1,4 +1,5 @@
-ControlP5 cp5; 
+ControlP5 cp5;
+Console console;
 Chart waveChart, wecChart; //wave Signal chart
 Slider position; //slider for position mode
 Slider h, freq; //sliders for function mode
@@ -25,6 +26,12 @@ PImage snlLogo;
 PImage wavePic;
 void initializeUI() {
 
+   // Initialize the console 
+  console = new Console(this);
+  // Start the console
+  console.start();
+  showConsole = true;
+  
   // starting ControlP5 stuff
   cp5 = new ControlP5(this);
   //Fonts

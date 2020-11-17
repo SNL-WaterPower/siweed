@@ -4,6 +4,7 @@ import processing.serial.*;
 import java.lang.Math.*;
 import java.util.LinkedList;
 import java.util.Queue;
+import at.mukprojects.console.*;
 
 int queueSize = 512;    //power of 2 closest to 30(15) seconds at 32 samples/second    !!Needs to match arduino
 LinkedList fftList;
@@ -82,6 +83,12 @@ void draw() {
   fill(green);
   textLeading(15);
   textAlign(CENTER, TOP);
+  
+    // Draw the console to the screen.
+  console.draw();
+  
+  // Print the console to the system out.
+  console.print();
   
   image(wavePic, 0, 0, width, height); //background
   fill(buttonblue);
