@@ -5,7 +5,7 @@ Slider position; //slider for position mode
 Slider h, freq; //sliders for function mode
 Slider sigH, peakF, gamma;  //sliders for sea state mode
 Slider pGain, dGain, torqueSlider, sigHWEC, peakFWEC, gammaWEC; // WEC sliders
-Button jog, function, sea, off, offWEC, torque, feedback, seaWEC; // mode buttons
+Button jog, function, sea, off, offWEC, torque, feedback, seaWEC, showCon; // mode buttons
 Button wecQs, waveQs; // popup buttons
 Button wavePosData, waveElData, wecPosData, wecVelData, wecTorqData, wecPowData;
 Button quad1, quad2, quad3, quad4; // power bar
@@ -30,7 +30,7 @@ void initializeUI() {
   console = new Console(this);
   // Start the console
   console.start();
-  showConsole = true;
+
   
   // starting ControlP5 stuff
   cp5 = new ControlP5(this);
@@ -81,6 +81,11 @@ void initializeUI() {
     .setPosition(qX - 45, qY + 410)
     .setSize(15, 15)
     .setLabel("?");
+    
+  showCon = cp5.addButton("showCon")
+    .setPosition(1150, 145)
+    .setSize(150, 60)
+    .setLabel("Console");
 
   // wave maker buttons
   int buttonX, buttonY;
@@ -284,6 +289,7 @@ wecPowData = cp5.addButton("wecPowData")
     .setText("At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.")
     .hide()
     ;
+    
 
   // Charts //
   waveChart =  cp5.addChart("Wave Information")

@@ -1,10 +1,10 @@
+import at.mukprojects.console.*;
 import meter.*;
 import controlP5.*; //importing GUI library
 import processing.serial.*;
 import java.lang.Math.*;
 import java.util.LinkedList;
 import java.util.Queue;
-import at.mukprojects.console.*;
 
 int queueSize = 512;    //power of 2 closest to 30(15) seconds at 32 samples/second    !!Needs to match arduino
 LinkedList fftList;
@@ -25,7 +25,6 @@ String fundingState = "Sandia National Laboratories is a multi-mission laborator
 String welcome = "Can you save the town from its power outage? \nChange the demension and type \n of wave to see how the power changes! \n Change the wave energy converter's controls \n to harvest more power. \n How quickly can you light up all four quadrants?";
 void setup() {
   ////////
-  
   frameRate(32);    //sets draw() to run x times a second.
   ///////initialize objects
   size(1920,1200, P2D);
@@ -83,12 +82,6 @@ void draw() {
   fill(green);
   textLeading(15);
   textAlign(CENTER, TOP);
-  
-    // Draw the console to the screen.
-  console.draw();
-  
-  // Print the console to the system out.
-  console.print();
   
   image(wavePic, 0, 0, width, height); //background
   fill(buttonblue);
