@@ -6,6 +6,7 @@ void initializeSerial() {
 
   printArray(Serial.list()); 
   port1 = new Serial(this, Serial.list()[1], 250000); // all communication with Megas
+  delay(2000);
 }
 void sendFloat(float f, Serial port)
 {
@@ -21,7 +22,7 @@ void readMegaSerial() {
    p:position
    d:other data for debugging
    */
-  while (megaConnected && port1.available() > 0) {    //recieves until buffer is empty. Since it runs 30 times a second, the arduino will send many samples per execution.
+  while (port1.available() > 0) {    //recieves until buffer is empty. Since it runs 30 times a second, the arduino can send many samples per execution.
     switch(port1.readChar()) {
     case '1':
       print("1 ");
@@ -54,7 +55,7 @@ float readFloat(Serial port) {
   //}
   //float f = ByteBuffer.wrap(byteArray).getFloat();
   float f = byteArrayToFloat(byteArray);
-  println(f);
+  //println(f);
   return f;
 }
 
