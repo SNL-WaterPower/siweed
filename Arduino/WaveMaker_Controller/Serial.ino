@@ -10,7 +10,7 @@ void initSerial() {
    g :gamma
 */
 void readSerial() {
-  if (Serial.available() > 5) {   //if a whole float is through: n+100>
+  if (Serial.available() > 4) {   //if a whole float is through: 1 byte tag + 4 byte float
     //delay(1000);
     //Serial.print('b');
     //Serial.println(Serial.available());
