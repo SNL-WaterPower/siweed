@@ -37,35 +37,26 @@ ISR(TIMER4_COMPA_vect) {    //function called by interupt     //Takes about .4 m
   pidPos = pos;
   pidIn = futurePos;
   myPID.Compute();    //sets pidOut
-  volatile float vel = speedScalar * (pidOut - pos) / interval; //desired velocity in mm/second   //ramped up over about a second   //LIKELY NEEDS TUNING
-  if (vel > 0) {
+  if (pidOut > 0) {
     digitalWrite(dirPin, HIGH);
   } else {
     digitalWrite(dirPin, LOW);
   }
-  volatile float sp = abs(vel);     //steping is always positive, so convert to speed
-  /*if (sp < 2.6) {   //31hz is the lowest frequency of tone(), in mm/s this is 2.6
-    sp = 2.6;
-    noTone(stepPin);
-    //Serial.println("min");
-    }*/
+  volatile float sp = abs(pidOut);     //steping is always positive, so convert to speed
   if (sp > maxRate) {  //max speed
     sp = maxRate;
     digitalWrite(13, HIGH);   //on board led turns on if max speed was reached
     //Serial.println("max");
   }
-//  if (mode >= 0 && abs(futurePos - pos) < 1.0)  //deadzone: don't move if near target in jog
-//  {
-//    sp = 0;
-//  }
-  volatile float stepsPerSecond = mmToSteps(sp);
+
+  //volatile float stepsPerSecond = mmToSteps(sp);    //instead of converting units, any conversions are handled by tuning PID
   if (mode == -1) {  //stop
     //      stepper.stop();
     freqReg = gen.freqCalc(0);
     gen.adjustFreq(MiniGen::FREQ0, freqReg); //stop moving
   }
   else {
-    freqReg = gen.freqCalc(stepsPerSecond);
+    freqReg = gen.freqCalc(sp);
     //Serial.println(stepsPerSecond);
     gen.adjustFreq(MiniGen::FREQ0, freqReg); //start moving
   }
