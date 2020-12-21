@@ -1,11 +1,23 @@
 //Plan: Processing will send numbers with tags, arduino will send them back with same tags
 
-const float serialInterval = .03125;   //time between each interupt call in seconds //max value: 1.04    .03125 is 32 times a second to match processing's speed(32hz)
+const float serialInterval = .2;   //time between each interupt call in seconds //max value: 1.04    .03125 is 32 times a second to match processing's speed(32hz)
 float d1 = -1, d2 = -1, dp = -1, dd = -1;   //data values
 
 void setup() {
   // put your setup code here, to run once:
   initSerial();
+  float testFloat = 123.456789;
+  byte byteArray[4];
+  float2bin(testFloat, (byte*)&byteArray);
+  //println(byteArray);
+  float resultFloat = bin2float((byte*)&byteArray);
+  if (testFloat == resultFloat) {
+    Serial.println("Byte Conversion Test PASSED");
+  } else {
+    Serial.println("Byte Conversion Test FAILED");
+    Serial.println(resultFloat);
+  }
+  delay(5000);
   //interupt setup:
   cli();//stop interrupts
   //////timer 5 for serial sending

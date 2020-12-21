@@ -200,7 +200,7 @@ float readFloat(Serial port) {
   //}
   //float f = ByteBuffer.wrap(byteArray).getFloat();
   float f = byteArrayToFloat(byteArray);
-  println(f);
+  //println(f);
   return f;
 }
 
