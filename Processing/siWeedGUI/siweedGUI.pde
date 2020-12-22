@@ -1,5 +1,6 @@
 import meter.*;
-import controlP5.*; //importing GUI library
+//import controlP5.*; //importing GUI library
+import controlP5.*;
 import processing.serial.*;
 import java.lang.Math.*;
 import java.util.LinkedList;
@@ -97,18 +98,18 @@ void draw() {
   text(fundingState, width/2, 1150);
   
   
-    cp5 = new ControlP5(this);
-  
-  myTextarea = cp5.addTextarea("Sandia Interactive Wave Energy Educational Display (SIWEED)")
+  cp5 = new ControlP5(this);
+  myTextarea = cp5.addTextarea("txt")
                   .setPosition(300,200)
-                  .setSize(300,300)
-                  .setFont(createFont("arial",12))
+                  .setSize(width/2,50)
+                  .setFont(createFont("fb",20))
                   .setLineHeight(14)
-                  .setColor(color(128))
-                  .setColorBackground(color(255,100))
+                  .setColor(color(#a1fa01))
+                 // .setColorBackground(color(255,100))
                   .setColorForeground(color(255,100));
                   
-   
+     myTextarea.setText("Sandia Interactive Wave Energy Educational Display (SIWEED)");
+    
 
   //Mission Control
   fill(turq, 150);
