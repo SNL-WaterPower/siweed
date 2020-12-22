@@ -5,6 +5,10 @@ import java.lang.Math.*;
 import java.util.LinkedList;
 import java.util.Queue;
 
+//ControlP5 cp5;
+
+Textarea myTextarea;
+
 int queueSize = 512;    //power of 2 closest to 30(15) seconds at 32 samples/second    !!Needs to match arduino
 LinkedList fftList;
 fft myFFT;
@@ -91,6 +95,20 @@ void draw() {
   textSize(12);
   textLeading(14);
   text(fundingState, width/2, 1150);
+  
+  
+    cp5 = new ControlP5(this);
+  
+  myTextarea = cp5.addTextarea("Sandia Interactive Wave Energy Educational Display (SIWEED)")
+                  .setPosition(300,200)
+                  .setSize(300,300)
+                  .setFont(createFont("arial",12))
+                  .setLineHeight(14)
+                  .setColor(color(128))
+                  .setColorBackground(color(255,100))
+                  .setColorForeground(color(255,100));
+                  
+   
 
   //Mission Control
   fill(turq, 150);
