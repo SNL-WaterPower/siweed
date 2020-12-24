@@ -1,5 +1,15 @@
 import processing.serial.*;
 void setup() {
+  frameRate(5);
+  float testFloat = 123.456789;
+  byte[] byteArray = floatToByteArray(testFloat);
+  //println(byteArray);
+  float resultFloat = byteArrayToFloat(byteArray);
+  if (testFloat == resultFloat) {
+    println("Byte Conversion Test PASSED");
+  } else {
+    println("Byte Conversion Test FAILED");
+  }
 }
 boolean initialized = false;
 int min = 0, max = 5;
