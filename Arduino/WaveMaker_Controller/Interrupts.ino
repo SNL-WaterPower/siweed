@@ -26,38 +26,51 @@ void initInterrupts() {
 
   sei();//allow interrupts
 }
+/*
+  Motor control interupt:
+  After calculating desired position with inputFnc(), this controller should estimate the command
+  linearly, then apply a PID calculated error correction. The sum is then converted from a velociy to
+  a frequency.
+
+  TODO: triple check unit conversions, and test linear controller on it's own. Then 
+  tune PID with 0P, maybe 0D
+*/
 ISR(TIMER4_COMPA_vect) {    //function called by interupt     //Takes about .4 milliseconds
-  volatile unsigned long freqReg = gen.freqCalc(0);
+  volatile unsigned long freqReg = gen.freqCalc(0);   //can we delete this?
   volatile float pos = encPos();
   error = futurePos - pos;   //where we told it to go vs where it is
+  ////////vars for linear interpolation:
   prevSampleT = sampleT;
   sampleT = micros();
   prevVal = futurePos;
+  /////////////////
   futurePos = inputFnc(t + interval);// + error;  //time plus delta time plus previous error. maybe error should scale as a percentage of speed? !!!!!!!!!!!!!!NEEDS TESTING
-  pidPos = pos;
-  pidIn = futurePos;
+  volatile float linearVel = (futurePos - pos) / interval;    //estimated desired velocity in mm/s, in order to hit target by next interupt call.
+  //PID calculation:
+  pidSet = 0; //desired error is 0
+  pidIn = error;
   myPID.Compute();    //sets pidOut
-  if (pidOut > 0) {
+  /////////
+  float velCommand = linearVel + pidOut;
+  if (velCommand > 0) {
     digitalWrite(dirPin, HIGH);
   } else {
     digitalWrite(dirPin, LOW);
   }
-  volatile float sp = abs(pidOut);     //steping is always positive, so convert to speed
+  volatile float sp = abs(velCommand);     //steping is always positive, so convert to speed
   if (sp > maxRate) {  //max speed
     sp = maxRate;
     digitalWrite(13, HIGH);   //on board led turns on if max speed was reached
     //Serial.println("max");
   }
 
-  //volatile float stepsPerSecond = mmToSteps(sp);    //instead of converting units, any conversions are handled by tuning PID
+  volatile float stepsPerSecond = mmToSteps(sp);    //instead of converting units, any conversions are handled by tuning PID
   if (mode == -1) {  //stop
-    //      stepper.stop();
     freqReg = gen.freqCalc(0);
     gen.adjustFreq(MiniGen::FREQ0, freqReg); //stop moving
   }
   else {
-    freqReg = gen.freqCalc(sp);
-    //Serial.println(stepsPerSecond);
+    freqReg = gen.freqCalc(stepsPerSecond);
     gen.adjustFreq(MiniGen::FREQ0, freqReg); //start moving
   }
 
