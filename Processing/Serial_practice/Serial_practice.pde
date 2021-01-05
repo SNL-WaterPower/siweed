@@ -1,6 +1,6 @@
 import processing.serial.*;
 void setup() {
-  frameRate(5);
+  frameRate(30);
   float testFloat = 123.456789;
   byte[] byteArray = floatToByteArray(testFloat);
   //println(byteArray);

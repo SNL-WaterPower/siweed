@@ -65,8 +65,10 @@ public void settings() {
 boolean initialized = false;
 void draw() {
   if (!initialized) {
-    initializeSerial();    //has a 2 second delay
+    initializeSerial();    //has a 2+ second delay
+    print("initialized");
     unitTests();
+    print("unit tested");
     initialized = true;
   }
   // Background color

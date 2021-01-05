@@ -61,6 +61,8 @@ void initializeSerial() {
    delay(2000);
    */
   //initialize the modes on the arduinos:
+  print("modes");
+
   if (megaConnected) {
     port1.write('!');
     sendFloat(0, port1);    //jog mode
@@ -210,7 +212,7 @@ public static byte[] floatToByteArray(float value) {
     (byte) (intBits >> 24), (byte) (intBits >> 16), (byte) (intBits >> 8), (byte) (intBits) };
 }
 public static float byteArrayToFloat(byte[] bytes) {
-      int intBits = 
-        bytes[0] << 24 | (bytes[1] & 0xFF) << 16 | (bytes[2] & 0xFF) << 8 | (bytes[3] & 0xFF);
-      return Float.intBitsToFloat(intBits);  
-  }
+  int intBits = 
+    bytes[0] << 24 | (bytes[1] & 0xFF) << 16 | (bytes[2] & 0xFF) << 8 | (bytes[3] & 0xFF);
+  return Float.intBitsToFloat(intBits);
+}
