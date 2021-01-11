@@ -20,6 +20,7 @@ color grey = color(180, 190, 191);
 // Fonts
 PFont f; // Regular font
 PFont fb; // Bold font
+PFont buttonFont;
 // Sandia logo
 PImage snlLogo;
 PImage wavePic;
@@ -28,8 +29,9 @@ void initializeUI() {
   // starting ControlP5 stuff
   cp5 = new ControlP5(this);
   //Fonts
-  f = createFont("Arial", 16, true);
+    f = createFont("Arial", 16, true);
   fb = createFont("Arial Bold Italic", 32, true);
+  buttonFont = createFont("Arial Bold Italic", 12, true);
 
   // Buttons //
   //1387
@@ -82,45 +84,53 @@ void initializeUI() {
   jog = cp5.addButton("jog")
     .setPosition(buttonX, buttonY)
     .setSize(150, 65)
-    .setLabel("Jog Mode");
+    .setLabel("Jog Mode")
+    .setFont(buttonFont );
 
   function = cp5.addButton("fun")
     .setPosition(buttonX + 170, buttonY)
     .setSize(150, 65)
-    .setLabel("Function Mode"); 
+    .setLabel("Function Mode")
+    .setFont(buttonFont); 
 
   sea = cp5.addButton("sea")
     .setPosition(buttonX + 340, buttonY)
     .setSize(150, 65)
-    .setLabel("Sea State"); 
+    .setLabel("Sea State")
+    .setFont(buttonFont); 
 
   off = cp5.addButton("off")
     .setPosition(buttonX + 510, buttonY)
     .setSize(150, 65)
-    .setLabel("OFF"); 
+    .setLabel("OFF")
+    .setFont(buttonFont); 
 
   buttonY = 660;
 
   torque = cp5.addButton("torque")
     .setPosition(buttonX, buttonY)
     .setSize(150, 65)
-    .setLabel("Torque");   
+    .setLabel("Torque")
+    .setFont(buttonFont);   
 
   feedback = cp5.addButton("feedback")
     .setPosition(buttonX + 170, buttonY)
     .setSize(150, 65)
-    .setLabel("Feedback"); 
+    .setLabel("Feedback")
+    .setFont(buttonFont); 
   //spring, jogWEC, offWEC 
 
   seaWEC = cp5.addButton("seaWEC")
     .setPosition(buttonX + 340, buttonY)
     .setSize(150, 65)
-    .setLabel("Sea State");    
+    .setLabel("Sea State")
+    .setFont(buttonFont);    
 
   offWEC = cp5.addButton("offWEC")
     .setPosition(buttonX + 510, buttonY)
     .setSize(150, 65)
-    .setLabel("Off"); 
+    .setLabel("Off")
+    .setFont(buttonFont); 
 
   //Button wavePosData, waveElData, wecPosData, wecVelData, wecTorqData, wecPowData;
   int dataButtonX, dataButtonY;
@@ -131,13 +141,15 @@ void initializeUI() {
     .setPosition(dataButtonX, dataButtonY)
     .setColorBackground(grey)
     .setSize(100, 50)
-    .setLabel("Wave Maker Position"); 
+    .setLabel("Wave Maker Position")
+    .setFont(buttonFont); 
 
   waveElData = cp5.addButton("waveElData")
     .setPosition(dataButtonX + 125, dataButtonY)
     .setColorBackground(grey)
     .setSize(100, 50)
-    .setLabel("Wave Elevation"); 
+    .setLabel("Wave Elevation")
+    .setFont(buttonFont); 
 
   dataButtonY = 990;
 
@@ -145,25 +157,29 @@ void initializeUI() {
     .setPosition(dataButtonX - 125, dataButtonY)
     .setColorBackground(grey)
     .setSize(100, 50)
-    .setLabel("Wec Position"); 
+    .setLabel("Wec Position")
+    .setFont(buttonFont); 
 
   wecVelData = cp5.addButton("wecVelData")
     .setPosition(dataButtonX, dataButtonY)
     .setColorBackground(grey)
     .setSize(100, 50)
-    .setLabel("WEC Velocity");
+    .setLabel("WEC Velocity")
+    .setFont(buttonFont);
 
   wecTorqData = cp5.addButton("wecTorqData")
     .setPosition(dataButtonX + 125, dataButtonY)
     .setColorBackground(grey)
     .setSize(100, 50)
-    .setLabel("WEC Torque");
+    .setLabel("WEC Torque")
+    .setFont(buttonFont);
 
   wecPowData = cp5.addButton("wecPowData")
     .setPosition(dataButtonX + 250, dataButtonY)
     .setColorBackground(grey)
     .setSize(100, 50)
-    .setLabel("WEC Power");
+    .setLabel("WEC Power")
+    .setFont(buttonFont);
 
   // Sliders // 
   //distance between slider and buttons is 150, distance between each slider is 100
