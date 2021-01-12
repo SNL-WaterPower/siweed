@@ -10,6 +10,9 @@ import java.util.Queue;
 
 Textarea myTextarea;
 
+Println console; //Needed for GUI console to work
+Textarea Output; //Needed for GUI console to work
+
 int queueSize = 512;    //power of 2 closest to 30(15) seconds at 32 samples/second    !!Needs to match arduino
 LinkedList fftList;
 fft myFFT;
@@ -62,6 +65,17 @@ void setup() {
   //// Use the default values for testing, 0 - 255.
   //minIn = m.getMinInputSignal();
   //maxIn = m.getMaxInputSignal();
+  
+  //console, this needs to be in the setup to ensure
+  //that 
+    Output=cp5.addTextarea("Output")
+    .setPosition(1460, 610) 
+      .setSize(330, 430)
+        .setLineHeight(14)
+          .setColorBackground(color(55,100))
+            .setColorForeground(color(255,100))
+              .scroll(1);
+    console = cp5.addConsole(Output);
 }
 /*
 public void settings() {
@@ -91,7 +105,7 @@ void draw() {
   rect(0, 0, width, 95); // Top Banner
   //banner text
   fill(green);
-  text("Sandia Interactive Wave Energy Educational Display (SIWEED)", width/2, 30);
+  //text("Sandia Interactive Wave Energy Educational Display (SIWEED)", width/2, 30);
   fill(255, 255, 255);
   textSize(12);
   textLeading(14);
@@ -99,17 +113,18 @@ void draw() {
   
   
   cp5 = new ControlP5(this);
-  myTextarea = cp5.addTextarea("txt")
-                  .setPosition(300,200)
-                  .setSize(width/2,50)
-                  .setFont(createFont("fb",20))
+    myTextarea = cp5.addTextarea("txt")
+                  .setPosition(width/6,height/45)
+                  .setSize(2000,90)
+                  .setFont(createFont("Arial Bold Italic",45))
                   .setLineHeight(14)
-                  .setColor(color(#a1fa01))
-                 // .setColorBackground(color(255,100))
+                  .setColor(color(green)) 
+                  //.setColorBackground(color(255,100))
                   .setColorForeground(color(255,100));
                   
      myTextarea.setText("Sandia Interactive Wave Energy Educational Display (SIWEED)");
     
+
 
   //Mission Control
   fill(turq, 150);
@@ -124,7 +139,19 @@ void draw() {
   fill(buttonblue);
   textLeading(15);
   textAlign(LEFT, TOP);
-  text("Mission Control", 35, 155);
+ // text("Mission Control", 35, 155);
+  
+    cp5 = new ControlP5(this);
+    myTextarea = cp5.addTextarea("txt")
+                  .setPosition(35, 155)
+                  .setSize(225,75)
+                  .setFont(createFont("Arial Bold Italic" ,25))
+                  .setLineHeight(7)
+                  .setColor(color(buttonblue)) // need to find the correct color for this
+                 // .setColorBackground(color(255,100))
+                  .setColorForeground(color(255,100));
+                  
+     myTextarea.setText("Mission Control");
 
   // System Status
   fill(turq, 150);

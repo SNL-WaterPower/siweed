@@ -141,14 +141,14 @@ void initializeUI() {
     .setPosition(dataButtonX, dataButtonY)
     .setColorBackground(grey)
     .setSize(100, 50)
-    .setLabel("Wave Maker Position")
+    .setLabel("Wave Maker\nPosition")
     .setFont(buttonFont); 
 
   waveElData = cp5.addButton("waveElData")
     .setPosition(dataButtonX + 125, dataButtonY)
     .setColorBackground(grey)
     .setSize(100, 50)
-    .setLabel("Wave Elevation")
+    .setLabel("Wave\nElevation")
     .setFont(buttonFont); 
 
   dataButtonY = 990;
@@ -345,6 +345,7 @@ void jog() {
   peakF.hide();
   gamma.hide();
   position.show();
+  println("hello world!");
   //set mode on arduino:
   if (megaConnected) {
     port1.write('!');
