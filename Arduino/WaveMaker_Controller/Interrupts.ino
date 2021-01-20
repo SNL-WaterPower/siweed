@@ -88,5 +88,4 @@ ISR(TIMER5_COMPA_vect) {   //takes ___ milliseconds
   float lerpVal = lerp(prevVal, futurePos, (interval * 1.0e6) / (sampleT - prevSampleT)); //linear interpolate(initial value, final value, percentatge)//percentage is desired interval/actual interval
   sendFloat(lerpVal);
   //Serial.println();
-  //Serial.println(mode);
 }

@@ -24,11 +24,11 @@ void draw() {
     if (millis() > min *1000 && millis() < max*1000) {
       println(min);
       port1.write('1');
-      sendFloat(min, port1);
+      sendFloat(10-min, port1);
       port1.write('2');
-      sendFloat(min, port1);
+      sendFloat(10-min, port1);
       port1.write('p');
-      sendFloat(min, port1);
+      sendFloat(10-min, port1);
       port1.write('d');
       sendFloat(min, port1);
     } else {
