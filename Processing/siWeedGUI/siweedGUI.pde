@@ -5,6 +5,8 @@ import java.lang.Math.*;
 import java.util.LinkedList;
 import java.util.Queue;
 
+boolean debug = false;    //for debug print statements
+
 int queueSize = 512;    //power of 2 closest to 30(15) seconds at 32 samples/second    !!Needs to match arduino
 LinkedList fftList;
 fft myFFT;
@@ -63,10 +65,16 @@ public void settings() {
  fullScreen(2);
  }*/
 boolean initialized = false;
+int timestamp = 0;   //for debuging
 void draw() {
   if (!initialized) {
-    initializeSerial();    //has a 2 second delay
+    initializeSerial();    //has a 2+ second delay
     unitTests();
+    if (debug) {
+      print("1 ");
+      println(millis() - timestamp);
+      timestamp = millis();
+    }
     initialized = true;
   }
   // Background color
@@ -76,6 +84,12 @@ void draw() {
   fill(green);
   textLeading(15);
   textAlign(CENTER, TOP);
+
+  if (debug) {
+    print("2 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
 
   image(wavePic, 0, 0, width, height); //background
   fill(buttonblue);
@@ -92,6 +106,11 @@ void draw() {
   textLeading(14);
   text(fundingState, width/2, 1150);
 
+  if (debug) {
+    print("3 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
   //Mission Control
   fill(turq, 150);
   stroke(buttonblue, 150);
@@ -106,6 +125,12 @@ void draw() {
   textLeading(15);
   textAlign(LEFT, TOP);
   text("Mission Control", 35, 155);
+
+  if (debug) {
+    print("4 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
 
   // System Status
   fill(turq, 150);
@@ -131,17 +156,35 @@ void draw() {
   text("System Status", 795, 155);
   stroke(green);
 
+  if (debug) {
+    print("5 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
+
   textFont(fb, 20);
   fill(255, 255, 255);
   textLeading(15);
   textAlign(LEFT, TOP);
   text("Change Wave Dimensions", 45, 220);
 
+  if (debug) {
+    print("6 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
+
   textFont(fb, 20); 
   fill(255, 255, 255);
   textLeading(15);
   textAlign(LEFT, TOP);
   text("Change WEC Controls", 45, 620);
+
+  if (debug) {
+    print("7 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
 
   //meter
 
@@ -165,6 +208,12 @@ void draw() {
     quad2.setColorBackground(green);
     quad3.setColorBackground(green);
     quad4.setColorBackground(green);
+  }
+
+  if (debug) {
+    print("9 ");
+    println(millis() - timestamp);
+    timestamp = millis();
   }
 
   //controls button pop up behavior
@@ -204,6 +253,12 @@ void draw() {
     sendFloat(waveMaker.gamma, port1);    //gamma always needs to be the last sent
   }
 
+  if (debug) {
+    print("10 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
+
   if (!dueConnected) {
     //do nothing
   } else if (wec.mode == 1 && torque.getValue() != wec.mag) {  //only sends if value has changed  
@@ -232,15 +287,29 @@ void draw() {
     sendFloat(wec.gamma, port2);    //gamma always needs to be the last sent
   }
 
+  if (debug) {
+    print("11 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
+
   /////FFT section(move to fft tab eventually):  //!!needs to be activated and deactivated(maybe)
   if (millis() > previousMillis+fftInterval) {
     previousMillis = millis();
     updateFFT();
   }
   drawFFT();
-  thread("readMegaSerial");    //will run this funciton in parallel thread
-  thread("readDueSerial");
-  thread("logData");
+  if (initialized) {
+    thread("readMegaSerial");    //will run this funciton in parallel thread
+    thread("readDueSerial");
+    thread("logData");
+  }
+  if (debug) {
+    print("12 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
+  //debug = false;
 }
 void updateFFT() {
   Complex[] fftIn = new Complex[queueSize];

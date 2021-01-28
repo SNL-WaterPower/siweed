@@ -4,26 +4,32 @@ boolean megaConnected, dueConnected;
 void initializeSerial() {
   ///////////initialize Serial
 
-  printArray(Serial.list()); 
-  for (int i = 0; i < Serial.list().length; i++) {
+  printArray(Serial.list());     //for debugging, shows all attached devices
+  if (debug) println("mega Serial:");
+  for (int i = 0; i < Serial.list().length; i++) {    //tries each device
     if (!megaConnected) {
       try {
-        port1 = new Serial(this, Serial.list()[i], 250000); // all communication with Megas
+        if (debug) println("trying port"+i);
+        port1 = new Serial(this, Serial.list()[i], 250000); //attempts to connect
         megaConnected = true;
       }
       catch(Exception e) {
         megaConnected = false;
+        if (debug) println("exception caught");
       }
-      if (megaConnected) {
-        delay(2000);
+      if (megaConnected) {    //if the device successfully connected
+        delay(2000);          //wait for connection to stabilize
+        if (debug) println("testing mega serial");
         readMegaSerial();    //reads serial buffer and sets bool true if recieving normal results
+        if (debug) println("finished testing mega serial");
         if (megaUnitTests[0]) {
           //correct board found
         } else {
-          megaConnected = false;
+          megaConnected = false;    //if not found, keep testing
         }
       }
     }
+    if (debug) println("Due Serial");
     if (!dueConnected) {
       try {
         port2 = new Serial(this, Serial.list()[i], 250000); // all communication with Due
@@ -34,6 +40,7 @@ void initializeSerial() {
       }
       if (dueConnected) {
         delay(2000);
+        if (debug) println("testing Due Serial");
         readDueSerial();    //reads serial buffer and sets bool true if recieving normal results
         if (dueUnitTests[0]) {
           //correct board found
@@ -45,22 +52,24 @@ void initializeSerial() {
   }
   /*
   try {
-    port1 = new Serial(this, Serial.list()[1], 250000); // all communication with Megas
-    megaConnected = true;
-  }
-  catch(Exception e) {
-    megaConnected = false;
-  }
-  try {
-    port2 = new Serial(this, Serial.list()[2], 250000); // all communication with Due
-    dueConnected = true;
-  }
-  catch(Exception e) {
-    dueConnected = false;
-  }
-  delay(2000);
-  */
+   port1 = new Serial(this, Serial.list()[1], 250000); // all communication with Megas
+   megaConnected = true;
+   }
+   catch(Exception e) {
+   megaConnected = false;
+   }
+   try {
+   port2 = new Serial(this, Serial.list()[2], 250000); // all communication with Due
+   dueConnected = true;
+   }
+   catch(Exception e) {
+   dueConnected = false;
+   }
+   delay(2000);
+   */
   //initialize the modes on the arduinos:
+  //print("modes");
+
   if (megaConnected) {
     port1.write('!');
     sendFloat(0, port1);    //jog mode
@@ -95,21 +104,9 @@ void sendFloat(float f, Serial port)
    
    EDIT: numbers are now in this format:  p1234>  has a scalar of 100, so no decimal, and no start char
    */
-  int i = (int)(f*100);    //convert to int(so decimal place does not need to be sent)
-  if (i == 0) {              //zero breaks this method, since 0*100 is still 0
-    port.write("+000>");
-    return;
-  }
-  String posStr = "";    //starts the string
-  if (f >= 0) {
-    posStr = posStr.concat("+");
-  } else {
-    posStr = posStr.concat("-");
-  }
-  posStr = posStr.concat(Integer.toString(abs(i)));
-  posStr = posStr.concat(">");    //end of string "keychar"
-  port.write(posStr);
-  //println(posStr);
+  byte[] byteArray = floatToByteArray(f);
+
+  port.write(byteArray);
 }
 void readMegaSerial() {
   /*
@@ -119,39 +116,38 @@ void readMegaSerial() {
    p:position
    d:other data for debugging
    */
-  while (megaConnected && port1.available() > 0) {    //recieves until buffer is empty. Since it runs 30 times a second, the arduino will send many samples per execution.
-    switch(port1.readChar()) {
-    case '1':
-      probe1 = readFloat(port1);
-      if (waveElClicked == true) {
-        waveChart.push("waveElevation", probe1);
+  if (megaConnected) {
+    for (int i = 0; i <port1.available()/20; i++) {    //runs as many times to empty the buffer(bytes availible/ bytes read per loop). Since it runs 30 times a second, the arduino will send many samples per execution.
+      switch(port1.readChar()) {
+      case '1':
+        probe1 = readFloat(port1);
+        if (waveElClicked == true) {
+          waveChart.push("waveElevation", probe1);
+        }
+        break;
+      case '2':
+        probe2 = readFloat(port1);
+        break;
+      case 'p':
+        waveMakerPos = readFloat(port1);
+        if (wavePosClicked == true) {
+          waveChart.push("waveMakerPosition", waveMakerPos);
+        }
+        break;
+      case 'd':
+        megaUnitTests[0] = true;      //for unit testing and acquiring serial.
+        debugData = readFloat(port1);
+        waveChart.push("debug", debugData);
+        if (waveMaker.mode == 3||waveMaker.mode == 2) fftList.add(debugData);      //adds to the tail if in the right mode
+        if (fftList.size() > queueSize) fftList.remove();          //removes from the head
+        break;
+      case 'u':
+        int testNum = (int)readFloat(port1);    //indicates which jonswap test passed(1 or 2). Negative means that test failed.
+        if (testNum > 0) {    //only changes if test was passed
+          megaUnitTests[testNum] = true;
+        }
+        break;
       }
-      break;
-    case '2':
-      probe2 = readFloat(port1);
-      break;
-    case 'p':
-      waveMakerPos = readFloat(port1);
-      if (wavePosClicked == true) {
-        waveChart.push("waveMakerPosition", waveMakerPos);
-      }
-      break;
-    case 'd':
-      megaUnitTests[0] = true;      //for unit testing;
-      debugData = readFloat(port1);
-      waveChart.push("debug", debugData);
-      if (waveMaker.mode == 3||waveMaker.mode == 2) fftList.add(debugData);      //adds to the tail if in the right mode
-      if (fftList.size() > queueSize)
-      {
-        fftList.remove();          //removes from the head
-      }
-      break;
-    case 'u':
-      int testNum = (int)readFloat(port1);    //indicates which jonswap test passed(1 or 2). Negative means that test failed.
-      if (testNum > 0) {    //only changes if test was passed
-        megaUnitTests[testNum] = true;
-      }
-      break;
     }
   }
 }
@@ -163,56 +159,67 @@ void readDueSerial() {
    p: power
    v: velocity
    */
-  while (dueConnected && port2.available() > 0)
-  {
-    switch(port2.readChar()) {
-    case 'e':
-      wecPos = readFloat(port2);
-      //wec data
-      if (wecPosClicked == true) {
-        wecChart.push("wecPosition", wecPos);
+  if (dueConnected) {
+    for (int i = 0; i <port2.available()/20; i++) {    //runs as many times to empty the buffer(bytes availible/ bytes read per loop). Since it runs 30 times a second, the arduino will send many samples per execution.
+      switch(port2.readChar()) {
+      case 'e':
+        wecPos = readFloat(port2);
+        //wec data
+        if (wecPosClicked == true) {
+          wecChart.push("wecPosition", wecPos);
+        }
+        break;
+      case 't':
+        tau = readFloat(port2);
+        if (wecTorqClicked == true) {
+          wecChart.push("wecTorque", tau);
+        }
+        break;
+      case 'p':
+        dueUnitTests[0] = true;
+        pow = readFloat(port2);
+        if (wecPowClicked == true) {
+          wecChart.push("wecPower", pow);
+        }
+        break;
+      case 'v':
+        wecVel = readFloat(port2);
+        if (wecVelClicked == true) {
+          wecChart.push("wecVelocity", wecVel);
+        }      
+        break;
+      case 'u':
+        int testNum = (int)readFloat(port2);    //indicates which jonswap test passed(1 or 2)
+        if (testNum > 0) {    //only changes if test was passed
+          dueUnitTests[testNum] = true;
+        }   
+        break;
       }
-      break;
-    case 't':
-      tau = readFloat(port2);
-      if (wecTorqClicked == true) {
-        wecChart.push("wecTorque", tau);
-      }
-      break;
-    case 'p':
-      dueUnitTests[0] = true;
-      pow = readFloat(port2);
-      if (wecPowClicked == true) {
-        wecChart.push("wecPower", pow);
-      }
-      break;
-    case 'v':
-      wecVel = readFloat(port2);
-      if (wecVelClicked == true) {
-        wecChart.push("wecVelocity", wecVel);
-      }      
-      break;
-    case 'u':
-      int testNum = (int)readFloat(port2);    //indicates which jonswap test passed(1 or 2)
-      if (testNum > 0) {    //only changes if test was passed
-        dueUnitTests[testNum] = true;
-      }   
-      break;
     }
   }
 }
 float readFloat(Serial port) {
-  waitForSerial(port);
-  String str = "";    //port.readStringUntil('>');
-  do {
-    waitForSerial(port);
-    str += port.readChar();
-  } while (str.charAt(str.length()-1) != '>');
-  str = str.substring(0, str.length()-1);    //removes the '>'
-  return float(str)/100.0;
-}
-void waitForSerial(Serial port) {
-  while (port.available() < 1) {    //wait for port to not be empty
+  while (port.available() <= 4) {    //wait for full array to be in buffer
     delay(1);    //give serial some time to come through
-  }
+  }  
+  byte[] byteArray = new byte[4];
+  //for (int i = 0; i < 4; i++) {
+  //inBuffer = myPort.readBytes();
+  port.readBytes(byteArray);
+  //}
+  //float f = ByteBuffer.wrap(byteArray).getFloat();
+  float f = byteArrayToFloat(byteArray);
+  //println(f);
+  return f;
+}
+
+public static byte[] floatToByteArray(float value) {
+  int intBits =  Float.floatToIntBits(value);
+  return new byte[] {
+    (byte) (intBits >> 24), (byte) (intBits >> 16), (byte) (intBits >> 8), (byte) (intBits) };
+}
+public static float byteArrayToFloat(byte[] bytes) {
+  int intBits = 
+    bytes[0] << 24 | (bytes[1] & 0xFF) << 16 | (bytes[2] & 0xFF) << 8 | (bytes[3] & 0xFF);
+  return Float.intBitsToFloat(intBits);
 }
