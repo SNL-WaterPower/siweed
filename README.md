@@ -5,6 +5,7 @@
 * [Getting Started](#getting-started)
   * [Prerequisites](#prerequisites)
   * [Installation](#installation)
+  *	[Running the GUI](#running-the-gui)
 * [System Layout](#System-layout)
 * [System Specifications](#System-Specifications)
 * [Roadmap](#roadmap)
@@ -56,18 +57,27 @@ Ex: C:\Users\user\Documents\GitHub\siweed\Processing
 ```
 This can be found at Tools > Board > Arduino Mega or Mega 2560
 ```
+NOTE: When programming the Arduino DUE board, make sure to change the selected board to: Arduino DUE (Progamming Port).
+Also, make sure that the microUSB is plugged into the programming port of the DUE
+<!-- Running the GUI -->
+### Running the GUI
+1. Open processing.exe 
+2. File > Open > siweedGUI.pde (Ex: Ex: C:\Users\user\Documents\GitHub\siweed\Processing\siWeedGUI\siweedGUI.pde)
+3. Click "Run"
+4. The GUI will open, allow some time for it to load. 
+
 <!-- System layout -->
 ## System layout
 SIWEED uses a PC to control two Arduinos: (1) an Arduino Mega to run the wavemaker and (2) an Arduino Due to run the WEC.
 A detailed illustration of the system layout is shown in the diagram below.
 
-![system layout](documentation/diagrams/systemLayoutPNG.png)
+![system layout](https://github.com/SNL-WaterPower/siweed/blob/develop/documentation/diagrams/systemLayoutPNG.png)
 <!-- System Specifications -->
 ## System specifications
  - Tank
  	- 3/4 inch acrylic tank
  	- Inner dimension: 1.5m x 0.3m x 0.5m (filled to ~0.3m deep)
- 	- Mass of water: 135 kg (~300lbs)
+ 	- Mass of water: 135 kg (~300lbs
  	- Mass of dry tank: ?
  	- Volume: 135 L (~36 gal)
  - WEC: 

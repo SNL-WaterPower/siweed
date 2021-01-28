@@ -1,4 +1,5 @@
-boolean[] megaUnitTests = {false, false, false};      //serial, jonswap amplitude array, jonswap timeSeries
+
+boolean[] megaUnitTests = {false, false, false, false};      //serial, jonswap amplitude array, jonswap timeSeries, encoder buffer
 boolean[] dueUnitTests = {false, false, false};
 void unitTests() {
   /////////////FFT:
@@ -67,6 +68,11 @@ void unitTests() {
     println("Mega Jonswap TimeSeries Test PASSED");
   } else {    
     println("Mega Jonswap TimeSeries Test FAILED");
+  }
+  if (megaUnitTests[3]) {
+    println("Mega Encoder Buffer Test PASSED");
+  } else {    
+    println("Mega Encoder Buffer Test FAILED");
   }
   ////////////verify due jonswap:
   readDueSerial();    //clear buffer
