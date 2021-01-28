@@ -83,7 +83,7 @@ volatile void sendFloat(volatile float f) {
   }
 }
 
-vvolatile void float2bin(volatile float target, volatile byte *byteArray) {
+volatile void float2bin(volatile float target, volatile byte *byteArray) {
   volatile uint32_t temp32;
   temp32 = (uint32_t)(*(uint32_t*)&target);
   for (volatile int i = 0; i < 4; i++) {

@@ -41,7 +41,7 @@ void readSerial() {
         peakF = readFloat();
         break;
       case 'g':     //should always be recieved after s and p
-        gamma = readFloat();
+        gam = readFloat();
         newJonswapData = true;
         break;
       case 'u':

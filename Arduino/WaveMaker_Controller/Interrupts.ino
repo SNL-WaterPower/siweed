@@ -77,7 +77,7 @@ ISR(TIMER5_COMPA_vect) {   //takes ___ milliseconds
   sendFloat(averageArray(probe2Buffer));
   Serial.write('p');    //to indicate position
   //Serial.print(encPos);
-  sendFloat(encPos);
+  sendFloat(encPos());
   Serial.write('d');    //to indicate alternate data
   float lerpVal = lerp(prevVal, futurePos, (interval * 1.0e6) / (sampleT - prevSampleT)); //linear interpolate(initial value, final value, percentatge)//percentage is desired interval/actual interval
   sendFloat(lerpVal);
