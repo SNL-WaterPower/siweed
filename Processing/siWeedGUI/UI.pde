@@ -10,6 +10,7 @@ Button wavePosData, waveElData, wecPosData, wecVelData, wecTorqData, wecPowData;
 Button quad1, quad2, quad3, quad4; // power bar
 Textarea wecText, waveText;
 // Custom colors
+color white = color(255,255,255);
 color green = color(190, 214, 48);
 color turq = color(0, 173, 208);
 color dblue = color(0, 83, 118);
@@ -20,7 +21,7 @@ color grey = color(180, 190, 191);
 // Fonts
 PFont f; // Regular font
 PFont fb; // Bold font
-PFont buttonFont, sliderFont, textBoxFont; 
+PFont buttonFont, sliderFont,titleTextBoxFont, headerTextBoxFont, textBoxFont; 
 
 
 // Sandia logo
@@ -33,9 +34,11 @@ void initializeUI() {
   //Fonts
     f = createFont("Arial", 16, true);
   fb = createFont("Arial Bold Italic", 32, true);
+  titleTextBoxFont = buttonFont = createFont("Arial Bold Italic", 40, true);
   buttonFont = createFont("Arial Bold Italic", 12, true);
   sliderFont = createFont("Arial Bold Italic",12,true);
-  textBoxFont = createFont("Arial Bold",25,false);
+  headerTextBoxFont = createFont("Arial Bold",25,false);
+  textBoxFont = createFont("Arial Bold Italic",20,true);
 
   // Buttons //
   //1387

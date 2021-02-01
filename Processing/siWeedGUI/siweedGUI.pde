@@ -34,7 +34,7 @@ void setup() {
   ////////
   frameRate(32);    //sets draw() to run x times a second.
   ///////initialize objects
-  size(1920, 1200, P2D);
+  size(1920, 1100, P2D); //need this for the touch screen
   surface.setTitle("SIWEED");
   waveMaker = new UIData();
   wec = new UIData();
@@ -104,11 +104,11 @@ void draw() {
   image(snlLogo, width-snlLogo.width*0.25-5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25); //Logo
   rect(0, 0, width, 95); // Top Banner
   //banner text
-  fill(green);
+ // fill(green);
   //text("Sandia Interactive Wave Energy Educational Display (SIWEED)", width/2, 30);
-  fill(255, 255, 255);
-  textSize(12);
-  textLeading(14);
+  //fill(255, 255, 255);
+  //textSize(12);
+ // textLeading(14);
   text(fundingState, width/2, 1150);
   
   
@@ -116,7 +116,7 @@ void draw() {
     myTextarea = cp5.addTextarea("txt")
                   .setPosition(width/6,height/45)
                   .setSize(2000,90)
-                  .setFont(textBoxFont)
+                  .setFont(titleTextBoxFont)
                   .setLineHeight(14)
                   .setColor(color(green)) 
                   //.setColorBackground(color(255,100))
@@ -145,7 +145,7 @@ void draw() {
     myTextarea = cp5.addTextarea("txt")
                   .setPosition(35, 155)
                   .setSize(225,75)
-                  .setFont(textBoxFont)
+                  .setFont(headerTextBoxFont)
                   .setLineHeight(7)
                   .setColor(color(buttonblue)) // need to find the correct color for this
                  // .setColorBackground(color(255,100))
@@ -165,9 +165,22 @@ void draw() {
   rect(805, 225, 550, 225, 7); // explainer box
   rect(805, 475, 550, 575, 7); //graph background
   rect(1387, 610, 480, 440, 7); //FFT background 
+  
   fill(255, 255, 255);
-  textFont(fb, 20);
-  text(welcome, 810, 250);
+  //textFont(fb, 20);
+  //text(welcome, 810, 250);
+  
+      cp5 = new ControlP5(this);
+    myTextarea = cp5.addTextarea("txt")
+                  .setPosition(810, 250)
+                  .setSize(2250,7500)
+                  .setFont(textBoxFont)
+                  .setLineHeight(29)
+                  .setColor(color(white)) // need to find the correct color for this
+                  //.setColorBackground(color(255,100))
+                  .setColorForeground(color(255,100));
+                  
+     myTextarea.setText(welcome);
   
   //System Status Text
   /* old textbox
@@ -183,26 +196,53 @@ void draw() {
     myTextarea = cp5.addTextarea("txt")
                   .setPosition(795, 155)
                   .setSize(225,75)
-                  .setFont(textBoxFont)
+                  .setFont(headerTextBoxFont)
                   .setLineHeight(7)
                   .setColor(color(buttonblue)) // need to find the correct color for this
                  // .setColorBackground(color(255,100))
                   .setColorForeground(color(255,100));
                   
      myTextarea.setText("System Status");
-
+     
+/* old Textbox 
   textFont(fb, 20);
   fill(255, 255, 255);
   textLeading(15);
   textAlign(LEFT, TOP);
   text("Change Wave Dimensions", 45, 220);
-
+  */
+  
+  //new controlp5 textbox
+    cp5 = new ControlP5(this);
+    myTextarea = cp5.addTextarea("txt")
+                  .setPosition(45, 220)
+                  .setSize(300,100)
+                  .setFont(textBoxFont)
+                  .setLineHeight(10)
+                  .setColor(color(white)) // need to find the correct color for this
+                 // .setColorBackground(color(255,100))
+                  .setColorForeground(color(255,100));
+                  
+     myTextarea.setText("Change Wave Dimensions");
+/* old Textbox 
   textFont(fb, 20); 
   fill(255, 255, 255);
   textLeading(15);
   textAlign(LEFT, TOP);
   text("Change WEC Controls", 45, 620);
-
+ */
+  //new controlp5 textbox
+    cp5 = new ControlP5(this);
+    myTextarea = cp5.addTextarea("txt")
+                  .setPosition(45, 620)
+                  .setSize(300,100)
+                  .setFont(textBoxFont)
+                  .setLineHeight(10)
+                  .setColor(color(white)) // need to find the correct color for this
+                 // .setColorBackground(color(255,100))
+                  .setColorForeground(color(255,100));
+                  
+     myTextarea.setText("Change WEC Controls");
   //meter
 
   m.updateMeter((int)(100*pow));
