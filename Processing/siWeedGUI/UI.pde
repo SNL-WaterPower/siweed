@@ -20,7 +20,9 @@ color grey = color(180, 190, 191);
 // Fonts
 PFont f; // Regular font
 PFont fb; // Bold font
-PFont buttonFont;
+PFont buttonFont, sliderFont; 
+
+
 // Sandia logo
 PImage snlLogo;
 PImage wavePic;
@@ -32,6 +34,7 @@ void initializeUI() {
     f = createFont("Arial", 16, true);
   fb = createFont("Arial Bold Italic", 32, true);
   buttonFont = createFont("Arial Bold Italic", 12, true);
+  sliderFont = createFont("Arial Bold Italic",12,true);
 
   // Buttons //
   //1387
@@ -192,6 +195,7 @@ void initializeUI() {
   position = cp5.addSlider("Position (CM)")  //name slider
     .setRange(-10, 10) //slider range
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
+    .setFont(sliderFont)
     .setSize(450, 50); //size (width, height)
 
   // Motor Function Mode Sliders
@@ -199,12 +203,14 @@ void initializeUI() {
     .setRange(0, 10) //slider range
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setSize(450, 50)
+    .setFont(sliderFont)
     .hide(); //size (width, height)
 
   freq = cp5.addSlider("Frequency (Hz)")  //name of button
     .setRange(0, 4)
     .setPosition(sliderX, sliderY + 100) //x and y coordinates of upper left corner of button
     .setSize(450, 50)
+    .setFont(sliderFont)
     .hide(); //size (width, height)
 
 
@@ -213,18 +219,21 @@ void initializeUI() {
     .setRange(0, 10) //slider range
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setSize(450, 50)
+    .setFont(sliderFont)
     .hide(); //size (width, height)
 
   peakF = cp5.addSlider("Peak Frequency (Hz)")  //name of button
     .setRange(0, 4)
     .setPosition(sliderX, sliderY + 100) //x and y coordinates of upper left corner of button
     .setSize(450, 50)
+    .setFont(sliderFont)
     .hide(); //size (width, height)
 
   gamma = cp5.addSlider("Peakedness")  //name of button
     .setRange(0, 7)
     .setPosition(sliderX, sliderY + 200) //x and y coordinates of upper left corner of button
     .setSize(450, 50)
+    .setFont(sliderFont)
     .hide(); //size (width, height)
 
   sliderY = buttonY + 65 + 50 ; //button y coordinate + button size + 50 (offset)
@@ -232,18 +241,21 @@ void initializeUI() {
   // WEC Torque Sliders
   torqueSlider = cp5.addSlider("Torque")  //name of button
     .setRange(0, 0.5)
+    .setFont(sliderFont)
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setSize(450, 50); //size (width, height)
 
   // WEC Feedback Sliders   
   pGain = cp5.addSlider("P Gain")  //name of button
     .setRange(0, 0.5)
+    .setFont(sliderFont)
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setSize(450, 50) //size (width, height)
     .hide();
 
   dGain = cp5.addSlider("D Gain")  //name of button
     .setRange(0, 0.5)
+    .setFont(sliderFont)
     .setPosition(sliderX, sliderY + 100) //x and y coordinates of upper left corner of button
     .setSize(450, 50) //size (width, height)
     .hide();
@@ -252,18 +264,21 @@ void initializeUI() {
 
   sigHWEC = cp5.addSlider("WEC Significant Height (CM)")  //name of button
     .setRange(0, 0.5)
+    .setFont(sliderFont)
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setSize(450, 50) //size (width, height)
     .hide();
 
   peakFWEC = cp5.addSlider("WEC Peak Frequency (Hz)")  //name of button
     .setRange(0, 0.5)
+    .setFont(sliderFont)
     .setPosition(sliderX, sliderY + 100) //x and y coordinates of upper left corner of button
     .setSize(450, 50) //size (width, height)
     .hide();
 
   gammaWEC = cp5.addSlider("WEC Peakedness)")  //name of button
     .setRange(0, 0.5)
+    .setFont(sliderFont)
     .setPosition(sliderX, sliderY + 200) //x and y coordinates of upper left corner of button
     .setSize(450, 50) //size (width, height)
     .hide();
@@ -296,6 +311,7 @@ void initializeUI() {
 
   // Charts //
   waveChart =  cp5.addChart("Wave Information")
+    .setFont(sliderFont)
     .setPosition(830, 540)
     .setSize(500, 175)
     .setRange(-10, 10)
@@ -309,6 +325,7 @@ void initializeUI() {
   waveChart.setData("debug", new float[360]);
   
   wecChart =  cp5.addChart("WEC Information")
+    .setFont(sliderFont)
     .setPosition(830, 795)
     .setSize(500, 175)
     .setRange(-10, 10)
