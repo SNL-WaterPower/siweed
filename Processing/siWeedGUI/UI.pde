@@ -69,15 +69,15 @@ void initializeUI() {
 
 
   int qX, qY;
-  qX = 300;
-  qY = 210;
+  qX = 295;
+  qY = 215;
   waveQs = cp5.addButton("waveQs")
     .setPosition(qX, qY)
     .setSize(15, 15)
     .setLabel("?");
 
   wecQs = cp5.addButton("wecQs")
-    .setPosition(qX - 45, qY + 410)
+    .setPosition(qX - 35, qY + 400)
     .setSize(15, 15)
     .setLabel("?");
 
