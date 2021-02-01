@@ -20,7 +20,7 @@ color grey = color(180, 190, 191);
 // Fonts
 PFont f; // Regular font
 PFont fb; // Bold font
-PFont buttonFont, sliderFont; 
+PFont buttonFont, sliderFont, textBoxFont; 
 
 
 // Sandia logo
@@ -35,6 +35,7 @@ void initializeUI() {
   fb = createFont("Arial Bold Italic", 32, true);
   buttonFont = createFont("Arial Bold Italic", 12, true);
   sliderFont = createFont("Arial Bold Italic",12,true);
+  textBoxFont = createFont("Arial Bold",25,false);
 
   // Buttons //
   //1387

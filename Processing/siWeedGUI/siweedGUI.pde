@@ -116,7 +116,7 @@ void draw() {
     myTextarea = cp5.addTextarea("txt")
                   .setPosition(width/6,height/45)
                   .setSize(2000,90)
-                  .setFont(createFont("Arial Bold Italic",45))
+                  .setFont(textBoxFont)
                   .setLineHeight(14)
                   .setColor(color(green)) 
                   //.setColorBackground(color(255,100))
@@ -145,7 +145,7 @@ void draw() {
     myTextarea = cp5.addTextarea("txt")
                   .setPosition(35, 155)
                   .setSize(225,75)
-                  .setFont(createFont("Arial Bold Italic" ,25))
+                  .setFont(textBoxFont)
                   .setLineHeight(7)
                   .setColor(color(buttonblue)) // need to find the correct color for this
                  // .setColorBackground(color(255,100))
@@ -168,14 +168,28 @@ void draw() {
   fill(255, 255, 255);
   textFont(fb, 20);
   text(welcome, 810, 250);
+  
   //System Status Text
+  /* old textbox
   textFont(fb, 25);
   fill(buttonblue);
   textLeading(15);
   textAlign(LEFT, TOP);
   stroke(buttonblue);
   text("System Status", 795, 155);
-  stroke(green);
+  stroke(green);*/
+  //New System Status controlP5 Textbox
+    cp5 = new ControlP5(this);
+    myTextarea = cp5.addTextarea("txt")
+                  .setPosition(795, 155)
+                  .setSize(225,75)
+                  .setFont(textBoxFont)
+                  .setLineHeight(7)
+                  .setColor(color(buttonblue)) // need to find the correct color for this
+                 // .setColorBackground(color(255,100))
+                  .setColorForeground(color(255,100));
+                  
+     myTextarea.setText("System Status");
 
   textFont(fb, 20);
   fill(255, 255, 255);
