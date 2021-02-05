@@ -8,6 +8,7 @@ Button jog, function, sea, off, offWEC, torque, feedback, seaWEC; // mode button
 Button wecQs, waveQs; // popup buttons
 Button wavePosData, waveElData, wecPosData, wecVelData, wecTorqData, wecPowData;
 Button quad1, quad2, quad3, quad4; // power bar
+Button consoleButton;
 Textarea wecText, waveText;
 // Custom colors
 color white = color(255,255,255);
@@ -42,6 +43,14 @@ void initializeUI() {
 
   // Buttons //
   //1387
+  
+    consoleButton = cp5.addButton("Console")
+    .setPosition(1390, 610)
+    .setSize(100, 50)
+    .setLabel("Console")
+    .setColorBackground(grey)
+    .setFont(buttonFont); 
+
   int powerX, powerY;
   powerX = 1425;
   powerY = 500;
@@ -111,6 +120,7 @@ void initializeUI() {
     .setSize(150, 65)
     .setLabel("OFF")
     .setFont(buttonFont); 
+    
 
   buttonY = 660;
 
@@ -351,7 +361,11 @@ void initializeUI() {
 }
 //button functions:
 /////////////////// MAKES BUTTONS DO THINGS ////////////////////////////////////
-
+// Console Button
+void consoleFunction(){
+  consoleFunction.setColorBackground(hoverblue);
+  function.setColorBackground(buttonblue);
+}
 // Motor Buttons 
 
 void jog() {
@@ -366,7 +380,7 @@ void jog() {
   peakF.hide();
   gamma.hide();
   position.show();
-  println("hello world!");
+ 
   //set mode on arduino:
   if (megaConnected) {
     port1.write('!');

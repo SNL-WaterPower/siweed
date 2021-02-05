@@ -69,11 +69,11 @@ void setup() {
   //console, this needs to be in the setup to ensure
   //that 
     Output=cp5.addTextarea("Output")
-    .setPosition(1460, 610) 
+    .setPosition(1460,710) 
       .setSize(330, 430)
         .setLineHeight(14)
-          .setColorBackground(color(55,100))
-            .setColorForeground(color(255,100))
+        //  .setColorBackground(color(100,100))
+           // .setColorForeground(color(255,100))
               .scroll(1);
     console = cp5.addConsole(Output);
 }
