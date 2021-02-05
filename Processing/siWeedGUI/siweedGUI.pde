@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 
+
 //ControlP5 cp5;
 
 Textarea myTextarea;
@@ -14,7 +15,6 @@ Println console; //Needed for GUI console to work
 Textarea consoleOutput; //Needed for GUI console to work
 
 boolean debug = false;    //for debug print statements
-
 
 int queueSize = 512;    //power of 2 closest to 30(15) seconds at 32 samples/second    !!Needs to match arduino
 LinkedList fftList;
@@ -131,8 +131,6 @@ void draw() {
         //setColorBackground(color(255,100))
         .setColorForeground(color(255,100));
     myTextarea.setText("Sandia Interactive Wave Energy Educational Display (SIWEED)");
-    
-
 
   if (debug) {
     print("3 ");
@@ -171,6 +169,12 @@ void draw() {
     timestamp = millis();
   }
 
+  if (debug) {
+    print("4 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
+
   // System Status
   fill(turq, 150);
   stroke(buttonblue, 150);
@@ -185,6 +189,7 @@ void draw() {
   rect(1387, 610, 480, 440, 7); //FFT background 
   
   fill(255, 255, 255);
+
 
  
   cp5 = new ControlP5(this);
@@ -234,6 +239,29 @@ void draw() {
                   .setColorForeground(color(255,100));              
      myTextarea.setText("Change WEC Controls");
      
+
+
+  if (debug) {
+    print("5 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
+
+
+  if (debug) {
+    print("6 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
+
+
+  if (debug) {
+    print("7 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
+
+  //meter
 
 
   if (debug) {

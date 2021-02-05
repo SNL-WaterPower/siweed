@@ -453,12 +453,13 @@ void off() {
   sea.setColorBackground(buttonblue);
   off.setColorBackground(hoverblue);
   waveMaker.mode = 4;
-  h.setValue(0);
-  freq.setValue(0);
-  sigH.setValue(0);
-  peakF.setValue(0); 
-  gamma.setValue(0);
-  position.setValue(0);
+  h.hide();
+  freq.hide();
+  h.hide();
+  position.hide();
+  sigH.hide();
+  peakF.hide();
+  gamma.hide();
   //set mode on arduino:
   if (megaConnected) {
     port1.write('!');
@@ -532,12 +533,12 @@ void offWEC() {
   seaWEC.setColorBackground(buttonblue);
   offWEC.setColorBackground(hoverblue);
   wec.mode = 4; 
-  torqueSlider.setValue(0);
-  pGain.setValue(0);
-  dGain.setValue(0);
-  sigHWEC.setValue(0);
-  peakFWEC.setValue(0);
-  gammaWEC.setValue(0);
+  torqueSlider.hide();    //hides all sliders
+  pGain.hide();
+  dGain.hide();
+  sigHWEC.hide();
+  peakFWEC.hide();
+  gammaWEC.hide();
   if (dueConnected) {
     port2.write('!');
     sendFloat(-1, port2);
