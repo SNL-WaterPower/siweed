@@ -5,12 +5,16 @@ import java.lang.Math.*;
 import java.util.LinkedList;
 import java.util.Queue;
 
+
 //ControlP5 cp5;
 
 Textarea myTextarea;
 
 Println console; //Needed for GUI console to work
 Textarea consoleOutput; //Needed for GUI console to work
+
+boolean debug = true;    //for debug print statements
+
 
 int queueSize = 512;    //power of 2 closest to 30(15) seconds at 32 samples/second    !!Needs to match arduino
 LinkedList fftList;
@@ -65,7 +69,7 @@ void setup() {
   //that it catches any errors when program starts
   consoleOutput=cp5.addTextarea("consoleOutput")
     .setPosition(1460,710) 
-    .setSize(330, 430)
+    .setSize(330, 300)
     .setLineHeight(14)
     .setColorValue(green) //color of font
     //  .setColorBackground(color(100,100))
@@ -81,10 +85,16 @@ public void settings() {
  }*/
  
 boolean initialized = false;
+int timestamp = 0;   //for debuging
 void draw() {
   if (!initialized) {
-    initializeSerial();    //has a 2 second delay
+    initializeSerial();    //has a 2+ second delay
     unitTests();
+    if (debug) {
+      print("1 ");
+      println(millis() - timestamp);
+      timestamp = millis();
+    }
     initialized = true;
   }
   
@@ -95,6 +105,12 @@ void draw() {
   fill(green);
   textLeading(15);
   textAlign(CENTER, TOP);
+
+  if (debug) {
+    print("2 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
 
   image(wavePic, 0, 0, width, height); //background
   fill(buttonblue);
@@ -118,6 +134,11 @@ void draw() {
     
 
 
+  if (debug) {
+    print("3 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
   //Mission Control
   fill(turq, 150);
   stroke(buttonblue, 150);
@@ -144,6 +165,12 @@ void draw() {
                   .setColorForeground(color(255,100));        
      myTextarea.setText("Mission Control");
 
+  if (debug) {
+    print("4 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
+
   // System Status
   fill(turq, 150);
   stroke(buttonblue, 150);
@@ -158,6 +185,7 @@ void draw() {
   rect(1387, 610, 480, 440, 7); //FFT background 
   
   fill(255, 255, 255);
+
  
   cp5 = new ControlP5(this);
   myTextarea = cp5.addTextarea("txt")
@@ -206,6 +234,26 @@ void draw() {
                   .setColorForeground(color(255,100));              
      myTextarea.setText("Change WEC Controls");
      
+
+
+  if (debug) {
+    print("5 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
+
+  if (debug) {
+    print("6 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
+
+  if (debug) {
+    print("7 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
+
   //meter
   m.updateMeter((int)(100*pow));
   // Use a delay to see the changes.
@@ -227,6 +275,12 @@ void draw() {
     quad2.setColorBackground(green);
     quad3.setColorBackground(green);
     quad4.setColorBackground(green);
+  }
+
+  if (debug) {
+    print("9 ");
+    println(millis() - timestamp);
+    timestamp = millis();
   }
 
   //controls button pop up behavior
@@ -266,6 +320,12 @@ void draw() {
     sendFloat(waveMaker.gamma, port1);    //gamma always needs to be the last sent
   }
 
+  if (debug) {
+    print("10 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
+
   if (!dueConnected) {
     //do nothing
   } else if (wec.mode == 1 && torque.getValue() != wec.mag) {  //only sends if value has changed  
@@ -294,15 +354,29 @@ void draw() {
     sendFloat(wec.gamma, port2);    //gamma always needs to be the last sent
   }
 
+  if (debug) {
+    print("11 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
+
   /////FFT section(move to fft tab eventually):  //!!needs to be activated and deactivated(maybe)
   if (millis() > previousMillis+fftInterval) {
     previousMillis = millis();
     updateFFT();
   }
   drawFFT();
-  thread("readMegaSerial");    //will run this funciton in parallel thread
-  thread("readDueSerial");
-  thread("logData");
+  if (initialized) {
+    thread("readMegaSerial");    //will run this funciton in parallel thread
+    thread("readDueSerial");
+    thread("logData");
+  }
+  if (debug) {
+    print("12 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
+  //debug = false;
 }
 void updateFFT() {
   Complex[] fftIn = new Complex[queueSize];
