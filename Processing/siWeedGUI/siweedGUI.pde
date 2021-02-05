@@ -11,7 +11,7 @@ import java.util.Queue;
 Textarea myTextarea;
 
 Println console; //Needed for GUI console to work
-Textarea Output; //Needed for GUI console to work
+Textarea consoleOutput; //Needed for GUI console to work
 
 int queueSize = 512;    //power of 2 closest to 30(15) seconds at 32 samples/second    !!Needs to match arduino
 LinkedList fftList;
@@ -20,6 +20,7 @@ float[] fftArr;
 
 int previousMillis = 0;    //used to update fft 
 int fftInterval = 100;    //in milliseconds
+int test = 0;
 
 ///test vars:
 /*
@@ -67,15 +68,19 @@ void setup() {
   //maxIn = m.getMaxInputSignal();
   
   //console, this needs to be in the setup to ensure
-  //that 
-    Output=cp5.addTextarea("Output")
+  //that it catches any errors when program starts
+    consoleOutput=cp5.addTextarea("consoleOutput")
     .setPosition(1460,710) 
       .setSize(330, 430)
         .setLineHeight(14)
-        //  .setColorBackground(color(100,100))
-           // .setColorForeground(color(255,100))
-              .scroll(1);
-    console = cp5.addConsole(Output);
+        .setColorValue(green) //color of font
+         //This was the easiest way to "hide" the console, set the color the same as background
+         //  .setColorBackground(color(100,100))
+         // .setColorForeground(color(255,100))
+              .scroll(1)
+              .hide();
+              
+    console = cp5.addConsole(consoleOutput);
 }
 /*
 public void settings() {
@@ -88,6 +93,24 @@ void draw() {
     unitTests();
     initialized = true;
   }
+  
+  //console logic here
+  /*
+  if(test == 1){
+    test = 0;
+    consoleOutput=cp5.addTextarea("consoleOutput")
+    .setPosition(1460,710) 
+      .setSize(330, 430)
+        .setLineHeight(14)
+        .setColorValue(green) //color of font
+         //This was the easiest way to "hide" the console, set the color the same as background
+         //  .setColorBackground(color(100,100))
+         // .setColorForeground(color(255,100))
+              .scroll(1)
+               .hide();;
+    console = cp5.addConsole(consoleOutput);
+  }
+  */
   // Background color
   background(dblue);
   //Title 
@@ -121,6 +144,7 @@ void draw() {
                   .setColor(color(green)) 
                   //.setColorBackground(color(255,100))
                   .setColorForeground(color(255,100));
+                  
                   
      myTextarea.setText("Sandia Interactive Wave Energy Educational Display (SIWEED)");
     

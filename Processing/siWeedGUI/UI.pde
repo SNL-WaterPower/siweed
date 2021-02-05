@@ -10,6 +10,7 @@ Button wavePosData, waveElData, wecPosData, wecVelData, wecTorqData, wecPowData;
 Button quad1, quad2, quad3, quad4; // power bar
 Button consoleButton;
 Textarea wecText, waveText;
+
 // Custom colors
 color white = color(255,255,255);
 color green = color(190, 214, 48);
@@ -18,6 +19,7 @@ color dblue = color(0, 83, 118);
 color buttonblue = color(0, 45, 90);
 color hoverblue = color(0, 116, 217);
 color grey = color(180, 190, 191);
+
 
 // Fonts
 PFont f; // Regular font
@@ -43,8 +45,16 @@ void initializeUI() {
 
   // Buttons //
   //1387
-  
-    consoleButton = cp5.addButton("Console")
+  /*
+    consoleButton = cp5.addToggle("consoleButton")
+    .setCaptionLabel("AllconsoleButton")
+    //.setValue(0)
+    .setPosition(1390, 610)
+    .setSize(50, 20)
+    .setColorBackground(grey)
+    .setState(false);
+ */
+    consoleButton = cp5.addButton("consoleButton")
     .setPosition(1390, 610)
     .setSize(100, 50)
     .setLabel("Console")
@@ -361,10 +371,18 @@ void initializeUI() {
 }
 //button functions:
 /////////////////// MAKES BUTTONS DO THINGS ////////////////////////////////////
+
 // Console Button
-void consoleFunction(){
-  consoleFunction.setColorBackground(hoverblue);
-  function.setColorBackground(buttonblue);
+void consoleButton(){
+ consoleButton.setColorBackground(hoverblue);
+  
+  if (consoleOutput.isVisible()) {
+    consoleOutput.hide();
+  } else {
+   consoleOutput.show();
+  }
+
+  
 }
 // Motor Buttons 
 
