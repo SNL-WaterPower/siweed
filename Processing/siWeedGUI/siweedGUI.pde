@@ -1,6 +1,5 @@
 import meter.*;
-//import controlP5.*; //importing GUI library
-import controlP5.*;
+import controlP5.*;  //importing GUI library
 import processing.serial.*;
 import java.lang.Math.*;
 import java.util.LinkedList;
@@ -22,19 +21,14 @@ int previousMillis = 0;    //used to update fft
 int fftInterval = 100;    //in milliseconds
 int test = 0;
 
-///test vars:
-/*
-float TSVal;
- */
-
-// meter set up  
-Meter m;
+Meter m; // meter set up  
 String fundingState = "Sandia National Laboratories is a multi-mission laboratory managed and operated by National Technology and Engineering Solutions of Sandia, LLC., a wholly owned subsidiary \n of Honeywell International, Inc., for the U.S. Department of Energy's National Nuclear Security Administration under contract DE-NA0003525.";
 String welcome = "Can you save the town from its power outage? \nChange the demension and type \n of wave to see how the power changes! \n Change the wave energy converter's controls \n to harvest more power. \n How quickly can you light up all four quadrants?";
 void setup() {
   ////////
   frameRate(32);    //sets draw() to run x times a second.
   ///////initialize objects
+  
   size(1920, 1100, P2D); //need this for the touch screen
   surface.setTitle("SIWEED");
   waveMaker = new UIData();
@@ -69,23 +63,23 @@ void setup() {
   
   //console, this needs to be in the setup to ensure
   //that it catches any errors when program starts
-    consoleOutput=cp5.addTextarea("consoleOutput")
+  consoleOutput=cp5.addTextarea("consoleOutput")
     .setPosition(1460,710) 
-      .setSize(330, 430)
-        .setLineHeight(14)
-        .setColorValue(green) //color of font
-         //This was the easiest way to "hide" the console, set the color the same as background
-         //  .setColorBackground(color(100,100))
-         // .setColorForeground(color(255,100))
-              .scroll(1)
-              .hide();
-              
+    .setSize(330, 430)
+    .setLineHeight(14)
+    .setColorValue(green) //color of font
+    //  .setColorBackground(color(100,100))
+    // .setColorForeground(color(255,100))
+    .scroll(1) //enable scrolling up and down
+    .hide(); //hidden on startup           
     console = cp5.addConsole(consoleOutput);
 }
+
 /*
 public void settings() {
  fullScreen(2);
  }*/
+ 
 boolean initialized = false;
 void draw() {
   if (!initialized) {
@@ -94,23 +88,6 @@ void draw() {
     initialized = true;
   }
   
-  //console logic here
-  /*
-  if(test == 1){
-    test = 0;
-    consoleOutput=cp5.addTextarea("consoleOutput")
-    .setPosition(1460,710) 
-      .setSize(330, 430)
-        .setLineHeight(14)
-        .setColorValue(green) //color of font
-         //This was the easiest way to "hide" the console, set the color the same as background
-         //  .setColorBackground(color(100,100))
-         // .setColorForeground(color(255,100))
-              .scroll(1)
-               .hide();;
-    console = cp5.addConsole(consoleOutput);
-  }
-  */
   // Background color
   background(dblue);
   //Title 
@@ -126,27 +103,18 @@ void draw() {
   rect(0, 1120, width, 80); //bottom banner
   image(snlLogo, width-snlLogo.width*0.25-5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25); //Logo
   rect(0, 0, width, 95); // Top Banner
-  //banner text
- // fill(green);
-  //text("Sandia Interactive Wave Energy Educational Display (SIWEED)", width/2, 30);
-  //fill(255, 255, 255);
-  //textSize(12);
- // textLeading(14);
-  text(fundingState, width/2, 1150);
-  
-  
+
+  text(fundingState, width/2, 1150);  
   cp5 = new ControlP5(this);
-    myTextarea = cp5.addTextarea("txt")
-                  .setPosition(width/6,height/45)
-                  .setSize(2000,90)
-                  .setFont(titleTextBoxFont)
-                  .setLineHeight(14)
-                  .setColor(color(green)) 
-                  //.setColorBackground(color(255,100))
-                  .setColorForeground(color(255,100));
-                  
-                  
-     myTextarea.setText("Sandia Interactive Wave Energy Educational Display (SIWEED)");
+  myTextarea = cp5.addTextarea("txt")
+        .setPosition(width/6,height/45)
+        .setSize(2000,90)
+        .setFont(titleTextBoxFont)
+        .setLineHeight(14)
+        .setColor(color(green)) 
+        //setColorBackground(color(255,100))
+        .setColorForeground(color(255,100));
+    myTextarea.setText("Sandia Interactive Wave Energy Educational Display (SIWEED)");
     
 
 
@@ -173,8 +141,7 @@ void draw() {
                   .setLineHeight(7)
                   .setColor(color(buttonblue)) // need to find the correct color for this
                  // .setColorBackground(color(255,100))
-                  .setColorForeground(color(255,100));
-                  
+                  .setColorForeground(color(255,100));        
      myTextarea.setText("Mission Control");
 
   // System Status
@@ -191,11 +158,9 @@ void draw() {
   rect(1387, 610, 480, 440, 7); //FFT background 
   
   fill(255, 255, 255);
-  //textFont(fb, 20);
-  //text(welcome, 810, 250);
-  
-      cp5 = new ControlP5(this);
-    myTextarea = cp5.addTextarea("txt")
+ 
+  cp5 = new ControlP5(this);
+  myTextarea = cp5.addTextarea("txt")
                   .setPosition(810, 250)
                   .setSize(2250,7500)
                   .setFont(textBoxFont)
@@ -204,20 +169,11 @@ void draw() {
                   //.setColorBackground(color(255,100))
                   .setColorForeground(color(255,100));
                   
-     myTextarea.setText(welcome);
+  myTextarea.setText(welcome);
   
-  //System Status Text
-  /* old textbox
-  textFont(fb, 25);
-  fill(buttonblue);
-  textLeading(15);
-  textAlign(LEFT, TOP);
-  stroke(buttonblue);
-  text("System Status", 795, 155);
-  stroke(green);*/
-  //New System Status controlP5 Textbox
-    cp5 = new ControlP5(this);
-    myTextarea = cp5.addTextarea("txt")
+  //System Status controlP5 Textbox 
+  cp5 = new ControlP5(this);
+  myTextarea = cp5.addTextarea("txt")
                   .setPosition(795, 155)
                   .setSize(225,75)
                   .setFont(headerTextBoxFont)
@@ -226,17 +182,8 @@ void draw() {
                  // .setColorBackground(color(255,100))
                   .setColorForeground(color(255,100));
                   
-     myTextarea.setText("System Status");
-     
-/* old Textbox 
-  textFont(fb, 20);
-  fill(255, 255, 255);
-  textLeading(15);
-  textAlign(LEFT, TOP);
-  text("Change Wave Dimensions", 45, 220);
-  */
-  
-  //new controlp5 textbox
+  myTextarea.setText("System Status");
+      
     cp5 = new ControlP5(this);
     myTextarea = cp5.addTextarea("txt")
                   .setPosition(45, 220)
@@ -245,17 +192,9 @@ void draw() {
                   .setLineHeight(10)
                   .setColor(color(white)) // need to find the correct color for this
                  // .setColorBackground(color(255,100))
-                  .setColorForeground(color(255,100));
-                  
-     myTextarea.setText("Change Wave Dimensions");
-/* old Textbox 
-  textFont(fb, 20); 
-  fill(255, 255, 255);
-  textLeading(15);
-  textAlign(LEFT, TOP);
-  text("Change WEC Controls", 45, 620);
- */
-  //new controlp5 textbox
+                  .setColorForeground(color(255,100));             
+    myTextarea.setText("Change Wave Dimensions");
+
     cp5 = new ControlP5(this);
     myTextarea = cp5.addTextarea("txt")
                   .setPosition(45, 620)
@@ -264,11 +203,10 @@ void draw() {
                   .setLineHeight(10)
                   .setColor(color(white)) // need to find the correct color for this
                  // .setColorBackground(color(255,100))
-                  .setColorForeground(color(255,100));
-                  
+                  .setColorForeground(color(255,100));              
      myTextarea.setText("Change WEC Controls");
+     
   //meter
-
   m.updateMeter((int)(100*pow));
   // Use a delay to see the changes.
   pow = 1.25;

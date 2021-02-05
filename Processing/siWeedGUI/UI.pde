@@ -8,7 +8,7 @@ Button jog, function, sea, off, offWEC, torque, feedback, seaWEC; // mode button
 Button wecQs, waveQs; // popup buttons
 Button wavePosData, waveElData, wecPosData, wecVelData, wecTorqData, wecPowData;
 Button quad1, quad2, quad3, quad4; // power bar
-Button consoleButton;
+Button consoleButton; //Idealy this would be a toggle, but was getting errors on the ".isVisible()"
 Textarea wecText, waveText;
 
 // Custom colors
@@ -45,7 +45,8 @@ void initializeUI() {
 
   // Buttons //
   //1387
-  /*
+  
+  /* Code to make this toggle, but getting errors on ".isVisible()
     consoleButton = cp5.addToggle("consoleButton")
     .setCaptionLabel("AllconsoleButton")
     //.setValue(0)
@@ -381,9 +382,8 @@ void consoleButton(){
   } else {
    consoleOutput.show();
   }
-
-  
 }
+
 // Motor Buttons 
 
 void jog() {
