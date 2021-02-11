@@ -1,4 +1,4 @@
-import meter.*;
+//import meter.*;
 import controlP5.*; //importing GUI library
 import processing.serial.*;
 import java.lang.Math.*;
@@ -21,7 +21,7 @@ float TSVal;
  */
 
 // meter set up  
-Meter m;
+Meter myMeter;
 String fundingState = "Sandia National Laboratories is a multi-mission laboratory managed and operated by National Technology and Engineering Solutions of Sandia, LLC., a wholly owned subsidiary \n of Honeywell International, Inc., for the U.S. Department of Energy's National Nuclear Security Administration under contract DE-NA0003525.";
 String welcome = "Can you save the town from its power outage? \nChange the demension and type \n of wave to see how the power changes! \n Change the wave energy converter's controls \n to harvest more power. \n How quickly can you light up all four quadrants?";
 void setup() {
@@ -45,17 +45,18 @@ void setup() {
   //unitTests();
 
   //adding meter 
-  m = new Meter(this, 1425, 240);
-  m.setMeterWidth(400);
-  m.setTitle("Power Meter");
-  m.setFrameColor(green);
-  m.setMinInputSignal(0);
-  m.setMaxInputSignal(500);
-  m.setTitleFontColor(buttonblue);
-  m.setPivotPointColor(buttonblue);
-  m.setArcColor(buttonblue);
-  m.setScaleFontColor(buttonblue);
-  m.setTicMarkColor(buttonblue);
+  myMeter = new Meter(0.0, 5.0);    //min and max
+  //m = new Meter(this, 1425, 240);
+  //m.setMeterWidth(400);
+  //m.setTitle("Power Meter");
+  //m.setFrameColor(green);
+  //m.setMinInputSignal(0);
+  //m.setMaxInputSignal(500);
+  //m.setTitleFontColor(buttonblue);
+  //m.setPivotPointColor(buttonblue);
+  //m.setArcColor(buttonblue);
+  //m.setScaleFontColor(buttonblue);
+  //m.setTicMarkColor(buttonblue);
   //// Use the default values for testing, 0 - 255.
   //minIn = m.getMinInputSignal();
   //maxIn = m.getMaxInputSignal();
@@ -185,12 +186,10 @@ void draw() {
     println(millis() - timestamp);
     timestamp = millis();
   }
+  pow += 3.2;
+  myMeter.update(pow);
 
-  //meter
 
-  m.updateMeter((int)(100*pow));
-  // Use a delay to see the changes.
-  pow = 1.25;
   if (pow >= 1.25 && pow < 3) {
     quad1.setColorBackground(green);
   }
