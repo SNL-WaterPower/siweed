@@ -163,127 +163,127 @@ void draw() {
     print("7 ");
     println(millis() - timestamp);
     timestamp = millis();
-  //Meter control:
-  myMeter.update(pow);
-  if (pow >= 1.25 && pow < 3) {
-    quad1.setColorBackground(green);
-  }
-  if (pow >= 3 && pow < 4.25) {
-    quad1.setColorBackground(green);
-    quad2.setColorBackground(green);
-  }
-  if (pow >= 4.25 && pow < 5) {
-    quad1.setColorBackground(green);
-    quad2.setColorBackground(green);
-    quad3.setColorBackground(green);
-  }
-  if (pow >= 5) {
-    quad1.setColorBackground(green);
-    quad2.setColorBackground(green);
-    quad3.setColorBackground(green);
-    quad4.setColorBackground(green);
-  }
+    //Meter control:
+    myMeter.update(pow);
+    if (pow >= 1.25 && pow < 3) {
+      quad1.setColorBackground(green);
+    }
+    if (pow >= 3 && pow < 4.25) {
+      quad1.setColorBackground(green);
+      quad2.setColorBackground(green);
+    }
+    if (pow >= 4.25 && pow < 5) {
+      quad1.setColorBackground(green);
+      quad2.setColorBackground(green);
+      quad3.setColorBackground(green);
+    }
+    if (pow >= 5) {
+      quad1.setColorBackground(green);
+      quad2.setColorBackground(green);
+      quad3.setColorBackground(green);
+      quad4.setColorBackground(green);
+    }
 
-  if (debug) {
-    print("9 ");
-    println(millis() - timestamp);
-    timestamp = millis();
-  }
+    if (debug) {
+      print("9 ");
+      println(millis() - timestamp);
+      timestamp = millis();
+    }
 
-  //controls button pop up behavior
-  if (mousePressed && waveText.isVisible()) {
-    waveText.hide();
-  }
-  //controls button pop up behavior
-  if (mousePressed && wecText.isVisible()) {
-    wecText.hide();
-  }
+    //controls button pop up behavior
+    if (mousePressed && waveText.isVisible()) {
+      waveText.hide();
+    }
+    //controls button pop up behavior
+    if (mousePressed && wecText.isVisible()) {
+      wecText.hide();
+    }
 
-  if (!megaConnected) {
-    //do nothing
-  } else if (waveMaker.mode == 1 && position.getValue() != waveMaker.mag) {  //only sends if value has changed  
-    //Jog:
-    waveMaker.mag = position.getValue();
-    port1.write('j');
-    sendFloat(waveMaker.mag, port1);
-    //function:
-  } else if (waveMaker.mode == 2 && !mousePressed && (waveMaker.amp != h.getValue() || waveMaker.freq != freq.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
-    waveMaker.amp = h.getValue();
-    waveMaker.freq = freq.getValue();
-    port1.write('a');
-    sendFloat(waveMaker.amp, port1);
-    port1.write('f');
-    sendFloat(waveMaker.freq, port1);
-    //Sea State:
-  } else if (waveMaker.mode == 3 && !mousePressed && (waveMaker.sigH != sigH.getValue() || waveMaker.peakF != peakF.getValue() || waveMaker.gamma != gamma.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
-    waveMaker.sigH = sigH.getValue();
-    waveMaker.peakF = peakF.getValue();
-    waveMaker.gamma = gamma.getValue();
-    port1.write('s');
-    sendFloat(waveMaker.sigH, port1);
-    port1.write('p');
-    sendFloat(waveMaker.peakF, port1);
-    port1.write('g');
-    sendFloat(waveMaker.gamma, port1);    //gamma always needs to be the last sent
-  }
+    if (!megaConnected) {
+      //do nothing
+    } else if (waveMaker.mode == 1 && position.getValue() != waveMaker.mag) {  //only sends if value has changed  
+      //Jog:
+      waveMaker.mag = position.getValue();
+      port1.write('j');
+      sendFloat(waveMaker.mag, port1);
+      //function:
+    } else if (waveMaker.mode == 2 && !mousePressed && (waveMaker.amp != h.getValue() || waveMaker.freq != freq.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
+      waveMaker.amp = h.getValue();
+      waveMaker.freq = freq.getValue();
+      port1.write('a');
+      sendFloat(waveMaker.amp, port1);
+      port1.write('f');
+      sendFloat(waveMaker.freq, port1);
+      //Sea State:
+    } else if (waveMaker.mode == 3 && !mousePressed && (waveMaker.sigH != sigH.getValue() || waveMaker.peakF != peakF.getValue() || waveMaker.gamma != gamma.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
+      waveMaker.sigH = sigH.getValue();
+      waveMaker.peakF = peakF.getValue();
+      waveMaker.gamma = gamma.getValue();
+      port1.write('s');
+      sendFloat(waveMaker.sigH, port1);
+      port1.write('p');
+      sendFloat(waveMaker.peakF, port1);
+      port1.write('g');
+      sendFloat(waveMaker.gamma, port1);    //gamma always needs to be the last sent
+    }
 
-  if (debug) {
-    print("10 ");
-    println(millis() - timestamp);
-    timestamp = millis();
-  }
+    if (debug) {
+      print("10 ");
+      println(millis() - timestamp);
+      timestamp = millis();
+    }
 
-  if (!dueConnected) {
-    //do nothing
-  } else if (wec.mode == 1 && torque.getValue() != wec.mag) {  //only sends if value has changed  
-    //Jog:
-    wec.mag = torque.getValue();
-    port2.write('t');
-    sendFloat(wec.mag, port2);
-    //feedback:
-  } else if (wec.mode == 2 && !mousePressed && (wec.amp != pGain.getValue() || wec.freq != dGain.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition) //for wec, amp is kp and freq is kd;
-    wec.amp = pGain.getValue();
-    wec.freq = dGain.getValue();
-    port1.write('k');
-    sendFloat(wec.amp, port2);
-    port1.write('d');
-    sendFloat(wec.freq, port2);
-    //Sea State:
-  } else if (wec.mode == 3 && !mousePressed && (wec.sigH != sigHWEC.getValue() || wec.peakF != peakFWEC.getValue() || wec.gamma != gammaWEC.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
-    wec.sigH = sigHWEC.getValue();
-    wec.peakF = peakFWEC.getValue();
-    wec.gamma = gammaWEC.getValue();
-    port1.write('s');
-    sendFloat(wec.sigH, port2);
-    port1.write('p');
-    sendFloat(wec.peakF, port2);
-    port1.write('g');
-    sendFloat(wec.gamma, port2);    //gamma always needs to be the last sent
-  }
+    if (!dueConnected) {
+      //do nothing
+    } else if (wec.mode == 1 && torque.getValue() != wec.mag) {  //only sends if value has changed  
+      //Jog:
+      wec.mag = torque.getValue();
+      port2.write('t');
+      sendFloat(wec.mag, port2);
+      //feedback:
+    } else if (wec.mode == 2 && !mousePressed && (wec.amp != pGain.getValue() || wec.freq != dGain.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition) //for wec, amp is kp and freq is kd;
+      wec.amp = pGain.getValue();
+      wec.freq = dGain.getValue();
+      port1.write('k');
+      sendFloat(wec.amp, port2);
+      port1.write('d');
+      sendFloat(wec.freq, port2);
+      //Sea State:
+    } else if (wec.mode == 3 && !mousePressed && (wec.sigH != sigHWEC.getValue() || wec.peakF != peakFWEC.getValue() || wec.gamma != gammaWEC.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
+      wec.sigH = sigHWEC.getValue();
+      wec.peakF = peakFWEC.getValue();
+      wec.gamma = gammaWEC.getValue();
+      port1.write('s');
+      sendFloat(wec.sigH, port2);
+      port1.write('p');
+      sendFloat(wec.peakF, port2);
+      port1.write('g');
+      sendFloat(wec.gamma, port2);    //gamma always needs to be the last sent
+    }
 
-  if (debug) {
-    print("11 ");
-    println(millis() - timestamp);
-    timestamp = millis();
-  }
+    if (debug) {
+      print("11 ");
+      println(millis() - timestamp);
+      timestamp = millis();
+    }
 
-  /////FFT section(move to fft tab eventually):  //!!needs to be activated and deactivated(maybe)
-  if (millis() > previousMillis+fftInterval) {
-    previousMillis = millis();
-    updateFFT();
+    /////FFT section(move to fft tab eventually):  //!!needs to be activated and deactivated(maybe)
+    if (millis() > previousMillis+fftInterval) {
+      previousMillis = millis();
+      updateFFT();
+    }
+    drawFFT();
+    if (initialized) {
+      thread("readMegaSerial");    //will run this funciton in parallel thread
+      thread("readDueSerial");
+      thread("logData");
+    }
+    if (debug) {
+      print("12 ");
+      println(millis() - timestamp);
+      timestamp = millis();
+    }
   }
-  drawFFT();
-  if (initialized) {
-    thread("readMegaSerial");    //will run this funciton in parallel thread
-    thread("readDueSerial");
-    thread("logData");
-  }
-  if (debug) {
-    print("12 ");
-    println(millis() - timestamp);
-    timestamp = millis();
-  }
-  //debug = false;
 }
 void updateFFT() {
   Complex[] fftIn = new Complex[queueSize];
