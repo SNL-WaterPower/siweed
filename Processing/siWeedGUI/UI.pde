@@ -19,6 +19,9 @@ color dblue = color(0, 83, 118);
 color buttonblue = color(0, 45, 90);
 color hoverblue = color(0, 116, 217);
 color grey = color(180, 190, 191);
+color black = color(0, 0, 0);
+color white = color(255, 255, 255);
+color red = color(255, 0, 0);
 
 
 // Fonts
@@ -84,7 +87,7 @@ void initializeUI() {
     .setSize(100, 50)
     .setLabel("75%"); 
 
-  quad3 = cp5.addButton("quad4")
+  quad4 = cp5.addButton("quad4")
     .setPosition(powerX + 300, powerY)
     .setColorBackground(grey)
     .setSize(100, 50)

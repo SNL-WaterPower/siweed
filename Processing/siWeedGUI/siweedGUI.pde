@@ -1,5 +1,6 @@
 import meter.*;
 import controlP5.*;  //importing GUI library
+
 import processing.serial.*;
 import java.lang.Math.*;
 import java.util.LinkedList;
@@ -25,7 +26,10 @@ int previousMillis = 0;    //used to update fft
 int fftInterval = 100;    //in milliseconds
 int test = 0;
 
-Meter m; // meter set up  
+
+// meter set up  
+Meter myMeter;
+
 String fundingState = "Sandia National Laboratories is a multi-mission laboratory managed and operated by National Technology and Engineering Solutions of Sandia, LLC., a wholly owned subsidiary \n of Honeywell International, Inc., for the U.S. Department of Energy's National Nuclear Security Administration under contract DE-NA0003525.";
 String welcome = "Can you save the town from its power outage? \nChange the demension and type \n of wave to see how the power changes! \n Change the wave energy converter's controls \n to harvest more power. \n How quickly can you light up all four quadrants?";
 void setup() {
@@ -45,28 +49,9 @@ void setup() {
   wec.mode = 4;  //1 = torque, 2= feedback, 3 = "sea", 4 = off
   initializeDataLogging();
   initializeUI();
-  //Because these take too long, they need to be run in draw(setup cannot take more that 5 seconds.)
-  //initializeSerial();    //has a 2 second delay
-  //unitTests();
 
-  //adding meter 
-  /*
-  m = new Meter(this, 1425, 240);
-  m.setMeterWidth(400);
-  m.setTitle("Power Meter");
-  m.setFrameColor(green);
-  m.setMinInputSignal(0);
-  m.setMaxInputSignal(500);
-  m.setTitleFontColor(buttonblue);
-  m.setPivotPointColor(buttonblue);
-  m.setArcColor(buttonblue);
-  m.setScaleFontColor(buttonblue);
-  m.setTicMarkColor(buttonblue);
-  */
-  //// Use the default values for testing, 0 - 255.
-  //minIn = m.getMinInputSignal();
-  //maxIn = m.getMaxInputSignal();
-  displaySetup();
+
+  myMeter = new Meter(0.0, 5.0);    //min and max
 
 }
 
@@ -78,7 +63,7 @@ public void settings() {
 boolean initialized = false;
 int timestamp = 0;   //for debuging
 void draw() {
-  if (!initialized) {
+  if (!initialized) {  //Because these take too long, they need to be run in draw(setup cannot take more that 5 seconds.)
     initializeSerial();    //has a 2+ second delay
     unitTests();
     if (debug) {
@@ -138,30 +123,9 @@ void draw() {
     timestamp = millis();
   }
 
+  //Meter control:
+  myMeter.update(pow);
 
-
-  if (debug) {
-    print("5 ");
-    println(millis() - timestamp);
-    timestamp = millis();
-  }
-
-  if (debug) {
-    print("6 ");
-    println(millis() - timestamp);
-    timestamp = millis();
-  }
-
-  if (debug) {
-    print("7 ");
-    println(millis() - timestamp);
-    timestamp = millis();
-  }
-
-  //meter
- // m.updateMeter((int)(100*pow));
-  // Use a delay to see the changes.
-  pow = 1.25;
   if (pow >= 1.25 && pow < 3) {
     quad1.setColorBackground(green);
   }
@@ -280,8 +244,8 @@ void draw() {
     println(millis() - timestamp);
     timestamp = millis();
   }
-  //debug = false;
 }
+
 void updateFFT() {
   Complex[] fftIn = new Complex[queueSize];
   for (int i = 0; i < queueSize; i++) {    //fill with zeros
