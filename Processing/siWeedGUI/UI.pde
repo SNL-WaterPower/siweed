@@ -12,7 +12,6 @@ Button consoleButton; //Idealy this would be a toggle, but was getting errors on
 Textarea wecText, waveText;
 
 // Custom colors
-color white = color(255,255,255);
 color green = color(190, 214, 48);
 color turq = color(0, 173, 208);
 color dblue = color(0, 83, 118);

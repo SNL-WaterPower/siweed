@@ -49,8 +49,9 @@ void setup() {
   wec.mode = 4;  //1 = torque, 2= feedback, 3 = "sea", 4 = off
   initializeDataLogging();
   initializeUI();
-
-
+  
+  displaySetup();
+  
   myMeter = new Meter(0.0, 5.0);    //min and max
 
 }
