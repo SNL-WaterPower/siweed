@@ -7,7 +7,7 @@ import java.util.Queue;
 
 
 
-//ControlP5 cp5;
+//ControlP5 cp5; delcared in UI
 
 Textarea myTextarea;
 
@@ -50,6 +50,7 @@ void setup() {
   //unitTests();
 
   //adding meter 
+  /*
   m = new Meter(this, 1425, 240);
   m.setMeterWidth(400);
   m.setTitle("Power Meter");
@@ -61,22 +62,12 @@ void setup() {
   m.setArcColor(buttonblue);
   m.setScaleFontColor(buttonblue);
   m.setTicMarkColor(buttonblue);
+  */
   //// Use the default values for testing, 0 - 255.
   //minIn = m.getMinInputSignal();
   //maxIn = m.getMaxInputSignal();
-  
-  //console, this needs to be in the setup to ensure
-  //that it catches any errors when program starts
-  consoleOutput=cp5.addTextarea("consoleOutput")
-    .setPosition(1460,710) 
-    .setSize(330, 300)
-    .setLineHeight(14)
-    .setColorValue(green) //color of font
-    //  .setColorBackground(color(100,100))
-    // .setColorForeground(color(255,100))
-    .scroll(1) //enable scrolling up and down
-    .hide(); //hidden on startup           
-    console = cp5.addConsole(consoleOutput);
+  displaySetup();
+
 }
 
 /*
@@ -97,14 +88,10 @@ void draw() {
     }
     initialized = true;
   }
-  
-  // Background color
-  background(dblue);
-  //Title 
-  textFont(fb, 40);
-  fill(green);
-  textLeading(15);
-  textAlign(CENTER, TOP);
+
+  displayUpdate(); 
+  //The reason for this is because the slider texts. 
+  //Without constantly updating the background and boxes, the text from the sliers will just remain there.
 
   if (debug) {
     print("2 ");
@@ -112,56 +99,13 @@ void draw() {
     timestamp = millis();
   }
 
-  image(wavePic, 0, 0, width, height); //background
-  fill(buttonblue);
-  stroke(buttonblue);
-  strokeWeight(0);
-  rect(0, 1120, width, 80); //bottom banner
-  image(snlLogo, width-snlLogo.width*0.25-5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25); //Logo
-  rect(0, 0, width, 95); // Top Banner
 
-  text(fundingState, width/2, 1150);  
-  cp5 = new ControlP5(this);
-  myTextarea = cp5.addTextarea("txt")
-        .setPosition(width/6,height/45)
-        .setSize(2000,90)
-        .setFont(titleTextBoxFont)
-        .setLineHeight(14)
-        .setColor(color(green)) 
-        //setColorBackground(color(255,100))
-        .setColorForeground(color(255,100));
-    myTextarea.setText("Sandia Interactive Wave Energy Educational Display (SIWEED)");
 
   if (debug) {
     print("3 ");
     println(millis() - timestamp);
     timestamp = millis();
   }
-  //Mission Control
-  fill(turq, 150);
-  stroke(buttonblue, 150);
-  strokeWeight(3);
-  rect(25, 150, 705, 930, 7); // background
-  fill(green);
-  stroke(buttonblue);
-  rect(15, 130, 225, 75, 7); //Mission Control Title Box 
-  //Mission Control Text
-  textFont(fb, 25);
-  fill(buttonblue);
-  textLeading(15);
-  textAlign(LEFT, TOP);
- // text("Mission Control", 35, 155);
-  
-    cp5 = new ControlP5(this);
-    myTextarea = cp5.addTextarea("txt")
-                  .setPosition(35, 155)
-                  .setSize(225,75)
-                  .setFont(headerTextBoxFont)
-                  .setLineHeight(7)
-                  .setColor(color(buttonblue)) // need to find the correct color for this
-                 // .setColorBackground(color(255,100))
-                  .setColorForeground(color(255,100));        
-     myTextarea.setText("Mission Control");
 
   if (debug) {
     print("4 ");
@@ -174,79 +118,12 @@ void draw() {
     println(millis() - timestamp);
     timestamp = millis();
   }
-
-  // System Status
-  fill(turq, 150);
-  stroke(buttonblue, 150);
-  rect(780, 150, 1115, 930, 7); // background
-  fill(green);
-  stroke(buttonblue);
-  rect(770, 130, 225, 75, 7); //system title
-  fill(buttonblue);
-  rect(1387, 185, 480, 400, 7); //power box
-  rect(805, 225, 550, 225, 7); // explainer box
-  rect(805, 475, 550, 575, 7); //graph background
-  rect(1387, 610, 480, 440, 7); //FFT background 
-  
-  fill(255, 255, 255);
-
-
- 
-  cp5 = new ControlP5(this);
-  myTextarea = cp5.addTextarea("txt")
-                  .setPosition(810, 250)
-                  .setSize(2250,7500)
-                  .setFont(textBoxFont)
-                  .setLineHeight(29)
-                  .setColor(color(white)) // need to find the correct color for this
-                  //.setColorBackground(color(255,100))
-                  .setColorForeground(color(255,100));
-                  
-  myTextarea.setText(welcome);
-  
-  //System Status controlP5 Textbox 
-  cp5 = new ControlP5(this);
-  myTextarea = cp5.addTextarea("txt")
-                  .setPosition(795, 155)
-                  .setSize(225,75)
-                  .setFont(headerTextBoxFont)
-                  .setLineHeight(7)
-                  .setColor(color(buttonblue)) // need to find the correct color for this
-                 // .setColorBackground(color(255,100))
-                  .setColorForeground(color(255,100));
-                  
-  myTextarea.setText("System Status");
-      
-    cp5 = new ControlP5(this);
-    myTextarea = cp5.addTextarea("txt")
-                  .setPosition(45, 220)
-                  .setSize(300,100)
-                  .setFont(textBoxFont)
-                  .setLineHeight(10)
-                  .setColor(color(white)) // need to find the correct color for this
-                 // .setColorBackground(color(255,100))
-                  .setColorForeground(color(255,100));             
-    myTextarea.setText("Change Wave Dimensions");
-
-    cp5 = new ControlP5(this);
-    myTextarea = cp5.addTextarea("txt")
-                  .setPosition(45, 620)
-                  .setSize(300,100)
-                  .setFont(textBoxFont)
-                  .setLineHeight(10)
-                  .setColor(color(white)) // need to find the correct color for this
-                 // .setColorBackground(color(255,100))
-                  .setColorForeground(color(255,100));              
-     myTextarea.setText("Change WEC Controls");
-     
-
 
   if (debug) {
     print("5 ");
     println(millis() - timestamp);
     timestamp = millis();
   }
-
 
   if (debug) {
     print("6 ");
@@ -261,7 +138,6 @@ void draw() {
     timestamp = millis();
   }
 
-  //meter
 
 
   if (debug) {
@@ -283,7 +159,7 @@ void draw() {
   }
 
   //meter
-  m.updateMeter((int)(100*pow));
+ // m.updateMeter((int)(100*pow));
   // Use a delay to see the changes.
   pow = 1.25;
   if (pow >= 1.25 && pow < 3) {
@@ -426,3 +302,155 @@ void updateFFT() {
   //println("in: "+fftIn[16]);
   //println("out: "+fftArr[16]);
 }
+
+void displaySetup(){
+
+  //console, this needs to be in the setup to ensure
+  //that it catches any errors when program starts
+  consoleOutput=cp5.addTextarea("consoleOutput")
+        .setPosition(1460,710) 
+        .setSize(330, 300)
+        .setLineHeight(14)
+        .setColorValue(green) //color of font
+         // .setColorBackground(color(100,100))
+        // .setColorForeground(color(255,100))
+        .scroll(1) //enable scrolling up and down
+        .hide(); //hidden on startup     
+  console = cp5.addConsole(consoleOutput);
+    
+    
+  myTextarea = cp5.addTextarea("txtBanner")
+        .setPosition(width/6,height/45)
+        .setText("Sandia Interactive Wave Energy Educational Display (SIWEED)")
+        .setSize(1200,90)
+        .setFont(titleTextBoxFont)
+        .setLineHeight(14)
+        .setColor(color(green)) ;
+        //.setColorBackground(color(255,100));
+        //.setColorForeground(color(255,100));
+   
+  myTextarea = cp5.addTextarea("txtWelcome")
+                  .setText(welcome)
+                  .setPosition(810, 250)
+                  .setSize(500,300)
+                  .setFont(textBoxFont)
+                  .setLineHeight(29)
+                  .setColor(color(white)); // need to find the correct color for this
+                  //.setColorBackground(color(255,100))
+                  //.setColorForeground(color(255,100));
+                
+  myTextarea = cp5.addTextarea("txtSystemStatus")
+                  .setPosition(795, 155)
+                  .setText("System Status")
+                  .setSize(225,75)
+                  .setFont(headerTextBoxFont)
+                  .setLineHeight(7)
+                  .setColor(color(buttonblue)); // need to find the correct color for this
+                 // .setColorBackground(color(255,100))
+                //  .setColorForeground(color(255,100));
+
+  myTextarea = cp5.addTextarea("txtWaveDimensions")
+                  .setPosition(45, 220)
+                  .setText("Change Wave Dimensions")
+                  .setSize(300,40)
+                  .setFont(textBoxFont)
+                  .setLineHeight(10)
+                  .setColor(color(white)); // need to find the correct color for this
+                  //.setColorBackground(color(255,100))
+                  //.setColorForeground(color(255,100));             
+
+  myTextarea = cp5.addTextarea("txtWECControls")
+                  .setPosition(45, 620)
+                  .setText("Change WEC Controls")
+                  .setSize(300,40)
+                  .setFont(textBoxFont)
+                  .setLineHeight(10)
+                  .setColor(color(white)); // need to find the correct color for this
+                  //.setColorBackground(color(255,100))
+                  //.setColorForeground(color(255,100));     
+                  
+  myTextarea = cp5.addTextarea("txtMissionControl")
+                  .setPosition(35, 155)
+                  .setText("Mission Control")
+                  .setSize(225,75)
+                  .setFont(headerTextBoxFont)
+                  .setLineHeight(7)
+                  .setColor(color(buttonblue)) ;// need to find the correct color for this
+                 // .setColorBackground(color(255,100));
+                  //.setColorForeground(color(255,100)); 
+                  
+                   image(wavePic, 0, 0, width, height); //background
+  fill(buttonblue); //top banner 
+  stroke(buttonblue); //not sure
+  strokeWeight(0);
+  rect(0, 1120, width, 80); //bottom banner
+  image(snlLogo, width-snlLogo.width*0.25-5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25); //Logo
+  rect(0, 0, width, 95); // Top Banner
+
+  text(fundingState, width/2, 1150);  
+//Mission Control
+  fill(turq, 150); //makes the mission control box transparrent 
+  stroke(buttonblue, 150);
+  strokeWeight(3);
+  rect(25, 150, 705, 930, 7); // background for Mission control blue box
+  
+  fill(green);
+  stroke(buttonblue); //outer color
+  rect(15, 130, 225, 75, 7); //Mission Control Title Box 
+  //Mission Control Text
+  
+   // System Status
+  fill(turq, 150);
+  stroke(buttonblue, 150);
+  rect(780, 150, 1115, 930, 7); // background
+  fill(green);
+  stroke(buttonblue);
+  rect(770, 130, 225, 75, 7); //system title
+  fill(buttonblue);
+  rect(1387, 185, 480, 400, 7); //power box
+  rect(805, 225, 550, 225, 7); // explainer box
+  rect(805, 475, 550, 575, 7); //graph background
+  rect(1387, 610, 480, 440, 7); //FFT background 
+  
+  fill(255, 255, 255);
+  
+ 
+}
+
+void displayUpdate(){
+   image(wavePic, 0, 0, width, height); //background
+  fill(buttonblue); //top banner 
+  stroke(buttonblue); //not sure
+  strokeWeight(0);
+  rect(0, 1120, width, 80); //bottom banner
+  image(snlLogo, width-snlLogo.width*0.25-5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25); //Logo
+  rect(0, 0, width, 95); // Top Banner
+
+  text(fundingState, width/2, 1150);  
+//Mission Control
+  fill(turq, 150); //makes the mission control box transparrent 
+  stroke(buttonblue, 150);
+  strokeWeight(3);
+  rect(25, 150, 705, 930, 7); // background for Mission control blue box
+  
+  fill(green);
+  stroke(buttonblue); //outer color
+  rect(15, 130, 225, 75, 7); //Mission Control Title Box 
+  //Mission Control Text
+  
+   // System Status
+  fill(turq, 150);
+  stroke(buttonblue, 150);
+  rect(780, 150, 1115, 930, 7); // background
+  fill(green);
+  stroke(buttonblue);
+  rect(770, 130, 225, 75, 7); //system title
+  fill(buttonblue);
+  rect(1387, 185, 480, 400, 7); //power box
+  rect(805, 225, 550, 225, 7); // explainer box
+  rect(805, 475, 550, 575, 7); //graph background
+  rect(1387, 610, 480, 440, 7); //FFT background 
+  
+  fill(255, 255, 255);
+}
+  
