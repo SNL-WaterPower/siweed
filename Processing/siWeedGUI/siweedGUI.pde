@@ -15,11 +15,6 @@ float[] fftArr;
 int previousMillis = 0;    //used to update fft 
 int fftInterval = 100;    //in milliseconds
 
-///test vars:
-/*
-float TSVal;
- */
-
 // meter set up  
 Meter myMeter;
 String fundingState = "Sandia National Laboratories is a multi-mission laboratory managed and operated by National Technology and Engineering Solutions of Sandia, LLC., a wholly owned subsidiary \n of Honeywell International, Inc., for the U.S. Department of Energy's National Nuclear Security Administration under contract DE-NA0003525.";
@@ -40,26 +35,9 @@ void setup() {
   wec.mode = 4;  //1 = torque, 2= feedback, 3 = "sea", 4 = off
   initializeDataLogging();
   initializeUI();
-  //Because these take too long, they need to be run in draw(setup cannot take more that 5 seconds.)
-  //initializeSerial();    //has a 2 second delay
-  //unitTests();
 
   //adding meter 
   myMeter = new Meter(0.0, 5.0);    //min and max
-  //m = new Meter(this, 1425, 240);
-  //m.setMeterWidth(400);
-  //m.setTitle("Power Meter");
-  //m.setFrameColor(green);
-  //m.setMinInputSignal(0);
-  //m.setMaxInputSignal(500);
-  //m.setTitleFontColor(buttonblue);
-  //m.setPivotPointColor(buttonblue);
-  //m.setArcColor(buttonblue);
-  //m.setScaleFontColor(buttonblue);
-  //m.setTicMarkColor(buttonblue);
-  //// Use the default values for testing, 0 - 255.
-  //minIn = m.getMinInputSignal();
-  //maxIn = m.getMaxInputSignal();
 }
 /*
 public void settings() {
@@ -68,7 +46,7 @@ public void settings() {
 boolean initialized = false;
 int timestamp = 0;   //for debuging
 void draw() {
-  if (!initialized) {
+  if (!initialized) {  //Because these take too long, they need to be run in draw(setup cannot take more that 5 seconds.)
     initializeSerial();    //has a 2+ second delay
     unitTests();
     if (debug) {
@@ -185,11 +163,8 @@ void draw() {
     print("7 ");
     println(millis() - timestamp);
     timestamp = millis();
-  }
-  pow += 3.2;
+  //Meter control:
   myMeter.update(pow);
-
-
   if (pow >= 1.25 && pow < 3) {
     quad1.setColorBackground(green);
   }

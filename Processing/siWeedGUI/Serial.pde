@@ -50,25 +50,6 @@ void initializeSerial() {
       }
     }
   }
-  /*
-  try {
-   port1 = new Serial(this, Serial.list()[1], 250000); // all communication with Megas
-   megaConnected = true;
-   }
-   catch(Exception e) {
-   megaConnected = false;
-   }
-   try {
-   port2 = new Serial(this, Serial.list()[2], 250000); // all communication with Due
-   dueConnected = true;
-   }
-   catch(Exception e) {
-   dueConnected = false;
-   }
-   delay(2000);
-   */
-  //initialize the modes on the arduinos:
-  //print("modes");
 
   if (megaConnected) {
     port1.write('!');
@@ -203,11 +184,7 @@ float readFloat(Serial port) {
     delay(1);    //give serial some time to come through
   }  
   byte[] byteArray = new byte[4];
-  //for (int i = 0; i < 4; i++) {
-  //inBuffer = myPort.readBytes();
   port.readBytes(byteArray);
-  //}
-  //float f = ByteBuffer.wrap(byteArray).getFloat();
   float f = byteArrayToFloat(byteArray);
   //println(f);
   return f;
