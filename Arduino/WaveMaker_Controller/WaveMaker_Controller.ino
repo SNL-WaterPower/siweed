@@ -73,7 +73,7 @@ void setup() {
   digitalWrite(dirPin, HIGH);
   /////////Zero encoder:
   tone(stepPin, 100);   //start moving
-  while (analogRead(limitPin) > 500) {}   //do nothing until the beam is broken
+  while (analogRead(limitPin) > 500) {Serial.println();delay(10);}   //do nothing until the beam is broken
   noTone(stepPin);   //stop moving
   encoderBuff.command2Reg(CNTR, IR_RegisterAction_CLR); //zero encoder
 

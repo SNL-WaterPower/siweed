@@ -1,6 +1,7 @@
 Serial port1;    //arduino mega
 Serial port2;    //arduino Due
 boolean megaConnected, dueConnected;
+int connectionDelay  = 3500;      //how many ms to wait after connecting to a device. Can greatly slow the startup
 void initializeSerial() {
   ///////////initialize Serial
 
