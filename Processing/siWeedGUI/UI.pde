@@ -371,6 +371,120 @@ void initializeUI() {
 
   snlLogo = loadImage("SNL_Stacked_White.png");
   wavePic = loadImage("ocean.jpg");
+  
+  
+  //console, this needs to be in the setup to ensure
+  //that it catches any errors when program starts
+  consoleOutput=cp5.addTextarea("consoleOutput")
+        .setPosition(1460,710) 
+        .setSize(330, 300)
+        .setLineHeight(14)
+        .setColorValue(green) //color of font
+         // .setColorBackground(color(100,100))
+        // .setColorForeground(color(255,100))
+        .scroll(1) //enable scrolling up and down
+        .hide(); //hidden on startup     
+  console = cp5.addConsole(consoleOutput);
+    
+    
+  myTextarea = cp5.addTextarea("txtBanner")
+        .setPosition(width/6,height/45)
+        .setText("Sandia Interactive Wave Energy Educational Display (SIWEED)")
+        .setSize(1200,90)
+        .setFont(titleTextBoxFont)
+        .setLineHeight(14)
+        .setColor(color(green)) ;
+        //.setColorBackground(color(255,100));
+        //.setColorForeground(color(255,100));
+   
+  myTextarea = cp5.addTextarea("txtWelcome")
+                  .setText(welcome)
+                  .setPosition(810, 250)
+                  .setSize(500,300)
+                  .setFont(textBoxFont)
+                  .setLineHeight(29)
+                  .setColor(color(white)); // need to find the correct color for this
+                  //.setColorBackground(color(255,100))
+                  //.setColorForeground(color(255,100));
+                
+  myTextarea = cp5.addTextarea("txtSystemStatus")
+                  .setPosition(795, 155)
+                  .setText("System Status")
+                  .setSize(225,75)
+                  .setFont(headerTextBoxFont)
+                  .setLineHeight(7)
+                  .setColor(color(buttonblue)); // need to find the correct color for this
+                 // .setColorBackground(color(255,100))
+                //  .setColorForeground(color(255,100));
+
+  myTextarea = cp5.addTextarea("txtWaveDimensions")
+                  .setPosition(45, 220)
+                  .setText("Change Wave Dimensions")
+                  .setSize(300,40)
+                  .setFont(textBoxFont)
+                  .setLineHeight(10)
+                  .setColor(color(white)); // need to find the correct color for this
+                  //.setColorBackground(color(255,100))
+                  //.setColorForeground(color(255,100));             
+
+  myTextarea = cp5.addTextarea("txtWECControls")
+                  .setPosition(45, 620)
+                  .setText("Change WEC Controls")
+                  .setSize(300,40)
+                  .setFont(textBoxFont)
+                  .setLineHeight(10)
+                  .setColor(color(white)); // need to find the correct color for this
+                  //.setColorBackground(color(255,100))
+                  //.setColorForeground(color(255,100));     
+                  
+  myTextarea = cp5.addTextarea("txtMissionControl")
+                  .setPosition(35, 155)
+                  .setText("Mission Control")
+                  .setSize(225,75)
+                  .setFont(headerTextBoxFont)
+                  .setLineHeight(7)
+                  .setColor(color(buttonblue)) ;// need to find the correct color for this
+                 // .setColorBackground(color(255,100));
+                  //.setColorForeground(color(255,100)); 
+                  
+                   image(wavePic, 0, 0, width, height); //background
+  fill(buttonblue); //top banner 
+  stroke(buttonblue); //not sure
+  strokeWeight(0);
+  rect(0, 1120, width, 80); //bottom banner
+  image(snlLogo, width-snlLogo.width*0.25-5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25); //Logo
+  rect(0, 0, width, 95); // Top Banner
+
+  text(fundingState, width/2, 1150);  
+//Mission Control
+  fill(turq, 150); //makes the mission control box transparrent 
+  stroke(buttonblue, 150);
+  strokeWeight(3);
+  rect(25, 150, 705, 930, 7); // background for Mission control blue box
+  
+  fill(green);
+  stroke(buttonblue); //outer color
+  rect(15, 130, 225, 75, 7); //Mission Control Title Box 
+  //Mission Control Text
+  
+   // System Status
+  fill(turq, 150);
+  stroke(buttonblue, 150);
+  rect(780, 150, 1115, 930, 7); // background
+  fill(green);
+  stroke(buttonblue);
+  rect(770, 130, 225, 75, 7); //system title
+  fill(buttonblue);
+  rect(1387, 185, 480, 400, 7); //power box
+  rect(805, 225, 550, 225, 7); // explainer box
+  rect(805, 475, 550, 575, 7); //graph background
+  rect(1387, 610, 480, 440, 7); //FFT background 
+  
+  fill(255, 255, 255);
+  
+  
+  
+  
 }
 //button functions:
 /////////////////// MAKES BUTTONS DO THINGS ////////////////////////////////////
@@ -683,4 +797,40 @@ void drawFFT() {
       text(i, initialX, y - yScale*i);    //y-axis
     }
   }
+}
+void displayUpdate(){
+   image(wavePic, 0, 0, width, height); //background
+  fill(buttonblue); //top banner 
+  stroke(buttonblue); //not sure
+  strokeWeight(0);
+  rect(0, 1120, width, 80); //bottom banner
+  image(snlLogo, width-snlLogo.width*0.25-5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25); //Logo
+  rect(0, 0, width, 95); // Top Banner
+
+  text(fundingState, width/2, 1150);  
+//Mission Control
+  fill(turq, 150); //makes the mission control box transparrent 
+  stroke(buttonblue, 150);
+  strokeWeight(3);
+  rect(25, 150, 705, 930, 7); // background for Mission control blue box
+  
+  fill(green);
+  stroke(buttonblue); //outer color
+  rect(15, 130, 225, 75, 7); //Mission Control Title Box 
+  //Mission Control Text
+  
+   // System Status
+  fill(turq, 150);
+  stroke(buttonblue, 150);
+  rect(780, 150, 1115, 930, 7); // background
+  fill(green);
+  stroke(buttonblue);
+  rect(770, 130, 225, 75, 7); //system title
+  fill(buttonblue);
+  rect(1387, 185, 480, 400, 7); //power box
+  rect(805, 225, 550, 225, 7); // explainer box
+  rect(805, 475, 550, 575, 7); //graph background
+  rect(1387, 610, 480, 440, 7); //FFT background 
+  
+  fill(255, 255, 255);
 }
