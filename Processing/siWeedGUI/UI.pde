@@ -16,6 +16,9 @@ color dblue = color(0, 83, 118);
 color buttonblue = color(0, 45, 90);
 color hoverblue = color(0, 116, 217);
 color grey = color(180, 190, 191);
+color black = color(0, 0, 0);
+color white = color(255, 255, 255);
+color red = color(255, 0, 0);
 
 // Fonts
 PFont f; // Regular font
@@ -55,7 +58,7 @@ void initializeUI() {
     .setSize(100, 50)
     .setLabel("75%"); 
 
-  quad3 = cp5.addButton("quad4")
+  quad4 = cp5.addButton("quad4")
     .setPosition(powerX + 300, powerY)
     .setColorBackground(grey)
     .setSize(100, 50)
@@ -383,12 +386,13 @@ void off() {
   sea.setColorBackground(buttonblue);
   off.setColorBackground(hoverblue);
   waveMaker.mode = 4;
-  h.setValue(0);
-  freq.setValue(0);
-  sigH.setValue(0);
-  peakF.setValue(0); 
-  gamma.setValue(0);
-  position.setValue(0);
+  h.hide();
+  freq.hide();
+  h.hide();
+  position.hide();
+  sigH.hide();
+  peakF.hide();
+  gamma.hide();
   //set mode on arduino:
   if (megaConnected) {
     port1.write('!');
@@ -462,12 +466,12 @@ void offWEC() {
   seaWEC.setColorBackground(buttonblue);
   offWEC.setColorBackground(hoverblue);
   wec.mode = 4; 
-  torqueSlider.setValue(0);
-  pGain.setValue(0);
-  dGain.setValue(0);
-  sigHWEC.setValue(0);
-  peakFWEC.setValue(0);
-  gammaWEC.setValue(0);
+  torqueSlider.hide();    //hides all sliders
+  pGain.hide();
+  dGain.hide();
+  sigHWEC.hide();
+  peakFWEC.hide();
+  gammaWEC.hide();
   if (dueConnected) {
     port2.write('!');
     sendFloat(-1, port2);

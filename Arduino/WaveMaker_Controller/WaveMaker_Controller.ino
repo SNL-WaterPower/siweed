@@ -1,7 +1,7 @@
 #define MINIGEN_COMPATIBILITY_MODE
 #include <miniWaveTankJonswap.h>
 #include <SuperDroidEncoderBuffer.h>
-#include<math.h>
+#include<math.h>HEAD
 #include <PID_v1.h> // not needed
 #include <SPI.h>
 #include <SparkFun_MiniGen.h>
@@ -15,8 +15,12 @@ SuperDroidEncoderBuffer encoderBuff = SuperDroidEncoderBuffer(42);
 bool encoderBuffInit, didItWork_MDR0, didItWork_MDR1, didItWork_DTR;   //variables for unit testing
 unsigned char MDR0_settings = MDRO_x4Quad | MDRO_freeRunningCountMode | MDRO_indexDisable | MDRO_syncIndex | MDRO_filterClkDivFactor_1;
 unsigned char MDR1_settings = MDR1_4ByteCounterMode | MDR1_enableCounting | MDR1_FlagOnIDX_NOP | MDR1_FlagOnCMP_NOP | MDR1_FlagOnBW_NOP | MDR1_FlagOnCY_NOP;
+<<<<<<< HEAD
 const int  dirPin = 5, limitPin = A0, probe1Pin = A1, probe2Pin = A2;
 
+=======
+const int stepPin = 4, dirPin = 5, limitPin = A0, probe1Pin = A1, probe2Pin = A2;
+>>>>>>> develop
 volatile double t = 0;    //time in seconds
 volatile float speedScalar = 0;
 volatile int mode = 0;     //-1 is stop, 0 is jog, 1 is sine, 2 is sea state
@@ -25,7 +29,8 @@ const int maxComponents = 100;   //max needed number of frequency components
 volatile float amps[maxComponents];
 volatile float phases[maxComponents];
 volatile float freqs[maxComponents];
-volatile float sigH, peakF, gamma;
+volatile float sigH, peakF, gam;   //"gamma" is used in another library
+//volatile float encPos;
 bool newJonswapData = false;
 volatile float desiredPos;   //used for jog mode
 const int buffSize = 10;    //number of data points buffered in the moving average filter
@@ -51,7 +56,7 @@ volatile float inputFnc(volatile float tm) {  //inputs time in seconds //outputs
   else if (mode > 0) {   //1 or 2
     if (newJonswapData && mode == 2) {
       newJonswapData = false;
-      jonswap.update(sigH, peakF, gamma);
+      jonswap.update(sigH, peakF, gam);
       n = jonswap.getNum();
       for (int i = 0; i < n; i++) {
         amps[i] = jonswap.getAmp()[i];
@@ -90,8 +95,6 @@ void setup() {
   pinMode(dirPin, OUTPUT);
   pinMode(13, OUTPUT);
   digitalWrite(13, LOW);    //initialization of maxRate indicator led
-
-
   /////////Zero encoder:
 
   digitalWrite(dirPin, HIGH);
@@ -124,7 +127,7 @@ volatile float encPos() {
   return encoderBuff.readCNTR() * (1 / encStepsPerTurn) * leadPitch * -1.0; //steps*(turns/step)*(mm/turn)
 }
 void loop() {   //__ microseconds
-  //encPos = waveEnc.read() * (1 / encStepsPerTurn) * leadPitch; //steps*(turns/step)*(mm/turn)
+  //encPos = encoderBuff.readCNTR() * (1 / encStepsPerTurn) * leadPitch; //steps*(turns/step)*(mm/turn)
   t = micros() / 1.0e6;
   readSerial();
   updateSpeedScalar();
@@ -163,9 +166,7 @@ volatile void pushBuffer(volatile float* arr, volatile float f) {
 float lerp(float a, float b, float f) {
   return a + f * (b - a);
 }
-bool ampUnitTest = true;
-bool TSUnitTest = true;
-bool encoderTest = true;
+bool ampUnitTest = true, TSUnitTest = true, encoderTest = true;
 float exampleAmps[] = {0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.01, 0.02, 0.05, 0.11, 0.20, 0.33, 0.48, 0.67, 0.87, 1.09, 1.30, 1.51, 1.70, 1.88, 2.03, 2.16};
 float exampleTS[] = {4.07, -3.45, 1.12, 1.56, 0.69, -2.25, -1.17, -6.01, 0.74, 2.85, -4.79, 5.71, -1.66, -3.66, -2.78, 1.38, 4.07, -3.45, 1.12, 1.56, 0.69, -2.25, -1.17, -6.01, 0.74, 2.85, -4.79, 5.71, -1.66, -3.66, -2.78, 1.38};
 void unitTests() {
@@ -176,7 +177,7 @@ void unitTests() {
   //jonswap.update(5.0, 3.0, 7.0);
   sigH = 5.0;
   peakF = 3.0;
-  gamma = 7.0;
+  gam = 7.0;
   inputFnc(0);   //assign amps and update jonswap
   for (int i = 0; i < jonswap.getNum(); i++) {
     //test amplitude array:
@@ -192,7 +193,6 @@ void unitTests() {
     //Serial.print(inputFnc(i));
     //Serial.print(", ");
   }
-  mode = oldMode;   //reset mode to what it was before unit tests
 
   //////////////////test encoder buffer:
   //If the initialization and setting functions worked, move on, otherwise, throw error and halt execution.
@@ -201,4 +201,6 @@ void unitTests() {
   } else {
     encoderTest = false;
   }
+  mode = oldMode;   //reset mode to what it was before unit tests
+
 }

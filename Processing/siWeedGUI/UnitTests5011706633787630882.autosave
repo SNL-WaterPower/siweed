@@ -1,6 +1,6 @@
 
 boolean[] megaUnitTests = {false, false, false, false};      //serial, jonswap amplitude array, jonswap timeSeries, encoder buffer
-boolean[] dueUnitTests = {false, false, false};
+boolean[] dueUnitTests = {false, false, false, false};
 void unitTests() {
   /////////////FFT:
   for (int i = 0; i < queueSize; i++) {
@@ -26,16 +26,6 @@ void unitTests() {
     println("FFT Test PASSED");
   } else {
     println("FFT Test FAILED");
-  }
-  ////////////////////Byte conversions:
-  float testFloat = 123.456789;
-  byte[] byteArray = floatToByteArray(testFloat);
-  //println(byteArray);
-  float resultFloat = byteArrayToFloat(byteArray);
-  if (testFloat == resultFloat) {
-    println("Byte Conversion Test PASSED");
-  } else {
-    println("Byte Conversion Test FAILED");
   }
   /////////////verify mega serial:    //maybe change method to : send value -> recieve value
   readMegaSerial();    //reads serial buffer and sets bool true if recieving normal results
@@ -70,9 +60,9 @@ void unitTests() {
     println("Mega Jonswap TimeSeries Test FAILED");
   }
   if (megaUnitTests[3]) {
-    println("Mega Encoder Buffer Test PASSED");
+    println("Mega Decoder Test PASSED");
   } else {    
-    println("Mega Encoder Buffer Test FAILED");
+    println("Mega Decoder Test FAILED");
   }
   ////////////verify due jonswap:
   readDueSerial();    //clear buffer
@@ -91,5 +81,10 @@ void unitTests() {
     println("Due Jonswap TimeSeries Test PASSED");
   } else {    
     println("Due Jonswap TimeSeries Test FAILED");
+  }
+  if (megaUnitTests[3]) {
+    println("Due Decoder Test PASSED");
+  } else {    
+    println("Due Decoder Test FAILED");
   }
 }

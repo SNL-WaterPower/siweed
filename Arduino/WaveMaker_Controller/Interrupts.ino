@@ -32,7 +32,7 @@ void initInterrupts() {
   linearly, then apply a PID calculated error correction. The sum is then converted from a velociy to
   a frequency.
 
-  TODO: triple check unit conversions, and test linear controller on it's own. Then 
+  TODO: triple check unit conversions, and test linear controller on it's own. Then
   tune PID with 0P, maybe 0D
 */
 ISR(TIMER4_COMPA_vect) {    //function called by interupt     //Takes about .4 milliseconds
@@ -68,8 +68,7 @@ ISR(TIMER4_COMPA_vect) {    //function called by interupt     //Takes about .4 m
   if (mode == -1 || stepsPerSecond < 12) {  //stop
     freqReg = gen.freqCalc(0);
     gen.adjustFreq(MiniGen::FREQ0, freqReg); //stop moving
-  }
-  else {
+  } else {
     freqReg = gen.freqCalc(stepsPerSecond);
     gen.adjustFreq(MiniGen::FREQ0, freqReg); //start moving
   }
@@ -91,15 +90,10 @@ ISR(TIMER5_COMPA_vect) {   //takes ___ milliseconds
   Serial.write('2');    //to indicate wave probe data
   sendFloat(averageArray(probe2Buffer));
   Serial.write('p');    //to indicate position
+  //Serial.print(encPos);
   sendFloat(encPos());
   Serial.write('d');    //to indicate alternate data
   float lerpVal = lerp(prevVal, futurePos, (interval * 1.0e6) / (sampleT - prevSampleT)); //linear interpolate(initial value, final value, percentatge)//percentage is desired interval/actual interval
   sendFloat(lerpVal);
-  Serial.print("n");
-  Serial.print(n);
-  Serial.print("f");
-  Serial.print(freqs[0]);
-  Serial.print("a");
-  Serial.println(amps[0]);
-  //Serial.println(mode);
+  //Serial.println();
 }

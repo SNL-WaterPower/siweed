@@ -1,9 +1,11 @@
-import meter.*;
+//import meter.*;
 import controlP5.*; //importing GUI library
 import processing.serial.*;
 import java.lang.Math.*;
 import java.util.LinkedList;
 import java.util.Queue;
+
+boolean debug = false;    //for debug print statements
 
 int queueSize = 512;    //power of 2 closest to 30(15) seconds at 32 samples/second    !!Needs to match arduino
 LinkedList fftList;
@@ -13,13 +15,8 @@ float[] fftArr;
 int previousMillis = 0;    //used to update fft 
 int fftInterval = 100;    //in milliseconds
 
-///test vars:
-/*
-float TSVal;
- */
-
 // meter set up  
-Meter m;
+Meter myMeter;
 String fundingState = "Sandia National Laboratories is a multi-mission laboratory managed and operated by National Technology and Engineering Solutions of Sandia, LLC., a wholly owned subsidiary \n of Honeywell International, Inc., for the U.S. Department of Energy's National Nuclear Security Administration under contract DE-NA0003525.";
 String welcome = "Can you save the town from its power outage? \nChange the demension and type \n of wave to see how the power changes! \n Change the wave energy converter's controls \n to harvest more power. \n How quickly can you light up all four quadrants?";
 void setup() {
@@ -38,35 +35,25 @@ void setup() {
   wec.mode = 4;  //1 = torque, 2= feedback, 3 = "sea", 4 = off
   initializeDataLogging();
   initializeUI();
-  //Because these take too long, they need to be run in draw(setup cannot take more that 5 seconds.)
-  //initializeSerial();    //has a 2 second delay
-  //unitTests();
 
   //adding meter 
-  m = new Meter(this, 1425, 240);
-  m.setMeterWidth(400);
-  m.setTitle("Power Meter");
-  m.setFrameColor(green);
-  m.setMinInputSignal(0);
-  m.setMaxInputSignal(500);
-  m.setTitleFontColor(buttonblue);
-  m.setPivotPointColor(buttonblue);
-  m.setArcColor(buttonblue);
-  m.setScaleFontColor(buttonblue);
-  m.setTicMarkColor(buttonblue);
-  //// Use the default values for testing, 0 - 255.
-  //minIn = m.getMinInputSignal();
-  //maxIn = m.getMaxInputSignal();
+  myMeter = new Meter(0.0, 5.0);    //min and max
 }
 /*
 public void settings() {
  fullScreen(2);
  }*/
 boolean initialized = false;
+int timestamp = 0;   //for debuging
 void draw() {
-  if (!initialized) {
-    initializeSerial();    //has a 2 second delay
+  if (!initialized) {  //Because these take too long, they need to be run in draw(setup cannot take more that 5 seconds.)
+    initializeSerial();    //has a 2+ second delay
     unitTests();
+    if (debug) {
+      print("1 ");
+      println(millis() - timestamp);
+      timestamp = millis();
+    }
     initialized = true;
   }
   // Background color
@@ -76,6 +63,12 @@ void draw() {
   fill(green);
   textLeading(15);
   textAlign(CENTER, TOP);
+
+  if (debug) {
+    print("2 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
 
   image(wavePic, 0, 0, width, height); //background
   fill(buttonblue);
@@ -92,6 +85,11 @@ void draw() {
   textLeading(14);
   text(fundingState, width/2, 1150);
 
+  if (debug) {
+    print("3 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
   //Mission Control
   fill(turq, 150);
   stroke(buttonblue, 150);
@@ -106,6 +104,12 @@ void draw() {
   textLeading(15);
   textAlign(LEFT, TOP);
   text("Mission Control", 35, 155);
+
+  if (debug) {
+    print("4 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
 
   // System Status
   fill(turq, 150);
@@ -131,11 +135,23 @@ void draw() {
   text("System Status", 795, 155);
   stroke(green);
 
+  if (debug) {
+    print("5 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
+
   textFont(fb, 20);
   fill(255, 255, 255);
   textLeading(15);
   textAlign(LEFT, TOP);
   text("Change Wave Dimensions", 45, 220);
+
+  if (debug) {
+    print("6 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
 
   textFont(fb, 20); 
   fill(255, 255, 255);
@@ -143,11 +159,13 @@ void draw() {
   textAlign(LEFT, TOP);
   text("Change WEC Controls", 45, 620);
 
-  //meter
-
-  m.updateMeter((int)(100*pow));
-  // Use a delay to see the changes.
-  pow = 1.25;
+  if (debug) {
+    print("7 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
+  //Meter control:
+  myMeter.update(pow);
   if (pow >= 1.25 && pow < 3) {
     quad1.setColorBackground(green);
   }
@@ -165,6 +183,12 @@ void draw() {
     quad2.setColorBackground(green);
     quad3.setColorBackground(green);
     quad4.setColorBackground(green);
+  }
+
+  if (debug) {
+    print("9 ");
+    println(millis() - timestamp);
+    timestamp = millis();
   }
 
   //controls button pop up behavior
@@ -204,6 +228,12 @@ void draw() {
     sendFloat(waveMaker.gamma, port1);    //gamma always needs to be the last sent
   }
 
+  if (debug) {
+    print("10 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
+
   if (!dueConnected) {
     //do nothing
   } else if (wec.mode == 1 && torque.getValue() != wec.mag) {  //only sends if value has changed  
@@ -232,16 +262,30 @@ void draw() {
     sendFloat(wec.gamma, port2);    //gamma always needs to be the last sent
   }
 
+  if (debug) {
+    print("11 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
+
   /////FFT section(move to fft tab eventually):  //!!needs to be activated and deactivated(maybe)
   if (millis() > previousMillis+fftInterval) {
     previousMillis = millis();
     updateFFT();
   }
   drawFFT();
-  thread("readMegaSerial");    //will run this funciton in parallel thread
-  thread("readDueSerial");
-  thread("logData");
+  if (initialized) {
+    thread("readMegaSerial");    //will run this funciton in parallel thread
+    thread("readDueSerial");
+    thread("logData");
+  }
+  if (debug) {
+    print("12 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
 }
+
 void updateFFT() {
   Complex[] fftIn = new Complex[queueSize];
   for (int i = 0; i < queueSize; i++) {    //fill with zeros
