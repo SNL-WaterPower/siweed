@@ -1,7 +1,7 @@
 #define MINIGEN_COMPATIBILITY_MODE
 #include <miniWaveTankJonswap.h>
 #include <SuperDroidEncoderBuffer.h>
-#include<math.h>HEAD
+#include<math.h>
 #include <PID_v1.h> // not needed
 #include <SPI.h>
 #include <SparkFun_MiniGen.h>
@@ -15,12 +15,7 @@ SuperDroidEncoderBuffer encoderBuff = SuperDroidEncoderBuffer(42);
 bool encoderBuffInit, didItWork_MDR0, didItWork_MDR1, didItWork_DTR;   //variables for unit testing
 unsigned char MDR0_settings = MDRO_x4Quad | MDRO_freeRunningCountMode | MDRO_indexDisable | MDRO_syncIndex | MDRO_filterClkDivFactor_1;
 unsigned char MDR1_settings = MDR1_4ByteCounterMode | MDR1_enableCounting | MDR1_FlagOnIDX_NOP | MDR1_FlagOnCMP_NOP | MDR1_FlagOnBW_NOP | MDR1_FlagOnCY_NOP;
-<<<<<<< HEAD
 const int  dirPin = 5, limitPin = A0, probe1Pin = A1, probe2Pin = A2;
-
-=======
-const int stepPin = 4, dirPin = 5, limitPin = A0, probe1Pin = A1, probe2Pin = A2;
->>>>>>> develop
 volatile double t = 0;    //time in seconds
 volatile float speedScalar = 0;
 volatile int mode = 0;     //-1 is stop, 0 is jog, 1 is sine, 2 is sea state
