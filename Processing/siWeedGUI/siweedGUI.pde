@@ -1,4 +1,3 @@
-import at.mukprojects.console.*;
 import meter.*;
 import controlP5.*; //importing GUI library
 import processing.serial.*;
@@ -21,8 +20,8 @@ float TSVal;
  
 // meter set up  
 Meter m;
-String fundingState = "Sandia National Laboratories is a multi-mission laboratory managed and operated by National Technology and Engineering Solutions of Sandia, LLC., a wholly owned subsidiary \n of Honeywell International, Inc., for the U.S. Department of Energy's National Nuclear Security Administration under contract DE-NA0003525.";
-String welcome = "Can you save the town from its power outage? \nChange the demension and type \n of wave to see how the power changes! \n Change the wave energy converter's controls \n to harvest more power. \n How quickly can you light up all four quadrants?";
+String fundingState = "Sandia National Laboratories is a multi-mission laboratory managed \n and operated by National Technology and Engineering Solutions of Sandia, LLC., a wholly owned \n subsidiary of Honeywell International, Inc., for the U.S. Department of Energy's \n National Nuclear Security Administration under contract DE-NA0003525.";
+//String welcome = "Can you save the town from its power outage? \nChange the demension and type \n of wave to see how the power changes! \n Change the wave energy converter's controls \n to harvest more power. \n How quickly can you light up all four quadrants?";
 void setup() {
   ////////
   frameRate(32);    //sets draw() to run x times a second.
@@ -53,8 +52,8 @@ void setup() {
   unitTests();
   
   //adding meter 
-  m = new Meter(this, 1425, 240);
-  m.setMeterWidth(400);
+  m = new Meter(this, int(width/3.5 + 50), int(height/4.5 + 550));
+  m.setMeterWidth(500);
   m.setTitle("Power Meter");
   m.setFrameColor(green);
   m.setMinInputSignal(0);
@@ -87,34 +86,38 @@ void draw() {
   fill(buttonblue);
   stroke(buttonblue);
   strokeWeight(0);
-  rect(0, 1120, width, 80); //bottom banner
   image(snlLogo, width-snlLogo.width*0.25-5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25); //Logo
-  rect(0, 0, width, 95); // Top Banner
-  //banner text
+  rect(0, 0, width/3.5, height); // LHS banner 
+  fill(255,255,255);
+  stroke(255,255,255);
+  rect(width/3.5, 0, width, height/2.5); //mission control banner
+  fill(turq);
+  stroke(turq);
+  rect(width/3.5, height/2.5, width, height); //mission control banner
   fill(green);
-  text("Sandia Interactive Wave Energy Educational Display (SIWEED)", width/2, 30);
+  text("SIWEED", (width/3.5)/2, 30);
   fill(255,255,255);
   textSize(12);
   textLeading(14);
-  text(fundingState, width/2, 1150);
+  text(fundingState, (width/3.5)/2, 1125);
  
   //Mission Control
-  fill(turq, 150);
-  stroke(buttonblue, 150);
-  strokeWeight(3);
-  rect(25, 150, 705, 930, 7); // background
-  fill(green);
-  stroke(buttonblue);
-  rect(15, 130, 225, 75, 7); //Mission Control Title Box 
+//  fill(turq, 150);
+//  stroke(buttonblue, 150);
+//  strokeWeight(3);
+//  rect(25, 150, 705, 930, 7); // background
+//  fill(green);
+//  stroke(buttonblue);
+//  rect(15, 130, 225, 75, 7); //Mission Control Title Box 
   //Mission Control Text
   textFont(fb, 25);
   fill(buttonblue);
   textLeading(15);
   textAlign(LEFT, TOP);
-  text("Mission Control", 35, 155);
+  text("Mission Control", (width/3.5 + 50), 30);
   
   // System Status
-  fill(turq, 150);
+/*  fill(turq, 150);
   stroke(buttonblue, 150);
   rect(780, 150, 1115, 930, 7); // background
   fill(green);
@@ -128,26 +131,26 @@ void draw() {
   fill(255,255,255);
   textFont(fb, 20);
   text(welcome, 810, 250);
-  //System Status Text
+  //System Status Text */
   textFont(fb, 25);
   fill(buttonblue);
   textLeading(15);
   textAlign(LEFT, TOP);
   stroke(buttonblue);
-  text("System Status", 795, 155);
-  stroke(green);
+  text("System Status", (width/3.5 + 50), (height/2.5 + 30));
+  stroke(green); 
     
   textFont(fb, 20);
-  fill(255,255,255);
+  fill(buttonblue);
   textLeading(15);
   textAlign(LEFT, TOP);
-  text("Change Wave Dimensions", 45, 220);
+  text("Change Wave Dimensions", (width/3.5 + 50), 90);
   
   textFont(fb, 20); 
-  fill(255,255,255);
+  fill(buttonblue);
   textLeading(15);
   textAlign(LEFT, TOP);
-  text("Change WEC Controls", 45, 620);
+  text("Change WEC Controls", (width/3.5 + 700), 90);
   
   //meter
   

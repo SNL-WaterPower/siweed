@@ -1,11 +1,10 @@
 ControlP5 cp5;
-Console console;
 Chart waveChart, wecChart; //wave Signal chart
 Slider position; //slider for position mode
 Slider h, freq; //sliders for function mode
 Slider sigH, peakF, gamma;  //sliders for sea state mode
 Slider pGain, dGain, torqueSlider, sigHWEC, peakFWEC, gammaWEC; // WEC sliders
-Button jog, function, sea, off, offWEC, torque, feedback, seaWEC, showCon; // mode buttons
+Button jog, function, sea, off, offWEC, torque, feedback, seaWEC; // mode buttons
 Button wecQs, waveQs; // popup buttons
 Button wavePosData, waveElData, wecPosData, wecVelData, wecTorqData, wecPowData;
 Button quad1, quad2, quad3, quad4; // power bar
@@ -25,12 +24,6 @@ PFont fb; // Bold font
 PImage snlLogo;
 PImage wavePic;
 void initializeUI() {
-
-   // Initialize the console 
-  console = new Console(this);
-  // Start the console
-  console.start();
-
   
   // starting ControlP5 stuff
   cp5 = new ControlP5(this);
@@ -39,36 +32,36 @@ void initializeUI() {
   fb = createFont("Arial-BoldMT", 32, true);
 
   // Buttons //
-  //1387
+ 
+ // Power display // 
   int powerX, powerY;
-  powerX = 1425;
-  powerY = 500;
+  powerX = int(width/3.5 + 50);
   
   quad1 = cp5.addButton("quad1")
-    .setPosition(powerX, powerY)
+    .setPosition(powerX, 1115)
     .setColorBackground(grey)
-    .setSize(100, 50)
+    .setSize(125, 50)
     .setLabel("25%");  
     
   quad2 = cp5.addButton("quad2")
-    .setPosition(powerX + 100, powerY)
+    .setPosition(powerX + 125, 1115)
     .setColorBackground(grey)
-    .setSize(100, 50)
+    .setSize(125, 50)
     .setLabel("50%"); 
 
   quad3 = cp5.addButton("quad3")
-    .setPosition(powerX + 200, powerY)
+    .setPosition(powerX + 250, 1115)
     .setColorBackground(grey)
-    .setSize(100, 50)
+    .setSize(125, 50)
     .setLabel("75%"); 
 
   quad3 = cp5.addButton("quad4")
-    .setPosition(powerX + 300, powerY)
+    .setPosition(powerX + 375, 1115)
     .setColorBackground(grey)
-    .setSize(100, 50)
+    .setSize(125, 50)
     .setLabel("100%");
 
-  
+/*  
  int qX, qY;
  qX = 300;
  qY = 210;
@@ -81,108 +74,106 @@ void initializeUI() {
     .setPosition(qX - 45, qY + 410)
     .setSize(15, 15)
     .setLabel("?");
-    
-  showCon = cp5.addButton("showCon")
-    .setPosition(1150, 145)
-    .setSize(150, 60)
-    .setLabel("Console");
+*/    
 
-  // wave maker buttons
+ // wave maker buttons //
   int buttonX, buttonY;
-  buttonX = 45;
-  buttonY = 260;
+  buttonX = int(width/3.5 + 50); //converts float to int
+  buttonY = 120;
+  
   jog = cp5.addButton("jog")
     .setPosition(buttonX, buttonY)
     .setSize(150, 65)
     .setLabel("Jog Mode");
 
   function = cp5.addButton("fun")
-    .setPosition(buttonX + 170, buttonY)
+    .setPosition(buttonX + 150, buttonY)
     .setSize(150, 65)
     .setLabel("Function Mode"); 
 
   sea = cp5.addButton("sea")
-    .setPosition(buttonX + 340, buttonY)
+    .setPosition(buttonX + 300, buttonY)
     .setSize(150, 65)
     .setLabel("Sea State"); 
 
   off = cp5.addButton("off")
-    .setPosition(buttonX + 510, buttonY)
+    .setPosition(buttonX + 450, buttonY)
     .setSize(150, 65)
     .setLabel("OFF"); 
+    
+// wec buttons //     
 
-  buttonY = 660;
-  
+ buttonX = int((width/3.5 + 4*(150) + 100));  
   torque = cp5.addButton("torque")
     .setPosition(buttonX, buttonY)
     .setSize(150, 65)
     .setLabel("Torque");   
 
   feedback = cp5.addButton("feedback")
-    .setPosition(buttonX + 170, buttonY)
+    .setPosition(buttonX + 150, buttonY)
     .setSize(150, 65)
     .setLabel("Feedback"); 
-  //spring, jogWEC, offWEC 
 
   seaWEC = cp5.addButton("seaWEC")
-    .setPosition(buttonX + 340, buttonY)
+    .setPosition(buttonX + 300, buttonY)
     .setSize(150, 65)
     .setLabel("Sea State");    
 
   offWEC = cp5.addButton("offWEC")
-    .setPosition(buttonX + 510, buttonY)
+    .setPosition(buttonX + 450, buttonY)
     .setSize(150, 65)
     .setLabel("Off"); 
     
+// Data buttons //     
 //Button wavePosData, waveElData, wecPosData, wecVelData, wecTorqData, wecPowData;
 int dataButtonX, dataButtonY;
 dataButtonX = 970;
-dataButtonY = 735;
+dataButtonY = 750;
 
 wavePosData = cp5.addButton("wavePosData")
-    .setPosition(dataButtonX, dataButtonY)
+    .setPosition(width/3.5 + 50, 750)
     .setColorBackground(grey)
-    .setSize(100, 50)
+    .setSize(250, 50)
     .setLabel("Wave Maker Position"); 
 
 waveElData = cp5.addButton("waveElData")
-    .setPosition(dataButtonX + 125, dataButtonY)
+    .setPosition(width/3.5 + 300, 750)
     .setColorBackground(grey)
-    .setSize(100, 50)
+    .setSize(250, 50)
     .setLabel("Wave Elevation"); 
-    
-dataButtonY = 990;
+   
+dataButtonY = 750;
 
 wecPosData = cp5.addButton("wecPosData")
-    .setPosition(dataButtonX - 125, dataButtonY)
+    .setPosition((width/3.5 + 700), dataButtonY)
     .setColorBackground(grey)
-    .setSize(100, 50)
+    .setSize(125, 50)
     .setLabel("Wec Position"); 
     
 wecVelData = cp5.addButton("wecVelData")
-    .setPosition(dataButtonX, dataButtonY)
+    .setPosition((width/3.5 + 825), dataButtonY)
     .setColorBackground(grey)
-    .setSize(100, 50)
+    .setSize(125, 50)
     .setLabel("WEC Velocity");
 
 wecTorqData = cp5.addButton("wecTorqData")
-    .setPosition(dataButtonX + 125, dataButtonY)
+    .setPosition((width/3.5 + 950), dataButtonY)
     .setColorBackground(grey)
-    .setSize(100, 50)
+    .setSize(125, 50)
     .setLabel("WEC Torque");
     
 wecPowData = cp5.addButton("wecPowData")
-    .setPosition(dataButtonX + 250, dataButtonY)
+    .setPosition((width/3.5 + 1075), dataButtonY)
     .setColorBackground(grey)
-    .setSize(100, 50)
+    .setSize(125, 50)
     .setLabel("WEC Power");
     
   // Sliders // 
   //distance between slider and buttons is 150, distance between each slider is 100
    
   int sliderX, sliderY;
-  sliderX = 150;
-  sliderY = 240 + 65 + 50; // button Y lcation (240) + size of button + 50 
+  sliderX = int((width/3.5 + 50));
+  sliderY = 200 ; // button Y lcation (240) + size of button + 50 
 
   // Motor Jog Mode Sliders
   position = cp5.addSlider("Position (CM)")  //name slider
@@ -223,9 +214,10 @@ wecPowData = cp5.addButton("wecPowData")
     .setSize(450, 50)
     .hide(); //size (width, height)
 
-  sliderY = buttonY + 65 + 50 ; //button y coordinate + button size + 50 (offset)
+//  sliderY = buttonY + 65 + 50 ; //button y coordinate + button size + 50 (offset)
 
   // WEC Torque Sliders
+  sliderX = int((width/3.5 + 4*(150) + 100));
   torqueSlider = cp5.addSlider("Torque")  //name of button
     .setRange(0, 0.5)
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
@@ -293,24 +285,24 @@ wecPowData = cp5.addButton("wecPowData")
 
   // Charts //
   waveChart =  cp5.addChart("Wave Information")
-    .setPosition(830, 540)
-    .setSize(500, 175)
+    .setPosition((width/3.5) + 50, 550)
+    .setSize(500, 200)
     .setRange(-10, 10)
     .setView(Chart.LINE) // use Chart.LINE, Chart.PIE, Chart.AREA, Chart.BAR_CENTERED
     .setStrokeWeight(10)
     .setColorCaptionLabel(color(40))
-    .setColorBackground(turq)
+    .setColorBackground(buttonblue)
     .setColorLabel(green)
     ;
 
   wecChart =  cp5.addChart("WEC Information")
-    .setPosition(830, 795)
-    .setSize(500, 175)
+    .setPosition((width/3.5 + 700), 550)
+    .setSize(500, 200)
     .setRange(-10, 10)
     .setView(Chart.LINE) // use Chart.LINE, Chart.PIE, Chart.AREA, Chart.BAR_CENTERED
     .setStrokeWeight(10)
     .setColorCaptionLabel(color(40))
-    .setColorBackground(turq)
+    .setColorBackground(buttonblue)
     .setColorLabel(green)
     ;
 
@@ -599,8 +591,8 @@ void drawFFT() {
   fill(green);
   stroke(green);
   for (int i=0; i<=queueSize/2; i++) {      //cut in half
-    float x = 1400+1.5*i;    //x coordinate
-    float y = 1000;            //y coordinate
+    float x = 1250+1.5*i;    //x coordinate
+    float y = 1150;            //y coordinate
     if (i == 0) {
       initialX = x;
     }
