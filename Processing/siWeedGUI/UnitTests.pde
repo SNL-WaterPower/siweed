@@ -1,4 +1,5 @@
-boolean[] megaUnitTests = {false, false, false};      //serial, jonswap amplitude array, jonswap timeSeries
+
+boolean[] megaUnitTests = {false, false, false, false};      //serial, jonswap amplitude array, jonswap timeSeries, encoder buffer
 boolean[] dueUnitTests = {false, false, false};
 void unitTests() {
   /////////////FFT:
@@ -26,6 +27,16 @@ void unitTests() {
   } else {
     println("FFT Test FAILED");
   }
+  ////////////////////Byte conversions:
+  float testFloat = 123.456789;
+  byte[] byteArray = floatToByteArray(testFloat);
+  //println(byteArray);
+  float resultFloat = byteArrayToFloat(byteArray);
+  if (testFloat == resultFloat) {
+    println("Byte Conversion Test PASSED");
+  } else {
+    println("Byte Conversion Test FAILED");
+  }
   /////////////verify mega serial:    //maybe change method to : send value -> recieve value
   readMegaSerial();    //reads serial buffer and sets bool true if recieving normal results
   if (megaUnitTests[0]) {
@@ -42,7 +53,10 @@ void unitTests() {
   }
   ////////////verify mega jonswap:
   readMegaSerial();    //clear buffer
-  port1.write('u');    //sends to begin test
+  if (megaConnected) {
+    port1.write('u');    //sends to begin test
+    sendFloat(0, port1);    //placeholder float to maintain format of letter>number
+  }
   delay(100);          //give time to complete
   readMegaSerial();
   if (megaUnitTests[1]) {
@@ -55,9 +69,17 @@ void unitTests() {
   } else {    
     println("Mega Jonswap TimeSeries Test FAILED");
   }
+  if (megaUnitTests[3]) {
+    println("Mega Encoder Buffer Test PASSED");
+  } else {    
+    println("Mega Encoder Buffer Test FAILED");
+  }
   ////////////verify due jonswap:
   readDueSerial();    //clear buffer
-  port2.write('u');    //sends to begin test
+  if (dueConnected) {
+    port2.write('u');    //sends to begin test
+    sendFloat(0, port2);    //placeholder float to maintain format of letter>number
+  }
   delay(100);          //give time to complete
   readDueSerial();
   if (dueUnitTests[1]) {

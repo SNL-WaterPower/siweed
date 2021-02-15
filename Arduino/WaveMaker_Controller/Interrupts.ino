@@ -30,7 +30,7 @@ void initInterrupts() {
   sei();//allow interrupts
 }
 ISR(TIMER4_COMPA_vect) {    //function called by interupt     //Takes about .4 milliseconds
-  volatile float pos = encPos;
+  volatile float pos = encPos();
   error = futurePos - pos;   //where we told it to go vs where it is
   prevSampleT = sampleT;
   sampleT = micros();
@@ -43,19 +43,21 @@ ISR(TIMER4_COMPA_vect) {    //function called by interupt     //Takes about .4 m
     digitalWrite(dirPin, LOW);
   }
   volatile float sp = abs(vel);     //steping is always positive, so convert to speed
-  if (sp < 2.6) {   //31hz is the lowest frequency of tone(), in mm/s this is 2.6
+  /*if (sp < 2.6) {   //31hz is the lowest frequency of tone(), in mm/s this is 2.6
     sp = 2.6;
+    noTone(stepPin);
     //Serial.println("min");
-  }
-  else if (sp > maxRate) {  //max speed
+    }*/
+  if (sp > maxRate) {  //max speed
     sp = maxRate;
     digitalWrite(13, HIGH);   //on board led turns on if max speed was reached
     //Serial.println("max");
   }
-  if (mode != -1) {  //only plays a tone if mode is not STOP
-    tone(stepPin, mmToSteps(sp));     //steps per second
-  } else {
+  volatile float stepsPerSecond = mmToSteps(sp);
+  if (mode == -1) {  //no tone if stopped
     noTone(stepPin);
+  } else {    
+    //signal geerator here
   }
 }
 
@@ -74,10 +76,10 @@ ISR(TIMER5_COMPA_vect) {   //takes ___ milliseconds
   Serial.write('2');    //to indicate wave probe data
   sendFloat(averageArray(probe2Buffer));
   Serial.write('p');    //to indicate position
-  sendFloat(encPos);
+  //Serial.print(encPos);
+  sendFloat(encPos());
   Serial.write('d');    //to indicate alternate data
-  float lerpVal = lerp(prevVal, futurePos, (interval*1.0e6)/(sampleT-prevSampleT));   //linear interpolate(initial value, final value, percentatge)//percentage is desired interval/actual interval
+  float lerpVal = lerp(prevVal, futurePos, (interval * 1.0e6) / (sampleT - prevSampleT)); //linear interpolate(initial value, final value, percentatge)//percentage is desired interval/actual interval
   sendFloat(lerpVal);
-  Serial.println();
-  //Serial.println(mode);
+  //Serial.println();
 }

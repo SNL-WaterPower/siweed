@@ -5,7 +5,7 @@ String startTime;
 //Variables to be logged:
 public class UIData {        //an object for the WEC and Wavemaker portions of the UI to use
   public int mode;
-  public float mag, amp, freq, sigH, peakF, gamma;
+  public float mag, amp, freq, sigH, peakF, gamma;      //for wec, amp is kp and freq is kd;
 }
 //data not held in the class(not in the UI):
 float probe1, probe2, waveMakerPos, debugData, wecPos, tau, pow, wecVel;

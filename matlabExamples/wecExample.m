@@ -16,8 +16,8 @@ mode = 1;
 switch mode
     case 0
     case 1
-        kP = -1.4;
-        kD = 1.2;
+        kP = 1.4;
+        kD = -1.2;
     case 2
         % see fsTimeseries.m example
     case 3
@@ -44,13 +44,15 @@ switch mode
     case 3
         tau = tau; % just directly setting from GUI, mostly for debugging
 end
-    
+
+disp(vel(ii))
+
 % command torque to motor
 disp(tau)
 
 % measure position from encoder
 
-pow = -1 * tau * vel(ii);
+pow = tau * vel(ii); % negative power is negative work done by the WEC (absorbed power)
 disp(pow)
 
 % pass to GUI: pos, vel, pow (pow is the basis for the town lights)

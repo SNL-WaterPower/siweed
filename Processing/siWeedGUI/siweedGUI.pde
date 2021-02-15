@@ -1,9 +1,20 @@
 import meter.*;
-import controlP5.*; //importing GUI library
+import controlP5.*;  //importing GUI library
 import processing.serial.*;
 import java.lang.Math.*;
 import java.util.LinkedList;
 import java.util.Queue;
+
+
+
+//ControlP5 cp5; delcared in UI
+
+Textarea myTextarea;
+
+Println console; //Needed for GUI console to work
+Textarea consoleOutput; //Needed for GUI console to work
+
+boolean debug = false;    //for debug print statements
 
 int queueSize = 512;    //power of 2 closest to 30(15) seconds at 32 samples/second    !!Needs to match arduino
 LinkedList fftList;
@@ -12,21 +23,21 @@ float[] fftArr;
 
 int previousMillis = 0;    //used to update fft 
 int fftInterval = 100;    //in milliseconds
+int test = 0;
 
-///test vars:
-/*
-float TSVal;
- */
- 
+
 // meter set up  
-Meter m;
+
+Meter myMeter;
 String fundingState = "Sandia National Laboratories is a multi-mission laboratory managed \n and operated by National Technology and Engineering Solutions of Sandia, LLC., a wholly owned \n subsidiary of Honeywell International, Inc., for the U.S. Department of Energy's \n National Nuclear Security Administration under contract DE-NA0003525.";
 //String welcome = "Can you save the town from its power outage? \nChange the demension and type \n of wave to see how the power changes! \n Change the wave energy converter's controls \n to harvest more power. \n How quickly can you light up all four quadrants?";
+
 void setup() {
   ////////
   frameRate(32);    //sets draw() to run x times a second.
   ///////initialize objects
-  size(1920,1200, P2D);
+  
+  size(1920, 1100, P2D); //need this for the touch screen
   surface.setTitle("SIWEED");
   waveMaker = new UIData();
   wec = new UIData();
@@ -35,11 +46,12 @@ void setup() {
   fftArr = new float[queueSize*2];
   //fftComplexArr = new Complex[queueSize];
   waveMaker.mode = 1;    // 1 = jog, 2 = function, 3 = sea, 4 = off
-  wec.mode = 3;  //1 = torque, 2 = "sea", 3 = off
+  wec.mode = 4;  //1 = torque, 2= feedback, 3 = "sea", 4 = off
   initializeDataLogging();
-  initializeSerial();    //has a 2 second delay
   initializeUI();
+  myMeter = new Meter(0.0, 5.0); //min and max
 
+/*
   //initialize the modes on the arduinos:
   port1.write('!');
   sendFloat(0, port1);    //jog mode
@@ -50,30 +62,37 @@ void setup() {
   sendFloat(-1, port2);    //off
   
   unitTests();
-  
-  //adding meter 
-  m = new Meter(this, int(width/3.5 + 50), int(height/4.5 + 550));
-  m.setMeterWidth(500);
-  m.setTitle("Power Meter");
-  m.setFrameColor(green);
-  m.setMinInputSignal(0);
-  m.setMaxInputSignal(500);
-  m.setTitleFontColor(buttonblue);
-  m.setPivotPointColor(buttonblue);
-  m.setArcColor(buttonblue);
-  m.setScaleFontColor(buttonblue);
-  m.setTicMarkColor(buttonblue);
-  //// Use the default values for testing, 0 - 255.
-  //minIn = m.getMinInputSignal();
-  //maxIn = m.getMaxInputSignal();
+  */
   
 }
+
 /*
 public void settings() {
+
   fullScreen(2);
 }*/
+boolean initialized = false;
+int timestamp = 0;   //for debuging
 
 void draw() {
+boolean initialized = false;
+int timestamp = 0;   //for debuging
+  if (!initialized) {  //Because these take too long, they need to be run in draw(setup cannot take more that 5 seconds.)
+    initializeSerial();    //has a 2+ second delay
+    unitTests();
+    if (debug) {
+      print("1 ");
+      println(millis() - timestamp);
+      timestamp = millis();
+    }
+    initialized = true;
+  }
+
+  displayUpdate(); 
+  //The reason for this is because the slider texts. 
+  //Without constantly updating the background and boxes, the text from the sliers will just remain there.
+
+  
   // Background color
   background(dblue);
   //Title 
@@ -152,40 +171,93 @@ void draw() {
   textAlign(LEFT, TOP);
   text("Change WEC Controls", (width/3.5 + 700), 90);
   
-  //meter
-  
-  m.updateMeter((int)(100*pow));
-  // Use a delay to see the changes.
-  pow = 1.25;
-  if (pow >= 1.25 && pow < 3){
+  if (debug) {
+    print("2 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
+
+
+
+  if (debug) {
+    print("3 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
+
+  if (debug) {
+    print("4 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
+
+  if (debug) {
+    print("4 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
+
+  if (debug) {
+    print("5 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
+
+  if (debug) {
+    print("6 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
+
+
+  if (debug) {
+    print("7 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
+
+  //Meter control:
+  pow = 1.25; //might be able to delete 
+  myMeter.update(pow);
+
+  if (pow >= 1.25 && pow < 3) {
     quad1.setColorBackground(green);
   }
-  if (pow >= 3 && pow < 4.25){
+  if (pow >= 3 && pow < 4.25) {
     quad1.setColorBackground(green);
     quad2.setColorBackground(green);
   }
-  if (pow >= 4.25 && pow < 5){
+  if (pow >= 4.25 && pow < 5) {
     quad1.setColorBackground(green);
     quad2.setColorBackground(green);
     quad3.setColorBackground(green);
   }
-  if (pow >= 5){
+  if (pow >= 5) {
     quad1.setColorBackground(green);
     quad2.setColorBackground(green);
     quad3.setColorBackground(green);
     quad4.setColorBackground(green);
   }
-  
+
+  if (debug) {
+    print("9 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
+
   //controls button pop up behavior
-  if (mousePressed && waveText.isVisible()){
+  if (mousePressed && waveText.isVisible()) {
     waveText.hide();
   }
   //controls button pop up behavior
-  if (mousePressed && wecText.isVisible()){
+  if (mousePressed && wecText.isVisible()) {
     wecText.hide();
   }
-  //Jog:
-  if (waveMaker.mode == 1 && position.getValue() != waveMaker.mag) {  //only sends if value has changed  
+
+  if (!megaConnected) {
+    //do nothing
+  } else if (waveMaker.mode == 1 && position.getValue() != waveMaker.mag) {  //only sends if value has changed  
+    //Jog:
     waveMaker.mag = position.getValue();
     port1.write('j');
     sendFloat(waveMaker.mag, port1);
@@ -209,17 +281,66 @@ void draw() {
     port1.write('g');
     sendFloat(waveMaker.gamma, port1);    //gamma always needs to be the last sent
   }
-  
+
+  if (debug) {
+    print("10 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
+
+  if (!dueConnected) {
+    //do nothing
+  } else if (wec.mode == 1 && torque.getValue() != wec.mag) {  //only sends if value has changed  
+    //Jog:
+    wec.mag = torque.getValue();
+    port2.write('t');
+    sendFloat(wec.mag, port2);
+    //feedback:
+  } else if (wec.mode == 2 && !mousePressed && (wec.amp != pGain.getValue() || wec.freq != dGain.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition) //for wec, amp is kp and freq is kd;
+    wec.amp = pGain.getValue();
+    wec.freq = dGain.getValue();
+    port1.write('k');
+    sendFloat(wec.amp, port2);
+    port1.write('d');
+    sendFloat(wec.freq, port2);
+    //Sea State:
+  } else if (wec.mode == 3 && !mousePressed && (wec.sigH != sigHWEC.getValue() || wec.peakF != peakFWEC.getValue() || wec.gamma != gammaWEC.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
+    wec.sigH = sigHWEC.getValue();
+    wec.peakF = peakFWEC.getValue();
+    wec.gamma = gammaWEC.getValue();
+    port1.write('s');
+    sendFloat(wec.sigH, port2);
+    port1.write('p');
+    sendFloat(wec.peakF, port2);
+    port1.write('g');
+    sendFloat(wec.gamma, port2);    //gamma always needs to be the last sent
+  }
+
+  if (debug) {
+    print("11 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
+
   /////FFT section(move to fft tab eventually):  //!!needs to be activated and deactivated(maybe)
   if (millis() > previousMillis+fftInterval) {
     previousMillis = millis();
     updateFFT();
   }
   drawFFT();
-  thread("readMegaSerial");    //will run this funciton in parallel thread
-  thread("readDueSerial");
-  thread("logData");
-}
+  if (initialized) {
+    thread("readMegaSerial");    //will run this funciton in parallel thread
+    thread("readDueSerial");
+    thread("logData");
+  }
+  if (debug) {
+    print("12 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
+  
+}//draw closing 
+
 void updateFFT() {
   Complex[] fftIn = new Complex[queueSize];
   for (int i = 0; i < queueSize; i++) {    //fill with zeros
