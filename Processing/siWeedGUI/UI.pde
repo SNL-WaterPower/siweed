@@ -8,7 +8,9 @@ Button jog, function, sea, off, offWEC, torque, feedback, seaWEC; // mode button
 Button wecQs, waveQs; // popup buttons
 Button wavePosData, waveElData, wecPosData, wecVelData, wecTorqData, wecPowData;
 Button quad1, quad2, quad3, quad4; // power bar
+Button consoleButton; //Idealy this would be a toggle, but was getting errors on the ".isVisible()"
 Textarea wecText, waveText;
+
 // Custom colors
 color green = color(190, 214, 48);
 color turq = color(0, 173, 208);
@@ -20,9 +22,13 @@ color black = color(0, 0, 0);
 color white = color(255, 255, 255);
 color red = color(255, 0, 0);
 
+
 // Fonts
 PFont f; // Regular font
 PFont fb; // Bold font
+PFont buttonFont, sliderFont,titleTextBoxFont, headerTextBoxFont, textBoxFont; 
+
+
 // Sandia logo
 PImage snlLogo;
 PImage wavePic;
@@ -31,11 +37,33 @@ void initializeUI() {
   // starting ControlP5 stuff
   cp5 = new ControlP5(this);
   //Fonts
-  f = createFont("Arial", 16, true);
+    f = createFont("Arial", 16, true);
   fb = createFont("Arial Bold Italic", 32, true);
+  titleTextBoxFont = buttonFont = createFont("Arial Bold Italic", 40, true);
+  buttonFont = createFont("Arial Bold Italic", 12, true);
+  sliderFont = createFont("Arial Bold Italic",12,true);
+  headerTextBoxFont = createFont("Arial Bold",25,false);
+  textBoxFont = createFont("Arial Bold Italic",20,true);
 
   // Buttons //
   //1387
+  
+  /* Code to make this toggle, but getting errors on ".isVisible()
+    consoleButton = cp5.addToggle("consoleButton")
+    .setCaptionLabel("AllconsoleButton")
+    //.setValue(0)
+    .setPosition(1390, 610)
+    .setSize(50, 20)
+    .setColorBackground(grey)
+    .setState(false);
+ */
+    consoleButton = cp5.addButton("consoleButton")
+    .setPosition(1390, 610)
+    .setSize(100, 50)
+    .setLabel("Console")
+    .setColorBackground(grey)
+    .setFont(buttonFont); 
+
   int powerX, powerY;
   powerX = 1425;
   powerY = 500;
@@ -66,15 +94,15 @@ void initializeUI() {
 
 
   int qX, qY;
-  qX = 300;
-  qY = 210;
+  qX = 295;
+  qY = 215;
   waveQs = cp5.addButton("waveQs")
     .setPosition(qX, qY)
     .setSize(15, 15)
     .setLabel("?");
 
   wecQs = cp5.addButton("wecQs")
-    .setPosition(qX - 45, qY + 410)
+    .setPosition(qX - 35, qY + 400)
     .setSize(15, 15)
     .setLabel("?");
 
@@ -85,45 +113,54 @@ void initializeUI() {
   jog = cp5.addButton("jog")
     .setPosition(buttonX, buttonY)
     .setSize(150, 65)
-    .setLabel("Jog Mode");
+    .setLabel("Jog Mode")
+    .setFont(buttonFont );
 
   function = cp5.addButton("fun")
     .setPosition(buttonX + 170, buttonY)
     .setSize(150, 65)
-    .setLabel("Function Mode"); 
+    .setLabel("Function Mode")
+    .setFont(buttonFont); 
 
   sea = cp5.addButton("sea")
     .setPosition(buttonX + 340, buttonY)
     .setSize(150, 65)
-    .setLabel("Sea State"); 
+    .setLabel("Sea State")
+    .setFont(buttonFont); 
 
   off = cp5.addButton("off")
     .setPosition(buttonX + 510, buttonY)
     .setSize(150, 65)
-    .setLabel("OFF"); 
+    .setLabel("OFF")
+    .setFont(buttonFont); 
+    
 
   buttonY = 660;
 
   torque = cp5.addButton("torque")
     .setPosition(buttonX, buttonY)
     .setSize(150, 65)
-    .setLabel("Torque");   
+    .setLabel("Torque")
+    .setFont(buttonFont);   
 
   feedback = cp5.addButton("feedback")
     .setPosition(buttonX + 170, buttonY)
     .setSize(150, 65)
-    .setLabel("Feedback"); 
+    .setLabel("Feedback")
+    .setFont(buttonFont); 
   //spring, jogWEC, offWEC 
 
   seaWEC = cp5.addButton("seaWEC")
     .setPosition(buttonX + 340, buttonY)
     .setSize(150, 65)
-    .setLabel("Sea State");    
+    .setLabel("Sea State")
+    .setFont(buttonFont);    
 
   offWEC = cp5.addButton("offWEC")
     .setPosition(buttonX + 510, buttonY)
     .setSize(150, 65)
-    .setLabel("Off"); 
+    .setLabel("Off")
+    .setFont(buttonFont); 
 
   //Button wavePosData, waveElData, wecPosData, wecVelData, wecTorqData, wecPowData;
   int dataButtonX, dataButtonY;
@@ -134,13 +171,15 @@ void initializeUI() {
     .setPosition(dataButtonX, dataButtonY)
     .setColorBackground(grey)
     .setSize(100, 50)
-    .setLabel("Wave Maker Position"); 
+    .setLabel("Wave Maker\nPosition")
+    .setFont(buttonFont); 
 
   waveElData = cp5.addButton("waveElData")
     .setPosition(dataButtonX + 125, dataButtonY)
     .setColorBackground(grey)
     .setSize(100, 50)
-    .setLabel("Wave Elevation"); 
+    .setLabel("Wave\nElevation")
+    .setFont(buttonFont); 
 
   dataButtonY = 990;
 
@@ -148,25 +187,29 @@ void initializeUI() {
     .setPosition(dataButtonX - 125, dataButtonY)
     .setColorBackground(grey)
     .setSize(100, 50)
-    .setLabel("Wec Position"); 
+    .setLabel("Wec Position")
+    .setFont(buttonFont); 
 
   wecVelData = cp5.addButton("wecVelData")
     .setPosition(dataButtonX, dataButtonY)
     .setColorBackground(grey)
     .setSize(100, 50)
-    .setLabel("WEC Velocity");
+    .setLabel("WEC Velocity")
+    .setFont(buttonFont);
 
   wecTorqData = cp5.addButton("wecTorqData")
     .setPosition(dataButtonX + 125, dataButtonY)
     .setColorBackground(grey)
     .setSize(100, 50)
-    .setLabel("WEC Torque");
+    .setLabel("WEC Torque")
+    .setFont(buttonFont);
 
   wecPowData = cp5.addButton("wecPowData")
     .setPosition(dataButtonX + 250, dataButtonY)
     .setColorBackground(grey)
     .setSize(100, 50)
-    .setLabel("WEC Power");
+    .setLabel("WEC Power")
+    .setFont(buttonFont);
 
   // Sliders // 
   //distance between slider and buttons is 150, distance between each slider is 100
@@ -179,6 +222,7 @@ void initializeUI() {
   position = cp5.addSlider("Position (CM)")  //name slider
     .setRange(-10, 10) //slider range
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
+    .setFont(sliderFont)
     .setSize(450, 50); //size (width, height)
 
   // Motor Function Mode Sliders
@@ -186,12 +230,14 @@ void initializeUI() {
     .setRange(0, 10) //slider range
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setSize(450, 50)
+    .setFont(sliderFont)
     .hide(); //size (width, height)
 
   freq = cp5.addSlider("Frequency (Hz)")  //name of button
     .setRange(0, 4)
     .setPosition(sliderX, sliderY + 100) //x and y coordinates of upper left corner of button
     .setSize(450, 50)
+    .setFont(sliderFont)
     .hide(); //size (width, height)
 
 
@@ -200,18 +246,21 @@ void initializeUI() {
     .setRange(0, 10) //slider range
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setSize(450, 50)
+    .setFont(sliderFont)
     .hide(); //size (width, height)
 
   peakF = cp5.addSlider("Peak Frequency (Hz)")  //name of button
     .setRange(0, 4)
     .setPosition(sliderX, sliderY + 100) //x and y coordinates of upper left corner of button
     .setSize(450, 50)
+    .setFont(sliderFont)
     .hide(); //size (width, height)
 
   gamma = cp5.addSlider("Peakedness")  //name of button
     .setRange(0, 7)
     .setPosition(sliderX, sliderY + 200) //x and y coordinates of upper left corner of button
     .setSize(450, 50)
+    .setFont(sliderFont)
     .hide(); //size (width, height)
 
   sliderY = buttonY + 65 + 50 ; //button y coordinate + button size + 50 (offset)
@@ -219,18 +268,21 @@ void initializeUI() {
   // WEC Torque Sliders
   torqueSlider = cp5.addSlider("Torque")  //name of button
     .setRange(0, 0.5)
+    .setFont(sliderFont)
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setSize(450, 50); //size (width, height)
 
   // WEC Feedback Sliders   
   pGain = cp5.addSlider("P Gain")  //name of button
     .setRange(0, 0.5)
+    .setFont(sliderFont)
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setSize(450, 50) //size (width, height)
     .hide();
 
   dGain = cp5.addSlider("D Gain")  //name of button
     .setRange(0, 0.5)
+    .setFont(sliderFont)
     .setPosition(sliderX, sliderY + 100) //x and y coordinates of upper left corner of button
     .setSize(450, 50) //size (width, height)
     .hide();
@@ -239,18 +291,21 @@ void initializeUI() {
 
   sigHWEC = cp5.addSlider("WEC Significant Height (CM)")  //name of button
     .setRange(0, 0.5)
+    .setFont(sliderFont)
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setSize(450, 50) //size (width, height)
     .hide();
 
   peakFWEC = cp5.addSlider("WEC Peak Frequency (Hz)")  //name of button
     .setRange(0, 0.5)
+    .setFont(sliderFont)
     .setPosition(sliderX, sliderY + 100) //x and y coordinates of upper left corner of button
     .setSize(450, 50) //size (width, height)
     .hide();
 
   gammaWEC = cp5.addSlider("WEC Peakedness)")  //name of button
     .setRange(0, 0.5)
+    .setFont(sliderFont)
     .setPosition(sliderX, sliderY + 200) //x and y coordinates of upper left corner of button
     .setSize(450, 50) //size (width, height)
     .hide();
@@ -283,6 +338,7 @@ void initializeUI() {
 
   // Charts //
   waveChart =  cp5.addChart("Wave Information")
+    .setFont(sliderFont)
     .setPosition(830, 540)
     .setSize(500, 175)
     .setRange(-10, 10)
@@ -296,6 +352,7 @@ void initializeUI() {
   waveChart.setData("debug", new float[360]);
   
   wecChart =  cp5.addChart("WEC Information")
+    .setFont(sliderFont)
     .setPosition(830, 795)
     .setSize(500, 175)
     .setRange(-10, 10)
@@ -314,9 +371,134 @@ void initializeUI() {
 
   snlLogo = loadImage("SNL_Stacked_White.png");
   wavePic = loadImage("ocean.jpg");
+  
+  
+  //console, this needs to be in the setup to ensure
+  //that it catches any errors when program starts
+  consoleOutput=cp5.addTextarea("consoleOutput")
+        .setPosition(1460,710) 
+        .setSize(330, 300)
+        .setLineHeight(14)
+        .setColorValue(green) //color of font
+         // .setColorBackground(color(100,100))
+        // .setColorForeground(color(255,100))
+        .scroll(1) //enable scrolling up and down
+        .hide(); //hidden on startup     
+  console = cp5.addConsole(consoleOutput);
+    
+    
+  myTextarea = cp5.addTextarea("txtBanner")
+        .setPosition(width/6,height/45)
+        .setText("Sandia Interactive Wave Energy Educational Display (SIWEED)")
+        .setSize(1200,90)
+        .setFont(titleTextBoxFont)
+        .setLineHeight(14)
+        .setColor(color(green)) ;
+        //.setColorBackground(color(255,100));
+        //.setColorForeground(color(255,100));
+   
+  myTextarea = cp5.addTextarea("txtWelcome")
+                  .setText(welcome)
+                  .setPosition(810, 250)
+                  .setSize(500,300)
+                  .setFont(textBoxFont)
+                  .setLineHeight(29)
+                  .setColor(color(white)); // need to find the correct color for this
+                  //.setColorBackground(color(255,100))
+                  //.setColorForeground(color(255,100));
+                
+  myTextarea = cp5.addTextarea("txtSystemStatus")
+                  .setPosition(795, 155)
+                  .setText("System Status")
+                  .setSize(225,75)
+                  .setFont(headerTextBoxFont)
+                  .setLineHeight(7)
+                  .setColor(color(buttonblue)); // need to find the correct color for this
+                 // .setColorBackground(color(255,100))
+                //  .setColorForeground(color(255,100));
+
+  myTextarea = cp5.addTextarea("txtWaveDimensions")
+                  .setPosition(45, 220)
+                  .setText("Change Wave Dimensions")
+                  .setSize(300,40)
+                  .setFont(textBoxFont)
+                  .setLineHeight(10)
+                  .setColor(color(white)); // need to find the correct color for this
+                  //.setColorBackground(color(255,100))
+                  //.setColorForeground(color(255,100));             
+
+  myTextarea = cp5.addTextarea("txtWECControls")
+                  .setPosition(45, 620)
+                  .setText("Change WEC Controls")
+                  .setSize(300,40)
+                  .setFont(textBoxFont)
+                  .setLineHeight(10)
+                  .setColor(color(white)); // need to find the correct color for this
+                  //.setColorBackground(color(255,100))
+                  //.setColorForeground(color(255,100));     
+                  
+  myTextarea = cp5.addTextarea("txtMissionControl")
+                  .setPosition(35, 155)
+                  .setText("Mission Control")
+                  .setSize(225,75)
+                  .setFont(headerTextBoxFont)
+                  .setLineHeight(7)
+                  .setColor(color(buttonblue)) ;// need to find the correct color for this
+                 // .setColorBackground(color(255,100));
+                  //.setColorForeground(color(255,100)); 
+                  
+                   image(wavePic, 0, 0, width, height); //background
+  fill(buttonblue); //top banner 
+  stroke(buttonblue); //not sure
+  strokeWeight(0);
+  rect(0, 1120, width, 80); //bottom banner
+  image(snlLogo, width-snlLogo.width*0.25-5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25); //Logo
+  rect(0, 0, width, 95); // Top Banner
+
+  text(fundingState, width/2, 1150);  
+//Mission Control
+  fill(turq, 150); //makes the mission control box transparrent 
+  stroke(buttonblue, 150);
+  strokeWeight(3);
+  rect(25, 150, 705, 930, 7); // background for Mission control blue box
+  
+  fill(green);
+  stroke(buttonblue); //outer color
+  rect(15, 130, 225, 75, 7); //Mission Control Title Box 
+  //Mission Control Text
+  
+   // System Status
+  fill(turq, 150);
+  stroke(buttonblue, 150);
+  rect(780, 150, 1115, 930, 7); // background
+  fill(green);
+  stroke(buttonblue);
+  rect(770, 130, 225, 75, 7); //system title
+  fill(buttonblue);
+  rect(1387, 185, 480, 400, 7); //power box
+  rect(805, 225, 550, 225, 7); // explainer box
+  rect(805, 475, 550, 575, 7); //graph background
+  rect(1387, 610, 480, 440, 7); //FFT background 
+  
+  fill(255, 255, 255);
+  
+  
+  
+  
 }
 //button functions:
 /////////////////// MAKES BUTTONS DO THINGS ////////////////////////////////////
+
+// Console Button
+void consoleButton(){
+ consoleButton.setColorBackground(hoverblue);
+  
+  if (consoleOutput.isVisible()) {
+    consoleOutput.hide();
+  } else {
+   consoleOutput.show();
+  }
+}
 
 // Motor Buttons 
 
@@ -332,6 +514,7 @@ void jog() {
   peakF.hide();
   gamma.hide();
   position.show();
+ 
   //set mode on arduino:
   if (megaConnected) {
     port1.write('!');
@@ -614,4 +797,40 @@ void drawFFT() {
       text(i, initialX, y - yScale*i);    //y-axis
     }
   }
+}
+void displayUpdate(){
+   image(wavePic, 0, 0, width, height); //background
+  fill(buttonblue); //top banner 
+  stroke(buttonblue); //not sure
+  strokeWeight(0);
+  rect(0, 1120, width, 80); //bottom banner
+  image(snlLogo, width-snlLogo.width*0.25-5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25); //Logo
+  rect(0, 0, width, 95); // Top Banner
+
+  text(fundingState, width/2, 1150);  
+//Mission Control
+  fill(turq, 150); //makes the mission control box transparrent 
+  stroke(buttonblue, 150);
+  strokeWeight(3);
+  rect(25, 150, 705, 930, 7); // background for Mission control blue box
+  
+  fill(green);
+  stroke(buttonblue); //outer color
+  rect(15, 130, 225, 75, 7); //Mission Control Title Box 
+  //Mission Control Text
+  
+   // System Status
+  fill(turq, 150);
+  stroke(buttonblue, 150);
+  rect(780, 150, 1115, 930, 7); // background
+  fill(green);
+  stroke(buttonblue);
+  rect(770, 130, 225, 75, 7); //system title
+  fill(buttonblue);
+  rect(1387, 185, 480, 400, 7); //power box
+  rect(805, 225, 550, 225, 7); // explainer box
+  rect(805, 475, 550, 575, 7); //graph background
+  rect(1387, 610, 480, 440, 7); //FFT background 
+  
+  fill(255, 255, 255);
 }
