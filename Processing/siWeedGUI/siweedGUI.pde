@@ -1,9 +1,19 @@
-//import meter.*;
-import controlP5.*; //importing GUI library
+import meter.*;
+import controlP5.*;  //importing GUI library
+
 import processing.serial.*;
 import java.lang.Math.*;
 import java.util.LinkedList;
 import java.util.Queue;
+
+
+
+//ControlP5 cp5; delcared in UI
+
+Textarea myTextarea;
+
+Println console; //Needed for GUI console to work
+Textarea consoleOutput; //Needed for GUI console to work
 
 boolean debug = false;    //for debug print statements
 
@@ -14,16 +24,20 @@ float[] fftArr;
 
 int previousMillis = 0;    //used to update fft 
 int fftInterval = 100;    //in milliseconds
+int test = 0;
+
 
 // meter set up  
 Meter myMeter;
+
 String fundingState = "Sandia National Laboratories is a multi-mission laboratory managed and operated by National Technology and Engineering Solutions of Sandia, LLC., a wholly owned subsidiary \n of Honeywell International, Inc., for the U.S. Department of Energy's National Nuclear Security Administration under contract DE-NA0003525.";
 String welcome = "Can you save the town from its power outage? \nChange the demension and type \n of wave to see how the power changes! \n Change the wave energy converter's controls \n to harvest more power. \n How quickly can you light up all four quadrants?";
 void setup() {
   ////////
   frameRate(32);    //sets draw() to run x times a second.
   ///////initialize objects
-  size(1920, 1200, P2D);
+  
+  size(1920, 1100, P2D); //need this for the touch screen
   surface.setTitle("SIWEED");
   waveMaker = new UIData();
   wec = new UIData();
@@ -35,14 +49,16 @@ void setup() {
   wec.mode = 4;  //1 = torque, 2= feedback, 3 = "sea", 4 = off
   initializeDataLogging();
   initializeUI();
-
-  //adding meter 
+  
   myMeter = new Meter(0.0, 5.0);    //min and max
+
 }
+
 /*
 public void settings() {
  fullScreen(2);
  }*/
+ 
 boolean initialized = false;
 int timestamp = 0;   //for debuging
 void draw() {
@@ -56,13 +72,10 @@ void draw() {
     }
     initialized = true;
   }
-  // Background color
-  background(dblue);
-  //Title 
-  textFont(fb, 40);
-  fill(green);
-  textLeading(15);
-  textAlign(CENTER, TOP);
+
+  displayUpdate(); 
+  //The reason for this is because the slider texts. 
+  //Without constantly updating the background and boxes, the text from the sliers will just remain there.
 
   if (debug) {
     print("2 ");
@@ -70,40 +83,13 @@ void draw() {
     timestamp = millis();
   }
 
-  image(wavePic, 0, 0, width, height); //background
-  fill(buttonblue);
-  stroke(buttonblue);
-  strokeWeight(0);
-  rect(0, 1120, width, 80); //bottom banner
-  image(snlLogo, width-snlLogo.width*0.25-5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25); //Logo
-  rect(0, 0, width, 95); // Top Banner
-  //banner text
-  fill(green);
-  text("Sandia Interactive Wave Energy Educational Display (SIWEED)", width/2, 30);
-  fill(255, 255, 255);
-  textSize(12);
-  textLeading(14);
-  text(fundingState, width/2, 1150);
+
 
   if (debug) {
     print("3 ");
     println(millis() - timestamp);
     timestamp = millis();
   }
-  //Mission Control
-  fill(turq, 150);
-  stroke(buttonblue, 150);
-  strokeWeight(3);
-  rect(25, 150, 705, 930, 7); // background
-  fill(green);
-  stroke(buttonblue);
-  rect(15, 130, 225, 75, 7); //Mission Control Title Box 
-  //Mission Control Text
-  textFont(fb, 25);
-  fill(buttonblue);
-  textLeading(15);
-  textAlign(LEFT, TOP);
-  text("Mission Control", 35, 155);
 
   if (debug) {
     print("4 ");
@@ -111,29 +97,11 @@ void draw() {
     timestamp = millis();
   }
 
-  // System Status
-  fill(turq, 150);
-  stroke(buttonblue, 150);
-  rect(780, 150, 1115, 930, 7); // background
-  fill(green);
-  stroke(buttonblue);
-  rect(770, 130, 225, 75, 7); //system title
-  fill(buttonblue);
-  rect(1387, 185, 480, 400, 7); //power box
-  rect(805, 225, 550, 225, 7); // explainer box
-  rect(805, 475, 550, 575, 7); //graph background
-  rect(1387, 610, 480, 440, 7); //FFT background 
-  fill(255, 255, 255);
-  textFont(fb, 20);
-  text(welcome, 810, 250);
-  //System Status Text
-  textFont(fb, 25);
-  fill(buttonblue);
-  textLeading(15);
-  textAlign(LEFT, TOP);
-  stroke(buttonblue);
-  text("System Status", 795, 155);
-  stroke(green);
+  if (debug) {
+    print("4 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
 
   if (debug) {
     print("5 ");
@@ -141,31 +109,22 @@ void draw() {
     timestamp = millis();
   }
 
-  textFont(fb, 20);
-  fill(255, 255, 255);
-  textLeading(15);
-  textAlign(LEFT, TOP);
-  text("Change Wave Dimensions", 45, 220);
-
   if (debug) {
     print("6 ");
     println(millis() - timestamp);
     timestamp = millis();
   }
 
-  textFont(fb, 20); 
-  fill(255, 255, 255);
-  textLeading(15);
-  textAlign(LEFT, TOP);
-  text("Change WEC Controls", 45, 620);
 
   if (debug) {
     print("7 ");
     println(millis() - timestamp);
     timestamp = millis();
   }
+
   //Meter control:
   myMeter.update(pow);
+
   if (pow >= 1.25 && pow < 3) {
     quad1.setColorBackground(green);
   }

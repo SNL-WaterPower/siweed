@@ -21,10 +21,10 @@ public class Meter {
   }
   public void update(float val) {
     strokeWeight(height/200);    //relative to frame size
-    stroke(green);    //border color
-    fill(white);            //background color
+    stroke(turq);    //border color
+    fill(buttonblue);            //background color
     rect(xmin, ymin, xmax - xmin, ymax - ymin, 7);      //background and border
-    stroke(black);
+    stroke(white);
     noFill();
     arc(originx, originy, arcR*2, arcR*2, PI, 2 * PI);    //solid arc
     strokeWeight(height/150);
@@ -32,7 +32,7 @@ public class Meter {
     //draw numbers:
     textFont(fb, 10);
     textAlign(CENTER);
-    fill(black);
+    fill(white);
     for (int i=0; i <= divisionCount; i++) {
       float labelVal = minVal + i*(float)(maxVal-minVal)/(float)divisionCount;
       labelVal = ((int)(labelVal*100))/100.0;    //rounds to 2 decimal places
