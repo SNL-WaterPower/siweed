@@ -13,6 +13,7 @@ void initializeSerial() {
         if (debug) println("trying port"+i);
         port1 = new Serial(this, Serial.list()[i], 250000); //attempts to connect
         megaConnected = true;
+        if (debug) println("mega test port connected");
       }
       catch(Exception e) {
         megaConnected = false;
@@ -25,16 +26,22 @@ void initializeSerial() {
         if (debug) println("finished testing mega serial");
         if (megaUnitTests[0]) {
           //correct board found
+          if (debug) println("correct board found");
         } else {
           megaConnected = false;    //if not found, keep testing
+          port1.stop();    //disconnect the port so Due function can try
+          if (debug) println("wrong board");
         }
       }
     }
     if (debug) println("Due Serial");
+    if (debug) println(Serial.list()[i]);
     if (!dueConnected) {
       try {
+        if (debug) println("trying port");
         port2 = new Serial(this, Serial.list()[i], 250000); // all communication with Due
         dueConnected = true;
+        if (debug) println("due port found");
       }
       catch(Exception e) {
         dueConnected = false;
@@ -47,6 +54,7 @@ void initializeSerial() {
           //correct board found
         } else {
           dueConnected = false;
+          port1.stop();    //disconnect the port
         }
       }
     }

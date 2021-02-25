@@ -1,38 +1,32 @@
 void initSerial() {
   Serial.begin(250000);
 }
-/* '!' indicates mode switch, next int is mode
-   j indicates jog position
-   a indicates incoming amplitude
-   f indicates incoming frequency
-   s :sigH
-   p :peakF
-   g :gamma
-*/
-void readSerial() {
-  if (Serial.available() > 4) {   //if a whole float is through: 1 byte tag + 4 byte float
-    //delay(1000);
-    //Serial.print('b');
-    //Serial.println(Serial.available());
-    speedScalar = 0;    //if anything happens, reset the speed scalar(and ramp up speed)
+void readSerial()
+{
+  /*
+    '!' indicates mode switch, next int is mode
+    t indicates torque command
+    k indicates kp -p was taken
+    d indicates kd
+    s :sigH
+    p :peakF
+    g :gamma
+  */
+  if (Serial.available() > 5) {   //if a whole float is through: n+100>
     char c = Serial.read();
-    //Serial.print('x');
-    //Serial.println(c);
-    switch (c) {
+    switch (c)
+    {
       case '!':
         mode = (int)readFloat();
-        if (mode == 1) {
-          n = 1;    //sine wave
-        }
         break;
-      case 'j':
-        desiredPos = readFloat();
+      case 't':
+        tau = readFloat();
         break;
-      case 'a':
-        amps[0] = readFloat();
+      case 'k':
+        kp = readFloat();
         break;
-      case 'f':
-        freqs[0] = readFloat();
+      case 'd':
+        kd = readFloat();
         break;
       case 's':
         sigH = readFloat();
@@ -41,7 +35,7 @@ void readSerial() {
         peakF = readFloat();
         break;
       case 'g':     //should always be recieved after s and p
-        gam = readFloat();
+        _gamma = readFloat();
         newJonswapData = true;
         break;
       case 'u':
@@ -71,6 +65,7 @@ void readSerial() {
     }
   }
 }
+
 volatile float readFloat() {
   volatile byte byteArray[4];
   for (volatile int i = 0; i < 4; i++) {

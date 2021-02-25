@@ -11,13 +11,8 @@ void initSerial() {
 */
 void readSerial() {
   if (Serial.available() > 4) {   //if a whole float is through: 1 byte tag + 4 byte float
-    //delay(1000);
-    //Serial.print('b');
-    //Serial.println(Serial.available());
     speedScalar = 0;    //if anything happens, reset the speed scalar(and ramp up speed)
     char c = Serial.read();
-    //Serial.print('x');
-    //Serial.println(c);
     switch (c) {
       case '!':
         mode = (int)readFloat();

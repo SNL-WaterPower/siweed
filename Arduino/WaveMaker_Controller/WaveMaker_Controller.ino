@@ -2,7 +2,7 @@
 #include <miniWaveTankJonswap.h>
 #include <SuperDroidEncoderBuffer.h>
 #include<math.h>
-#include <PID_v1.h> // not needed
+#include <PID_v1.h> 
 #include <SPI.h>
 #include <SparkFun_MiniGen.h>
 
@@ -97,7 +97,6 @@ void setup() {
   while (analogRead(limitPin) > 500) {}   //move up until the beam is broken
   digitalWrite(dirPin, LOW);
   while (analogRead(limitPin) < 500) {}   //move down until the beam is unbroken
-
   freqReg = gen.freqCalc(0); //stop moving motor
   gen.adjustFreq(MiniGen::FREQ0, freqReg);
 

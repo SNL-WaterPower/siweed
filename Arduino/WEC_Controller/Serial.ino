@@ -12,7 +12,7 @@ void readSerial()
     p :peakF
     g :gamma
   */
-  if (Serial.available() > 5) {   //if a whole float is through: n+100>
+  if (Serial.available() >  4) {   //if a whole float is through: 1 byte tag + 4 byte float
     char c = Serial.read();
     switch (c)
     {
