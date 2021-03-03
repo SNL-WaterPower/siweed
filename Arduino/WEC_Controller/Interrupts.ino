@@ -61,4 +61,7 @@ void sendSerial() {  //called by interupt
   Serial.write('v');
   sendFloat(vel);
   Serial.println();
+  Serial.println(encoderBuffInit);
+  Serial.println(didItWork_MDR0);
+  Serial.println(didItWork_MDR1);
 }

@@ -15,7 +15,7 @@ Textarea myTextarea;
 Println console; //Needed for GUI console to work
 Textarea consoleOutput; //Needed for GUI console to work
 
-boolean debug = false;    //for debug print statements
+boolean debug = false;    //for debug print statements. Also disables GUI consol, and puts it in processing
 
 int queueSize = 512;    //power of 2 closest to 30(15) seconds at 32 samples/second    !!Needs to match arduino
 LinkedList fftList;

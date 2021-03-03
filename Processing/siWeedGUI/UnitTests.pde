@@ -1,6 +1,6 @@
 
 boolean[] megaUnitTests = {false, false, false, false};      //serial, jonswap amplitude array, jonswap timeSeries, encoder buffer
-boolean[] dueUnitTests = {false, false, false};
+boolean[] dueUnitTests = {false, false, false, false};
 void unitTests() {
   /////////////FFT:
   for (int i = 0; i < queueSize; i++) {
@@ -52,13 +52,14 @@ void unitTests() {
     println("Due Serial Test FAILED");
   }
   ////////////verify mega jonswap:
-  readMegaSerial();    //clear buffer
-  if (megaConnected) {
+  if (megaConnected) {    //something not right: work on next week!!
+    port1.clear();    //clear buffer
     port1.write('u');    //sends to begin test
-    sendFloat(0, port1);    //placeholder float to maintain format of letter>number
+    sendFloat(1.0, port1);    //placeholder float to maintain format of letter>number
+    port1.clear();
+    delay(15);     //give time to complete
+    readMegaSerial();
   }
-  delay(100);          //give time to complete
-  readMegaSerial();
   if (megaUnitTests[1]) {
     println("Mega Jonswap Amplitide Test PASSED");
   } else {    
@@ -75,13 +76,13 @@ void unitTests() {
     println("Mega Encoder Buffer Test FAILED");
   }
   ////////////verify due jonswap:
-  readDueSerial();    //clear buffer
   if (dueConnected) {
+    port2.clear();    //clear buffer
     port2.write('u');    //sends to begin test
-    sendFloat(0, port2);    //placeholder float to maintain format of letter>number
+    sendFloat(1.0, port2);    //placeholder float to maintain format of letter>number
+    delay(10);          //give time to complete
+    readDueSerial();
   }
-  delay(100);          //give time to complete
-  readDueSerial();
   if (dueUnitTests[1]) {
     println("Due Jonswap Amplitide Test PASSED");
   } else {    
@@ -91,5 +92,10 @@ void unitTests() {
     println("Due Jonswap TimeSeries Test PASSED");
   } else {    
     println("Due Jonswap TimeSeries Test FAILED");
+  }
+  if (dueUnitTests[3]) {
+    println("Due Encoder Buffer Test PASSED");
+  } else {    
+    println("Due Encoder Buffer Test FAILED");
   }
 }

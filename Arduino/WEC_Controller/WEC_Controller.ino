@@ -39,7 +39,7 @@ void setup()
   pinMode(dirPin, OUTPUT);
   digitalWrite(dirPin, LOW);
   pinMode(tauPin, OUTPUT);
-  
+
   pinMode(l1Pin, OUTPUT);
   digitalWrite(l1Pin, HIGH);
   pinMode(l2Pin, OUTPUT);
@@ -53,9 +53,17 @@ void setup()
   digitalWrite(l2Pin, LOW);
   digitalWrite(l3Pin, LOW);
   digitalWrite(l4Pin, LOW);
-  encoderBuffInit = encoderBuff.begin();    //configure encoder buffer and assign bools for unit testing
-  didItWork_MDR0 = encoderBuff.setMDR0(MDR0_settings);
-  didItWork_MDR1 = encoderBuff.setMDR1(MDR1_settings);
+  delay(100);
+  for (int i = 0; i < 10; i++)
+  {
+    encoderBuffInit = encoderBuff.begin(200000);    //configure encoder buffer and assign bools for unit testing
+    didItWork_MDR0 = encoderBuff.setMDR0(MDR0_settings);
+    didItWork_MDR1 = encoderBuff.setMDR1(MDR1_settings);
+    if (encoderBuffInit && didItWork_MDR0 && didItWork_MDR1)
+    {
+      break;
+    }
+  }
 
   unitTests();
   initInterrupts();

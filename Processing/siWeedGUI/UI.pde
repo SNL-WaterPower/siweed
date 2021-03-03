@@ -26,7 +26,7 @@ color red = color(255, 0, 0);
 // Fonts
 PFont f; // Regular font
 PFont fb; // Bold font
-PFont buttonFont, sliderFont,titleTextBoxFont, headerTextBoxFont, textBoxFont; 
+PFont buttonFont, sliderFont, titleTextBoxFont, headerTextBoxFont, textBoxFont; 
 
 
 // Sandia logo
@@ -37,27 +37,27 @@ void initializeUI() {
   // starting ControlP5 stuff
   cp5 = new ControlP5(this);
   //Fonts
-    f = createFont("Arial", 16, true);
+  f = createFont("Arial", 16, true);
   fb = createFont("Arial Bold Italic", 32, true);
   titleTextBoxFont = buttonFont = createFont("Arial Bold Italic", 40, true);
   buttonFont = createFont("Arial Bold Italic", 12, true);
-  sliderFont = createFont("Arial Bold Italic",12,true);
-  headerTextBoxFont = createFont("Arial Bold",25,false);
-  textBoxFont = createFont("Arial Bold Italic",20,true);
+  sliderFont = createFont("Arial Bold Italic", 12, true);
+  headerTextBoxFont = createFont("Arial Bold", 25, false);
+  textBoxFont = createFont("Arial Bold Italic", 20, true);
 
   // Buttons //
   //1387
-  
+
   /* Code to make this toggle, but getting errors on ".isVisible()
-    consoleButton = cp5.addToggle("consoleButton")
-    .setCaptionLabel("AllconsoleButton")
-    //.setValue(0)
-    .setPosition(1390, 610)
-    .setSize(50, 20)
-    .setColorBackground(grey)
-    .setState(false);
- */
-    consoleButton = cp5.addButton("consoleButton")
+   consoleButton = cp5.addToggle("consoleButton")
+   .setCaptionLabel("AllconsoleButton")
+   //.setValue(0)
+   .setPosition(1390, 610)
+   .setSize(50, 20)
+   .setColorBackground(grey)
+   .setState(false);
+   */
+  consoleButton = cp5.addButton("consoleButton")
     .setPosition(1390, 610)
     .setSize(100, 50)
     .setLabel("Console")
@@ -133,7 +133,7 @@ void initializeUI() {
     .setSize(150, 65)
     .setLabel("OFF")
     .setFont(buttonFont); 
-    
+
 
   buttonY = 660;
 
@@ -350,7 +350,7 @@ void initializeUI() {
     ;
   waveChart.addDataSet("debug");
   waveChart.setData("debug", new float[360]);
-  
+
   wecChart =  cp5.addChart("WEC Information")
     .setFont(sliderFont)
     .setPosition(830, 795)
@@ -371,83 +371,86 @@ void initializeUI() {
 
   snlLogo = loadImage("SNL_Stacked_White.png");
   wavePic = loadImage("ocean.jpg");
-  
-  
+
+
   //console, this needs to be in the setup to ensure
   //that it catches any errors when program starts
   consoleOutput=cp5.addTextarea("consoleOutput")
-        .setPosition(1460,710) 
-        .setSize(330, 300)
-        .setLineHeight(14)
-        .setColorValue(green) //color of font
-         // .setColorBackground(color(100,100))
-        // .setColorForeground(color(255,100))
-        .scroll(1) //enable scrolling up and down
-        .hide(); //hidden on startup     
-  console = cp5.addConsole(consoleOutput);
-    
-    
+    .setPosition(1460, 710) 
+    .setSize(330, 300)
+    .setLineHeight(14)
+    .setColorValue(green) //color of font
+    // .setColorBackground(color(100,100))
+    // .setColorForeground(color(255,100))
+    .scroll(1) //enable scrolling up and down
+    .hide(); //hidden on startup   
+  if (!debug)      //only does in GUI console if not debugging
+  {
+    console = cp5.addConsole(consoleOutput);
+  }
+
+
   myTextarea = cp5.addTextarea("txtBanner")
-        .setPosition(width/6,height/45)
-        .setText("Sandia Interactive Wave Energy Educational Display (SIWEED)")
-        .setSize(1200,90)
-        .setFont(titleTextBoxFont)
-        .setLineHeight(14)
-        .setColor(color(green)) ;
-        //.setColorBackground(color(255,100));
-        //.setColorForeground(color(255,100));
-   
+    .setPosition(width/6, height/45)
+    .setText("Sandia Interactive Wave Energy Educational Display (SIWEED)")
+    .setSize(1200, 90)
+    .setFont(titleTextBoxFont)
+    .setLineHeight(14)
+    .setColor(color(green)) ;
+  //.setColorBackground(color(255,100));
+  //.setColorForeground(color(255,100));
+
   myTextarea = cp5.addTextarea("txtWelcome")
-                  .setText(welcome)
-                  .setPosition(810, 250)
-                  .setSize(500,300)
-                  .setFont(textBoxFont)
-                  .setLineHeight(29)
-                  .setColor(color(white)); // need to find the correct color for this
-                  //.setColorBackground(color(255,100))
-                  //.setColorForeground(color(255,100));
-                
+    .setText(welcome)
+    .setPosition(810, 250)
+    .setSize(500, 300)
+    .setFont(textBoxFont)
+    .setLineHeight(29)
+    .setColor(color(white)); // need to find the correct color for this
+  //.setColorBackground(color(255,100))
+  //.setColorForeground(color(255,100));
+
   myTextarea = cp5.addTextarea("txtSystemStatus")
-                  .setPosition(795, 155)
-                  .setText("System Status")
-                  .setSize(225,75)
-                  .setFont(headerTextBoxFont)
-                  .setLineHeight(7)
-                  .setColor(color(buttonblue)); // need to find the correct color for this
-                 // .setColorBackground(color(255,100))
-                //  .setColorForeground(color(255,100));
+    .setPosition(795, 155)
+    .setText("System Status")
+    .setSize(225, 75)
+    .setFont(headerTextBoxFont)
+    .setLineHeight(7)
+    .setColor(color(buttonblue)); // need to find the correct color for this
+  // .setColorBackground(color(255,100))
+  //  .setColorForeground(color(255,100));
 
   myTextarea = cp5.addTextarea("txtWaveDimensions")
-                  .setPosition(45, 220)
-                  .setText("Change Wave Dimensions")
-                  .setSize(300,40)
-                  .setFont(textBoxFont)
-                  .setLineHeight(10)
-                  .setColor(color(white)); // need to find the correct color for this
-                  //.setColorBackground(color(255,100))
-                  //.setColorForeground(color(255,100));             
+    .setPosition(45, 220)
+    .setText("Change Wave Dimensions")
+    .setSize(300, 40)
+    .setFont(textBoxFont)
+    .setLineHeight(10)
+    .setColor(color(white)); // need to find the correct color for this
+  //.setColorBackground(color(255,100))
+  //.setColorForeground(color(255,100));             
 
   myTextarea = cp5.addTextarea("txtWECControls")
-                  .setPosition(45, 620)
-                  .setText("Change WEC Controls")
-                  .setSize(300,40)
-                  .setFont(textBoxFont)
-                  .setLineHeight(10)
-                  .setColor(color(white)); // need to find the correct color for this
-                  //.setColorBackground(color(255,100))
-                  //.setColorForeground(color(255,100));     
-                  
+    .setPosition(45, 620)
+    .setText("Change WEC Controls")
+    .setSize(300, 40)
+    .setFont(textBoxFont)
+    .setLineHeight(10)
+    .setColor(color(white)); // need to find the correct color for this
+  //.setColorBackground(color(255,100))
+  //.setColorForeground(color(255,100));     
+
   myTextarea = cp5.addTextarea("txtMissionControl")
-                  .setPosition(35, 155)
-                  .setText("Mission Control")
-                  .setSize(225,75)
-                  .setFont(headerTextBoxFont)
-                  .setLineHeight(7)
-                  .setColor(color(buttonblue)) ;// need to find the correct color for this
-                 // .setColorBackground(color(255,100));
-                  //.setColorForeground(color(255,100)); 
-                  
-                   image(wavePic, 0, 0, width, height); //background
+    .setPosition(35, 155)
+    .setText("Mission Control")
+    .setSize(225, 75)
+    .setFont(headerTextBoxFont)
+    .setLineHeight(7)
+    .setColor(color(buttonblue)) ;// need to find the correct color for this
+  // .setColorBackground(color(255,100));
+  //.setColorForeground(color(255,100)); 
+
+  image(wavePic, 0, 0, width, height); //background
   fill(buttonblue); //top banner 
   stroke(buttonblue); //not sure
   strokeWeight(0);
@@ -456,18 +459,18 @@ void initializeUI() {
   rect(0, 0, width, 95); // Top Banner
 
   text(fundingState, width/2, 1150);  
-//Mission Control
+  //Mission Control
   fill(turq, 150); //makes the mission control box transparrent 
   stroke(buttonblue, 150);
   strokeWeight(3);
   rect(25, 150, 705, 930, 7); // background for Mission control blue box
-  
+
   fill(green);
   stroke(buttonblue); //outer color
   rect(15, 130, 225, 75, 7); //Mission Control Title Box 
   //Mission Control Text
-  
-   // System Status
+
+  // System Status
   fill(turq, 150);
   stroke(buttonblue, 150);
   rect(780, 150, 1115, 930, 7); // background
@@ -479,24 +482,20 @@ void initializeUI() {
   rect(805, 225, 550, 225, 7); // explainer box
   rect(805, 475, 550, 575, 7); //graph background
   rect(1387, 610, 480, 440, 7); //FFT background 
-  
+
   fill(255, 255, 255);
-  
-  
-  
-  
 }
 //button functions:
 /////////////////// MAKES BUTTONS DO THINGS ////////////////////////////////////
 
 // Console Button
-void consoleButton(){
- consoleButton.setColorBackground(hoverblue);
-  
+void consoleButton() {
+  consoleButton.setColorBackground(hoverblue);
+
   if (consoleOutput.isVisible()) {
     consoleOutput.hide();
   } else {
-   consoleOutput.show();
+    consoleOutput.show();
   }
 }
 
@@ -514,7 +513,7 @@ void jog() {
   peakF.hide();
   gamma.hide();
   position.show();
- 
+
   //set mode on arduino:
   if (megaConnected) {
     port1.write('!');
@@ -798,8 +797,8 @@ void drawFFT() {
     }
   }
 }
-void displayUpdate(){
-   image(wavePic, 0, 0, width, height); //background
+void displayUpdate() {
+  image(wavePic, 0, 0, width, height); //background
   fill(buttonblue); //top banner 
   stroke(buttonblue); //not sure
   strokeWeight(0);
@@ -808,18 +807,18 @@ void displayUpdate(){
   rect(0, 0, width, 95); // Top Banner
 
   text(fundingState, width/2, 1150);  
-//Mission Control
+  //Mission Control
   fill(turq, 150); //makes the mission control box transparrent 
   stroke(buttonblue, 150);
   strokeWeight(3);
   rect(25, 150, 705, 930, 7); // background for Mission control blue box
-  
+
   fill(green);
   stroke(buttonblue); //outer color
   rect(15, 130, 225, 75, 7); //Mission Control Title Box 
   //Mission Control Text
-  
-   // System Status
+
+  // System Status
   fill(turq, 150);
   stroke(buttonblue, 150);
   rect(780, 150, 1115, 930, 7); // background
@@ -831,6 +830,6 @@ void displayUpdate(){
   rect(805, 225, 550, 225, 7); // explainer box
   rect(805, 475, 550, 575, 7); //graph background
   rect(1387, 610, 480, 440, 7); //FFT background 
-  
+
   fill(255, 255, 255);
 }

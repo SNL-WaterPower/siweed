@@ -41,9 +41,10 @@ void readSerial() {
         break;
       case 'u':
         readFloat();    //get rid of placeholder float
+        noInterrupts();   //prevents the send serial interupt from interupting this reply
         if (ampUnitTest) {
           Serial.write('u');
-          sendFloat(1);       //this may get interupted by the send serial interupt, which might cause an issue
+          sendFloat(1); 
         } else {
           Serial.write('u');
           sendFloat(-1);
@@ -62,6 +63,9 @@ void readSerial() {
           Serial.write('u');
           sendFloat(-3);
         }
+        Serial.write('u');
+        sendFloat(0);   //placeholder to match 20 byte packet
+        interrupts();   //allows interupts again
         break;
     }
   }

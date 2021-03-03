@@ -107,7 +107,7 @@ void readMegaSerial() {
    d:other data for debugging
    */
   if (megaConnected) {
-    for (int i = 0; i <port1.available()/20; i++) {    //runs as many times to empty the buffer(bytes availible/ bytes read per loop). Since it runs 30 times a second, the arduino will send many samples per execution.
+    for (int i = 0; i <port1.available()/20; i++) {    //runs as many times to empty the buffer(bytes availible/ bytes read per loop).
       switch(port1.readChar()) {
       case '1':
         probe1 = readFloat(port1);
@@ -133,6 +133,7 @@ void readMegaSerial() {
         break;
       case 'u':
         int testNum = (int)readFloat(port1);    //indicates which jonswap test passed(1 or 2). Negative means that test failed.
+        if(debug){println("testNum:"+testNum);}
         if (testNum > 0) {    //only changes if test was passed
           megaUnitTests[testNum] = true;
         }

@@ -67,9 +67,9 @@ public class Meter {
       }
     }
     //draw needle:
-    if(val > maxVal){
+    if (val > maxVal) {
       val = maxVal;
-    }else if(val < minVal){
+    } else if (val < minVal) {
       val = minVal;
     }
     stroke(red);
