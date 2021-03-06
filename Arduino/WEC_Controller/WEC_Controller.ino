@@ -4,11 +4,11 @@
 #include <miniWaveTankJonswap.h>
 miniWaveTankJonswap jonswap(512.0 / 32.0, 0.5, 2.5); //period, low frequency, high frequency. frequencies will be rounded to multiples of df(=1/period)
 //^ISSUE. Acuracy seems to fall off after ~50 components when using higher frequencies(1,3 at 64 elements seems wrong).
-SuperDroidEncoderBuffer encoderBuff = SuperDroidEncoderBuffer(42);
+SuperDroidEncoderBuffer encoderBuff = SuperDroidEncoderBuffer(52);
 bool encoderBuffInit, didItWork_MDR0, didItWork_MDR1, didItWork_DTR;   //variables for unit testing
 unsigned char MDR0_settings = MDRO_x4Quad | MDRO_freeRunningCountMode | MDRO_indexDisable | MDRO_syncIndex | MDRO_filterClkDivFactor_1;
 unsigned char MDR1_settings = MDR1_4ByteCounterMode | MDR1_enableCounting | MDR1_FlagOnIDX_NOP | MDR1_FlagOnCMP_NOP | MDR1_FlagOnBW_NOP | MDR1_FlagOnCY_NOP;
-bool newJonswapData = false;
+bool newJonswapData = false, sendUnitTests = false;
 volatile float sigH, peakF, _gamma;
 volatile int mode = -1;    //-1 stop, 0 torque control, 1 feedback control, 2 sea state
 volatile int n;   //number of components
@@ -54,9 +54,9 @@ void setup()
   digitalWrite(l3Pin, LOW);
   digitalWrite(l4Pin, LOW);
   delay(100);
-  for (int i = 0; i < 10; i++)
+  for (int i = 0; i < 10; i++)      //tries i times or until it works. Messy but functional
   {
-    encoderBuffInit = encoderBuff.begin(200000);    //configure encoder buffer and assign bools for unit testing
+    encoderBuffInit = encoderBuff.begin();    //configure encoder buffer and assign bools for unit testing
     didItWork_MDR0 = encoderBuff.setMDR0(MDR0_settings);
     didItWork_MDR1 = encoderBuff.setMDR1(MDR1_settings);
     if (encoderBuffInit && didItWork_MDR0 && didItWork_MDR1)

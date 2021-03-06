@@ -35,7 +35,7 @@ void initInterrupts() {
   TODO: triple check unit conversions, and test linear controller on it's own. Then
   tune PID with 0P, maybe 0D
 */
-ISR(TIMER4_COMPA_vect) {    //function called by interupt     //Takes about .4 milliseconds
+ISR(TIMER4_COMPA_vect) {    //function called by interupt
   volatile unsigned long freqReg = gen.freqCalc(0);   //can we delete this?
   volatile float pos = encPos();
   error = futurePos - pos;   //where we told it to go vs where it is
@@ -85,14 +85,42 @@ ISR(TIMER5_COMPA_vect) {   //takes ___ milliseconds
 
   pushBuffer(probe1Buffer, mapFloat(analogRead(probe1Pin), 0.0, 560.0, 0.0, 27.0));     //maps to cm and adds to data buffer
   pushBuffer(probe2Buffer, mapFloat(analogRead(probe2Pin), 0.0, 560.0, 0.0, 27.0));
-  Serial.write('1');    //to indicate wave probe data
-  sendFloat(averageArray(probe1Buffer));
-  Serial.write('2');    //to indicate wave probe data
-  sendFloat(averageArray(probe2Buffer));
-  Serial.write('p');    //to indicate position
-  sendFloat(encPos());
-  Serial.write('d');    //to indicate alternate data
-  float lerpVal = lerp(prevVal, futurePos, (interval * 1.0e6) / (sampleT - prevSampleT)); //linear interpolate(initial value, final value, percentatge)//percentage is desired interval/actual interval
-  sendFloat(lerpVal);
+  if (sendUnitTests)    //if in unit testing serial mode
+  {
+    if (ampUnitTest) {
+      Serial.write('u');
+      sendFloat(1);
+    } else {
+      Serial.write('u');
+      sendFloat(-1);
+    }
+    if (TSUnitTest) {
+      Serial.write('u');
+      sendFloat(2);
+    } else {
+      Serial.write('u');
+      sendFloat(-2);
+    }
+    if (encoderTest) {
+      Serial.write('u');
+      sendFloat(3);
+    } else {
+      Serial.write('u');
+      sendFloat(-3);
+    }
+    Serial.write('u');
+    sendFloat(4);     //4 indicates that all tests have been sent at least once
+
+  } else {        //under normal operation
+    Serial.write('1');    //to indicate wave probe data
+    sendFloat(averageArray(probe1Buffer));
+    Serial.write('2');    //to indicate wave probe data
+    sendFloat(averageArray(probe2Buffer));
+    Serial.write('p');    //to indicate position
+    sendFloat(encPos());
+    Serial.write('d');    //to indicate alternate data
+    float lerpVal = lerp(prevVal, futurePos, (interval * 1.0e6) / (sampleT - prevSampleT)); //linear interpolate(initial value, final value, percentatge)//percentage is desired interval/actual interval
+    sendFloat(lerpVal);
+  }
   //Serial.println(encoderTest);
 }

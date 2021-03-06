@@ -1,5 +1,5 @@
 const float interval = .01;    //interval of updateTau interupt in seconds
-const float serialInterval = .0333; //interval of serial interupt
+const float serialInterval = .03125; //interval of serial interupt
 
 void initInterrupts() {
   Timer.getAvailable().attachInterrupt(sendSerial).start(serialInterval * 1.0e6);
@@ -52,16 +52,50 @@ void sendSerial() {  //called by interupt
     p: power
     v: velocity
   */
-  Serial.write('e');
-  sendFloat(encPos());
-  Serial.write('t');
-  sendFloat(tauCommand);
-  Serial.write('p');
-  sendFloat(power);
-  Serial.write('v');
-  sendFloat(vel);
-  //Serial.println();
-  //Serial.println(encoderBuffInit);
-  //Serial.println(didItWork_MDR0);
-  //Serial.println(didItWork_MDR1);
+  if (sendUnitTests)    //if in unit testing serial mode
+  {
+    if (ampUnitTest) {
+      Serial.write('u');
+      sendFloat(1);
+    } else {
+      Serial.write('u');
+      sendFloat(-1);
+    }
+    if (TSUnitTest) {
+      Serial.write('u');
+      sendFloat(2);
+    } else {
+      Serial.write('u');
+      sendFloat(-2);
+    }
+    if (encoderTest) {
+      Serial.write('u');
+      sendFloat(3);
+    } else {
+      Serial.write('u');
+      sendFloat(-3);
+    }
+    Serial.write('u');
+    sendFloat(4);     //4 indicates that all tests have been sent at least once
+
+  } else {        //under normal operation
+    Serial.write('e');
+    sendFloat(encPos());
+    Serial.write('t');
+    sendFloat(tauCommand);
+    Serial.write('p');
+    sendFloat(power);
+    Serial.write('v');
+    sendFloat(vel);
+  }
+  /*
+    Serial.println();
+    Serial.println(encoderBuffInit);
+    Serial.print((char)MDR0_settings, BIN);
+    Serial.print(" <-mdr0settings:if it worked-> ");
+    Serial.println(didItWork_MDR0);
+    Serial.print((char)MDR1_settings,BIN);
+    Serial.print(" <-mdr1settings:if it worked-> ");
+    Serial.println(didItWork_MDR1);
+    Serial.println(encPos());//*/
 }

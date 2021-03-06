@@ -2,7 +2,7 @@
 #include <miniWaveTankJonswap.h>
 #include <SuperDroidEncoderBuffer.h>
 #include<math.h>
-#include <PID_v1.h> 
+#include <PID_v1.h>
 #include <SPI.h>
 #include <SparkFun_MiniGen.h>
 
@@ -10,7 +10,7 @@ MiniGen gen(10); //initalize signal generator with FSYNC pin 10
 miniWaveTankJonswap jonswap(512.0 / 32.0, 0.5, 2.5); //period, low frequency, high frequency. frequencies will be rounded to multiples of df(=1/period)
 //^ISSUE. Acuracy seems to fall off after ~50 components when using higher frequencies(1,3 at 64 elements seems wrong).
 volatile double pidOut, pidSet, pidIn;
-PID myPID(&pidIn, &pidOut, &pidSet,0,0,0, P_ON_M, DIRECT);  //input, output, setpoint, kp,  ki, kd
+PID myPID(&pidIn, &pidOut, &pidSet, 0, 0, 0, P_ON_M, DIRECT); //input, output, setpoint, kp,  ki, kd
 SuperDroidEncoderBuffer encoderBuff = SuperDroidEncoderBuffer(42);
 bool encoderBuffInit, didItWork_MDR0, didItWork_MDR1, didItWork_DTR;   //variables for unit testing
 unsigned char MDR0_settings = MDRO_x4Quad | MDRO_freeRunningCountMode | MDRO_indexDisable | MDRO_syncIndex | MDRO_filterClkDivFactor_1;
@@ -26,20 +26,19 @@ volatile float phases[maxComponents];
 volatile float freqs[maxComponents];
 volatile float sigH, peakF, gam;   //"gamma" is used in another library
 //volatile float encPos;
-bool newJonswapData = false;
+bool newJonswapData = false, sendUnitTests = false;
 volatile float desiredPos;   //used for jog mode
 const int buffSize = 10;    //number of data points buffered in the moving average filter
 volatile float probe1Buffer[buffSize];
 volatile float probe2Buffer[buffSize];
 const float maxRate = 50.0;   //max mm/seconds
-//const float minRate = 10.0;
-////////////////////////
+/////////would like to put these in the interrupts tab, but cant without changing proect structure to .cpp and .h files.
 const float interval = .01;   //time between each interupt call in seconds //max value: 1.04
 const float serialInterval = .03125;   //time between each interupt call in seconds //max value: 1.04    .03125 is 32 times a second to match processing's speed(32hz)
-////////////////////////////////////////////////
+//////////
 //Derived funciton here:
 const float leadPitch = 10.0;     //mm/turn
-const float gearRatio = 12.0 /60.0; //motor turns per lead screw turns
+const float gearRatio = 12.0 / 60.0; //motor turns per lead screw turns
 const float motorStepsPerTurn = 400.0;   //steps per motor revolution
 const float encStepsPerTurn = 3200.0;
 
@@ -94,9 +93,16 @@ void setup() {
   digitalWrite(dirPin, HIGH);
   freqReg = gen.freqCalc(100); //setting the signal generator to 10hz
   gen.adjustFreq(MiniGen::FREQ0, freqReg); //start moving
-  while (analogRead(limitPin) > 500) {}   //move up until the beam is broken
+  float initialPos = encPos();
+  while (analogRead(limitPin) > 500) {   //move up until the beam is broken
+    if (encPos() - initialPos == 0)    //if motor is not moving(software testing), move on.
+      break;
+  }
   digitalWrite(dirPin, LOW);
-  while (analogRead(limitPin) < 500) {}   //move down until the beam is unbroken
+  while (analogRead(limitPin) < 500) {  //move down until the beam is unbroken
+    if (encPos() - initialPos == 0)    //if motor is not moving(software testing), move on.
+      break;
+  }
   freqReg = gen.freqCalc(0); //stop moving motor
   gen.adjustFreq(MiniGen::FREQ0, freqReg);
 
@@ -128,13 +134,13 @@ void loop() {   //__ microseconds
 }
 void updateSpeedScalar() {    //used to prevent jumps/smooth start
   //Serial.println(speedScalar);
-/*
-  if (speedScalar < 1) {
-    speedScalar += .005;
-  } else {
-    speedScalar = 1.0;
-  }
-*/
+  /*
+    if (speedScalar < 1) {
+      speedScalar += .005;
+    } else {
+      speedScalar = 1.0;
+    }
+  */
   speedScalar = 1.0;
 }
 volatile float mmToSteps(volatile float mm) {

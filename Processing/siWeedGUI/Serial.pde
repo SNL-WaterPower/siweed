@@ -105,6 +105,7 @@ void readMegaSerial() {
    2:probe 2
    p:position
    d:other data for debugging
+   u:unit tests
    */
   if (megaConnected) {
     for (int i = 0; i <port1.available()/20; i++) {    //runs as many times to empty the buffer(bytes availible/ bytes read per loop).
@@ -133,7 +134,9 @@ void readMegaSerial() {
         break;
       case 'u':
         int testNum = (int)readFloat(port1);    //indicates which jonswap test passed(1 or 2). Negative means that test failed.
-        if(debug){println("testNum:"+testNum);}
+        if (debug) {
+          println("MegatestNum:"+testNum);
+        }
         if (testNum > 0) {    //only changes if test was passed
           megaUnitTests[testNum] = true;
         }
@@ -149,6 +152,7 @@ void readDueSerial() {
    t: tau commanded to motor
    p: power
    v: velocity
+   u: unit testing
    */
   if (dueConnected) {
     for (int i = 0; i <port2.available()/20; i++) {    //runs as many times to empty the buffer(bytes availible/ bytes read per loop). Since it runs 30 times a second, the arduino will send many samples per execution.
@@ -161,13 +165,13 @@ void readDueSerial() {
         }
         break;
       case 't':
+        dueUnitTests[0] = true;
         tau = readFloat(port2);
         if (wecTorqClicked == true) {
           wecChart.push("wecTorque", tau);
         }
         break;
       case 'p':
-        dueUnitTests[0] = true;
         pow = readFloat(port2);
         if (wecPowClicked == true) {
           wecChart.push("wecPower", pow);
@@ -181,6 +185,9 @@ void readDueSerial() {
         break;
       case 'u':
         int testNum = (int)readFloat(port2);    //indicates which jonswap test passed(1 or 2)
+        if (debug) {
+          println("DuetestNum:"+testNum);
+        }
         if (testNum > 0) {    //only changes if test was passed
           dueUnitTests[testNum] = true;
         }   

@@ -1,6 +1,6 @@
 
-boolean[] megaUnitTests = {false, false, false, false};      //serial, jonswap amplitude array, jonswap timeSeries, encoder buffer
-boolean[] dueUnitTests = {false, false, false, false};
+boolean[] megaUnitTests = {false, false, false, false, false};      //serial, jonswap amplitude array, jonswap timeSeries, encoder buffer, unit tests recieved
+boolean[] dueUnitTests = {false, false, false, false, false};
 void unitTests() {
   /////////////FFT:
   for (int i = 0; i < queueSize; i++) {
@@ -52,13 +52,20 @@ void unitTests() {
     println("Due Serial Test FAILED");
   }
   ////////////verify mega jonswap:
-  if (megaConnected) {    //something not right: work on next week!!
+  if (megaConnected) { 
     port1.clear();    //clear buffer
     port1.write('u');    //sends to begin test
-    sendFloat(1.0, port1);    //placeholder float to maintain format of letter>number
-    port1.clear();
-    delay(15);     //give time to complete
-    readMegaSerial();
+    sendFloat(1.0, port1);    //flips to unit test serial mode
+    delay(200);    //time for arduino to send tests
+    for (int i = 0; i < 10 && !megaUnitTests[4]; i++)    //tries i times or until the confimation flag is recieved
+    {
+      readMegaSerial();
+      if (debug) {
+        println("retrieving mega unit tests");
+      }
+    }
+    port1.write('u');    //sends to begin test
+    sendFloat(0, port1);    //back to normal operation
   }
   if (megaUnitTests[1]) {
     println("Mega Jonswap Amplitide Test PASSED");
@@ -79,9 +86,17 @@ void unitTests() {
   if (dueConnected) {
     port2.clear();    //clear buffer
     port2.write('u');    //sends to begin test
-    sendFloat(1.0, port2);    //placeholder float to maintain format of letter>number
-    delay(10);          //give time to complete
-    readDueSerial();
+    sendFloat(1.0, port2);    //flips to unit test serial mode
+    delay(200);    //time for arduino to send tests
+    for (int i = 0; i < 10 && !dueUnitTests[4]; i++)    //tries i times or until the confimation flag is recieved
+    {
+      readDueSerial();      
+      if (debug) {
+        println("retrieving due unit tests");
+      }
+    }
+    port2.write('u'); 
+    sendFloat(0, port2);    //back to normal operation
   }
   if (dueUnitTests[1]) {
     println("Due Jonswap Amplitide Test PASSED");

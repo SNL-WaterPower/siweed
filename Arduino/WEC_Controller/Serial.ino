@@ -11,6 +11,7 @@ void readSerial()
     s :sigH
     p :peakF
     g :gamma
+    u :serial mode
   */
   if (Serial.available() >  4) {   //if a whole float is through: 1 byte tag + 4 byte float
     char c = Serial.read();
@@ -39,27 +40,12 @@ void readSerial()
         newJonswapData = true;
         break;
       case 'u':
-        readFloat();    //get rid of placeholder float
-        if (ampUnitTest) {
-          Serial.write('u');
-          sendFloat(1);       //this may get interupted by the send serial interupt, which might cause an issue
+        int u = (int)readFloat();    // if 1, unit test sending mode, if 0, normal serial operation.
+        if (u)
+        {
+          sendUnitTests = true;
         } else {
-          Serial.write('u');
-          sendFloat(-1);
-        }
-        if (TSUnitTest) {
-          Serial.write('u');
-          sendFloat(2);
-        } else {
-          Serial.write('u');
-          sendFloat(-2);
-        }
-        if (encoderTest) {
-          Serial.write('u');
-          sendFloat(3);
-        } else {
-          Serial.write('u');
-          sendFloat(-3);
+          sendUnitTests = false;
         }
         break;
     }
@@ -71,19 +57,19 @@ volatile float readFloat() {
   for (volatile int i = 0; i < 4; i++) {
     byteArray[i] = Serial.read();
   }
-  volatile float f = bin2float((byte*)&byteArray); 
+  volatile float f = bin2float((byte*)&byteArray);
   return f;
 }
 
 volatile void sendFloat(volatile float f) {
   volatile byte byteArray[4];
-  float2bin(f,(byte*)&byteArray);
+  float2bin(f, (byte*)&byteArray);
   for (volatile int i = 0; i < 4; i++) {
     Serial.write(byteArray[i]);
   }
 }
 
-volatile void float2bin(volatile float target, volatile byte *byteArray) {
+volatile void float2bin(volatile float target, volatile byte * byteArray) {
   volatile uint32_t temp32;
   temp32 = (uint32_t)(*(uint32_t*)&target);
   for (volatile int i = 0; i < 4; i++) {
@@ -91,7 +77,7 @@ volatile void float2bin(volatile float target, volatile byte *byteArray) {
   }
 }
 
-volatile float bin2float(volatile byte *byteArray) {
+volatile float bin2float(volatile byte * byteArray) {
   volatile uint32_t temp32 = 0;
   volatile byte temp8;
 
