@@ -82,6 +82,11 @@ void unitTests() {
   } else {    
     println("Mega Encoder Buffer Test FAILED");
   }
+  if (megaUnitTests[4]) {
+    println("Mega Units Tests Unit Test PASSED");
+  } else {    
+    println("Mega Units Tests Unit Test FAILED");
+  }
   ////////////verify due jonswap:
   if (dueConnected) {
     port2.clear();    //clear buffer
@@ -112,5 +117,10 @@ void unitTests() {
     println("Due Encoder Buffer Test PASSED");
   } else {    
     println("Due Encoder Buffer Test FAILED");
+  }
+  if (dueUnitTests[4]) {
+    println("Due Units Tests Unit Test PASSED");
+  } else {    
+    println("Due Units Tests Unit Test FAILED");
   }
 }
