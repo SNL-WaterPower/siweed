@@ -69,7 +69,7 @@ void setup()
   initInterrupts();
 }
 volatile float encPos() {
-  encoderBuff.readCNTR() * (1 / encStepsPerTurn) * teethPerTurn * mmPerTooth; //steps*(turns/step)*(mm/turn)
+  return encoderBuff.readCNTR() * (1 / encStepsPerTurn) * teethPerTurn * mmPerTooth; //steps*(turns/step)*(mm/turn)
 }
 void loop()
 {
