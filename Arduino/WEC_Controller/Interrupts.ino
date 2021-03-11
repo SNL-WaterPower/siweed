@@ -35,12 +35,14 @@ void updateTau()    //called by interupt
       digitalWrite(dirPin, LOW);
     }
     tauCommand = abs(tauCommand);
-    if (tauCommand > maxTau) {    //ensure that maxTau is max, so that duty cycle does not exceed 90%
-      tauCommand = maxTau;
+    //convert torque to amperage:
+    float ampCommand = tauCommand/torqueConstant;
+    if (ampCommand > maxAmps) {    //ensure maximum so that duty cycle does not exceed 90%
+      ampCommand = maxAmps;
     }
     float minCommand = mapFloat(10, 0, 100, 0, 4095);    //maps 10% to 0-4095 for analogWrite   //!could be a constant
     float maxCommand = mapFloat(90, 0, 100, 0, 4095);    //maps 10% to 0-4095 for analogWrite   //!could be a constant
-    analogWrite(tauPin, mapFloat(tauCommand, minTau, maxTau, minCommand, maxCommand));    //sends to the motor controller after mapping from newtom/meters to pwm
+    analogWrite(tauPin, mapFloat(ampCommand, minAmps, maxAmps, minCommand, maxCommand));    //sends to the motor controller after mapping from newtom/meters to pwm
     digitalWrite(enablePin, HIGH);
   }
 }

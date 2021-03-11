@@ -19,11 +19,11 @@ const int tauPin = 4, enablePin = 5, dirPin = 6, l1Pin = 10, l2Pin = 11, l3Pin =
 const float l1Lim = 1.1, l2Lim = 2.2, l3Lim = 3.3, l4Lim = 4.4;       //!!NEEDS EDITING!!the power threshholds of the led groups
 //Encoder wecEnc(2, 3); //pins 2 and 3(interupts)//for 800 ppr/3200 counts per revolution set dip switches(0100) //2048ppr/8192 counts per revolution max(0000)
 //volatile float encPos;
-const float pi = 3.14159265358979;
 const float encStepsPerTurn = 3200.0;
 const float teethPerTurn = 5;   //EDIT
 const float mmPerTooth = 10;    //EDIT
-const float minTau = 0, maxTau = 5;    //EDIT   //starts at 0 because sign is handled separately
+const float minAmps = 0, maxAmps = 5;    //EDIT   //starts at 0 because sign is handled separately
+const float torqueConstant = 0.0078;   //7.8 mNm/A
 
 const int maxComponents = 100;   //max needed number of frequency components
 volatile float amps[maxComponents];
@@ -133,7 +133,7 @@ volatile float calcTS(volatile float tm) {      //calculate jonswap timeseries v
   volatile float val = 0;
   for (volatile int i = 0; i < n; i++)           //function mode
   {
-    val += amps[i] * sin(2 * pi * tm * freqs[i] + phases[i]);
+    val += amps[i] * sin(2 * PI * tm * freqs[i] + phases[i]);
   }
   return val;
 }
