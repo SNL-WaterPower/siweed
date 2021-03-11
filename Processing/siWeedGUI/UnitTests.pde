@@ -67,25 +67,24 @@ void unitTests() {
     port1.write('u');    //sends to begin test
     sendFloat(0, port1);    //back to normal operation
   }
-  if (megaUnitTests[1]) {
-    println("Mega Jonswap Amplitide Test PASSED");
-  } else {    
-    println("Mega Jonswap Amplitude Test FAILED");
-  }
-  if (megaUnitTests[2]) {
-    println("Mega Jonswap TimeSeries Test PASSED");
-  } else {    
-    println("Mega Jonswap TimeSeries Test FAILED");
-  }
-  if (megaUnitTests[3]) {
-    println("Mega Encoder Buffer Test PASSED");
-  } else {    
-    println("Mega Encoder Buffer Test FAILED");
-  }
-  if (megaUnitTests[4]) {
-    println("Mega Units Tests Unit Test PASSED");
-  } else {    
-    println("Mega Units Tests Unit Test FAILED");
+  if (megaUnitTests[4]) {    //if the tests were recived correctly
+    if (megaUnitTests[1]) {
+      println("Mega Jonswap Amplitide Test PASSED");
+    } else {    
+      println("Mega Jonswap Amplitude Test FAILED");
+    }
+    if (megaUnitTests[2]) {
+      println("Mega Jonswap TimeSeries Test PASSED");
+    } else {    
+      println("Mega Jonswap TimeSeries Test FAILED");
+    }
+    if (megaUnitTests[3]) {
+      println("Mega Encoder Buffer Test PASSED");
+    } else {    
+      println("Mega Encoder Buffer Test FAILED");
+    }
+  } else {          //if the tests were not recieved correctly
+    println("Mega On-Board Units Tests FAILED");
   }
   ////////////verify due jonswap:
   if (dueConnected) {
@@ -103,24 +102,24 @@ void unitTests() {
     port2.write('u'); 
     sendFloat(0, port2);    //back to normal operation
   }
-  if (dueUnitTests[1]) {
-    println("Due Jonswap Amplitide Test PASSED");
-  } else {    
-    println("Due Jonswap Amplitude Test FAILED");
-  }
-  if (dueUnitTests[2]) {
-    println("Due Jonswap TimeSeries Test PASSED");
-  } else {    
-    println("Due Jonswap TimeSeries Test FAILED");
-  }
-  if (dueUnitTests[3]) {
-    println("Due Encoder Buffer Test PASSED");
-  } else {    
-    println("Due Encoder Buffer Test FAILED");
-  }
+
   if (dueUnitTests[4]) {
-    println("Due Units Tests Unit Test PASSED");
+    if (dueUnitTests[1]) {
+      println("Due Jonswap Amplitide Test PASSED");
+    } else {    
+      println("Due Jonswap Amplitude Test FAILED");
+    }
+    if (dueUnitTests[2]) {
+      println("Due Jonswap TimeSeries Test PASSED");
+    } else {    
+      println("Due Jonswap TimeSeries Test FAILED");
+    }
+    if (dueUnitTests[3]) {
+      println("Due Encoder Buffer Test PASSED");
+    } else {    
+      println("Due Encoder Buffer Test FAILED");
+    }
   } else {    
-    println("Due Units Tests Unit Test FAILED");
+    println("Due On-Board Units Tests FAILED");
   }
 }
