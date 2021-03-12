@@ -74,7 +74,7 @@ public class Meter {
     }
     stroke(red);
     strokeWeight(height/300); 
-    float angle = PI*(val/maxVal);    //angle in radians
+    float angle = PI*((val-minVal)/(maxVal-minVal));    //angle in radians  
     float RCos = (float)arcR*(float)Math.cos(angle);
     float RSin = (float)arcR*(float)Math.sin(angle);
     int markX = (int)(originx - RCos);

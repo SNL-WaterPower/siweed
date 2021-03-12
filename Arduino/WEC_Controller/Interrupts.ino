@@ -21,7 +21,7 @@ void updateTau()    //called by interupt
       tauCommand = tau;       //direct control
       break;
     case 1:
-      tauCommand = kp * pos + kd * vel;      //PD feedback control
+      tauCommand = kp * pos + -kd * vel;      //PD feedback control
       break;
     case 2:
       tauCommand = calcTS(t);
@@ -34,15 +34,15 @@ void updateTau()    //called by interupt
     } else {
       digitalWrite(dirPin, LOW);
     }
-    tauCommand = abs(tauCommand);
     //convert torque to amperage:
-    float ampCommand = tauCommand/torqueConstant;
+    volatile float ampCommand = abs(tauCommand) / torqueConstant;
     if (ampCommand > maxAmps) {    //ensure maximum so that duty cycle does not exceed 90%
       ampCommand = maxAmps;
     }
-    float minCommand = mapFloat(10, 0, 100, 0, 4095);    //maps 10% to 0-4095 for analogWrite   //!could be a constant
-    float maxCommand = mapFloat(90, 0, 100, 0, 4095);    //maps 10% to 0-4095 for analogWrite   //!could be a constant
-    analogWrite(tauPin, mapFloat(ampCommand, minAmps, maxAmps, minCommand, maxCommand));    //sends to the motor controller after mapping from newtom/meters to pwm
+    float minCommand = mapFloat(minPwm, 0, 1, 0, 4095);    //maps 10% to 0-4095 for analogWrite   //!could be a constant
+    float maxCommand = mapFloat(maxPwm, 0, 1, 0, 4095);    //maps 90% to 0-4095 for analogWrite   //!could be a constant
+    analogWrite(tauPin, mapFloat(ampCommand, minAmps, maxAmps, minCommand, maxCommand));    //sends to the motor controller after mapping from amps to pwm
+    //analogWrite(tauPin, mapFloat(0.76*pos/100, minAmps, maxAmps, minCommand, maxCommand));  //makes a positive spring
     digitalWrite(enablePin, HIGH);
   }
 }
@@ -90,14 +90,4 @@ void sendSerial() {  //called by interupt
     Serial.write('v');
     sendFloat(vel);
   }
-  /*
-    Serial.println();
-    Serial.println(encoderBuffInit);
-    Serial.print((char)MDR0_settings, BIN);
-    Serial.print(" <-mdr0settings:if it worked-> ");
-    Serial.println(didItWork_MDR0);
-    Serial.print((char)MDR1_settings,BIN);
-    Serial.print(" <-mdr1settings:if it worked-> ");
-    Serial.println(didItWork_MDR1);
-    Serial.println(encPos());//*/
 }

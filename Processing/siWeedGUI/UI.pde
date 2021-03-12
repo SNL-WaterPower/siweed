@@ -267,21 +267,21 @@ void initializeUI() {
 
   // WEC Torque Sliders
   torqueSlider = cp5.addSlider("Torque")  //name of button
-    .setRange(0, 0.5)
+    .setRange(-5.0, 5.0)
     .setFont(sliderFont)
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setSize(450, 50); //size (width, height)
 
   // WEC Feedback Sliders   
   pGain = cp5.addSlider("P Gain")  //name of button
-    .setRange(0, 0.5)
+    .setRange(-0.0005, 0.0005)    //user needs to be able to command negative
     .setFont(sliderFont)
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setSize(450, 50) //size (width, height)
     .hide();
 
   dGain = cp5.addSlider("D Gain")  //name of button
-    .setRange(0, 0.5)
+    .setRange(0, 0.0005)    //user needs to be command positive
     .setFont(sliderFont)
     .setPosition(sliderX, sliderY + 100) //x and y coordinates of upper left corner of button
     .setSize(450, 50) //size (width, height)
@@ -355,7 +355,7 @@ void initializeUI() {
     .setFont(sliderFont)
     .setPosition(830, 795)
     .setSize(500, 175)
-    .setRange(-10, 10)
+    .setRange(-100, 100)
     .setView(Chart.LINE) // use Chart.LINE, Chart.PIE, Chart.AREA, Chart.BAR_CENTERED
     .setStrokeWeight(10)
     .setColorCaptionLabel(color(40))
@@ -384,7 +384,7 @@ void initializeUI() {
     // .setColorForeground(color(255,100))
     .scroll(1) //enable scrolling up and down
     .hide(); //hidden on startup   
-  if (!debug)      //only does in GUI console if not debugging
+  if (!debug && guiConsole)      //only does in GUI console if not debugging
   {
     console = cp5.addConsole(consoleOutput);
   }

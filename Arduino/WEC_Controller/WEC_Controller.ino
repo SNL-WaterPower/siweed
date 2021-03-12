@@ -17,12 +17,12 @@ volatile float tau = 0, kp = 0, kd = 0, power = 0, vel = 0;
 volatile float tauCommand = 0;   //tau after any modifications
 const int tauPin = 4, enablePin = 5, dirPin = 6, l1Pin = 10, l2Pin = 11, l3Pin = 12, l4Pin = 13;  //tauPin = DAC0
 const float l1Lim = 1.1, l2Lim = 2.2, l3Lim = 3.3, l4Lim = 4.4;       //!!NEEDS EDITING!!the power threshholds of the led groups
-//Encoder wecEnc(2, 3); //pins 2 and 3(interupts)//for 800 ppr/3200 counts per revolution set dip switches(0100) //2048ppr/8192 counts per revolution max(0000)
 //volatile float encPos;
-const float encStepsPerTurn = 3200.0;
-const float teethPerTurn = 5;   //EDIT
-const float mmPerTooth = 10;    //EDIT
-const float minAmps = 0, maxAmps = 5;    //EDIT   //starts at 0 because sign is handled separately
+const float encStepsPerTurn = 8192;   //for 800 ppr/3200 counts per revolution set dip switches(0100) //2048ppr/8192 counts per revolution max(0000)
+const float teethPerTurn = 20;   
+const float mmPerTooth = 2;
+const float minPwm = .1, maxPwm = .9;
+const float minAmps = 0, maxAmps = 0.7620;    //amperage at min and max pwm
 const float torqueConstant = 0.0078;   //7.8 mNm/A
 
 const int maxComponents = 100;   //max needed number of frequency components
@@ -64,6 +64,7 @@ void setup()
       break;
     }
   }
+  encoderBuff.command2Reg(CNTR, IR_RegisterAction_CLR); //zero encoder
 
   unitTests();
   initInterrupts();
@@ -75,7 +76,7 @@ void loop()
 {
   //encPos = wecEnc.read() * (1 / encStepsPerTurn) * teethPerTurn * mmPerTooth; //steps*(turns/step)*(mm/turn)
   t = micros() / 1.0e6;
-  power = tauCommand * vel; //negative power is negative work done by the WEC (absorbed power)
+  power = -tauCommand * vel; //negative power is negative work done by the WEC (absorbed power) This in inverted to make more sense to the user.
   readSerial();
 
   if (power > l4Lim)
@@ -115,7 +116,7 @@ void loop()
   }
 }
 
-volatile float mapFloat(volatile long x, volatile long in_min, volatile long in_max, volatile long out_min, volatile long out_max)
+volatile float mapFloat(volatile float x, volatile float in_min, volatile float in_max, volatile float out_min, volatile float out_max)
 {
   return (float)(x - in_min) * (out_max - out_min) / (float)(in_max - in_min) + out_min;
 }

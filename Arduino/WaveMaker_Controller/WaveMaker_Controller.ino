@@ -94,11 +94,13 @@ void setup() {
   freqReg = gen.freqCalc(100); //setting the signal generator to 10hz
   gen.adjustFreq(MiniGen::FREQ0, freqReg); //start moving
   float initialPos = encPos();
+  delay(10);
   while (analogRead(limitPin) > 500) {   //move up until the beam is broken
     if (encPos() - initialPos == 0)    //if motor is not moving(software testing), move on.
       break;
   }
   digitalWrite(dirPin, LOW);
+  delay(10);
   while (analogRead(limitPin) < 500) {  //move down until the beam is unbroken
     if (encPos() - initialPos == 0)    //if motor is not moving(software testing), move on.
       break;
@@ -107,7 +109,6 @@ void setup() {
   gen.adjustFreq(MiniGen::FREQ0, freqReg);
 
   encoderBuff.command2Reg(CNTR, IR_RegisterAction_CLR); //zero encoder
-  //while(1){}
 
   //fill probe buffers with 0's:
   for (int i = 0; i < buffSize; i++) {
@@ -146,7 +147,7 @@ void updateSpeedScalar() {    //used to prevent jumps/smooth start
 volatile float mmToSteps(volatile float mm) {
   return mm * (1 / leadPitch) * gearRatio * motorStepsPerTurn; //mm*(lead turns/mm)*(motor turns/lead turn)*(steps per motor turn)
 }
-volatile float mapFloat(volatile long x, volatile long in_min, volatile long in_max, volatile long out_min, volatile long out_max) {
+volatile float mapFloat(volatile float x, volatile float in_min, volatile float in_max, volatile float out_min, volatile float out_max) {
   return (float)(x - in_min) * (out_max - out_min) / (float)(in_max - in_min) + out_min;
 }
 volatile float averageArray(volatile float* arr) {
