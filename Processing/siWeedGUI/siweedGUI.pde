@@ -3,7 +3,6 @@ import controlP5.*;  //importing GUI library
 import processing.serial.*;
 import java.lang.Math.*;
 import java.util.LinkedList;
-import java.util.Queue;
 
 
 
@@ -50,7 +49,7 @@ void setup() {
   initializeDataLogging();
   initializeUI();
   
-  myMeter = new Meter(-5000.0, 5000.0);    //min and max
+  myMeter = new Meter(-5.0, 5.0);    //min and max
 
 }
 
