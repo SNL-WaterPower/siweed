@@ -35,7 +35,7 @@ void setup() {
   ////////
   frameRate(32);    //sets draw() to run x times a second.
   ///////initialize objects
-  
+
   size(1920, 1100, P2D); //need this for the touch screen
   surface.setTitle("SIWEED");
   waveMaker = new UIData();
@@ -43,21 +43,19 @@ void setup() {
   fftList = new LinkedList();
   myFFT = new fft();
   fftArr = new float[queueSize*2];
-  //fftComplexArr = new Complex[queueSize];
   waveMaker.mode = 1;    // 1 = jog, 2 = function, 3 = sea, 4 = off
   wec.mode = 4;  //1 = torque, 2= feedback, 3 = "sea", 4 = off
   initializeDataLogging();
   initializeUI();
-  
-  myMeter = new Meter(-5.0, 5.0);    //min and max
 
+  myMeter = new Meter(-5.0, 5.0);    //min and max
 }
 
 /*
 public void settings() {
  fullScreen(2);
  }*/
- 
+
 boolean initialized = false;
 int timestamp = 0;   //for debuging
 void draw() {
@@ -74,7 +72,7 @@ void draw() {
 
   displayUpdate(); 
   //The reason for this is because the slider texts. 
-  //Without constantly updating the background and boxes, the text from the sliers will just remain there.
+  //Without constantly updating the background and boxes, the text from the sliders will just remain there.
 
   //Meter control:
   myMeter.update(pow);
@@ -181,7 +179,7 @@ void draw() {
     timestamp = millis();
   }
 
-  /////FFT section(move to fft tab eventually):  //!!needs to be activated and deactivated(maybe)
+  /////FFT section(move to fft tab eventually):  //!!needs to be activated and deactivated based on mode(maybe)
   if (millis() > previousMillis+fftInterval) {
     previousMillis = millis();
     updateFFT();
@@ -214,8 +212,5 @@ void updateFFT() {
   Complex[] fftOut = myFFT.fft(fftIn);
   for (int i = 0; i < queueSize; i++) {
     fftArr[i] = (float)Math.sqrt( fftOut[i].re()*fftOut[i].re() + fftOut[i].im()*fftOut[i].im() )/queueSize;      //magnitude
-    //println(fftOut[i].re()+" + "+fftOut[i].im()+"i");
   }
-  //println("in: "+fftIn[16]);
-  //println("out: "+fftArr[16]);
 }

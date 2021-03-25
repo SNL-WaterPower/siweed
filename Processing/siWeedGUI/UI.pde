@@ -219,15 +219,15 @@ void initializeUI() {
   sliderY = 240 + 65 + 50; // button Y lcation (240) + size of button + 50 
 
   // Motor Jog Mode Sliders
-  position = cp5.addSlider("Position (CM)")  //name slider
-    .setRange(-10, 10) //slider range
+  position = cp5.addSlider("Position (M)")  //name slider
+    .setRange(-0.01, 0.01) //slider range
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setFont(sliderFont)
     .setSize(450, 50); //size (width, height)
 
   // Motor Function Mode Sliders
-  h = cp5.addSlider("Height (CM)")  //name slider
-    .setRange(0, 10) //slider range
+  h = cp5.addSlider("Height (M)")  //name slider
+    .setRange(0, 0.01) //slider range
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setSize(450, 50)
     .setFont(sliderFont)
@@ -242,8 +242,8 @@ void initializeUI() {
 
 
   // Motor Sea State Mode Sliders
-  sigH = cp5.addSlider("Significant Height (CM)")  //name slider
-    .setRange(0, 10) //slider range
+  sigH = cp5.addSlider("Significant Height (M)")  //name slider
+    .setRange(0, .01) //slider range
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setSize(450, 50)
     .setFont(sliderFont)
@@ -267,21 +267,21 @@ void initializeUI() {
 
   // WEC Torque Sliders
   torqueSlider = cp5.addSlider("Torque")  //name of button
-    .setRange(-5.0, 5.0)
+    .setRange(-0.006, 0.006)      //max amps * torque constant. I think this will max amperage at max slider value
     .setFont(sliderFont)
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setSize(450, 50); //size (width, height)
 
   // WEC Feedback Sliders   
   pGain = cp5.addSlider("P Gain")  //name of button
-    .setRange(-0.0005, 0.0005)    //user needs to be able to command negative
+    .setRange(-0.0006, 0.0006)    //user needs to be able to command negative //0.1(wave height in meters) * max torque(above)
     .setFont(sliderFont)
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setSize(450, 50) //size (width, height)
     .hide();
 
   dGain = cp5.addSlider("D Gain")  //name of button
-    .setRange(0, 0.0005)    //user needs to be command positive
+    .setRange(0, 0.0005)    //user needs to only command positive    //!!will find right values by measuring max vel
     .setFont(sliderFont)
     .setPosition(sliderX, sliderY + 100) //x and y coordinates of upper left corner of button
     .setSize(450, 50) //size (width, height)
@@ -289,8 +289,8 @@ void initializeUI() {
 
   //WEC Seastate Sliders 
 
-  sigHWEC = cp5.addSlider("WEC Significant Height (CM)")  //name of button
-    .setRange(0, 0.5)
+  sigHWEC = cp5.addSlider("WEC Significant Height (M)")  //name of button
+    .setRange(0, 0.05)
     .setFont(sliderFont)
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setSize(450, 50) //size (width, height)
@@ -341,7 +341,7 @@ void initializeUI() {
     .setFont(sliderFont)
     .setPosition(830, 540)
     .setSize(500, 175)
-    .setRange(-10, 10)
+    .setRange(-0.10, 0.10)
     .setView(Chart.LINE) // use Chart.LINE, Chart.PIE, Chart.AREA, Chart.BAR_CENTERED
     .setStrokeWeight(10)
     .setColorCaptionLabel(color(40))
@@ -355,7 +355,7 @@ void initializeUI() {
     .setFont(sliderFont)
     .setPosition(830, 795)
     .setSize(500, 175)
-    .setRange(-100, 100)
+    .setRange(-10, 10)
     .setView(Chart.LINE) // use Chart.LINE, Chart.PIE, Chart.AREA, Chart.BAR_CENTERED
     .setStrokeWeight(10)
     .setColorCaptionLabel(color(40))

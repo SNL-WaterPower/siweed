@@ -82,8 +82,8 @@ ISR(TIMER5_COMPA_vect) {   //takes ___ milliseconds
     d: other data for debugging
   */
 
-  pushBuffer(probe1Buffer, mapFloat(analogRead(probe1Pin), 0.0, 560.0, 0.0, 27.0));     //maps to cm and adds to data buffer
-  pushBuffer(probe2Buffer, mapFloat(analogRead(probe2Pin), 0.0, 560.0, 0.0, 27.0));
+  pushBuffer(probe1Buffer, mapFloat(analogRead(probe1Pin), 0.0, 560.0, 0.0, 0.27));     //maps to m and adds to data buffer
+  pushBuffer(probe2Buffer, mapFloat(analogRead(probe2Pin), 0.0, 560.0, 0.0, 0.27));
   if (sendUnitTests)    //if in unit testing serial mode
   {
     if (ampUnitTest) {
@@ -121,5 +121,4 @@ ISR(TIMER5_COMPA_vect) {   //takes ___ milliseconds
     float lerpVal = lerp(prevVal, futurePos, (interval * 1.0e6) / (sampleT - prevSampleT)); //linear interpolate(initial value, final value, percentatge)//percentage is desired interval/actual interval
     sendFloat(lerpVal);
   }
-  //Serial.println(encoderTest);
 }
