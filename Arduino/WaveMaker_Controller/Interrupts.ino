@@ -45,7 +45,7 @@ ISR(TIMER4_COMPA_vect) {    //function called by interupt
   prevVal = futurePos;
   /////////////////
   futurePos = inputFnc(t + interval);// + error;  //time plus delta time plus previous error. maybe error should scale as a percentage of speed? !!!!!!!!!!!!!!NEEDS TESTING
-  volatile float linearVel = (futurePos - pos) / interval;    //estimated desired velocity in mm/s, in order to hit target by next interupt call.
+  volatile float linearVel = (futurePos - pos) / interval;    //estimated desired velocity in m/s, in order to hit target by next interupt call.
   //PID calculation:
   pidSet = 0; //desired error is 0
   pidIn = error;
@@ -61,10 +61,9 @@ ISR(TIMER4_COMPA_vect) {    //function called by interupt
   if (sp > maxRate) {  //max speed
     sp = maxRate;
     digitalWrite(13, HIGH);   //on board led turns on if max speed was reached
-    //Serial.println("max");
   }
 
-  volatile float stepsPerSecond = mmToSteps(sp);    //instead of converting units, any conversions are handled by tuning PID
+  volatile float stepsPerSecond = mToSteps(sp);    //instead of converting units, any conversions are handled by tuning PID
   if (mode == -1 || stepsPerSecond < 12) {  //stop
     freqReg = gen.freqCalc(0);
     gen.adjustFreq(MiniGen::FREQ0, freqReg); //stop moving

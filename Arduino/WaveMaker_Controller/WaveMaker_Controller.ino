@@ -31,18 +31,18 @@ volatile float desiredPos;   //used for jog mode
 const int buffSize = 10;    //number of data points buffered in the moving average filter
 volatile float probe1Buffer[buffSize];
 volatile float probe2Buffer[buffSize];
-const float maxRate = 50.0;   //max mm/seconds
+const float maxRate = 0.05;   //max m/seconds
 /////////would like to put these in the interrupts tab, but cant without changing proect structure to .cpp and .h files.
 const float interval = .01;   //time between each interupt call in seconds //max value: 1.04
 const float serialInterval = .03125;   //time between each interupt call in seconds //max value: 1.04    .03125 is 32 times a second to match processing's speed(32hz)
 //////////
 //Derived funciton here:
-const float leadPitch = 10.0;     //mm/turn
+const float leadPitch = .01;     //m/turn
 const float gearRatio = 12.0 / 60.0; //motor turns per lead screw turns
 const float motorStepsPerTurn = 400.0;   //steps per motor revolution
 const float encStepsPerTurn = 3200.0;
 
-volatile float inputFnc(volatile float tm) {  //inputs time in seconds //outputs position in mm
+volatile float inputFnc(volatile float tm) {  //inputs time in seconds //outputs position in m
   volatile float val = 0;
   if (mode == 0) {    //jog
     val = desiredPos;
@@ -125,10 +125,9 @@ void setup() {
   initInterrupts();
 }
 volatile float encPos() {
-  return encoderBuff.readCNTR() * (1 / encStepsPerTurn) * leadPitch * -1.0; //steps*(turns/step)*(mm/turn)
+  return encoderBuff.readCNTR() * (1 / encStepsPerTurn) * leadPitch * -1.0; //steps*(turns/step)*(m/turn)
 }
 void loop() {   //__ microseconds
-  //encPos = encoderBuff.readCNTR() * (1 / encStepsPerTurn) * leadPitch; //steps*(turns/step)*(mm/turn)
   t = micros() / 1.0e6;
   readSerial();
   updateSpeedScalar();
@@ -144,8 +143,8 @@ void updateSpeedScalar() {    //used to prevent jumps/smooth start
   */
   speedScalar = 1.0;
 }
-volatile float mmToSteps(volatile float mm) {
-  return mm * (1 / leadPitch) * gearRatio * motorStepsPerTurn; //mm*(lead turns/mm)*(motor turns/lead turn)*(steps per motor turn)
+volatile float mToSteps(volatile float m) {
+  return m * (1 / leadPitch) * gearRatio * motorStepsPerTurn; //m*(lead turns/m)*(motor turns/lead turn)*(steps per motor turn)
 }
 volatile float mapFloat(volatile float x, volatile float in_min, volatile float in_max, volatile float out_min, volatile float out_max) {
   return (float)(x - in_min) * (out_max - out_min) / (float)(in_max - in_min) + out_min;

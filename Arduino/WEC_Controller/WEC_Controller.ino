@@ -20,7 +20,7 @@ const float l1Lim = 1.1, l2Lim = 2.2, l3Lim = 3.3, l4Lim = 4.4;       //!!NEEDS 
 //volatile float encPos;
 const float encStepsPerTurn = 8192;   //for 800 ppr/3200 counts per revolution set dip switches(0100) //2048ppr/8192 counts per revolution max(0000)
 const float teethPerTurn = 20;   
-const float mmPerTooth = 2;
+const float mPerTooth = 0.002;
 const float minPwm = .1, maxPwm = .9;
 const float minAmps = 0, maxAmps = 0.7620;    //amperage at min and max pwm
 const float torqueConstant = 0.0078;   //7.8 mNm/A
@@ -70,11 +70,10 @@ void setup()
   initInterrupts();
 }
 volatile float encPos() {
-  return encoderBuff.readCNTR() * (1 / encStepsPerTurn) * teethPerTurn * mmPerTooth; //steps*(turns/step)*(mm/turn)
+  return encoderBuff.readCNTR() * (1 / encStepsPerTurn) * teethPerTurn * mPerTooth; //steps*(turns/step)*(m/turn)
 }
 void loop()
 {
-  //encPos = wecEnc.read() * (1 / encStepsPerTurn) * teethPerTurn * mmPerTooth; //steps*(turns/step)*(mm/turn)
   t = micros() / 1.0e6;
   power = -tauCommand * vel; //negative power is negative work done by the WEC (absorbed power) This in inverted to make more sense to the user.
   readSerial();
