@@ -44,14 +44,20 @@ ISR(TIMER4_COMPA_vect) {    //function called by interupt
   sampleT = micros();
   prevVal = futurePos;
   /////////////////
-  futurePos = inputFnc(t + interval);// + error;  //time plus delta time plus previous error. maybe error should scale as a percentage of speed? !!!!!!!!!!!!!!NEEDS TESTING
-  volatile float linearVel = (futurePos - pos) / interval;    //estimated desired velocity in m/s, in order to hit target by next interupt call.
+  futurePos = inputFnc(t + interval);  //time plus delta time plus previous error.
+  volatile float linearVel;
+  if (futurePos - pos > 0.0002) { //deadband in meters
+    linearVel = (futurePos - pos) / interval;    //estimated desired velocity in m/s, in order to hit target by next interupt call.
+  } else {
+    linearVel = 0;
+  }
   //PID calculation:
   pidSet = 0; //desired error is 0
   pidIn = error;
   myPID.Compute();    //sets pidOut
   /////////
-  float velCommand = linearVel + pidOut;
+  volatile float velCommand = linearVel + pidOut;
+  //Serial.println(velCommand, 5);
   if (velCommand > 0) {
     digitalWrite(dirPin, HIGH);
   } else {
@@ -81,44 +87,43 @@ ISR(TIMER5_COMPA_vect) {   //takes ___ milliseconds
     p: position
     d: other data for debugging
   */
+    pushBuffer(probe1Buffer, mapFloat(analogRead(probe1Pin), 0.0, 560.0, 0.0, 0.27));     //maps to m and adds to data buffer
+    pushBuffer(probe2Buffer, mapFloat(analogRead(probe2Pin), 0.0, 560.0, 0.0, 0.27));
+    if (sendUnitTests)    //if in unit testing serial mode
+    {
+      if (ampUnitTest) {
+        Serial.write('u');
+        sendFloat(1);
+      } else {
+        Serial.write('u');
+        sendFloat(-1);
+      }
+      if (TSUnitTest) {
+        Serial.write('u');
+        sendFloat(2);
+      } else {
+        Serial.write('u');
+        sendFloat(-2);
+      }
+      if (encoderTest) {
+        Serial.write('u');
+        sendFloat(3);
+      } else {
+        Serial.write('u');
+        sendFloat(-3);
+      }
+      Serial.write('u');
+      sendFloat(4);     //4 indicates that all tests have been sent at least once
 
-  pushBuffer(probe1Buffer, mapFloat(analogRead(probe1Pin), 0.0, 560.0, 0.0, 0.27));     //maps to m and adds to data buffer
-  pushBuffer(probe2Buffer, mapFloat(analogRead(probe2Pin), 0.0, 560.0, 0.0, 0.27));
-  if (sendUnitTests)    //if in unit testing serial mode
-  {
-    if (ampUnitTest) {
-      Serial.write('u');
-      sendFloat(1);
-    } else {
-      Serial.write('u');
-      sendFloat(-1);
+    } else {        //under normal operation
+      Serial.write('1');    //to indicate wave probe data
+      sendFloat(averageArray(probe1Buffer));
+      Serial.write('2');    //to indicate wave probe data
+      sendFloat(averageArray(probe2Buffer));
+      Serial.write('p');    //to indicate position
+      sendFloat(encPos());
+      Serial.write('d');    //to indicate alternate data
+      float lerpVal = lerp(prevVal, futurePos, (interval * 1.0e6) / (sampleT - prevSampleT)); //linear interpolate(initial value, final value, percentatge)//percentage is desired interval/actual interval
+      sendFloat(lerpVal);
     }
-    if (TSUnitTest) {
-      Serial.write('u');
-      sendFloat(2);
-    } else {
-      Serial.write('u');
-      sendFloat(-2);
-    }
-    if (encoderTest) {
-      Serial.write('u');
-      sendFloat(3);
-    } else {
-      Serial.write('u');
-      sendFloat(-3);
-    }
-    Serial.write('u');
-    sendFloat(4);     //4 indicates that all tests have been sent at least once
-
-  } else {        //under normal operation
-    Serial.write('1');    //to indicate wave probe data
-    sendFloat(averageArray(probe1Buffer));
-    Serial.write('2');    //to indicate wave probe data
-    sendFloat(averageArray(probe2Buffer));
-    Serial.write('p');    //to indicate position
-    sendFloat(encPos());
-    Serial.write('d');    //to indicate alternate data
-    float lerpVal = lerp(prevVal, futurePos, (interval * 1.0e6) / (sampleT - prevSampleT)); //linear interpolate(initial value, final value, percentatge)//percentage is desired interval/actual interval
-    sendFloat(lerpVal);
-  }
 }
