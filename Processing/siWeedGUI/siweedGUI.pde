@@ -14,7 +14,7 @@ Println console; //Needed for GUI console to work
 Textarea consoleOutput; //Needed for GUI console to work
 
 boolean debug = false;    //for debug print statements. Also disables GUI consol, and puts it in processing
-boolean guiConsole = true; 
+boolean guiConsole = false; 
 
 int queueSize = 512;    //power of 2 closest to 30(15) seconds at 32 samples/second    !!Needs to match arduino
 LinkedList fftList;
@@ -146,12 +146,20 @@ void draw() {
   }
   if (!dueConnected) {
     //do nothing
-  } else if (wec.mode == 1 && torqueSlider.getValue() != wec.mag) {  //only sends if value has changed  
+  } else if (wec.mode == 1 && torqueSlider.getValue()/1000 != wec.mag) {  //only sends if value has changed  
     //Jog:
-    wec.mag = torque.getValue();
+    wec.mag = torque.getValue()/1000;
     port2.write('t');
     sendFloat(wec.mag, port2);
     println(wec.mag);
+    /*
+    am trying to scale the slider y 1000 to make it more usable, but wec.mag is not doing what it should and a NaN is getting sent to the chart.
+    The 1000 scaler is currently only on this torque value, but if it works I'll apply it to more wec values
+    
+    
+    
+    
+    */
     //feedback:
   } else if (wec.mode == 2 && !mousePressed && (wec.amp != pGain.getValue() || wec.freq != dGain.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition) //for wec, amp is kp and freq is kd;
     wec.amp = pGain.getValue();

@@ -39,6 +39,7 @@ void updateTau()    //called by interupt
     if (ampCommand > maxAmps) {    //ensure maximum so that duty cycle does not exceed 90%
       ampCommand = maxAmps;
     }
+    tauCommanded = ampCommand * torqueConstant * (abs(tauCommand)/tauCommand);    // converts the ampCommand back to tau, and adds sign from original command. This is to account for saturation.
     float minCommand = mapFloat(minPwm, 0, 1, 0, 4095);    //maps 10% to 0-4095 for analogWrite   //!could be a constant
     float maxCommand = mapFloat(maxPwm, 0, 1, 0, 4095);    //maps 90% to 0-4095 for analogWrite   //!could be a constant
     analogWrite(tauPin, mapFloat(ampCommand, minAmps, maxAmps, minCommand, maxCommand));    //sends to the motor controller after mapping from amps to pwm
@@ -84,7 +85,7 @@ void sendSerial() {  //called by interupt
     Serial.write('e');
     sendFloat(encPos());
     Serial.write('t');
-    sendFloat(tauCommand);
+    sendFloat(tauCommanded);
     Serial.write('p');
     sendFloat(power);
     Serial.write('v');

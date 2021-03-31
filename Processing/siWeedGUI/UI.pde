@@ -220,14 +220,14 @@ void initializeUI() {
 
   // Motor Jog Mode Sliders
   position = cp5.addSlider("Position (M)")  //name slider
-    .setRange(-0.01, 0.01) //slider range
+    .setRange(-0.1, 0.1) //slider range
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setFont(sliderFont)
     .setSize(450, 50); //size (width, height)
 
   // Motor Function Mode Sliders
   h = cp5.addSlider("Height (M)")  //name slider
-    .setRange(0, 0.01) //slider range
+    .setRange(0, 0.1) //slider range
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setSize(450, 50)
     .setFont(sliderFont)
@@ -243,7 +243,7 @@ void initializeUI() {
 
   // Motor Sea State Mode Sliders
   sigH = cp5.addSlider("Significant Height (M)")  //name slider
-    .setRange(0, .01) //slider range
+    .setRange(0, .1) //slider range
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setSize(450, 50)
     .setFont(sliderFont)
@@ -267,7 +267,8 @@ void initializeUI() {
 
   // WEC Torque Sliders
   torqueSlider = cp5.addSlider("Torque")  //name of button
-    .setRange(-0.006, 0.006)      //max amps * torque constant. I think this will max amperage at max slider value
+    //.setRange(-0.006, 0.006)      //max amps * torque constant. I think this will max amperage at max slider value
+    .setRange(-6, 6)
     .setFont(sliderFont)
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setSize(450, 50); //size (width, height)
