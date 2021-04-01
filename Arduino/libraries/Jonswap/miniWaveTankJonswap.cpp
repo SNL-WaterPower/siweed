@@ -1,6 +1,6 @@
 #include "miniWaveTankJonswap.h"
 const int max_num_fs = 100;
-double miniWaveTankJonswap::period = 0;
+//double miniWaveTankJonswap::period = 0;
 double miniWaveTankJonswap::df = 0;
 double miniWaveTankJonswap::f_low = 0;
 double miniWaveTankJonswap::f_high = 0;
@@ -34,7 +34,7 @@ miniWaveTankJonswap::miniWaveTankJonswap(double _period, double _low, double _hi
 void miniWaveTankJonswap::update(double sigH, double peakF, double gamma)
 { 
   //updates amp with new values. Called on button press
-  double Hm0 = sigH / 100; //cm to meters
+  double Hm0 = sigH;
   double Tp = 1 / peakF;
   //gamma is the same;
   ///////////////////////////////////////////////start jonswap
@@ -82,7 +82,7 @@ void miniWaveTankJonswap::update(double sigH, double peakF, double gamma)
   for (int i = 0; i < num_fs; i++)
   { //reassign amplitude.
     //System.out.println(""+S.S[i]+"  "+S.f[i]+"  "+f[i]);    //this proves that f and S.f are the same
-    amp[i] = sqrt(2 * S[i] * 2 * M_PI * df) * 100; //meters to cm
+    amp[i] = sqrt(2 * S[i] * 2 * M_PI * df); 
   }
 }
 
@@ -91,27 +91,39 @@ int miniWaveTankJonswap::getNum()
   return num_fs;
 }
 
-float* miniWaveTankJonswap::getAmp()
+float miniWaveTankJonswap::getAmp(int index)
 {
-  return copyArraydf(amp);
-}
-
-float* miniWaveTankJonswap::getPhase()
-{
-  return copyArraydf(phase);
-}
-
-float* miniWaveTankJonswap::getF()
-{
-  return copyArraydf(f);
-}
-
-float* miniWaveTankJonswap::copyArraydf(double d[])
-{ //copies a double array to a float array
-  float f[num_fs];
-  for (int i = 0; i < num_fs; i++)
+  if(index >= 0 && index < num_fs)
   {
-    f[i] = (float)d[i];
+    return amp[index];
   }
-  return f;
+  else
+  {
+  return NULL;
+  }
 }
+
+float miniWaveTankJonswap::getPhase(int index)
+{
+  if(index >= 0 && index < num_fs)
+  {
+    return phase[index];
+  }
+  else
+  {
+  return NULL;
+  }
+}
+
+float miniWaveTankJonswap::getF(int index)
+{
+  if(index >= 0 && index < num_fs)
+  {
+    return f[index];
+  }
+  else
+  {
+  return NULL;
+  }
+}
+

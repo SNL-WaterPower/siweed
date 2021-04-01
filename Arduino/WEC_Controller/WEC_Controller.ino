@@ -125,9 +125,9 @@ volatile float calcTS(volatile float tm) {      //calculate jonswap timeseries v
     jonswap.update(sigH, peakF, _gamma);
     n = jonswap.getNum();
     for (int i = 0; i < n; i++) {
-      amps[i] = jonswap.getAmp()[i];
-      freqs[i] = jonswap.getF()[i];
-      phases[i] = jonswap.getPhase()[i];
+      amps[i] = jonswap.getAmp(i);
+      freqs[i] = jonswap.getF(i);
+      phases[i] = jonswap.getPhase(i);
     }
   }
   volatile float val = 0;

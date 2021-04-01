@@ -10,7 +10,7 @@ MiniGen gen(10); //initalize signal generator with FSYNC pin 10
 miniWaveTankJonswap jonswap(512.0 / 32.0, 0.5, 2.5); //period, low frequency, high frequency. frequencies will be rounded to multiples of df(=1/period)
 //^ISSUE. Acuracy seems to fall off after ~50 components when using higher frequencies(1,3 at 64 elements seems wrong).
 volatile double pidOut, pidSet, pidIn;
-PID myPID(&pidIn, &pidOut, &pidSet,0, 0, 0, P_ON_M, DIRECT); //input, output, setpoint, kp,  ki, kd
+PID myPID(&pidIn, &pidOut, &pidSet, 0, 0, 0, P_ON_M, DIRECT); //input, output, setpoint, kp,  ki, kd
 SuperDroidEncoderBuffer encoderBuff = SuperDroidEncoderBuffer(42);
 bool encoderBuffInit, didItWork_MDR0, didItWork_MDR1, didItWork_DTR;   //variables for unit testing
 unsigned char MDR0_settings = MDRO_x4Quad | MDRO_freeRunningCountMode | MDRO_indexDisable | MDRO_syncIndex | MDRO_filterClkDivFactor_1;
@@ -53,9 +53,9 @@ volatile float inputFnc(volatile float tm) {  //inputs time in seconds //outputs
       jonswap.update(sigH, peakF, gam);
       n = jonswap.getNum();
       for (int i = 0; i < n; i++) {
-        amps[i] = jonswap.getAmp()[i];
-        freqs[i] = jonswap.getF()[i];
-        phases[i] = jonswap.getPhase()[i];
+        amps[i] = jonswap.getAmp(i);
+        freqs[i] = jonswap.getF(i);
+        phases[i] = jonswap.getPhase(i);
       }
     }
     for (volatile int i = 0; i < n; i++) {
@@ -189,18 +189,20 @@ void unitTests() {
     if (abs(inputFnc(i) - exampleTS[i]) > 0.01) {      //i acts as an arbitrary time
       TSUnitTest = false;
     }
+    //////////////////////////////
     //Serial.print(amps[i]);    //To get the data that fills the example arrays
     //Serial.print(inputFnc(i));
     //Serial.print(", ");
-  }
+    ////////////////////////////
+  } 
 
-  //////////////////test encoder buffer:
-  //If the initialization and setting functions worked, move on, otherwise, throw error and halt execution.
-  if (encoderBuffInit && didItWork_MDR0 && didItWork_MDR1) {
-    //passed
-  } else {
-    encoderTest = false;
-  }
+    //////////////////test encoder buffer:
+    //If the initialization and setting functions worked, move on, otherwise, throw error and halt execution.
+    if (encoderBuffInit && didItWork_MDR0 && didItWork_MDR1) {
+      //passed
+    } else {
+      encoderTest = false;
+    }
   mode = oldMode;   //reset mode to what it was before unit tests
 
 }
