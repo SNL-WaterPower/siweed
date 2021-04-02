@@ -1,3 +1,6 @@
+const float interval = .01;   //time between each interupt call in seconds //max value: 1.04
+const float serialInterval = .03125;   //time between each interupt call in seconds //max value: 1.04    .03125 is 32 times a second to match processing's speed(32hz)
+
 volatile float futurePos;
 volatile float error;
 volatile float sampleT = 0;  //timestamp in microseconds of sample
@@ -26,53 +29,36 @@ void initInterrupts() {
 
   sei();//allow interrupts
 }
-/*
-  Motor control interupt:
-  After calculating desired position with inputFnc(), this controller should estimate the command
-  linearly, then apply a PID calculated error correction. The sum is then converted from a velociy to
-  a frequency.
-
-  TODO: triple check unit conversions, and test linear controller on it's own. Then
-  tune PID with 0P, maybe 0D
-*/
 ISR(TIMER4_COMPA_vect) {    //function called by interupt     //Takes about .4 milliseconds
-  volatile unsigned long freqReg = gen.freqCalc(0);   //can we delete this?
   volatile float pos = encPos();
   error = futurePos - pos;   //where we told it to go vs where it is
-  ////////vars for linear interpolation:
   prevSampleT = sampleT;
   sampleT = micros();
   prevVal = futurePos;
-  /////////////////
   futurePos = inputFnc(t + interval);// + error;  //time plus delta time plus previous error. maybe error should scale as a percentage of speed? !!!!!!!!!!!!!!NEEDS TESTING
-  volatile float linearVel = (futurePos - pos) / interval;    //estimated desired velocity in mm/s, in order to hit target by next interupt call.
-  //PID calculation:
-  pidSet = 0; //desired error is 0
-  pidIn = error;
-  myPID.Compute();    //sets pidOut
-  /////////
-  float velCommand = linearVel + pidOut;
-  if (velCommand > 0) {
+  volatile float vel = speedScalar * (futurePos - pos) / interval; //desired velocity in mm/second   //ramped up over about a second   //LIKELY NEEDS TUNING
+  if (vel > 0) {
     digitalWrite(dirPin, HIGH);
   } else {
     digitalWrite(dirPin, LOW);
   }
-  volatile float sp = abs(velCommand);     //steping is always positive, so convert to speed
+  volatile float sp = abs(vel);     //steping is always positive, so convert to speed
+  /*if (sp < 2.6) {   //31hz is the lowest frequency of tone(), in mm/s this is 2.6
+    sp = 2.6;
+    noTone(stepPin);
+    //Serial.println("min");
+    }*/
   if (sp > maxRate) {  //max speed
     sp = maxRate;
     digitalWrite(13, HIGH);   //on board led turns on if max speed was reached
     //Serial.println("max");
   }
-
-  volatile float stepsPerSecond = mmToSteps(sp);    //instead of converting units, any conversions are handled by tuning PID
-  if (mode == -1 || stepsPerSecond < 12) {  //stop
-    freqReg = gen.freqCalc(0);
-    gen.adjustFreq(MiniGen::FREQ0, freqReg); //stop moving
-  } else {
-    freqReg = gen.freqCalc(stepsPerSecond);
-    gen.adjustFreq(MiniGen::FREQ0, freqReg); //start moving
+  volatile float stepsPerSecond = mmToSteps(sp);
+  if (mode == -1) {  //no tone if stopped
+    noTone(stepPin);
+  } else {    
+    //signal geerator here
   }
-
 }
 
 ISR(TIMER5_COMPA_vect) {   //takes ___ milliseconds
@@ -95,5 +81,5 @@ ISR(TIMER5_COMPA_vect) {   //takes ___ milliseconds
   Serial.write('d');    //to indicate alternate data
   float lerpVal = lerp(prevVal, futurePos, (interval * 1.0e6) / (sampleT - prevSampleT)); //linear interpolate(initial value, final value, percentatge)//percentage is desired interval/actual interval
   sendFloat(lerpVal);
-  //Serial.println();
+  //Serial.println(encPos());
 }
