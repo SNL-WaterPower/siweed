@@ -779,7 +779,7 @@ void wecQs() {
 void drawFFT() {
   int nyquist = (int)frameRate/2;    //sampling frequency/2 NOTE: framerate is not a constant variable
   float initialX = 0;
-  float yScale = 50;
+  float yScale = 20000;
   textSize(10);
   fill(green);
   stroke(green);
@@ -794,7 +794,7 @@ void drawFFT() {
       text((int)(i*(1/((float)queueSize/32))), x, y);    //x-axis: frequency spacing is 1/T, where t is length of sample in seconds
     }
     if (i%1 == 0 && i<=5) {
-      text(i, initialX, y - yScale*i);    //y-axis
+      text(i, initialX, y - 50*i);    //y-axis    //units need to be fixed
     }
   }
 }

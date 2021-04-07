@@ -48,7 +48,7 @@ ISR(TIMER4_COMPA_vect) {    //function called by interupt
   //PID calculation:
   pidSet = 0; //desired error is 0
   pidIn = error;
-  myPID.Compute();    //sets pidOut
+  //myPID.Compute();    //sets pidOut
   /////////
   volatile float velCommand;
   if (mode != 0 || abs(futurePos - pos) > deadzone) {    //deadband only if in jog mode.

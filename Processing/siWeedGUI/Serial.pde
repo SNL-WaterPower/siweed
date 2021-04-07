@@ -125,7 +125,7 @@ void readMegaSerial() {
       case '1':
         megaUnitTests[0] = true;      //for unit testing and acquiring serial.
         if (debug) {
-          print(" d ");
+          //print(" d ");
         }
         probe1 = readFloat(port1);
         if (waveElClicked == true) {
@@ -151,7 +151,7 @@ void readMegaSerial() {
         int testNum = (int)readFloat(port1);    //indicates which jonswap test passed(1 or 2). Negative means that test failed.
         if (debug) {
           //println("MegaUnittestNum: "+testNum);
-          print(" u ");
+          //print(" u ");
         }
         if (testNum > 0) {    //only changes if test was passed
           megaUnitTests[testNum] = true;
