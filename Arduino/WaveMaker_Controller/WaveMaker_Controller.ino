@@ -7,7 +7,8 @@
 #include <SparkFun_MiniGen.h>
 
 MiniGen gen(10); //initalize signal generator with FSYNC pin 10
-miniWaveTankJonswap jonswap(512.0 / 32.0, 0.5, 2.5); //period, low frequency, high frequency. frequencies will be rounded to multiples of df(=1/period)
+miniWaveTankJonswap jonswap(512.0 / 64.0, 0.5, 2.5); //period, low frequency, high frequency. frequencies will be rounded to multiples of df(=1/period)
+//df = 1 / _period; num_fs = (int)((f_high - f_low) / df);
 //^ISSUE. Acuracy seems to fall off after ~50 components when using higher frequencies(1,3 at 64 elements seems wrong).
 volatile double pidOut, pidSet, pidIn;
 PID myPID(&pidIn, &pidOut, &pidSet, 0, 0, 0, P_ON_M, DIRECT); //input, output, setpoint, kp,  ki, kd
@@ -31,7 +32,7 @@ volatile float desiredPos;   //used for jog mode
 const int buffSize = 10;    //number of data points buffered in the moving average filter
 volatile float probe1Buffer[buffSize];
 volatile float probe2Buffer[buffSize];
-const float maxRate = 0.05;   //max m/seconds
+const float maxRate = 0.25;   //max m/seconds
 /////////would like to put these in the interrupts tab, but cant without changing proect structure to .cpp and .h files.
 const float interval = .01;   //time between each interupt call in seconds //max value: 1.04
 const float serialInterval = .03125;   //time between each interupt call in seconds //max value: 1.04    .03125 is 32 times a second to match processing's speed(32hz)
@@ -52,7 +53,7 @@ volatile float inputFnc(volatile float tm) {  //inputs time in seconds //outputs
       newJonswapData = false;
       jonswap.update(sigH, peakF, gam);
       n = jonswap.getNum();
-      for (int i = 0; i < n; i++) {
+      for (volatile int i = 0; i < n; i++) {
         amps[i] = jonswap.getAmp(i);
         freqs[i] = jonswap.getF(i);
         phases[i] = jonswap.getPhase(i);
@@ -60,9 +61,6 @@ volatile float inputFnc(volatile float tm) {  //inputs time in seconds //outputs
     }
     for (volatile int i = 0; i < n; i++) {
       val += amps[i] * sin(2 * M_PI * tm * freqs[i] + phases[i]);
-      //Serial.println(amps[i]);// + " " + freqs[i]+" "+phases[i]);
-      //Serial.println(freqs[i]);
-      //Serial.println(phases[i]);
     }
   }
   return val;
@@ -131,17 +129,20 @@ void loop() {   //__ microseconds
   t = micros() / 1.0e6;
   readSerial();
   updateSpeedScalar();
+//  newJonswapData = true;    //to see what n is
+//  inputFnc(0);
+//  Serial.println(n);
 }
 void updateSpeedScalar() {    //used to prevent jumps/smooth start
   //Serial.println(speedScalar);
-  /*
-    if (speedScalar < 1) {
-      speedScalar += .005;
-    } else {
-      speedScalar = 1.0;
-    }
-  */
-  speedScalar = 1.0;
+
+  if (speedScalar < 1) {
+    speedScalar += .0007;   //value determined by testing
+  } else {
+    speedScalar = 1.0;
+  }
+
+  //speedScalar = 1.0;
 }
 volatile float mToSteps(volatile float m) {
   return m * (1 / leadPitch) * gearRatio * motorStepsPerTurn; //m*(lead turns/m)*(motor turns/lead turn)*(steps per motor turn)
@@ -194,15 +195,15 @@ void unitTests() {
     //Serial.print(inputFnc(i));
     //Serial.print(", ");
     ////////////////////////////
-  } 
-
-    //////////////////test encoder buffer:
-    //If the initialization and setting functions worked, move on, otherwise, throw error and halt execution.
-    if (encoderBuffInit && didItWork_MDR0 && didItWork_MDR1) {
-      //passed
-    } else {
-      encoderTest = false;
-    }
+  }
+  //while(1)
+  //////////////////test encoder buffer:
+  //If the initialization and setting functions worked, move on, otherwise, throw error and halt execution.
+  if (encoderBuffInit && didItWork_MDR0 && didItWork_MDR1) {
+    //passed
+  } else {
+    encoderTest = false;
+  }
   mode = oldMode;   //reset mode to what it was before unit tests
 
 }

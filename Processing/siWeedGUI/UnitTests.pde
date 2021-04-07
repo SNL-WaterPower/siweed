@@ -1,4 +1,4 @@
-
+int onboardTestDelay = 200;    //ms to wait for arduino to send unit tests
 boolean[] megaUnitTests = {false, false, false, false, false};      //serial, jonswap amplitude array, jonswap timeSeries, encoder buffer, unit tests recieved
 boolean[] dueUnitTests = {false, false, false, false, false};
 void unitTests() {
@@ -51,23 +51,50 @@ void unitTests() {
   } else {
     println("Due Serial Test FAILED");
   }
-  ////////////verify mega jonswap:
+  ////////////verify mega on board unit tests:
   if (megaConnected) { 
     port1.clear();    //clear buffer
     port1.write('u');    //sends to begin test
     sendFloat(1.0, port1);    //flips to unit test serial mode
-    delay(200);    //time for arduino to send tests
-    for (int i = 0; i < 10 && !megaUnitTests[4]; i++)    //tries i times or until the confimation flag is recieved
-    {
+    delay(onboardTestDelay);    //time for arduino to send tests
+    for (int i = 0; i < 10 && !megaUnitTests[4]; i++) {   //tries i times or until the confimation flag is recieved
       readMegaSerial();
       if (debug) {
         println("retrieving mega unit tests");
       }
+      if (i == 5) {    //if failed after 5 tries, send command again.
+        port1.clear();    //clear buffer
+        port1.write('u');    //sends to begin test
+        sendFloat(1.0, port1);    //flips to unit test serial mode
+        delay(onboardTestDelay);    //time for arduino to send tests
+        if (debug) {
+          println("did not recieve mega unit tests, sending new request");
+        }
+      }
     }
-    port1.write('u');    //sends to begin test
-    sendFloat(0, port1);    //back to normal operation
+    if (debug && megaUnitTests[4]) {
+      println("mega unit tests recieved");
+    } else if (debug) {
+      println("mega unit tests timed out");
+    }
+    megaUnitTests[0] = false;
+    for (int i = 0; i < 10 && !megaUnitTests[0]; i++) {    //tries i times or until back to normal operation.
+      port1.clear();
+      port1.write('u'); 
+      sendFloat(0, port1);    //back to normal operation
+      delay(onboardTestDelay);
+      megaUnitTests[0] = false;
+      readMegaSerial();
+      if (debug){
+        println("testing if mega returned to normal operation");
+      }
+    }
+    if(!megaUnitTests[0]){
+      println("Mega failed to exit Unit Testing mode");
+    }
   }
-  if (megaUnitTests[4]) {    //if the tests were recived correctly
+  if (!megaConnected) {
+  } else if (megaUnitTests[4]) {    //if the tests were recived correctly
     if (megaUnitTests[1]) {
       println("Mega Jonswap Amplitide Test PASSED");
     } else {    
@@ -86,24 +113,51 @@ void unitTests() {
   } else {          //if the tests were not recieved correctly
     println("Mega On-Board Units Tests FAILED");
   }
-  ////////////verify due jonswap:
+  ////////////verify due on board unit tests:
   if (dueConnected) {
     port2.clear();    //clear buffer
     port2.write('u');    //sends to begin test
     sendFloat(1.0, port2);    //flips to unit test serial mode
-    delay(200);    //time for arduino to send tests
+    delay(onboardTestDelay);    //time for arduino to send tests
     for (int i = 0; i < 10 && !dueUnitTests[4]; i++)    //tries i times or until the confimation flag is recieved
     {
       readDueSerial();      
       if (debug) {
         println("retrieving due unit tests");
       }
+      if (i == 5) {    //if failed after 5 tries, send command again.
+        port2.clear();    //clear buffer
+        port2.write('u');    //sends to begin test
+        sendFloat(1.0, port2);    //flips to unit test serial mode
+        delay(onboardTestDelay);    //time for arduino to send tests
+        if (debug) {
+          println("did not recieve due unit tests, sending new request");
+        }
+      }
     }
-    port2.write('u'); 
-    sendFloat(0, port2);    //back to normal operation
+    if (debug && dueUnitTests[4]) {
+      println("due unit tests recieved");
+    } else if (debug) {
+      println("due unit tests timed out");
+    }
+    dueUnitTests[0] = false;
+    for (int i = 0; i < 10 && !dueUnitTests[0]; i++) {    //tries i times or until back to normal operation.
+      port2.clear();
+      port2.write('u');
+      sendFloat(0, port2);    //back to normal operation
+      delay(onboardTestDelay);
+      dueUnitTests[0] = false;
+      readDueSerial();
+      if (debug){
+        println("testing if Due returned to normal operation");
+      }
+    }
+    if(dueUnitTests[0] == false){
+      println("Due failed to exit Unit Testing mode");
+    }
   }
-
-  if (dueUnitTests[4]) {
+  if (!dueConnected) {
+  } else if (dueUnitTests[4]) {
     if (dueUnitTests[1]) {
       println("Due Jonswap Amplitide Test PASSED");
     } else {    

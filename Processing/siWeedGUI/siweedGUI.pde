@@ -13,7 +13,7 @@ Textarea myTextarea;
 Println console; //Needed for GUI console to work
 Textarea consoleOutput; //Needed for GUI console to work
 
-boolean debug = false;    //for debug print statements. Also disables GUI consol, and puts it in processing
+boolean debug = true;    //for debug print statements. Also disables GUI console, and puts it in processing
 boolean guiConsole = true; 
 
 int queueSize = 512;    //power of 2 closest to 30(15) seconds at 32 samples/second    !!Needs to match arduino
@@ -62,11 +62,6 @@ void draw() {
   if (!initialized) {  //Because these take too long, they need to be run in draw(setup cannot take more that 5 seconds.)
     initializeSerial();    //has a 2+ second delay
     unitTests();
-    if (debug) {
-      print("1 ");
-      println(millis() - timestamp);
-      timestamp = millis();
-    }
     initialized = true;
   }
 
@@ -96,11 +91,6 @@ void draw() {
     quad4.setColorBackground(green);
   }
 
-  if (debug) {
-    print("9 ");
-    println(millis() - timestamp);
-    timestamp = millis();
-  }
 
   //controls button pop up behavior
   if (mousePressed && waveText.isVisible()) {
@@ -113,22 +103,22 @@ void draw() {
 
   if (!megaConnected) {
     //do nothing
-  } else if (waveMaker.mode == 1 && position.getValue() != waveMaker.mag) {  //only sends if value has changed  
+  } else if (waveMaker.mode == 1 && position.getValue() != waveMaker.mag*1000) {  //only sends if value has changed  
     //Jog:
-    waveMaker.mag = position.getValue();
+    waveMaker.mag = position.getValue()/1000;
     port1.write('j');
     sendFloat(waveMaker.mag, port1);
     //function:
-  } else if (waveMaker.mode == 2 && !mousePressed && (waveMaker.amp != h.getValue() || waveMaker.freq != freq.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
-    waveMaker.amp = h.getValue();
+  } else if (waveMaker.mode == 2 && !mousePressed && (waveMaker.amp*1000 != h.getValue() || waveMaker.freq != freq.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
+    waveMaker.amp = h.getValue()/1000;
     waveMaker.freq = freq.getValue();
     port1.write('a');
     sendFloat(waveMaker.amp, port1);
     port1.write('f');
     sendFloat(waveMaker.freq, port1);
     //Sea State:
-  } else if (waveMaker.mode == 3 && !mousePressed && (waveMaker.sigH != sigH.getValue() || waveMaker.peakF != peakF.getValue() || waveMaker.gamma != gamma.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
-    waveMaker.sigH = sigH.getValue();
+  } else if (waveMaker.mode == 3 && !mousePressed && (waveMaker.sigH*1000 != sigH.getValue() || waveMaker.peakF != peakF.getValue() || waveMaker.gamma != gamma.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
+    waveMaker.sigH = sigH.getValue()/1000;
     waveMaker.peakF = peakF.getValue();
     waveMaker.gamma = gamma.getValue();
     port1.write('s');
@@ -137,16 +127,14 @@ void draw() {
     sendFloat(waveMaker.peakF, port1);
     port1.write('g');
     sendFloat(waveMaker.gamma, port1);    //gamma always needs to be the last sent
+    if (debug) {
+      println("sending jonswap values");
+    }
   }
 
-  if (debug) {
-    print("10 ");
-    println(millis() - timestamp);
-    timestamp = millis();
-  }
   if (!dueConnected) {
     //do nothing
-  } else if (wec.mode == 1 && torqueSlider.getValue()/1000 != wec.mag) {  //only sends if value has changed  
+  } else if (wec.mode == 1 && torqueSlider.getValue()*1000 != wec.mag) {  //only sends if value has changed  
     //Jog:
     wec.mag = torque.getValue()/1000;
     port2.write('t');
@@ -154,12 +142,12 @@ void draw() {
     println(wec.mag);
     /*
     am trying to scale the slider y 1000 to make it more usable, but wec.mag is not doing what it should and a NaN is getting sent to the chart.
-    The 1000 scaler is currently only on this torque value, but if it works I'll apply it to more wec values
-    
-    
-    
-    
-    */
+     The 1000 scaler is currently only on this torque value, but if it works I'll apply it to more wec values
+     
+     
+     
+     
+     */
     //feedback:
   } else if (wec.mode == 2 && !mousePressed && (wec.amp != pGain.getValue() || wec.freq != dGain.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition) //for wec, amp is kp and freq is kd;
     wec.amp = pGain.getValue();
@@ -181,12 +169,6 @@ void draw() {
     sendFloat(wec.gamma, port2);    //gamma always needs to be the last sent
   }
 
-  if (debug) {
-    print("11 ");
-    println(millis() - timestamp);
-    timestamp = millis();
-  }
-
   /////FFT section(move to fft tab eventually):  //!!needs to be activated and deactivated based on mode(maybe)
   if (millis() > previousMillis+fftInterval) {
     previousMillis = millis();
@@ -197,11 +179,6 @@ void draw() {
     thread("readMegaSerial");    //will run this funciton in parallel thread
     thread("readDueSerial");
     thread("logData");
-  }
-  if (debug) {
-    print("12 ");
-    println(millis() - timestamp);
-    timestamp = millis();
   }
 }
 

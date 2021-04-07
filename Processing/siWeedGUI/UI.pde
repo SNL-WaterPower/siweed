@@ -219,22 +219,22 @@ void initializeUI() {
   sliderY = 240 + 65 + 50; // button Y lcation (240) + size of button + 50 
 
   // Motor Jog Mode Sliders
-  position = cp5.addSlider("Position (M)")  //name slider
-    .setRange(-0.1, 0.1) //slider range
+  position = cp5.addSlider("Position (MM)")  //name slider
+    .setRange(-25, 25) //slider range
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setFont(sliderFont)
     .setSize(450, 50); //size (width, height)
 
   // Motor Function Mode Sliders
-  h = cp5.addSlider("Height (M)")  //name slider
-    .setRange(0, 0.1) //slider range
+  h = cp5.addSlider("Height (MM)")  //name slider
+    .setRange(0, 20) //slider range
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setSize(450, 50)
     .setFont(sliderFont)
     .hide(); //size (width, height)
 
   freq = cp5.addSlider("Frequency (Hz)")  //name of button
-    .setRange(0, 4)
+    .setRange(0, 2.5)
     .setPosition(sliderX, sliderY + 100) //x and y coordinates of upper left corner of button
     .setSize(450, 50)
     .setFont(sliderFont)
@@ -242,8 +242,8 @@ void initializeUI() {
 
 
   // Motor Sea State Mode Sliders
-  sigH = cp5.addSlider("Significant Height (M)")  //name slider
-    .setRange(0, .1) //slider range
+  sigH = cp5.addSlider("Significant Height (MM)")  //name slider
+    .setRange(0, 50) //slider range
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setSize(450, 50)
     .setFont(sliderFont)
