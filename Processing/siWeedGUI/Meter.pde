@@ -1,8 +1,13 @@
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class Meter {
   int xmin = (int)(0.742 * width);      //coordinates in pixels
   int xmax = (int)(0.951 * width);
   int ymin = (int)(0.222 * height);
   int ymax = (int)(0.407 * height);
+  Queue<Float> q;      //queue for moving average
+  int buffSize = 10;
   int originx, originy;
   float minVal, maxVal;
   int divisionCount = 5, subDivisionCount = 5;    //how many large lines and numbers, and how subdivisions per division.
@@ -10,6 +15,7 @@ public class Meter {
   int arcR, labelR, markR;
   float LMarkSize = 0.2;    //amount of large mark shown relative to radius
   public Meter(float min, float max) {
+    q = new LinkedList<Float>();    //initialize queue
     originx = xmin + (xmax-xmin)/2;
     originy = ymin + (ymax-ymin) - height/75;    //slightly above frame
     minVal = min;
@@ -67,14 +73,25 @@ public class Meter {
       }
     }
     //draw needle:
-    if(val > maxVal){
-      val = maxVal;
-    }else if(val < minVal){
-      val = minVal;
+    q.add(val);
+    if (q.size() > buffSize) {
+      q.remove();
+    }
+    float averageVal = 0;
+    for (int i = 0; i < q.size(); i++) {      //find sum by removing and adding to queue
+      float temp = q.remove();
+      averageVal += temp;
+      q.add(temp);
+    }
+    averageVal = averageVal/q.size();      //finds moving average
+    if (averageVal > maxVal) {
+      averageVal = maxVal;
+    } else if (val < minVal) {
+      averageVal = minVal;
     }
     stroke(red);
     strokeWeight(height/300); 
-    float angle = PI*(val/maxVal);    //angle in radians
+    float angle = PI*((averageVal-minVal)/(maxVal-minVal));    //angle in radians  
     float RCos = (float)arcR*(float)Math.cos(angle);
     float RSin = (float)arcR*(float)Math.sin(angle);
     int markX = (int)(originx - RCos);

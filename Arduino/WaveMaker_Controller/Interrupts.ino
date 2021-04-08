@@ -1,5 +1,7 @@
+bool dir = true;
+
+const float deadzone = 0.0001;  //dead band in meters
 volatile float futurePos;
-volatile float error;
 volatile float sampleT = 0;  //timestamp in microseconds of sample
 volatile float prevSampleT;  //previous timestamp in microseconds
 volatile float prevVal;   //value of sample at prevSampleT
@@ -35,36 +37,39 @@ void initInterrupts() {
   TODO: triple check unit conversions, and test linear controller on it's own. Then
   tune PID with 0P, maybe 0D
 */
-ISR(TIMER4_COMPA_vect) {    //function called by interupt     //Takes about .4 milliseconds
-  volatile unsigned long freqReg = gen.freqCalc(0);   //can we delete this?
+ISR(TIMER4_COMPA_vect) {    //function called by interupt
   volatile float pos = encPos();
-  error = futurePos - pos;   //where we told it to go vs where it is
+  volatile float error = futurePos - pos;   //where we told it to go vs where it is
   ////////vars for linear interpolation:
   prevSampleT = sampleT;
   sampleT = micros();
   prevVal = futurePos;
-  /////////////////
-  futurePos = inputFnc(t + interval);// + error;  //time plus delta time plus previous error. maybe error should scale as a percentage of speed? !!!!!!!!!!!!!!NEEDS TESTING
-  volatile float linearVel = (futurePos - pos) / interval;    //estimated desired velocity in mm/s, in order to hit target by next interupt call.
+  futurePos = inputFnc(t + interval);  //time plus delta time
   //PID calculation:
   pidSet = 0; //desired error is 0
   pidIn = error;
-  myPID.Compute();    //sets pidOut
+  //myPID.Compute();    //sets pidOut
   /////////
-  float velCommand = linearVel + pidOut;
+  volatile float velCommand;
+  if (mode != 0 || abs(futurePos - pos) > deadzone) {    //deadband only if in jog mode.
+    velCommand = ((futurePos - pos) / interval) + pidOut; //estimated desired velocity in m/s, in order to hit target by next interupt call, + pid error adjustment
+  } else {
+    velCommand = 0;
+  }
+  //Serial.println(velCommand, 5);
   if (velCommand > 0) {
     digitalWrite(dirPin, HIGH);
   } else {
     digitalWrite(dirPin, LOW);
   }
-  volatile float sp = abs(velCommand);     //steping is always positive, so convert to speed
+  volatile float sp = speedScalar * abs(velCommand);     //steping is always positive, so convert to speed, * speed scalar to smooth transitions
   if (sp > maxRate) {  //max speed
     sp = maxRate;
     digitalWrite(13, HIGH);   //on board led turns on if max speed was reached
-    //Serial.println("max");
   }
 
-  volatile float stepsPerSecond = mmToSteps(sp);    //instead of converting units, any conversions are handled by tuning PID
+  volatile float stepsPerSecond = mToSteps(sp);
+  volatile unsigned long freqReg;
   if (mode == -1 || stepsPerSecond < 12) {  //stop
     freqReg = gen.freqCalc(0);
     gen.adjustFreq(MiniGen::FREQ0, freqReg); //stop moving
@@ -82,18 +87,43 @@ ISR(TIMER5_COMPA_vect) {   //takes ___ milliseconds
     p: position
     d: other data for debugging
   */
+  pushBuffer(probe1Buffer, mapFloat(analogRead(probe1Pin), 0.0, 560.0, 0.0, 0.27));     //maps to m and adds to data buffer
+  pushBuffer(probe2Buffer, mapFloat(analogRead(probe2Pin), 0.0, 560.0, 0.0, 0.27));
+  if (sendUnitTests)    //if in unit testing serial mode
+  {
+    if (ampUnitTest) {
+      Serial.write('u');
+      sendFloat(1);
+    } else {
+      Serial.write('u');
+      sendFloat(-1);
+    }
+    if (TSUnitTest) {
+      Serial.write('u');
+      sendFloat(2);
+    } else {
+      Serial.write('u');
+      sendFloat(-2);
+    }
+    if (encoderTest) {
+      Serial.write('u');
+      sendFloat(3);
+    } else {
+      Serial.write('u');
+      sendFloat(-3);
+    }
+    Serial.write('u');
+    sendFloat(4);     //4 indicates that all tests have been sent at least once
 
-  pushBuffer(probe1Buffer, mapFloat(analogRead(probe1Pin), 0.0, 560.0, 0.0, 27.0));     //maps to cm and adds to data buffer
-  pushBuffer(probe2Buffer, mapFloat(analogRead(probe2Pin), 0.0, 560.0, 0.0, 27.0));
-  Serial.write('1');    //to indicate wave probe data
-  sendFloat(averageArray(probe1Buffer));
-  Serial.write('2');    //to indicate wave probe data
-  sendFloat(averageArray(probe2Buffer));
-  Serial.write('p');    //to indicate position
-  //Serial.print(encPos);
-  sendFloat(encPos());
-  Serial.write('d');    //to indicate alternate data
-  float lerpVal = lerp(prevVal, futurePos, (interval * 1.0e6) / (sampleT - prevSampleT)); //linear interpolate(initial value, final value, percentatge)//percentage is desired interval/actual interval
-  sendFloat(lerpVal);
-  //Serial.println();
+  } else {        //under normal operation
+    Serial.write('1');    //to indicate wave probe data
+    sendFloat(averageArray(probe1Buffer));
+    Serial.write('2');    //to indicate wave probe data
+    sendFloat(averageArray(probe2Buffer));
+    Serial.write('p');    //to indicate position
+    sendFloat(encPos());
+    Serial.write('d');    //to indicate alternate data
+    float lerpVal = lerp(prevVal, futurePos, (interval * 1.0e6) / (sampleT - prevSampleT)); //linear interpolate(initial value, final value, percentatge)//percentage is desired interval/actual interval
+    sendFloat(lerpVal);
+  }
 }

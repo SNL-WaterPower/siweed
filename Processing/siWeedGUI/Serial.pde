@@ -1,6 +1,8 @@
 Serial port1;    //arduino mega
 Serial port2;    //arduino Due
 boolean megaConnected, dueConnected;
+int connectionDelay  = 3500;      //how many ms to wait after connecting to a device. Can greatly slow the startup
+int baudRate = 250000;
 void initializeSerial() {
   ///////////initialize Serial
 
@@ -9,43 +11,59 @@ void initializeSerial() {
   for (int i = 0; i < Serial.list().length; i++) {    //tries each device
     if (!megaConnected) {
       try {
-        if (debug) println("trying port"+i);
-        port1 = new Serial(this, Serial.list()[i], 250000); //attempts to connect
+        if (debug) println("trying port"+Serial.list()[i]);
+        port1 = new Serial(this, Serial.list()[i], baudRate); //attempts to connect
         megaConnected = true;
+        if (debug) println("mega test port connected");
       }
       catch(Exception e) {
         megaConnected = false;
         if (debug) println("exception caught");
       }
       if (megaConnected) {    //if the device successfully connected
-        delay(2000);          //wait for connection to stabilize
-        if (debug) println("testing mega serial");
+        if (debug) println("connected to device, waiting for connection to stabilize");
+        delay(connectionDelay);          //wait for connection to stabilize
+
+        port1.clear();
+        delay(100);        //after the connection stabilizes, this clears all the garbage and gives good data time to come through.
+
         readMegaSerial();    //reads serial buffer and sets bool true if recieving normal results
-        if (debug) println("finished testing mega serial");
         if (megaUnitTests[0]) {
           //correct board found
+          if (debug) println("correct board found");
         } else {
           megaConnected = false;    //if not found, keep testing
+          port1.stop();    //disconnect the port so Due function can try
+          if (debug) println("wrong board");
         }
       }
     }
-    if (debug) println("Due Serial");
+    if (debug) println("Due Serial:");
     if (!dueConnected) {
       try {
-        port2 = new Serial(this, Serial.list()[i], 250000); // all communication with Due
+        if (debug) println("trying due port "+Serial.list()[i]);
+        port2 = new Serial(this, Serial.list()[i], baudRate); // all communication with Due
         dueConnected = true;
+        if (debug) println("due test port connected");
       }
       catch(Exception e) {
         dueConnected = false;
+        if (debug) println("exception caught");
       }
       if (dueConnected) {
-        delay(2000);
-        if (debug) println("testing Due Serial");
+        if (debug) println("connected to device, waiting for connection to stabilize");
+        delay(connectionDelay);
+        port2.clear();
+        delay(100);        //after the connection stabilizes, this clears all the garbage and gives good data time to come through.
+
         readDueSerial();    //reads serial buffer and sets bool true if recieving normal results
         if (dueUnitTests[0]) {
           //correct board found
+          if (debug) println("correct board found");
         } else {
           dueConnected = false;
+          port1.stop();    //disconnect the port
+          if (debug) println("wrong board");
         }
       }
     }
@@ -88,6 +106,9 @@ void sendFloat(float f, Serial port)
   byte[] byteArray = floatToByteArray(f);
 
   port.write(byteArray);
+  if (debug) {
+    println("sent float: "+f);
+  }
 }
 void readMegaSerial() {
   /*
@@ -96,11 +117,16 @@ void readMegaSerial() {
    2:probe 2
    p:position
    d:other data for debugging
+   u:unit tests
    */
   if (megaConnected) {
-    for (int i = 0; i <port1.available()/20; i++) {    //runs as many times to empty the buffer(bytes availible/ bytes read per loop). Since it runs 30 times a second, the arduino will send many samples per execution.
+    for (int i = 0; i <port1.available()/20; i++) {    //runs as many times to empty the buffer(bytes availible/ bytes read per loop).
       switch(port1.readChar()) {
       case '1':
+        megaUnitTests[0] = true;      //for unit testing and acquiring serial.
+        if (debug) {
+          //print(" d ");
+        }
         probe1 = readFloat(port1);
         if (waveElClicked == true) {
           waveChart.push("waveElevation", probe1);
@@ -116,7 +142,6 @@ void readMegaSerial() {
         }
         break;
       case 'd':
-        megaUnitTests[0] = true;      //for unit testing and acquiring serial.
         debugData = readFloat(port1);
         waveChart.push("debug", debugData);
         if (waveMaker.mode == 3||waveMaker.mode == 2) fftList.add(debugData);      //adds to the tail if in the right mode
@@ -124,6 +149,10 @@ void readMegaSerial() {
         break;
       case 'u':
         int testNum = (int)readFloat(port1);    //indicates which jonswap test passed(1 or 2). Negative means that test failed.
+        if (debug) {
+          //println("MegaUnittestNum: "+testNum);
+          //print(" u ");
+        }
         if (testNum > 0) {    //only changes if test was passed
           megaUnitTests[testNum] = true;
         }
@@ -139,6 +168,7 @@ void readDueSerial() {
    t: tau commanded to motor
    p: power
    v: velocity
+   u: unit testing
    */
   if (dueConnected) {
     for (int i = 0; i <port2.available()/20; i++) {    //runs as many times to empty the buffer(bytes availible/ bytes read per loop). Since it runs 30 times a second, the arduino will send many samples per execution.
@@ -151,13 +181,13 @@ void readDueSerial() {
         }
         break;
       case 't':
+        dueUnitTests[0] = true;
         tau = readFloat(port2);
         if (wecTorqClicked == true) {
           wecChart.push("wecTorque", tau);
         }
         break;
       case 'p':
-        dueUnitTests[0] = true;
         pow = readFloat(port2);
         if (wecPowClicked == true) {
           wecChart.push("wecPower", pow);
@@ -171,6 +201,9 @@ void readDueSerial() {
         break;
       case 'u':
         int testNum = (int)readFloat(port2);    //indicates which jonswap test passed(1 or 2)
+        if (debug) {
+          println("DueUnittestNum: "+testNum);
+        }
         if (testNum > 0) {    //only changes if test was passed
           dueUnitTests[testNum] = true;
         }   

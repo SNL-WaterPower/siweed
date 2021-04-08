@@ -26,7 +26,7 @@ color red = color(255, 0, 0);
 // Fonts
 PFont f; // Regular font
 PFont fb; // Bold font
-PFont buttonFont, sliderFont,titleTextBoxFont, headerTextBoxFont, textBoxFont; 
+PFont buttonFont, sliderFont, titleTextBoxFont, headerTextBoxFont, textBoxFont; 
 
 
 // Sandia logo
@@ -42,22 +42,23 @@ void initializeUI() {
   fb = createFont("Arial Bold Italic", 32, true);
   titleTextBoxFont = buttonFont = createFont("Arial Bold Italic", 40, true);
   buttonFont = createFont("Arial Bold Italic", 12, true);
-  sliderFont = createFont("Arial Bold Italic",12,true);
-  headerTextBoxFont = createFont("Arial Bold",25,false);
-  textBoxFont = createFont("Arial Bold Italic",20,true);
+  sliderFont = createFont("Arial Bold Italic", 12, true);
+  headerTextBoxFont = createFont("Arial Bold", 25, false);
+  textBoxFont = createFont("Arial Bold Italic", 20, true);
 
   // Buttons //
-  
+
+  //1387
   /* Code to make this toggle, but getting errors on ".isVisible()
-    consoleButton = cp5.addToggle("consoleButton")
-    .setCaptionLabel("AllconsoleButton")
-    //.setValue(0)
-    .setPosition(1390, 610)
-    .setSize(50, 20)
-    .setColorBackground(grey)
-    .setState(false);
- */
-    consoleButton = cp5.addButton("consoleButton")
+   consoleButton = cp5.addToggle("consoleButton")
+   .setCaptionLabel("AllconsoleButton")
+   //.setValue(0)
+   .setPosition(1390, 610)
+   .setSize(50, 20)
+   .setColorBackground(grey)
+   .setState(false);
+   */
+  consoleButton = cp5.addButton("consoleButton")
     .setPosition(1390, 610)
     .setSize(100, 50)
     .setLabel("Console")
@@ -137,7 +138,6 @@ void initializeUI() {
     .setSize(150, 65)
     .setLabel("OFF")
     .setFont(buttonFont); 
-// wec buttons //     
 
  buttonX = int((width/3.5 + 4*(150) + 100));  
 
@@ -224,22 +224,22 @@ wecPowData = cp5.addButton("wecPowData")
   sliderY = 200 ; // button Y lcation (240) + size of button + 50 
 
   // Motor Jog Mode Sliders
-  position = cp5.addSlider("Position (CM)")  //name slider
-    .setRange(-10, 10) //slider range
+  position = cp5.addSlider("Position (MM)")  //name slider
+    .setRange(-25, 25) //slider range
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setFont(sliderFont)
     .setSize(450, 50); //size (width, height)
 
   // Motor Function Mode Sliders
-  h = cp5.addSlider("Height (CM)")  //name slider
-    .setRange(0, 10) //slider range
+  h = cp5.addSlider("Height (MM)")  //name slider
+    .setRange(0, 20) //slider range
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setSize(450, 50)
     .setFont(sliderFont)
     .hide(); //size (width, height)
 
   freq = cp5.addSlider("Frequency (Hz)")  //name of button
-    .setRange(0, 4)
+    .setRange(0, 2.5)
     .setPosition(sliderX, sliderY + 100) //x and y coordinates of upper left corner of button
     .setSize(450, 50)
     .setFont(sliderFont)
@@ -247,8 +247,8 @@ wecPowData = cp5.addButton("wecPowData")
 
 
   // Motor Sea State Mode Sliders
-  sigH = cp5.addSlider("Significant Height (CM)")  //name slider
-    .setRange(0, 10) //slider range
+  sigH = cp5.addSlider("Significant Height (MM)")  //name slider
+    .setRange(0, 50) //slider range
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setSize(450, 50)
     .setFont(sliderFont)
@@ -273,21 +273,22 @@ wecPowData = cp5.addButton("wecPowData")
   // WEC Torque Sliders
   sliderX = int((width/3.5 + 4*(150) + 100));
   torqueSlider = cp5.addSlider("Torque")  //name of button
-    .setRange(0, 0.5)
+    //.setRange(-0.006, 0.006)      //max amps * torque constant. I think this will max amperage at max slider value
+    .setRange(-6, 6)
     .setFont(sliderFont)
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setSize(450, 50); //size (width, height)
 
   // WEC Feedback Sliders   
   pGain = cp5.addSlider("P Gain")  //name of button
-    .setRange(0, 0.5)
+    .setRange(-0.0006, 0.0006)    //user needs to be able to command negative //0.1(wave height in meters) * max torque(above)
     .setFont(sliderFont)
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setSize(450, 50) //size (width, height)
     .hide();
 
   dGain = cp5.addSlider("D Gain")  //name of button
-    .setRange(0, 0.5)
+    .setRange(0, 0.0005)    //user needs to only command positive    //!!will find right values by measuring max vel
     .setFont(sliderFont)
     .setPosition(sliderX, sliderY + 100) //x and y coordinates of upper left corner of button
     .setSize(450, 50) //size (width, height)
@@ -295,8 +296,8 @@ wecPowData = cp5.addButton("wecPowData")
 
   //WEC Seastate Sliders 
 
-  sigHWEC = cp5.addSlider("WEC Significant Height (CM)")  //name of button
-    .setRange(0, 0.5)
+  sigHWEC = cp5.addSlider("WEC Significant Height (M)")  //name of button
+    .setRange(0, 0.05)
     .setFont(sliderFont)
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setSize(450, 50) //size (width, height)
@@ -348,7 +349,10 @@ wecPowData = cp5.addButton("wecPowData")
     .setPosition((width/3.5) + 50, 550)
     .setSize(500, 200)
     .setFont(sliderFont)
-    .setRange(-10, 10)
+//    .setRange(-10, 10) value delaney had 
+    .setPosition(830, 540)
+    .setSize(500, 175)
+    .setRange(-0.10, 0.10) //new value from develop 
     .setView(Chart.LINE) // use Chart.LINE, Chart.PIE, Chart.AREA, Chart.BAR_CENTERED
     .setStrokeWeight(10)
     .setColorCaptionLabel(color(40))
@@ -358,7 +362,7 @@ wecPowData = cp5.addButton("wecPowData")
     
   waveChart.addDataSet("debug");
   waveChart.setData("debug", new float[360]);
-  
+
   wecChart =  cp5.addChart("WEC Information")
     .setPosition((width/3.5 + 700), 550)
     .setSize(500, 200)
@@ -379,83 +383,86 @@ wecPowData = cp5.addButton("wecPowData")
 
   snlLogo = loadImage("SNL_Stacked_White.png");
   wavePic = loadImage("ocean.jpg");
-  
-  
+
+
   //console, this needs to be in the setup to ensure
   //that it catches any errors when program starts
   consoleOutput=cp5.addTextarea("consoleOutput")
-        .setPosition(1460,710) 
-        .setSize(330, 300)
-        .setLineHeight(14)
-        .setColorValue(green) //color of font
-         // .setColorBackground(color(100,100))
-        // .setColorForeground(color(255,100))
-        .scroll(1) //enable scrolling up and down
-        .hide(); //hidden on startup     
-  console = cp5.addConsole(consoleOutput);
-    
-    
+    .setPosition(1460, 710) 
+    .setSize(330, 300)
+    .setLineHeight(14)
+    .setColorValue(green) //color of font
+    // .setColorBackground(color(100,100))
+    // .setColorForeground(color(255,100))
+    .scroll(1) //enable scrolling up and down
+    .hide(); //hidden on startup   
+  if (!debug && guiConsole)      //only does in GUI console if not debugging
+  {
+    console = cp5.addConsole(consoleOutput);
+  }
+
+
   myTextarea = cp5.addTextarea("txtBanner")
-        .setPosition(width/6,height/45)
-        .setText("Sandia Interactive Wave Energy Educational Display (SIWEED)")
-        .setSize(1200,90)
-        .setFont(titleTextBoxFont)
-        .setLineHeight(14)
-        .setColor(color(green)) ;
-        //.setColorBackground(color(255,100));
-        //.setColorForeground(color(255,100));
-   
+    .setPosition(width/6, height/45)
+    .setText("Sandia Interactive Wave Energy Educational Display (SIWEED)")
+    .setSize(1200, 90)
+    .setFont(titleTextBoxFont)
+    .setLineHeight(14)
+    .setColor(color(green)) ;
+  //.setColorBackground(color(255,100));
+  //.setColorForeground(color(255,100));
+
   myTextarea = cp5.addTextarea("txtWelcome")
-                  .setText("Is this the error? I think it might be the error")
-                  .setPosition(810, 250)
-                  .setSize(500,300)
-                  .setFont(textBoxFont)
-                  .setLineHeight(29)
-                  .setColor(color(white)); // need to find the correct color for this
-                  //.setColorBackground(color(255,100))
-                  //.setColorForeground(color(255,100));
-                
+    .setText("test of the text")
+    .setPosition(810, 250)
+    .setSize(500, 300)
+    .setFont(textBoxFont)
+    .setLineHeight(29)
+    .setColor(color(white)); // need to find the correct color for this
+  //.setColorBackground(color(255,100))
+  //.setColorForeground(color(255,100));
+
   myTextarea = cp5.addTextarea("txtSystemStatus")
-                  .setPosition(795, 155)
-                  .setText("System Status")
-                  .setSize(225,75)
-                  .setFont(headerTextBoxFont)
-                  .setLineHeight(7)
-                  .setColor(color(buttonblue)); // need to find the correct color for this
-                 // .setColorBackground(color(255,100))
-                //  .setColorForeground(color(255,100));
+    .setPosition(795, 155)
+    .setText("System Status")
+    .setSize(225, 75)
+    .setFont(headerTextBoxFont)
+    .setLineHeight(7)
+    .setColor(color(buttonblue)); // need to find the correct color for this
+  // .setColorBackground(color(255,100))
+  //  .setColorForeground(color(255,100));
 
   myTextarea = cp5.addTextarea("txtWaveDimensions")
-                  .setPosition(45, 220)
-                  .setText("Change Wave Dimensions")
-                  .setSize(300,40)
-                  .setFont(textBoxFont)
-                  .setLineHeight(10)
-                  .setColor(color(white)); // need to find the correct color for this
-                  //.setColorBackground(color(255,100))
-                  //.setColorForeground(color(255,100));             
+    .setPosition(45, 220)
+    .setText("Change Wave Dimensions")
+    .setSize(300, 40)
+    .setFont(textBoxFont)
+    .setLineHeight(10)
+    .setColor(color(white)); // need to find the correct color for this
+  //.setColorBackground(color(255,100))
+  //.setColorForeground(color(255,100));             
 
   myTextarea = cp5.addTextarea("txtWECControls")
-                  .setPosition(45, 620)
-                  .setText("Change WEC Controls")
-                  .setSize(300,40)
-                  .setFont(textBoxFont)
-                  .setLineHeight(10)
-                  .setColor(color(white)); // need to find the correct color for this
-                  //.setColorBackground(color(255,100))
-                  //.setColorForeground(color(255,100));     
-                  
+    .setPosition(45, 620)
+    .setText("Change WEC Controls")
+    .setSize(300, 40)
+    .setFont(textBoxFont)
+    .setLineHeight(10)
+    .setColor(color(white)); // need to find the correct color for this
+  //.setColorBackground(color(255,100))
+  //.setColorForeground(color(255,100));     
+
   myTextarea = cp5.addTextarea("txtMissionControl")
-                  .setPosition(35, 155)
-                  .setText("Mission Control")
-                  .setSize(225,75)
-                  .setFont(headerTextBoxFont)
-                  .setLineHeight(7)
-                  .setColor(color(buttonblue)) ;// need to find the correct color for this
-                 // .setColorBackground(color(255,100));
-                  //.setColorForeground(color(255,100)); 
-                  
-                   image(wavePic, 0, 0, width, height); //background
+    .setPosition(35, 155)
+    .setText("Mission Control")
+    .setSize(225, 75)
+    .setFont(headerTextBoxFont)
+    .setLineHeight(7)
+    .setColor(color(buttonblue)) ;// need to find the correct color for this
+  // .setColorBackground(color(255,100));
+  //.setColorForeground(color(255,100)); 
+
+  image(wavePic, 0, 0, width, height); //background
   fill(buttonblue); //top banner 
   stroke(buttonblue); //not sure
   strokeWeight(0);
@@ -464,18 +471,18 @@ wecPowData = cp5.addButton("wecPowData")
   rect(0, 0, width, 95); // Top Banner
 
   text(fundingState, width/2, 1150);  
-//Mission Control
+  //Mission Control
   fill(turq, 150); //makes the mission control box transparrent 
   stroke(buttonblue, 150);
   strokeWeight(3);
   rect(25, 150, 705, 930, 7); // background for Mission control blue box
-  
+
   fill(green);
   stroke(buttonblue); //outer color
   rect(15, 130, 225, 75, 7); //Mission Control Title Box 
   //Mission Control Text
-  
-   // System Status
+
+  // System Status
   fill(turq, 150);
   stroke(buttonblue, 150);
   rect(780, 150, 1115, 930, 7); // background
@@ -487,24 +494,20 @@ wecPowData = cp5.addButton("wecPowData")
   rect(805, 225, 550, 225, 7); // explainer box
   rect(805, 475, 550, 575, 7); //graph background
   rect(1387, 610, 480, 440, 7); //FFT background 
-  
+
   fill(255, 255, 255);
-  
-  
-  
-  
 }
 //button functions:
 /////////////////// MAKES BUTTONS DO THINGS ////////////////////////////////////
 
 // Console Button
-void consoleButton(){
- consoleButton.setColorBackground(hoverblue);
-  
+void consoleButton() {
+  consoleButton.setColorBackground(hoverblue);
+
   if (consoleOutput.isVisible()) {
     consoleOutput.hide();
   } else {
-   consoleOutput.show();
+    consoleOutput.show();
   }
 }
 
@@ -522,7 +525,7 @@ void jog() {
   peakF.hide();
   gamma.hide();
   position.show();
- 
+
   //set mode on arduino:
   if (megaConnected) {
     port1.write('!');
@@ -787,7 +790,7 @@ void wecQs() {
 void drawFFT() {
   int nyquist = (int)frameRate/2;    //sampling frequency/2 NOTE: framerate is not a constant variable
   float initialX = 0;
-  float yScale = 50;
+  float yScale = 20000;
   textSize(10);
   fill(green);
   stroke(green);
@@ -802,33 +805,56 @@ void drawFFT() {
       text((int)(i*(1/((float)queueSize/32))), x, y);    //x-axis: frequency spacing is 1/T, where t is length of sample in seconds
     }
     if (i%1 == 0 && i<=5) {
-      text(i, initialX, y - yScale*i);    //y-axis
+      text(i, initialX, y - 50*i);    //y-axis    //units need to be fixed
     }
   }
 }
-void displayUpdate(){
-   image(wavePic, 0, 0, width, height); //background
-  fill(buttonblue); //top banner 
-  stroke(buttonblue); //not sure
-  strokeWeight(0);
-  rect(0, 1120, width, 80); //bottom banner
-  image(snlLogo, width-snlLogo.width*0.25-5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25); //Logo
-  rect(0, 0, width, 95); // Top Banner
+void displayUpdate() {
 
-  text(fundingState, width/2, 1150);  
-//Mission Control
-  fill(turq, 150); //makes the mission control box transparrent 
-  stroke(buttonblue, 150);
-  strokeWeight(3);
-  rect(25, 150, 705, 930, 7); // background for Mission control blue box
-  
+  // Background color
+  background(dblue);
+  //Title 
+  textFont(fb, 40);
   fill(green);
-  stroke(buttonblue); //outer color
-  rect(15, 130, 225, 75, 7); //Mission Control Title Box 
-  //Mission Control Text
+  textLeading(15);
+  textAlign(CENTER, TOP);
   
-   // System Status
-  fill(turq, 150);
+  image(wavePic, 0, 0, width, height); //background
+  fill(buttonblue);
+  stroke(buttonblue);
+  strokeWeight(0);
+  image(snlLogo, width-snlLogo.width*0.25-5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25); //Logo
+  rect(0, 0, width/3.5, height); // LHS banner 
+  fill(255,255,255);
+  stroke(255,255,255);
+  rect(width/3.5, 0, width, height/2.5); //mission control banner
+  fill(turq);
+  stroke(turq);
+  rect(width/3.5, height/2.5, width, height); //mission control banner
+  fill(green);
+  text("SIWEED", (width/3.5)/2, 30);
+  fill(255,255,255);
+  textSize(12);
+  textLeading(14);
+  text(fundingState, (width/3.5)/2, 1125);
+ 
+  //Mission Control
+//  fill(turq, 150);
+//  stroke(buttonblue, 150);
+//  strokeWeight(3);
+//  rect(25, 150, 705, 930, 7); // background
+//  fill(green);
+//  stroke(buttonblue);
+//  rect(15, 130, 225, 75, 7); //Mission Control Title Box 
+  //Mission Control Text
+  textFont(fb, 25);
+  fill(buttonblue);
+  textLeading(15);
+  textAlign(LEFT, TOP);
+  text("Mission Control", (width/3.5 + 50), 30);
+  
+  // System Status
+/*  fill(turq, 150);
   stroke(buttonblue, 150);
   rect(780, 150, 1115, 930, 7); // background
   fill(green);
@@ -839,6 +865,27 @@ void displayUpdate(){
   rect(805, 225, 550, 225, 7); // explainer box
   rect(805, 475, 550, 575, 7); //graph background
   rect(1387, 610, 480, 440, 7); //FFT background 
+  fill(255,255,255);
+  textFont(fb, 20);
+  text(welcome, 810, 250);
+  //System Status Text */
+  textFont(fb, 25);
+  fill(buttonblue);
+  textLeading(15);
+  textAlign(LEFT, TOP);
+  stroke(buttonblue);
+  text("System Status", (width/3.5 + 50), (height/2.5 + 30));
+  stroke(green); 
+    
+  textFont(fb, 20);
+  fill(buttonblue);
+  textLeading(15);
+  textAlign(LEFT, TOP);
+  text("Change Wave Dimensions", (width/3.5 + 50), 90);
   
-  fill(255, 255, 255);
+  textFont(fb, 20); 
+  fill(buttonblue);
+  textLeading(15);
+  textAlign(LEFT, TOP);
+  text("Change WEC Controls", (width/3.5 + 700), 90);
 }

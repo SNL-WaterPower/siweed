@@ -8,16 +8,12 @@ void initSerial() {
    s :sigH
    p :peakF
    g :gamma
+   u : serial mode
 */
 void readSerial() {
   if (Serial.available() > 4) {   //if a whole float is through: 1 byte tag + 4 byte float
-    //delay(1000);
-    //Serial.print('b');
-    //Serial.println(Serial.available());
     speedScalar = 0;    //if anything happens, reset the speed scalar(and ramp up speed)
     char c = Serial.read();
-    //Serial.print('x');
-    //Serial.println(c);
     switch (c) {
       case '!':
         mode = (int)readFloat();
@@ -45,27 +41,12 @@ void readSerial() {
         newJonswapData = true;
         break;
       case 'u':
-        readFloat();    //get rid of placeholder float
-        if (ampUnitTest) {
-          Serial.write('u');
-          sendFloat(1);       //this may get interupted by the send serial interupt, which might cause an issue
+        float u = readFloat();    // if 1, unit test sending mode, if 0, normal serial operation.
+        if (u)
+        {
+          sendUnitTests = true;
         } else {
-          Serial.write('u');
-          sendFloat(-1);
-        }
-        if (TSUnitTest) {
-          Serial.write('u');
-          sendFloat(2);
-        } else {
-          Serial.write('u');
-          sendFloat(-2);
-        }
-        if (encoderTest) {
-          Serial.write('u');
-          sendFloat(3);
-        } else {
-          Serial.write('u');
-          sendFloat(-3);
+          sendUnitTests = false;
         }
         break;
     }
@@ -76,13 +57,13 @@ volatile float readFloat() {
   for (volatile int i = 0; i < 4; i++) {
     byteArray[i] = Serial.read();
   }
-  volatile float f = bin2float((byte*)&byteArray); 
+  volatile float f = bin2float((byte*)&byteArray);
   return f;
 }
 
 volatile void sendFloat(volatile float f) {
   volatile byte byteArray[4];
-  float2bin(f,(byte*)&byteArray);
+  float2bin(f, (byte*)&byteArray);
   for (volatile int i = 0; i < 4; i++) {
     Serial.write(byteArray[i]);
   }
