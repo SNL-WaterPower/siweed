@@ -462,40 +462,6 @@ wecPowData = cp5.addButton("wecPowData")
   // .setColorBackground(color(255,100));
   //.setColorForeground(color(255,100)); 
 
-  image(wavePic, 0, 0, width, height); //background
-  fill(buttonblue); //top banner 
-  stroke(buttonblue); //not sure
-  strokeWeight(0);
-  rect(0, 1120, width, 80); //bottom banner
-  image(snlLogo, width-snlLogo.width*0.25-5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25); //Logo
-  rect(0, 0, width, 95); // Top Banner
-
-  text(fundingState, width/2, 1150);  
-  //Mission Control
-  fill(turq, 150); //makes the mission control box transparrent 
-  stroke(buttonblue, 150);
-  strokeWeight(3);
-  rect(25, 150, 705, 930, 7); // background for Mission control blue box
-
-  fill(green);
-  stroke(buttonblue); //outer color
-  rect(15, 130, 225, 75, 7); //Mission Control Title Box 
-  //Mission Control Text
-
-  // System Status
-  fill(turq, 150);
-  stroke(buttonblue, 150);
-  rect(780, 150, 1115, 930, 7); // background
-  fill(green);
-  stroke(buttonblue);
-  rect(770, 130, 225, 75, 7); //system title
-  fill(buttonblue);
-  rect(1387, 185, 480, 400, 7); //power box
-  rect(805, 225, 550, 225, 7); // explainer box
-  rect(805, 475, 550, 575, 7); //graph background
-  rect(1387, 610, 480, 440, 7); //FFT background 
-
-  fill(255, 255, 255);
 }
 //button functions:
 /////////////////// MAKES BUTTONS DO THINGS ////////////////////////////////////
@@ -846,6 +812,7 @@ void displayUpdate() {
 //  fill(green);
 //  stroke(buttonblue);
 //  rect(15, 130, 225, 75, 7); //Mission Control Title Box 
+
   //Mission Control Text
   textFont(fb, 25);
   fill(buttonblue);
