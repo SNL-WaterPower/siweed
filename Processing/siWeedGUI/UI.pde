@@ -402,28 +402,29 @@ wecPowData = cp5.addButton("wecPowData")
   }
 
 
-  myTextarea = cp5.addTextarea("txtBanner")
-    .setPosition(width/6, height/45)
-    .setText("Sandia Interactive Wave Energy Educational Display (SIWEED)")
-    .setSize(1200, 90)
+
+ myTextarea = cp5.addTextarea("txtBanner")
+    .setPosition(int((width/3.5)/6), 30)
+    .setText("Capturing the Power \n         of Waves") 
+    .setSize(1200, 100)
     .setFont(titleTextBoxFont)
-    .setLineHeight(14)
+    .setLineHeight(27) // need to check what font size is and base on that 
     .setColor(color(green)) ;
   //.setColorBackground(color(255,100));
   //.setColorForeground(color(255,100));
-
+/*
   myTextarea = cp5.addTextarea("txtWelcome")
-    .setText("test of the text")
+    .setText("There will be instructions here!")
     .setPosition(810, 250)
     .setSize(500, 300)
     .setFont(textBoxFont)
     .setLineHeight(29)
-    .setColor(color(white)); // need to find the correct color for this
+    .setColor(color(buttonblue)); // need to find the correct color for this
   //.setColorBackground(color(255,100))
   //.setColorForeground(color(255,100));
-
+*/
   myTextarea = cp5.addTextarea("txtSystemStatus")
-    .setPosition(795, 155)
+    .setPosition(int((width/3.5 + 50)), (height/2.5 + 30))
     .setText("System Status")
     .setSize(225, 75)
     .setFont(headerTextBoxFont)
@@ -433,34 +434,35 @@ wecPowData = cp5.addButton("wecPowData")
   //  .setColorForeground(color(255,100));
 
   myTextarea = cp5.addTextarea("txtWaveDimensions")
-    .setPosition(45, 220)
+    .setPosition(int((width/3.5 + 50)), 90)
     .setText("Change Wave Dimensions")
     .setSize(300, 40)
     .setFont(textBoxFont)
     .setLineHeight(10)
-    .setColor(color(white)); // need to find the correct color for this
+    .setColor(color(buttonblue)); // need to find the correct color for this
   //.setColorBackground(color(255,100))
   //.setColorForeground(color(255,100));             
 
   myTextarea = cp5.addTextarea("txtWECControls")
-    .setPosition(45, 620)
+    .setPosition(int((width/3.5 + 700)), 90)
     .setText("Change WEC Controls")
     .setSize(300, 40)
     .setFont(textBoxFont)
     .setLineHeight(10)
-    .setColor(color(white)); // need to find the correct color for this
+    .setColor(color(buttonblue)); // need to find the correct color for this
   //.setColorBackground(color(255,100))
   //.setColorForeground(color(255,100));     
 
   myTextarea = cp5.addTextarea("txtMissionControl")
-    .setPosition(35, 155)
+    .setPosition(int((width/3.5 + 50)), 30)
     .setText("Mission Control")
     .setSize(225, 75)
     .setFont(headerTextBoxFont)
     .setLineHeight(7)
-    .setColor(color(buttonblue)) ;// need to find the correct color for this
+    .setColor(color(buttonblue));// need to find the correct color for this
   // .setColorBackground(color(255,100));
   //.setColorForeground(color(255,100)); 
+
 
 }
 //button functions:
