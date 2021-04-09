@@ -408,7 +408,7 @@ wecPowData = cp5.addButton("wecPowData")
     .setText("Capturing the Power \n         of Waves") 
     .setSize(1200, 100)
     .setFont(titleTextBoxFont)
-    .setLineHeight(27) // need to check what font size is and base on that 
+    .setLineHeight(40) // need to check what font size is and base on that 
     .setColor(color(green)) ;
   //.setColorBackground(color(255,100));
   //.setColorForeground(color(255,100));
@@ -781,11 +781,7 @@ void displayUpdate() {
 
   // Background color
   background(dblue);
-  //Title 
-  textFont(fb, 40);
-  fill(green);
-  textLeading(15);
-  textAlign(CENTER, TOP);
+
   
   image(wavePic, 0, 0, width, height); //background
   fill(buttonblue);
@@ -800,11 +796,10 @@ void displayUpdate() {
   stroke(turq);
   rect(width/3.5, height/2.5, width, height); //mission control banner
   fill(green);
-  text("SIWEED", (width/3.5)/2, 30);
   fill(255,255,255);
   textSize(12);
   textLeading(14);
-  text(fundingState, (width/3.5)/2, 1125);
+ // text(fundingState, (width/3.5)/2, 1125);
  
   //Mission Control
 //  fill(turq, 150);
@@ -815,12 +810,7 @@ void displayUpdate() {
 //  stroke(buttonblue);
 //  rect(15, 130, 225, 75, 7); //Mission Control Title Box 
 
-  //Mission Control Text
-  textFont(fb, 25);
-  fill(buttonblue);
-  textLeading(15);
-  textAlign(LEFT, TOP);
-  text("Mission Control", (width/3.5 + 50), 30);
+
   
   // System Status
 /*  fill(turq, 150);
@@ -838,23 +828,6 @@ void displayUpdate() {
   textFont(fb, 20);
   text(welcome, 810, 250);
   //System Status Text */
-  textFont(fb, 25);
-  fill(buttonblue);
-  textLeading(15);
-  textAlign(LEFT, TOP);
-  stroke(buttonblue);
-  text("System Status", (width/3.5 + 50), (height/2.5 + 30));
-  stroke(green); 
-    
-  textFont(fb, 20);
-  fill(buttonblue);
-  textLeading(15);
-  textAlign(LEFT, TOP);
-  text("Change Wave Dimensions", (width/3.5 + 50), 90);
-  
-  textFont(fb, 20); 
-  fill(buttonblue);
-  textLeading(15);
-  textAlign(LEFT, TOP);
-  text("Change WEC Controls", (width/3.5 + 700), 90);
+
+
 }
