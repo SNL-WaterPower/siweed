@@ -124,12 +124,9 @@ void readMegaSerial() {
       switch(port1.readChar()) {
       case '1':
         megaUnitTests[0] = true;      //for unit testing and acquiring serial.
-        if (debug) {
-          //print(" d ");
-        }
         probe1 = readFloat(port1);
         if (waveElClicked == true) {
-          waveChart.push("waveElevation", probe1);
+          waveChart.push("waveElevation", probe1*waveElevationScale);
         }
         break;
       case '2':
@@ -138,7 +135,7 @@ void readMegaSerial() {
       case 'p':
         waveMakerPos = readFloat(port1);
         if (wavePosClicked == true) {
-          waveChart.push("waveMakerPosition", waveMakerPos);
+          waveChart.push("waveMakerPosition", waveMakerPos*WMPosScale);
         }
         break;
       case 'd':
@@ -177,26 +174,26 @@ void readDueSerial() {
         wecPos = readFloat(port2);
         //wec data
         if (wecPosClicked == true) {
-          wecChart.push("wecPosition", wecPos);
+          wecChart.push("wecPosition", wecPos*WCPosScale);
         }
         break;
       case 't':
         dueUnitTests[0] = true;
         tau = readFloat(port2);
         if (wecTorqClicked == true) {
-          wecChart.push("wecTorque", tau);
+          wecChart.push("wecTorque", tau*WCTauScale);
         }
         break;
       case 'p':
-        pow = readFloat(port2);
+        pow = 100*readFloat(port2);
         if (wecPowClicked == true) {
-          wecChart.push("wecPower", pow);
+          wecChart.push("wecPower", pow*WCPowScale);
         }
         break;
       case 'v':
         wecVel = readFloat(port2);
         if (wecVelClicked == true) {
-          wecChart.push("wecVelocity", wecVel);
+          wecChart.push("wecVelocity", wecVel * WCVelScale);
         }      
         break;
       case 'u':

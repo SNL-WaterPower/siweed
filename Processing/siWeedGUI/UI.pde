@@ -275,14 +275,16 @@ void initializeUI() {
 
   // WEC Feedback Sliders   
   pGain = cp5.addSlider("P Gain")  //name of button
-    .setRange(-0.0006, 0.0006)    //user needs to be able to command negative //0.1(wave height in meters) * max torque(above)
+    //.setRange(-0.0006, 0.0006)    //user needs to be able to command negative //0.1(wave height in meters) * max torque(above)
+    .setRange(-10, 10)    //scaled in main tab
     .setFont(sliderFont)
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setSize(450, 50) //size (width, height)
     .hide();
 
   dGain = cp5.addSlider("D Gain")  //name of button
-    .setRange(0, 0.0005)    //user needs to only command positive    //!!will find right values by measuring max vel
+    //.setRange(0, 0.0005)    //user needs to only command positive
+    .setRange(0, 10)    //scaled in main tab
     .setFont(sliderFont)
     .setPosition(sliderX, sliderY + 100) //x and y coordinates of upper left corner of button
     .setSize(450, 50) //size (width, height)
@@ -291,7 +293,7 @@ void initializeUI() {
   //WEC Seastate Sliders 
 
   sigHWEC = cp5.addSlider("WEC Significant Height (M)")  //name of button
-    .setRange(0, 0.05)
+    .setRange(0, 10)
     .setFont(sliderFont)
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setSize(450, 50) //size (width, height)
@@ -356,7 +358,7 @@ void initializeUI() {
     .setFont(sliderFont)
     .setPosition(830, 795)
     .setSize(500, 175)
-    .setRange(-10, 10)
+    .setRange(-0.10, 0.10)
     .setView(Chart.LINE) // use Chart.LINE, Chart.PIE, Chart.AREA, Chart.BAR_CENTERED
     .setStrokeWeight(10)
     .setColorCaptionLabel(color(40))
@@ -751,15 +753,6 @@ void wecPowData() {
     wecChart.removeDataSet("wecPower");
   }
 }
-/*   
- wecChart.addDataSet("wecPosition");
- wecChart.setData("wecPosition", new float[360]); 
- 
- wecChart.setData("wecVelocity", new float[360]);    //use to set the domain of the plot. This value is = desired domain(secnods) * 30
- wecChart.addDataSet("wecTorque");
- 
- 
- */
 
 void waveQs() {
   if (waveText.isVisible()) {
