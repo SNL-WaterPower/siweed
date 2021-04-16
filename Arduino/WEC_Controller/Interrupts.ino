@@ -16,6 +16,7 @@ void updateTau()    //called by interupt
   switch (mode) {
     case -1:
       digitalWrite(enablePin, LOW);   //stop
+      tauCommanded = 0;   //allows GUI to see 0 torque
       break;
     case 0:
       tauCommand = tau;       //direct control

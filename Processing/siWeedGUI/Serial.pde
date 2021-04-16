@@ -140,7 +140,7 @@ void readMegaSerial() {
         break;
       case 'd':
         debugData = readFloat(port1);
-        waveChart.push("debug", debugData);
+        waveChart.push("debug", debugData*WMPosScale);
         if (waveMaker.mode == 3||waveMaker.mode == 2) fftList.add(debugData);      //adds to the tail if in the right mode
         if (fftList.size() > queueSize) fftList.remove();          //removes from the head
         break;
@@ -185,7 +185,7 @@ void readDueSerial() {
         }
         break;
       case 'p':
-        pow = 100*readFloat(port2);
+        pow = readFloat(port2);
         if (wecPowClicked == true) {
           wecChart.push("wecPower", pow*WCPowScale);
         }

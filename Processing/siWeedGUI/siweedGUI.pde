@@ -8,19 +8,21 @@ import java.util.LinkedList;
 //input scaling:
 float WMJogScale = 1000;
 float WMAmpScale = 1000;
-float WMSigHScale = 1000;
+float WMSigHScale = 1000;    //These should be a multiple of 10, so units can stay accurate
 float WCJogScale = 1000;
 float WCPScale = 80;
 float WCDScale = 600;
-float WCSigHScale = 1000;
+float WCSigHScale = 1000; 
 //chart scaling:    //these factors are used in serial upon receipt of variables.
-float waveElevationScale = 1;
-float WMPosScale = 1;
-float WCPosScale = 1;
-float WCTauScale = 10;
-float WCPowScale = 1;
-float WCVelScale = 1/10;
+float waveElevationScale = 100;
+float WMPosScale = 500;
+float WCPosScale = 100;
+float WCTauScale = 1000;
+float WCPowScale = 5000;
+float WCVelScale = 20;
 ////////////////////////////
+boolean debug = false;    //for debug print statements. Also disables GUI console, and puts it in processing
+boolean guiConsole = true; 
 
 //ControlP5 cp5; delcared in UI
 
@@ -28,9 +30,6 @@ Textarea myTextarea;
 
 Println console; //Needed for GUI console to work
 Textarea consoleOutput; //Needed for GUI console to work
-
-boolean debug = false;    //for debug print statements. Also disables GUI console, and puts it in processing
-boolean guiConsole = true; 
 
 int queueSize = 512;    //power of 2 closest to 30(15) seconds at 32 samples/second    !!Needs to match arduino
 LinkedList fftList;
@@ -86,7 +85,7 @@ void draw() {
   //Without constantly updating the background and boxes, the text from the sliders will just remain there.
 
   //Meter control:
-  myMeter.update(pow);
+  myMeter.update(pow*WCPowScale);
 
   if (pow >= 1.25 && pow < 3) {
     quad1.setColorBackground(green);

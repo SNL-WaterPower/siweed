@@ -243,7 +243,7 @@ void initializeUI() {
 
   // Motor Sea State Mode Sliders
   sigH = cp5.addSlider("Significant Height (MM)")  //name slider
-    .setRange(0, 50) //slider range
+    .setRange(0, 10) //slider range
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setSize(450, 50)
     .setFont(sliderFont)
@@ -292,8 +292,8 @@ void initializeUI() {
 
   //WEC Seastate Sliders 
 
-  sigHWEC = cp5.addSlider("WEC Significant Height (M)")  //name of button
-    .setRange(0, 10)
+  sigHWEC = cp5.addSlider("WEC Significant Tau")  //name of button
+    .setRange(0, 5)
     .setFont(sliderFont)
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setSize(450, 50) //size (width, height)
@@ -313,6 +313,16 @@ void initializeUI() {
     .setSize(450, 50) //size (width, height)
     .hide();
 
+  //slider default values:    //only non zeros need to be set
+  h.setValue(5);
+  freq.setValue(1.0);
+  sigH.setValue(2.5);
+  peakF.setValue(3.0);
+  gamma.setValue(7.0);
+
+  sigHWEC.setValue(2.5);
+  peakFWEC.setValue(0.3);
+  gammaWEC.setValue(0.3);
 
   waveText = cp5.addTextarea("Wave Infromation")
     .setPosition(275, 150)
@@ -344,7 +354,7 @@ void initializeUI() {
     .setFont(sliderFont)
     .setPosition(830, 540)
     .setSize(500, 175)
-    .setRange(-0.10, 0.10)
+    .setRange(-10, 10)
     .setView(Chart.LINE) // use Chart.LINE, Chart.PIE, Chart.AREA, Chart.BAR_CENTERED
     .setStrokeWeight(10)
     .setColorCaptionLabel(color(40))
@@ -358,7 +368,7 @@ void initializeUI() {
     .setFont(sliderFont)
     .setPosition(830, 795)
     .setSize(500, 175)
-    .setRange(-0.10, 0.10)
+    .setRange(-10, 10)
     .setView(Chart.LINE) // use Chart.LINE, Chart.PIE, Chart.AREA, Chart.BAR_CENTERED
     .setStrokeWeight(10)
     .setColorCaptionLabel(color(40))
@@ -366,11 +376,6 @@ void initializeUI() {
     .setColorLabel(green)
     ;
 
-  h.setValue(5);
-  freq.setValue(1.0);
-  sigH.setValue(2.5);
-  peakF.setValue(3.0);
-  gamma.setValue(7.0);
 
   snlLogo = loadImage("SNL_Stacked_White.png");
   wavePic = loadImage("ocean.jpg");
@@ -643,6 +648,16 @@ void seaWEC() {
     port2.write('!');
     sendFloat(2, port2);
   }
+  //////////Ideally this does not need to be sent here, but the redundancy improves reliability:
+  wec.sigH = sigHWEC.getValue()/WCSigHScale;
+  wec.peakF = peakFWEC.getValue();
+  wec.gamma = gammaWEC.getValue();
+  port2.write('s');
+  sendFloat(wec.sigH, port2);
+  port2.write('p');
+  sendFloat(wec.peakF, port2);
+  port2.write('g');
+  sendFloat(wec.gamma, port2);    //gamma always needs to be the last sent
 }
 
 void offWEC() {
