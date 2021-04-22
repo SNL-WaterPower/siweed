@@ -125,7 +125,7 @@ void readMegaSerial() {
       case '1':
         megaUnitTests[0] = true;      //for unit testing and acquiring serial.
         probe1 = readFloat(port1);
-        if (waveElClicked == true && !Float.isNaN(probe1) && probe1 < 100 && probe1 > -100) {        //when starting seastate, a very large value is sent. this prevents that value from coming through
+        if (waveElClicked == true && !Float.isNaN(probe1)) {
           waveChart.push("waveElevation", probe1*waveElevationScale);
         }
         break;
@@ -140,11 +140,11 @@ void readMegaSerial() {
         break;
       case 'd':
         debugData = readFloat(port1);
-        if (!Float.isNaN(debugData)) {
+        if (!Float.isNaN(debugData) && debugData < 1 && debugData > -1) {    //when starting seastate, a "large" value comes through, messing witht the FFT. The saturation prevents that.
           waveChart.push("debug", debugData*WMPosScale);
+          if (waveMaker.mode == 3||waveMaker.mode == 2) fftList.add(debugData);      //adds to the tail if in the right mode
+          if (fftList.size() > queueSize) fftList.remove();          //removes from the head
         }
-        if (waveMaker.mode == 3||waveMaker.mode == 2) fftList.add(debugData);      //adds to the tail if in the right mode
-        if (fftList.size() > queueSize) fftList.remove();          //removes from the head
         break;
       case 'u':
         int testNum = (int)readFloat(port1);    //indicates which jonswap test passed(1 or 2). Negative means that test failed.
