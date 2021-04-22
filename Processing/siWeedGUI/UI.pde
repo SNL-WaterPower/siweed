@@ -1,4 +1,5 @@
 ControlP5 cp5; 
+Textarea myTextarea;
 Chart waveChart, wecChart; //wave Signal chart
 Slider position; //slider for position mode
 Slider h, freq; //sliders for function mode

@@ -1,5 +1,4 @@
 import controlP5.*;  //importing GUI library
-
 import processing.serial.*;
 import java.lang.Math.*;
 import java.util.LinkedList;
@@ -24,10 +23,6 @@ float WCVelScale = 20;
 boolean debug = false;    //for debug print statements. Also disables GUI console, and puts it in processing
 boolean guiConsole = true; 
 
-//ControlP5 cp5; delcared in UI
-
-Textarea myTextarea;
-
 Println console; //Needed for GUI console to work
 Textarea consoleOutput; //Needed for GUI console to work
 
@@ -35,11 +30,8 @@ int queueSize = 512;    //power of 2 closest to 30(15) seconds at 32 samples/sec
 LinkedList fftList;
 fft myFFT;
 float[] fftArr;
-
 int previousMillis = 0;    //used to update fft 
 int fftInterval = 100;    //in milliseconds
-int test = 0;
-
 
 // meter set up  
 Meter myMeter;
