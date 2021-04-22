@@ -125,7 +125,7 @@ void readMegaSerial() {
       case '1':
         megaUnitTests[0] = true;      //for unit testing and acquiring serial.
         probe1 = readFloat(port1);
-        if (waveElClicked == true) {
+        if (waveElClicked == true && !Float.isNaN(probe1) && probe1 < 100 && probe1 > -100) {        //when starting seastate, a very large value is sent. this prevents that value from coming through
           waveChart.push("waveElevation", probe1*waveElevationScale);
         }
         break;
@@ -134,21 +134,22 @@ void readMegaSerial() {
         break;
       case 'p':
         waveMakerPos = readFloat(port1);
-        if (wavePosClicked == true) {
+        if (wavePosClicked == true && !Float.isNaN(probe2)) {
           waveChart.push("waveMakerPosition", waveMakerPos*WMPosScale);
         }
         break;
       case 'd':
         debugData = readFloat(port1);
-        waveChart.push("debug", debugData*WMPosScale);
+        if (!Float.isNaN(debugData)) {
+          waveChart.push("debug", debugData*WMPosScale);
+        }
         if (waveMaker.mode == 3||waveMaker.mode == 2) fftList.add(debugData);      //adds to the tail if in the right mode
         if (fftList.size() > queueSize) fftList.remove();          //removes from the head
         break;
       case 'u':
         int testNum = (int)readFloat(port1);    //indicates which jonswap test passed(1 or 2). Negative means that test failed.
         if (debug) {
-          //println("MegaUnittestNum: "+testNum);
-          //print(" u ");
+          println("MegaUnittestNum: "+testNum);
         }
         if (testNum > 0) {    //only changes if test was passed
           megaUnitTests[testNum] = true;
@@ -172,27 +173,26 @@ void readDueSerial() {
       switch(port2.readChar()) {
       case 'e':
         wecPos = readFloat(port2);
-        //wec data
-        if (wecPosClicked == true) {
+        if (wecPosClicked == true && !Float.isNaN(wecPos)) {
           wecChart.push("wecPosition", wecPos*WCPosScale);
         }
         break;
       case 't':
         dueUnitTests[0] = true;
         tau = readFloat(port2);
-        if (wecTorqClicked == true) {
+        if (wecTorqClicked == true && !Float.isNaN(tau)) {
           wecChart.push("wecTorque", tau*WCTauScale);
         }
         break;
       case 'p':
         pow = readFloat(port2);
-        if (wecPowClicked == true) {
+        if (wecPowClicked == true && !Float.isNaN(pow)) {
           wecChart.push("wecPower", pow*WCPowScale);
         }
         break;
       case 'v':
         wecVel = readFloat(port2);
-        if (wecVelClicked == true) {
+        if (wecVelClicked == true && !Float.isNaN(wecVel)) {
           wecChart.push("wecVelocity", wecVel * WCVelScale);
         }      
         break;
@@ -230,3 +230,11 @@ public static float byteArrayToFloat(byte[] bytes) {
     bytes[0] << 24 | (bytes[1] & 0xFF) << 16 | (bytes[2] & 0xFF) << 8 | (bytes[3] & 0xFF);
   return Float.intBitsToFloat(intBits);
 }
+//boolean isFloat(float val) {
+//  if (Float.isNaN(val)){
+//    return false;
+//  }
+//  else {
+//   return true; 
+//  }
+//}

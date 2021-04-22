@@ -784,25 +784,33 @@ void wecQs() {
     wecText.show();
   }
 }
+//////////////////FFT vars:
+float originx = 1400;    //x and y coordinates of the FFT graph
+float originy = 1000;
+float xScale = 1.5;    //how spaced the graph is horizontally
+float yScale = 50000;    //how tall the data is. axis has to be set separately
+float FFTHeight = 250;    //height of y axis coordinates. Does not scale data
+int yAxisCount = 10;    //how many numbers on the y axis
+float FFTXOffset = 10, FFTYOffset = 10;
 void drawFFT() {
   int nyquist = (int)frameRate/2;    //sampling frequency/2 NOTE: framerate is not a constant variable
-  float initialX = 0;
-  float yScale = 20000;
   textSize(10);
   fill(green);
   stroke(green);
   for (int i=0; i<=queueSize/2; i++) {      //cut in half
-    float x = 1400+1.5*i;    //x coordinate
-    float y = 1000;            //y coordinate
-    if (i == 0) {
-      initialX = x;
+    float x = originx+xScale*i;
+    float y = originy;
+    float maxY = originy - FFTHeight;    //value that saturates the data
+    float yCord = y - yScale*fftArr[i];    //how high to draw the line
+    if (yCord < maxY) {    //saturate, so y doesn't get drawn off the graph(remember coordinates are flipped)
+      yCord = maxY;
     }
-    line(x, y, x, y - yScale*fftArr[i]);
-    if (i%32 == 0) {        //should make 32 into a variable, but frameRate is not an int
-      text((int)(i*(1/((float)queueSize/32))), x, y);    //x-axis: frequency spacing is 1/T, where t is length of sample in seconds
+    line(x+FFTXOffset, y-FFTYOffset, x+FFTXOffset, yCord-FFTYOffset);
+    if (i%32 == 0) {        //should make 32 into a variable, but frameRate is not an int.
+      text((int)(i*(1/((float)queueSize/32))), x+FFTXOffset, y);    //x-axis: frequency spacing is 1/T, where t is length of sample in seconds
     }
-    if (i%1 == 0 && i<=5) {
-      text(i, initialX, y - 50*i);    //y-axis    //units need to be fixed
+    if (i%1 == 0 && i<=yAxisCount && i != 0) {    //mod controls spacing, draws only if less than max count and not zero(to not draw 2 zeros)
+      text(i, originx, y - FFTHeight/yAxisCount*i);    //y-axis    //units need to be fixed
     }
   }
 }
