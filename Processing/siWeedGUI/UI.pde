@@ -12,10 +12,10 @@ Button consoleButton; //Idealy this would be a toggle, but was getting errors on
 Textarea wecText, waveText;
 
 // Custom colors
-color green = color(190, 214, 48);
-color turq = color(0, 173, 208);
+color green = color(176,191,70);
+color turq = color(20,186,215);
 color dblue = color(0, 83, 118);
-color buttonblue = color(0, 45, 90);
+color buttonblue = color(0,102,137);
 color hoverblue = color(0, 116, 217);
 color grey = color(180, 190, 191);
 color black = color(0, 0, 0);
@@ -783,18 +783,18 @@ void displayUpdate() {
   background(dblue);
 
   
-  image(wavePic, 0, 0, width, height); //background
+ // image(wavePic, 0, 0, width, height); //background
   fill(buttonblue);
   stroke(buttonblue);
   strokeWeight(0);
   image(snlLogo, width-snlLogo.width*0.25-5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25); //Logo
-  rect(0, 0, width/3.5, height); // LHS banner 
-  fill(255,255,255);
-  stroke(255,255,255);
-  rect(width/3.5, 0, width, height/2.5); //mission control banner
+  rect(0, 0, width/2.7, height); // LHS banner 
+  fill(white);
+  //stroke(255,255,255);
+  rect(width/2.7, 0, width, height*.333); //mission control banner
   fill(turq);
-  stroke(turq);
-  rect(width/3.5, height/2.5, width, height); //mission control banner
+  //stroke(turq);
+  rect(width/2.7, height*.333, width, height); //mission control banner
   fill(green);
   fill(255,255,255);
   textSize(12);
