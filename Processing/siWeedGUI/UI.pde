@@ -10,6 +10,10 @@ Button wavePosData, waveElData, wecPosData, wecVelData, wecTorqData, wecPowData;
 Button quad1, quad2, quad3, quad4; // power bar
 Button consoleButton; //Idealy this would be a toggle, but was getting errors on the ".isVisible()"
 Textarea wecText, waveText;
+float zeroLocationX = 780;
+float zeroLocationY = 40;
+float offsetX = 50;
+float offsetY = 50;
 
 // Custom colors
 color green = color(176,191,70);
@@ -112,30 +116,33 @@ void initializeUI() {
 
  // wave maker buttons //
   int buttonX, buttonY;
-  buttonX = int(width/3.5 + 50); //converts float to int
-  buttonY = 120;
+  buttonX = int(zeroLocationX); //converts float to int
+  buttonY = 155;
+ int buttonSizeX = 125;
+  int buttonSizeY = 35;
+  int spaceBetweenButtons = 127;
   
   jog = cp5.addButton("jog")
     .setPosition(buttonX, buttonY)
-    .setSize(150, 65)
+    .setSize(buttonSizeX, buttonSizeY)
     .setLabel("Jog Mode")
     .setFont(buttonFont );
 
   function = cp5.addButton("fun")
-    .setPosition(buttonX + 150, buttonY)
-    .setSize(150, 65)
+    .setPosition(buttonX + spaceBetweenButtons , buttonY)
+    .setSize(buttonSizeX, buttonSizeY)
     .setLabel("Function Mode")
     .setFont(buttonFont); 
 
   sea = cp5.addButton("sea")
-    .setPosition(buttonX + 300, buttonY)
-    .setSize(150, 65)
+    .setPosition(buttonX + spaceBetweenButtons*2, buttonY)
+    .setSize(buttonSizeX, buttonSizeY)
     .setLabel("Sea State")
     .setFont(buttonFont); 
 
   off = cp5.addButton("off")
-    .setPosition(buttonX + 450, buttonY)
-    .setSize(150, 65)
+    .setPosition(buttonX + spaceBetweenButtons*3, buttonY)
+    .setSize(buttonSizeX, buttonSizeY)
     .setLabel("OFF")
     .setFont(buttonFont); 
 
@@ -143,26 +150,26 @@ void initializeUI() {
 
   torque = cp5.addButton("torque")
     .setPosition(buttonX, buttonY)
-    .setSize(150, 65)
+    .setSize(150, buttonSizeY)
     .setLabel("Torque")
     .setFont(buttonFont);   
 
   feedback = cp5.addButton("feedback")
     .setPosition(buttonX + 150, buttonY)
-    .setSize(150, 65)
+    .setSize(150, buttonSizeY)
     .setLabel("Feedback")
     .setFont(buttonFont); 
 
 
   seaWEC = cp5.addButton("seaWEC")
     .setPosition(buttonX + 300, buttonY)
-    .setSize(150, 65)
+    .setSize(150, buttonSizeY)
     .setLabel("Sea State")
     .setFont(buttonFont);    
 
   offWEC = cp5.addButton("offWEC")
     .setPosition(buttonX + 450, buttonY)
-    .setSize(150, 65)
+    .setSize(150, buttonSizeY)
     .setLabel("Off")
     .setFont(buttonFont);
     
@@ -220,51 +227,54 @@ wecPowData = cp5.addButton("wecPowData")
   //distance between slider and buttons is 150, distance between each slider is 100
 
   int sliderX, sliderY;
-  sliderX = int((width/3.5 + 50));
-  sliderY = 200 ; // button Y lcation (240) + size of button + 50 
+  sliderX = int(zeroLocationX);
+  sliderY = 200 ;
+ int sliderSizeX = 380 ;
+int  sliderSizeY = 35;
+int sliderOffset = 48;
 
   // Motor Jog Mode Sliders
   position = cp5.addSlider("Position (MM)")  //name slider
     .setRange(-25, 25) //slider range
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
     .setFont(sliderFont)
-    .setSize(450, 50); //size (width, height)
+    .setSize(sliderSizeX, sliderSizeY); //size (width, height)
 
   // Motor Function Mode Sliders
   h = cp5.addSlider("Height (MM)")  //name slider
     .setRange(0, 20) //slider range
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
-    .setSize(450, 50)
+    .setSize(sliderSizeX, sliderSizeY)
     .setFont(sliderFont)
     .hide(); //size (width, height)
 
   freq = cp5.addSlider("Frequency (Hz)")  //name of button
     .setRange(0, 2.5)
-    .setPosition(sliderX, sliderY + 100) //x and y coordinates of upper left corner of button
-    .setSize(450, 50)
+    .setPosition(sliderX, sliderY + sliderOffset) //x and y coordinates of upper left corner of button
+    .setSize(sliderSizeX, sliderSizeY)
     .setFont(sliderFont)
     .hide(); //size (width, height)
 
 
   // Motor Sea State Mode Sliders
   sigH = cp5.addSlider("Significant Height (MM)")  //name slider
-    .setRange(0, 50) //slider range
+    .setRange(0, sliderSizeY) //slider range
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
-    .setSize(450, 50)
+    .setSize(sliderSizeX, sliderSizeY)
     .setFont(sliderFont)
     .hide(); //size (width, height)
 
   peakF = cp5.addSlider("Peak Frequency (Hz)")  //name of button
     .setRange(0, 4)
-    .setPosition(sliderX, sliderY + 100) //x and y coordinates of upper left corner of button
-    .setSize(450, 50)
+    .setPosition(sliderX, sliderY + sliderOffset) //x and y coordinates of upper left corner of button
+    .setSize(sliderSizeX, sliderSizeY)
     .setFont(sliderFont)
     .hide(); //size (width, height)
 
   gamma = cp5.addSlider("Peakedness")  //name of button
     .setRange(0, 7)
-    .setPosition(sliderX, sliderY + 200) //x and y coordinates of upper left corner of button
-    .setSize(450, 50)
+    .setPosition(sliderX, sliderY + sliderOffset*2) //x and y coordinates of upper left corner of button
+    .setSize(sliderSizeX, sliderSizeY)
     .setFont(sliderFont)
     .hide(); //size (width, height)
 
@@ -277,21 +287,21 @@ wecPowData = cp5.addButton("wecPowData")
     .setRange(-6, 6)
     .setFont(sliderFont)
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
-    .setSize(450, 50); //size (width, height)
+    .setSize(sliderSizeX, sliderSizeY); //size (width, height)
 
   // WEC Feedback Sliders   
   pGain = cp5.addSlider("P Gain")  //name of button
     .setRange(-0.0006, 0.0006)    //user needs to be able to command negative //0.1(wave height in meters) * max torque(above)
     .setFont(sliderFont)
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
-    .setSize(450, 50) //size (width, height)
+    .setSize(sliderSizeX, sliderSizeY) //size (width, height)
     .hide();
 
   dGain = cp5.addSlider("D Gain")  //name of button
     .setRange(0, 0.0005)    //user needs to only command positive    //!!will find right values by measuring max vel
     .setFont(sliderFont)
-    .setPosition(sliderX, sliderY + 100) //x and y coordinates of upper left corner of button
-    .setSize(450, 50) //size (width, height)
+    .setPosition(sliderX, sliderY + sliderOffset) //x and y coordinates of upper left corner of button
+    .setSize(sliderSizeX, sliderSizeY) //size (width, height)
     .hide();
 
   //WEC Seastate Sliders 
@@ -300,21 +310,21 @@ wecPowData = cp5.addButton("wecPowData")
     .setRange(0, 0.05)
     .setFont(sliderFont)
     .setPosition(sliderX, sliderY) //x and y coordinates of upper left corner of button
-    .setSize(450, 50) //size (width, height)
+    .setSize(sliderSizeX, sliderSizeY) //size (width, height)
     .hide();
 
   peakFWEC = cp5.addSlider("WEC Peak Frequency (Hz)")  //name of button
     .setRange(0, 0.5)
     .setFont(sliderFont)
-    .setPosition(sliderX, sliderY + 100) //x and y coordinates of upper left corner of button
-    .setSize(450, 50) //size (width, height)
+    .setPosition(sliderX, sliderY + sliderOffset) //x and y coordinates of upper left corner of button
+    .setSize(sliderSizeX, sliderSizeY) //size (width, height)
     .hide();
 
   gammaWEC = cp5.addSlider("WEC Peakedness)")  //name of button
     .setRange(0, 0.5)
     .setFont(sliderFont)
-    .setPosition(sliderX, sliderY + 200) //x and y coordinates of upper left corner of button
-    .setSize(450, 50) //size (width, height)
+    .setPosition(sliderX, sliderY + sliderOffset*2) //x and y coordinates of upper left corner of button
+    .setSize(sliderSizeX, sliderSizeY) //size (width, height)
     .hide();
 
 
@@ -454,7 +464,7 @@ wecPowData = cp5.addButton("wecPowData")
   //.setColorForeground(color(255,100));     
 
   myTextarea = cp5.addTextarea("txtMissionControl")
-    .setPosition(int((width/3.5 + 50)), 30)
+    .setPosition(zeroLocationX, zeroLocationY)
     .setText("Mission Control")
     .setSize(225, 75)
     .setFont(headerTextBoxFont)
