@@ -4,8 +4,8 @@ import java.util.Queue;
 public class Meter {
   int xmin = (int)(0.742 * width);      //coordinates in pixels
   int xmax = (int)(0.951 * width);
-  int ymin = (int)(0.222 * height);
-  int ymax = (int)(0.407 * height);
+  int ymin = (int)(0.505 * height);
+  int ymax = (int)(0.690 * height);
   Queue<Float> q;      //queue for moving average
   int buffSize = 10;
   int originx, originy;

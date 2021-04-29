@@ -59,7 +59,7 @@ void initializeUI() {
    .setState(false);
    */
   consoleButton = cp5.addButton("consoleButton")
-    .setPosition(1390, 610)
+    .setPosition(width/10, height - 100)
     .setSize(100, 50)
     .setLabel("Console")
     .setColorBackground(grey)
@@ -170,7 +170,7 @@ void initializeUI() {
 //Button wavePosData, waveElData, wecPosData, wecVelData, wecTorqData, wecPowData;
 int dataButtonX, dataButtonY;
 dataButtonX = int(width/3.5);
-dataButtonY = 750;
+dataButtonY = 1025;
 
 wavePosData = cp5.addButton("wavePosData")
     .setPosition(dataButtonX + 50, 750)
@@ -188,28 +188,28 @@ waveElData = cp5.addButton("waveElData")
    
 
 wecPosData = cp5.addButton("wecPosData")
-    .setPosition((dataButtonX + 700), dataButtonY)
+    .setPosition((dataButtonX + 50), dataButtonY)
     .setColorBackground(grey)
     .setSize(125, 50)
     .setLabel("Wec Position")
     .setFont(buttonFont); 
     
 wecVelData = cp5.addButton("wecVelData")
-    .setPosition((dataButtonX + 825), dataButtonY)
+    .setPosition((dataButtonX + 175), dataButtonY)
     .setColorBackground(grey)
     .setSize(125, 50)
     .setLabel("WEC Velocity")
     .setFont(buttonFont);
 
 wecTorqData = cp5.addButton("wecTorqData")
-    .setPosition((dataButtonX + 950), dataButtonY)
+    .setPosition((dataButtonX + 300), dataButtonY)
     .setColorBackground(grey)
     .setSize(125, 50)
     .setLabel("WEC Torque")
     .setFont(buttonFont);
     
 wecPowData = cp5.addButton("wecPowData")
-    .setPosition((dataButtonX + 1075), dataButtonY)
+    .setPosition((dataButtonX + 425), dataButtonY)
     .setColorBackground(grey)
     .setSize(125, 50)
     .setLabel("WEC Power")
@@ -346,11 +346,10 @@ wecPowData = cp5.addButton("wecPowData")
 
   // Charts //
   waveChart =  cp5.addChart("Wave Information")
-    .setPosition((width/3.5) + 50, 550)
+    .setPosition(dataButtonX + 50, 575)
     .setSize(500, 200)
     .setFont(sliderFont)
 //    .setRange(-10, 10) value delaney had 
-    .setPosition(830, 540)
     .setSize(500, 175)
     .setRange(-0.10, 0.10) //new value from develop 
     .setView(Chart.LINE) // use Chart.LINE, Chart.PIE, Chart.AREA, Chart.BAR_CENTERED
@@ -359,12 +358,12 @@ wecPowData = cp5.addButton("wecPowData")
     .setColorBackground(buttonblue)
     .setColorLabel(green)
     ;
-    
+   
   waveChart.addDataSet("debug");
   waveChart.setData("debug", new float[360]);
 
   wecChart =  cp5.addChart("WEC Information")
-    .setPosition((width/3.5 + 700), 550)
+    .setPosition(dataButtonX + 50, 825)
     .setSize(500, 200)
     .setFont(sliderFont)
     .setRange(-10, 10)
@@ -424,7 +423,7 @@ wecPowData = cp5.addButton("wecPowData")
   //.setColorForeground(color(255,100));
 */
   myTextarea = cp5.addTextarea("txtSystemStatus")
-    .setPosition(int((width/3.5 + 50)), (height/2.5 + 30))
+    .setPosition(int((width/3.5 + 50)), (height/2.3 + 30))
     .setText("System Status")
     .setSize(225, 75)
     .setFont(headerTextBoxFont)
@@ -791,10 +790,10 @@ void displayUpdate() {
   rect(0, 0, width/3.5, height); // LHS banner 
   fill(255,255,255);
   stroke(255,255,255);
-  rect(width/3.5, 0, width, height/2.5); //mission control banner
+  rect(width/3.5, 0, width, height/2.3); //mission control banner
   fill(turq);
   stroke(turq);
-  rect(width/3.5, height/2.5, width, height); //mission control banner
+  rect(width/3.5, height/2.3, width, height); //system satus
   fill(green);
   fill(255,255,255);
   textSize(12);
