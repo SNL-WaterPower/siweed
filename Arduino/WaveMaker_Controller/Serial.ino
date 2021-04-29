@@ -22,7 +22,8 @@ void readSerial() {
         }
         break;
       case 'j':
-        desiredPos = readFloat();
+        pushBuffer(jogBuffer, readFloat());   //pushes in the latest value to the moving average buffer
+        desiredPos = averageArray(jogBuffer);     //averages the array for the the moving average
         break;
       case 'a':
         amps[0] = readFloat();

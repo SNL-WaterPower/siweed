@@ -33,6 +33,7 @@ volatile float desiredPos;   //used for jog mode
 const int buffSize = 10;    //number of data points buffered in the moving average filter
 volatile float probe1Buffer[buffSize];
 volatile float probe2Buffer[buffSize];
+volatile float jogBuffer[buffSize];
 const float maxRate = 0.25;   //max m/seconds
 /////////would like to put these in the interrupts tab, but cant without changing proect structure to .cpp and .h files.
 const float interval = .01;   //time between each interupt call in seconds //max value: 1.04
@@ -109,10 +110,11 @@ void setup() {
 
   encoderBuff.command2Reg(CNTR, IR_RegisterAction_CLR); //zero encoder
 
-  //fill probe buffers with 0's:
+  //fill moving average buffers with 0's:
   for (int i = 0; i < buffSize; i++) {
     probe1Buffer[i] = 0;
     probe2Buffer[i] = 0;
+    jogBuffer[i] = 0;
   }
   //fill amps freqs and phases with 0's:
   for (int i = 0; i < maxComponents; i++) {

@@ -14,7 +14,7 @@ float WCDScale = 600;
 float WCSigHScale = 1000; 
 //chart scaling:    //these factors are used in serial upon receipt of variables.
 float waveElevationScale = 100;
-float WMPosScale = 500;
+float WMPosScale = 400;
 float WCPosScale = 100;
 float WCTauScale = 1000;
 float WCPowScale = 5000;
@@ -22,6 +22,7 @@ float WCVelScale = 20;
 ////////////////////////////
 boolean debug = false;    //for debug print statements. Also disables GUI console, and puts it in processing
 boolean guiConsole = true; 
+boolean dataLogging = false;    //if this is true, a .csv with most variables will be written, but it has a memory leak and cannot run at high performance for more than a few minutes
 
 Println console; //Needed for GUI console to work
 Textarea consoleOutput; //Needed for GUI console to work
@@ -54,7 +55,6 @@ void setup() {
   wec.mode = 4;  //1 = , 2= feedback, 3 = "sea", 4 = off
   initializeDataLogging();
   initializeUI();
-
   myMeter = new Meter(-5.0, 5.0);    //min and max
 }
 
@@ -64,49 +64,16 @@ public void settings() {
  }*/
 
 boolean initialized = false;
-int timestamp = 0;   //for debuging
 void draw() {
   if (!initialized) {  //Because these take too long, they need to be run in draw(setup cannot take more that 5 seconds.)
     initializeSerial();    //has a 2+ second delay
     unitTests();
     initialized = true;
   }
-
   displayUpdate(); 
-  //The reason for this is because the slider texts. 
-  //Without constantly updating the background and boxes, the text from the sliders will just remain there.
 
   //Meter control:
   myMeter.update(pow*WCPowScale);
-
-  if (pow >= 1.25 && pow < 3) {
-    quad1.setColorBackground(green);
-  }
-  if (pow >= 3 && pow < 4.25) {
-    quad1.setColorBackground(green);
-    quad2.setColorBackground(green);
-  }
-  if (pow >= 4.25 && pow < 5) {
-    quad1.setColorBackground(green);
-    quad2.setColorBackground(green);
-    quad3.setColorBackground(green);
-  }
-  if (pow >= 5) {
-    quad1.setColorBackground(green);
-    quad2.setColorBackground(green);
-    quad3.setColorBackground(green);
-    quad4.setColorBackground(green);
-  }
-
-
-  //controls button pop up behavior
-  if (mousePressed && waveText.isVisible()) {
-    waveText.hide();
-  }
-  //controls button pop up behavior
-  if (mousePressed && wecText.isVisible()) {
-    wecText.hide();
-  }
 
   if (!megaConnected) {
     //do nothing
@@ -174,9 +141,11 @@ void draw() {
   }
   drawFFT();
   if (initialized) {
-    thread("readMegaSerial");    //will run this funciton in parallel thread
-    thread("readDueSerial");
-    thread("logData");
+    if (dataLogging) {
+      logData();
+    }
+    readMegaSerial();
+    readDueSerial();
   }
 }
 

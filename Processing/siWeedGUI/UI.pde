@@ -528,6 +528,7 @@ void jog() {
     port1.write('!');
     sendFloat(0, port1);
   }
+    waveMaker.mag += 1;    //this parameter being adjusted will cause the main loop to send the initial data
 }
 
 void fun() {
@@ -549,6 +550,7 @@ void fun() {
     port1.write('!');
     sendFloat(1, port1);
   }
+    waveMaker.amp += 1;    //this parameter being adjusted will cause the main loop to send the initial data
 }
 
 void sea() {
@@ -569,6 +571,7 @@ void sea() {
     port1.write('!');
     sendFloat(2, port1);
   }
+  waveMaker.sigH += 1;    //this parameter being adjusted will cause the main loop to send the initial data
 }
 
 void off() {
@@ -609,6 +612,7 @@ void torque() {
     port2.write('!');
     sendFloat(0, port2);
   }
+  wec.mag += 1;    //this parameter being adjusted will cause the main loop to send the initial data
 }   
 
 void feedback() {
@@ -627,6 +631,7 @@ void feedback() {
     port2.write('!');
     sendFloat(1, port2);
   }
+  wec.amp += 1;    //this parameter being adjusted will cause the main loop to send the initial data
 }
 
 // Slider pGain, dGain, torqueSlider, sigHWEC, peakFWEC, gammaWEC; 
@@ -649,16 +654,8 @@ void seaWEC() {
     port2.write('!');
     sendFloat(2, port2);
   }
-  //////////Ideally this does not need to be sent here, but the redundancy improves reliability:
-  wec.sigH = sigHWEC.getValue()/WCSigHScale;
-  wec.peakF = peakFWEC.getValue();
-  wec.gamma = gammaWEC.getValue();
-  port2.write('s');
-  sendFloat(wec.sigH, port2);
-  port2.write('p');
-  sendFloat(wec.peakF, port2);
-  port2.write('g');
-  sendFloat(wec.gamma, port2);    //gamma always needs to be the last sent
+
+  wec.sigH += 1;    //this parameter being adjusted will cause the main loop to send the initial data
 }
 
 void offWEC() {
@@ -850,4 +847,31 @@ void displayUpdate() {
   rect(1387, 610, 480, 440, 7); //FFT background 
 
   fill(255, 255, 255);
+    //controls button pop up behavior
+  if (mousePressed && waveText.isVisible()) {
+    waveText.hide();
+  }
+  //controls button pop up behavior
+  if (mousePressed && wecText.isVisible()) {
+    wecText.hide();
+  }
+  if (pow >= 1.25 && pow < 3) {
+    quad1.setColorBackground(green);
+  }
+  if (pow >= 3 && pow < 4.25) {
+    quad1.setColorBackground(green);
+    quad2.setColorBackground(green);
+  }
+  if (pow >= 4.25 && pow < 5) {
+    quad1.setColorBackground(green);
+    quad2.setColorBackground(green);
+    quad3.setColorBackground(green);
+  }
+  if (pow >= 5) {
+    quad1.setColorBackground(green);
+    quad2.setColorBackground(green);
+    quad3.setColorBackground(green);
+    quad4.setColorBackground(green);
+  }
+
 }
