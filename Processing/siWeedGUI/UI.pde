@@ -10,10 +10,15 @@ Button wavePosData, waveElData, wecPosData, wecVelData, wecTorqData, wecPowData;
 Button quad1, quad2, quad3, quad4; // power bar
 Button consoleButton; //Idealy this would be a toggle, but was getting errors on the ".isVisible()"
 Textarea wecText, waveText;
-float zeroLocationX = 780;
-float zeroLocationY = 40;
+int zeroLocationX = 780;
+float zeroLocationY = 35;
 float offsetX = 50;
 float offsetY = 50;
+  int chartLocationX = zeroLocationX;
+  int chartLocationY = 475;
+  int zeroLocationRight = 1350;
+  int chartSizeX = 505;
+int chartSizeY = 175;
 
 // Custom colors
 color green = color(176,191,70);
@@ -30,7 +35,7 @@ color red = color(255, 0, 0);
 // Fonts
 PFont f; // Regular font
 PFont fb; // Bold font
-PFont buttonFont, sliderFont, titleTextBoxFont, headerTextBoxFont, textBoxFont; 
+PFont buttonFont, sliderFont, titleTextBoxFont, headerTextBoxFont, textBoxFont, smallTextBoxFont; 
 
 
 // Sandia logo
@@ -47,8 +52,9 @@ void initializeUI() {
   titleTextBoxFont = buttonFont = createFont("Arial Bold Italic", 40, true);
   buttonFont = createFont("Arial Bold Italic", 12, true);
   sliderFont = createFont("Arial Bold Italic", 12, true);
-  headerTextBoxFont = createFont("Arial Bold", 25, false);
-  textBoxFont = createFont("Arial Bold Italic", 20, true);
+  headerTextBoxFont = createFont("Arial Bold", 35, false);
+  textBoxFont = createFont("Arial Bold Italic", 22, true);
+  smallTextBoxFont = createFont("Arial Bold Italic", 18, true);
 
   // Buttons //
 
@@ -146,80 +152,81 @@ void initializeUI() {
     .setLabel("OFF")
     .setFont(buttonFont); 
 
- buttonX = int((width/3.5 + 4*(150) + 100));  
+ buttonX = buttonX+570;  
+ print(buttonX);
 
   torque = cp5.addButton("torque")
     .setPosition(buttonX, buttonY)
-    .setSize(150, buttonSizeY)
+    .setSize(buttonSizeX, buttonSizeY)
     .setLabel("Torque")
     .setFont(buttonFont);   
 
   feedback = cp5.addButton("feedback")
-    .setPosition(buttonX + 150, buttonY)
-    .setSize(150, buttonSizeY)
+    .setPosition(buttonX + spaceBetweenButtons, buttonY)
+    .setSize(buttonSizeX, buttonSizeY)
     .setLabel("Feedback")
     .setFont(buttonFont); 
 
 
   seaWEC = cp5.addButton("seaWEC")
-    .setPosition(buttonX + 300, buttonY)
-    .setSize(150, buttonSizeY)
+    .setPosition(buttonX + spaceBetweenButtons*2, buttonY)
+    .setSize(buttonSizeX, buttonSizeY)
     .setLabel("Sea State")
     .setFont(buttonFont);    
 
   offWEC = cp5.addButton("offWEC")
-    .setPosition(buttonX + 450, buttonY)
-    .setSize(150, buttonSizeY)
+    .setPosition(buttonX + spaceBetweenButtons*3, buttonY)
+    .setSize(buttonSizeX, buttonSizeY)
     .setLabel("Off")
     .setFont(buttonFont);
     
 // Data buttons //     
 //Button wavePosData, waveElData, wecPosData, wecVelData, wecTorqData, wecPowData;
 int dataButtonX, dataButtonY;
-dataButtonX = int(width/3.5);
-dataButtonY = 750;
+dataButtonX =buttonSizeX+127;
+dataButtonY = buttonSizeY;
 
 wavePosData = cp5.addButton("wavePosData")
-    .setPosition(dataButtonX + 50, 750)
+    .setPosition(chartLocationX, chartLocationY+chartSizeY)
     .setColorBackground(grey)
-    .setSize(250, 50)
+    .setSize(dataButtonX, buttonSizeY)
     .setLabel("Wave Maker\nPosition")
     .setFont(buttonFont); 
 
 waveElData = cp5.addButton("waveElData")
-    .setPosition(dataButtonX + 300, 750)
+    .setPosition(chartLocationX + dataButtonX+1, chartLocationY+chartSizeY)
     .setColorBackground(grey)
-    .setSize(250, 50)
+    .setSize(dataButtonX, buttonSizeY)
     .setLabel("Wave\nElevation")
     .setFont(buttonFont); 
    
 
 wecPosData = cp5.addButton("wecPosData")
-    .setPosition((dataButtonX + 700), dataButtonY)
+    .setPosition(buttonX, chartLocationY+chartSizeY)
     .setColorBackground(grey)
-    .setSize(125, 50)
-    .setLabel("Wec Position")
+    .setSize(buttonSizeX, buttonSizeY)
+    .setLabel("Position")
     .setFont(buttonFont); 
     
 wecVelData = cp5.addButton("wecVelData")
-    .setPosition((dataButtonX + 825), dataButtonY)
+    .setPosition(buttonX + spaceBetweenButtons, chartLocationY+chartSizeY)
     .setColorBackground(grey)
-    .setSize(125, 50)
-    .setLabel("WEC Velocity")
+    .setSize(buttonSizeX, buttonSizeY)
+    .setLabel("Velocity")
     .setFont(buttonFont);
 
 wecTorqData = cp5.addButton("wecTorqData")
-    .setPosition((dataButtonX + 950), dataButtonY)
+    .setPosition(buttonX + spaceBetweenButtons*2, chartLocationY+chartSizeY)
     .setColorBackground(grey)
-    .setSize(125, 50)
-    .setLabel("WEC Torque")
+    .setSize(buttonSizeX, buttonSizeY)
+    .setLabel("Torque")
     .setFont(buttonFont);
     
 wecPowData = cp5.addButton("wecPowData")
-    .setPosition((dataButtonX + 1075), dataButtonY)
+    .setPosition(buttonX + spaceBetweenButtons*3, chartLocationY+chartSizeY)
     .setColorBackground(grey)
-    .setSize(125, 50)
-    .setLabel("WEC Power")
+    .setSize(buttonSizeX, buttonSizeY)
+    .setLabel("Power")
     .setFont(buttonFont);
     
 
@@ -281,7 +288,7 @@ int sliderOffset = 48;
 //  sliderY = buttonY + 65 + 50 ; //button y coordinate + button size + 50 (offset)
 
   // WEC Torque Sliders
-  sliderX = int((width/3.5 + 4*(150) + 100));
+  sliderX = zeroLocationRight;
   torqueSlider = cp5.addSlider("Torque")  //name of button
     //.setRange(-0.006, 0.006)      //max amps * torque constant. I think this will max amperage at max slider value
     .setRange(-6, 6)
@@ -329,7 +336,7 @@ int sliderOffset = 48;
 
 
   waveText = cp5.addTextarea("Wave Infromation")
-    .setPosition(275, 150)
+    .setPosition(buttonX, 150)
     .setSize(550, 400)
     .setFont(createFont("arial", 16))
     .setLineHeight(14)
@@ -355,34 +362,30 @@ int sliderOffset = 48;
     
 
   // Charts //
-  waveChart =  cp5.addChart("Wave Information")
-    .setPosition((width/3.5) + 50, 550)
-    .setSize(500, 200)
+
+  waveChart =  cp5.addChart("Wave Information chart")//
+    .setPosition(chartLocationX, chartLocationY)
+    .setSize(chartSizeX, chartSizeY)
     .setFont(sliderFont)
-//    .setRange(-10, 10) value delaney had 
-    .setPosition(830, 540)
-    .setSize(500, 175)
     .setRange(-0.10, 0.10) //new value from develop 
     .setView(Chart.LINE) // use Chart.LINE, Chart.PIE, Chart.AREA, Chart.BAR_CENTERED
     .setStrokeWeight(10)
     .setColorCaptionLabel(color(40))
-    .setColorBackground(buttonblue)
-    .setColorLabel(green)
+    .setColorBackground(white)
     ;
     
   waveChart.addDataSet("debug");
   waveChart.setData("debug", new float[360]);
 
-  wecChart =  cp5.addChart("WEC Information")
-    .setPosition((width/3.5 + 700), 550)
-    .setSize(500, 200)
+  wecChart =  cp5.addChart("WEC Information chart")//TODO FIND HOW TO HIDE LABEL  
+    .setPosition(zeroLocationRight, chartLocationY)
+    .setSize(chartSizeX, chartSizeY)
     .setFont(sliderFont)
     .setRange(-10, 10)
     .setView(Chart.LINE) // use Chart.LINE, Chart.PIE, Chart.AREA, Chart.BAR_CENTERED
     .setStrokeWeight(10)
     .setColorCaptionLabel(color(40))
-    .setColorBackground(buttonblue)
-    .setColorLabel(green)
+    .setColorBackground(white)
     ;
 
   h.setValue(5);
@@ -416,7 +419,7 @@ int sliderOffset = 48;
  myTextarea = cp5.addTextarea("txtBanner")
     .setPosition(int((width/3.5)/6), 30)
     .setText("Capturing the Power \n         of Waves") 
-    .setSize(1200, 100)
+    .setSize(1200, 200)
     .setFont(titleTextBoxFont)
     .setLineHeight(40) // need to check what font size is and base on that 
     .setColor(color(green)) ;
@@ -434,39 +437,64 @@ int sliderOffset = 48;
   //.setColorForeground(color(255,100));
 */
   myTextarea = cp5.addTextarea("txtSystemStatus")
-    .setPosition(int((width/3.5 + 50)), (height/2.5 + 30))
-    .setText("System Status")
-    .setSize(225, 75)
+    .setPosition(zeroLocationX, 385)
+    .setText("SYSTEM STATUS")
+    .setSize(350, 75)
     .setFont(headerTextBoxFont)
     .setLineHeight(7)
     .setColor(color(buttonblue)); // need to find the correct color for this
   // .setColorBackground(color(255,100))
   //  .setColorForeground(color(255,100));
 
+
   myTextarea = cp5.addTextarea("txtWaveDimensions")
-    .setPosition(int((width/3.5 + 50)), 90)
-    .setText("Change Wave Dimensions")
-    .setSize(300, 40)
+    .setPosition(zeroLocationX+100, 100)
+    .setText("CHANGE WAVE DIMENSIONS" )
+    .setSize(350, 40)
     .setFont(textBoxFont)
     .setLineHeight(10)
-    .setColor(color(buttonblue)); // need to find the correct color for this
-  //.setColorBackground(color(255,100))
+    .setColor(color(white)); // need to find the correct color for this
+    
+  myTextarea = cp5.addTextarea("txtWaveInformation")
+    .setPosition(zeroLocationX+160, 448)
+    .setText("WAVE INFORMATION" )
+    .setSize(350, 40)
+    .setFont(smallTextBoxFont)
+    .setLineHeight(10)
+    .setColor(color(white)); // need to find the correct color for this
+
   //.setColorForeground(color(255,100));             
 
   myTextarea = cp5.addTextarea("txtWECControls")
-    .setPosition(int((width/3.5 + 700)), 90)
-    .setText("Change WEC Controls")
+    .setPosition(zeroLocationRight + 100, 100)
+    .setText("CHANGE WEC CONTROLS")
     .setSize(300, 40)
     .setFont(textBoxFont)
     .setLineHeight(10)
-    .setColor(color(buttonblue)); // need to find the correct color for this
+    .setColor(color(white)); // need to find the correct color for this
   //.setColorBackground(color(255,100))
   //.setColorForeground(color(255,100));     
+  
+    myTextarea = cp5.addTextarea("txtWECInformation")
+    .setPosition(zeroLocationX+180, 720)
+    .setText("POWER METER")
+    .setSize(300, 40)
+    .setFont(smallTextBoxFont)
+    .setLineHeight(10)
+    .setColor(color(white));
+    
+myTextarea = cp5.addTextarea("txtPowerMeter")
+    .setPosition(zeroLocationRight + 160, 448)
+    .setText("WEC INFORMATION")
+    .setSize(300, 40)
+    .setFont(smallTextBoxFont)
+    .setLineHeight(10)
+    .setColor(color(white));
 
   myTextarea = cp5.addTextarea("txtMissionControl")
     .setPosition(zeroLocationX, zeroLocationY)
     .setText("Mission Control")
-    .setSize(225, 75)
+    .setSize(300, 75)
     .setFont(headerTextBoxFont)
     .setLineHeight(7)
     .setColor(color(buttonblue));// need to find the correct color for this
@@ -799,7 +827,7 @@ void displayUpdate() {
   strokeWeight(0);
   image(snlLogo, width-snlLogo.width*0.25-5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25); //Logo
   rect(0, 0, width/2.7, height); // LHS banner 
-  fill(white);
+ fill(white);
   //stroke(255,255,255);
   rect(width/2.7, 0, width, height*.333); //mission control banner
   fill(turq);
@@ -809,6 +837,16 @@ void displayUpdate() {
   fill(255,255,255);
   textSize(12);
   textLeading(14);
+  //boxes behind the titles
+     fill(red);
+    rect(zeroLocationX, 90, 505, 45); // Change wave dimensions
+    rect(zeroLocationRight, 90, 505, 45); // Change WEC controls
+    rect(zeroLocationX, 445, 505, 45); // Wave Information
+    rect(zeroLocationRight, 445, 505, 45); // Wec Information
+    rect(zeroLocationX, 720, 505, 45); // Power Meter
+    rect(zeroLocationRight, 445, 505, 45); // Wec Information
+
+ 
  // text(fundingState, (width/3.5)/2, 1125);
  
   //Mission Control
