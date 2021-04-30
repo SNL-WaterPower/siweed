@@ -70,7 +70,7 @@ void initializeUI() {
    .setState(false);
    */
   consoleButton = cp5.addButton("consoleButton")
-    .setPosition(1390, 610)
+    .setPosition(1390, 810)
     .setSize(100, 50)
     .setLabel("Console")
     .setColorBackground(grey)
