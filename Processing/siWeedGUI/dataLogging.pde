@@ -1,6 +1,6 @@
 Table table;  //table for data logging
 //Table FFTTable;
-Table TSTable;
+//Table TSTable;
 String startTime;
 //Variables to be logged:
 public class UIData {        //an object for the WEC and Wavemaker portions of the UI to use
@@ -40,17 +40,17 @@ void initializeDataLogging() {
   table.addColumn("wecTau");
   table.addColumn("wecPower");
   table.addColumn("wecVel");
-/*
+  /*
   //isolated .csv's
-  FFTTable = new Table();
-  for (int i = 0; i < queueSize *2; i++) {
-    FFTTable.addColumn("FFT "+Integer.toString(i));
-  }
-  */
+   FFTTable = new Table();
+   for (int i = 0; i < queueSize *2; i++) {
+   FFTTable.addColumn("FFT "+Integer.toString(i));
+   }
+   
   TSTable = new Table();
   TSTable.addColumn("time");
   TSTable.addColumn("height");
-  
+  */
 }
 //Funciton to test CSV functionality
 void logData() {     //will be called at the framerate
@@ -65,9 +65,9 @@ void logData() {     //will be called at the framerate
   newRow.setFloat("UIWaveMakergamma", waveMaker.gamma);
   newRow.setFloat("UIWecMode", wec.mode);
   newRow.setFloat("UIWecTorque", wec.mag);
- // newRow.setFloat("UIWeckP", positionTorque.getValue()); //may want to change these names
- // newRow.setFloat("UIWeckS", spring.getValue()); //may want to change these names
- // newRow.setFloat("UIWeckD", damper.getValue()); //may want to change these names
+  // newRow.setFloat("UIWeckP", positionTorque.getValue()); //may want to change these names
+  // newRow.setFloat("UIWeckS", spring.getValue()); //may want to change these names
+  // newRow.setFloat("UIWeckD", damper.getValue()); //may want to change these names
   newRow.setFloat("UIWecHeight", wec.amp);
   newRow.setFloat("UIWecFrequency", wec.freq);
   newRow.setFloat("UIWecSigH", wec.sigH);
@@ -82,20 +82,59 @@ void logData() {     //will be called at the framerate
   newRow.setFloat("wecPower", pow);
   newRow.setFloat("wecVel", wecVel);
   saveTable(table, "data/"+startTime+".csv");
-
+  //appendTextToFile("data/"+startTime+".csv", table);
+  
   //isolated .csvs for testing:
   /*
   if (millis() > 40000 && millis() < 41000)    //save conditions(so not all data is captured)
-  {
-    TableRow FFTRow = FFTTable.addRow();
-    for (int i = 0; i < queueSize *2; i++) {
-      FFTRow.setFloat("FFT "+Integer.toString(i), fftArr[i]);
-    }
-    saveTable(FFTTable, "data/vars/FFT"+startTime+".csv");
-  }
-  */
+   {
+   TableRow FFTRow = FFTTable.addRow();
+   for (int i = 0; i < queueSize *2; i++) {
+   FFTRow.setFloat("FFT "+Integer.toString(i), fftArr[i]);
+   }
+   saveTable(FFTTable, "data/vars/FFT"+startTime+".csv");
+   }
+   
   TableRow TSRow = TSTable.addRow();
   TSRow.setFloat("time", (millis()/1000.0 - 2.0));
   TSRow.setFloat("height", debugData);
   saveTable(TSTable, "data/vars/TS"+startTime+".csv");
+  */
+
 } 
+/**https://stackoverflow.com/questions/17010222/how-do-i-append-text-to-a-csv-txt-file-in-processing
+ * Appends text to the end of a text file located in the data directory, 
+ * creates the file if it does not exist.
+ * Can be used for big files with lots of rows, 
+ * existing lines will not be rewritten
+ */
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+void appendTextToFile(String filename, String text) {
+  File f = new File(dataPath(filename));
+  if (!f.exists()) {
+    createFile(f);
+  }
+  try {
+    PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(f, true)));
+    out.println(text);
+    out.close();
+  }
+  catch (IOException e) {
+    e.printStackTrace();
+  }
+}
+
+/**
+ * Creates a new file including all subfolders
+ */
+void createFile(File f) {
+  File parentDir = f.getParentFile();
+  try {
+    parentDir.mkdirs(); 
+    f.createNewFile();
+  }
+  catch(Exception e) {
+    e.printStackTrace();
+  }
+}    
