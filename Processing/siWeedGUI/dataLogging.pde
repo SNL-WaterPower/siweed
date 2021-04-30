@@ -82,7 +82,7 @@ void logData() {     //will be called at the framerate
   newRow.setFloat("wecPower", pow);
   newRow.setFloat("wecVel", wecVel);
   saveTable(table, "data/"+startTime+".csv");
-  //appendTextToFile("data/"+startTime+".csv", table);
+  //appendTextToFile("data/"+startTime+".csv", SAVE STRING OF CSV FORMATTED ROW HERE);s
   
   //isolated .csvs for testing:
   /*
