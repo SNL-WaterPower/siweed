@@ -2,11 +2,13 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class Meter {
+
   int xmin = 780;      //coordinates in pixels
   int xmax = 1285;
   int ymin = 745;
   int ymax = ymin+270;
   
+
   Queue<Float> q;      //queue for moving average
   int buffSize = 10;
   int originx, originy;
