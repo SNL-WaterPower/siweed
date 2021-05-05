@@ -1,4 +1,4 @@
-Serial port1;    //arduino mega
+Serial port1;    //arduino mega //<>// //<>//
 Serial port2;    //arduino Due
 boolean megaConnected, dueConnected;
 int connectionDelay  = 3500;      //how many ms to wait after connecting to a device. Can greatly slow the startup
@@ -124,12 +124,9 @@ void readMegaSerial() {
       switch(port1.readChar()) {
       case '1':
         megaUnitTests[0] = true;      //for unit testing and acquiring serial.
-        if (debug) {
-          //print(" d ");
-        }
         probe1 = readFloat(port1);
-        if (waveElClicked == true) {
-          waveChart.push("waveElevation", probe1);
+        if (waveElClicked == true && !Float.isNaN(probe1)) {
+          waveChart.push("waveElevation", probe1*waveElevationScale);
         }
         break;
       case '2':
@@ -137,21 +134,22 @@ void readMegaSerial() {
         break;
       case 'p':
         waveMakerPos = readFloat(port1);
-        if (wavePosClicked == true) {
-          waveChart.push("waveMakerPosition", waveMakerPos);
+        if (wavePosClicked == true && !Float.isNaN(probe2)) {
+          waveChart.push("waveMakerPosition", waveMakerPos*WMPosScale);
         }
         break;
       case 'd':
         debugData = readFloat(port1);
-        waveChart.push("debug", debugData);
-        if (waveMaker.mode == 3||waveMaker.mode == 2) fftList.add(debugData);      //adds to the tail if in the right mode
-        if (fftList.size() > queueSize) fftList.remove();          //removes from the head
+        if (!Float.isNaN(debugData) && debugData < 1 && debugData > -1) {    //when starting seastate, a "large" value comes through, messing witht the FFT. The saturation prevents that.
+          waveChart.push("debug", debugData*WMPosScale);
+          if (waveMaker.mode == 3||waveMaker.mode == 2) fftList.add(debugData);      //adds to the tail if in the right mode
+          if (fftList.size() > queueSize) fftList.remove();          //removes from the head
+        }
         break;
       case 'u':
         int testNum = (int)readFloat(port1);    //indicates which jonswap test passed(1 or 2). Negative means that test failed.
         if (debug) {
-          //println("MegaUnittestNum: "+testNum);
-          //print(" u ");
+          println("MegaUnittestNum: "+testNum);
         }
         if (testNum > 0) {    //only changes if test was passed
           megaUnitTests[testNum] = true;
@@ -175,28 +173,27 @@ void readDueSerial() {
       switch(port2.readChar()) {
       case 'e':
         wecPos = readFloat(port2);
-        //wec data
-        if (wecPosClicked == true) {
-          wecChart.push("wecPosition", wecPos);
+        if (wecPosClicked == true && !Float.isNaN(wecPos)) {
+          wecChart.push("wecPosition", wecPos*WCPosScale);
         }
         break;
       case 't':
         dueUnitTests[0] = true;
         tau = readFloat(port2);
-        if (wecTorqClicked == true) {
-          wecChart.push("wecTorque", tau);
+        if (wecTorqClicked == true && !Float.isNaN(tau)) {
+          wecChart.push("wecTorque", tau*WCTauScale);
         }
         break;
       case 'p':
         pow = readFloat(port2);
-        if (wecPowClicked == true) {
-          wecChart.push("wecPower", pow);
+        if (wecPowClicked == true && !Float.isNaN(pow)) {
+          wecChart.push("wecPower", pow*WCPowScale);
         }
         break;
       case 'v':
         wecVel = readFloat(port2);
-        if (wecVelClicked == true) {
-          wecChart.push("wecVelocity", wecVel);
+        if (wecVelClicked == true && !Float.isNaN(wecVel)) {
+          wecChart.push("wecVelocity", wecVel * WCVelScale);
         }      
         break;
       case 'u':
@@ -233,3 +230,11 @@ public static float byteArrayToFloat(byte[] bytes) {
     bytes[0] << 24 | (bytes[1] & 0xFF) << 16 | (bytes[2] & 0xFF) << 8 | (bytes[3] & 0xFF);
   return Float.intBitsToFloat(intBits);
 }
+//boolean isFloat(float val) {
+//  if (Float.isNaN(val)){
+//    return false;
+//  }
+//  else {
+//   return true; 
+//  }
+//}

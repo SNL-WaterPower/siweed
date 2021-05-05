@@ -3,27 +3,36 @@ import processing.serial.*;
 import java.lang.Math.*;
 import java.util.LinkedList;
 
-
-
-//ControlP5 cp5; delcared in UI
-
-Textarea myTextarea;
+////////////////////Scaling section:
+//input scaling:
+float WMJogScale = 1000;
+float WMAmpScale = 1000;
+float WMSigHScale = 1000;    //These should be a multiple of 10, so units can stay accurate
+float WCJogScale = 1000;
+float WCPScale = 80;
+float WCDScale = 600;
+float WCSigHScale = 1000; 
+//chart scaling:    //these factors are used in serial upon receipt of variables.
+float waveElevationScale = 100;
+float WMPosScale = 400;
+float WCPosScale = 100;
+float WCTauScale = 1000;
+float WCPowScale = 5000;
+float WCVelScale = 20;
+////////////////////////////
+boolean debug = false;    //for debug print statements. Also disables GUI console, and puts it in processing
+boolean guiConsole = true; 
+boolean dataLogging = false;    //if this is true, a .csv with most variables will be written, but it has a memory leak and cannot run at high performance for more than a few minutes
 
 Println console; //Needed for GUI console to work
 Textarea consoleOutput; //Needed for GUI console to work
-
-boolean debug = true;    //for debug print statements. Also disables GUI console, and puts it in processing
-boolean guiConsole = true; 
 
 int queueSize = 512;    //power of 2 closest to 30(15) seconds at 32 samples/second    !!Needs to match arduino
 LinkedList fftList;
 fft myFFT;
 float[] fftArr;
-
 int previousMillis = 0;    //used to update fft 
 int fftInterval = 100;    //in milliseconds
-int test = 0;
-
 
 // meter set up  
 
@@ -44,26 +53,9 @@ void setup() {
   myFFT = new fft();
   fftArr = new float[queueSize*2];
   waveMaker.mode = 1;    // 1 = jog, 2 = function, 3 = sea, 4 = off
-  wec.mode = 4;  //1 = torque, 2= feedback, 3 = "sea", 4 = off
+  wec.mode = 4;  //1 = , 2= feedback, 3 = "sea", 4 = off
   initializeDataLogging();
   initializeUI();
-
-//MERGE QUESTION: not sure if we need this. Still not sure if we need this. Need to ask Nick about it. (4/8/21) 
-
-/*
-  //initialize the modes on the arduinos:
-  port1.write('!');
-  sendFloat(0, port1);    //jog mode
-  port1.write('j');
-  sendFloat(0, port1);    //at position 0
-  
-  port2.write('!');
-  sendFloat(-1, port2);    //off
-  
-  unitTests();
-  */
-////////////////////////////
-
   myMeter = new Meter(-5.0, 5.0);    //min and max
 }
 
@@ -74,8 +66,6 @@ public void settings() {
 }*/
 
 boolean initialized = false;
-int timestamp = 0;   //for debuging
-
 void draw() {
 boolean initialized = false;
 int timestamp = 0;   //for debuging
@@ -84,110 +74,30 @@ int timestamp = 0;   //for debuging
     unitTests();
     initialized = true;
   }
-
   displayUpdate(); 
-  //The reason for this is because the slider texts. 
-  //Without constantly updating the background and boxes, the text from the sliders will just remain there.
-
-//MERGE QUESTION: Not sure if this should still be here/can't remember original function. This was in newGUI but not in Dev branch. 
-/*
-  if (debug) {
-    print("2 ");
-    println(millis() - timestamp);
-    timestamp = millis();
-  }
-
-
-  if (debug) {
-    print("3 ");
-    println(millis() - timestamp);
-    timestamp = millis();
-  }
-
-  if (debug) {
-    print("4 ");
-    println(millis() - timestamp);
-    timestamp = millis();
-  }
-
-  if (debug) {
-    print("4 ");
-    println(millis() - timestamp);
-    timestamp = millis();
-  }
-
-  if (debug) {
-    print("5 ");
-    println(millis() - timestamp);
-    timestamp = millis();
-  }
-
-  if (debug) {
-    print("6 ");
-    println(millis() - timestamp);
-    timestamp = millis();
-  }
-
-
-  if (debug) {
-    print("7 ");
-    println(millis() - timestamp);
-    timestamp = millis();
-  }
-*/
 
 
   //Meter control:
-  pow = 1.25; //might be able to delete 
-  myMeter.update(pow);
-
-  if (pow >= 1.25 && pow < 3) {
-    quad1.setColorBackground(green);
-  }
-  if (pow >= 3 && pow < 4.25) {
-    quad1.setColorBackground(green);
-    quad2.setColorBackground(green);
-  }
-  if (pow >= 4.25 && pow < 5) {
-    quad1.setColorBackground(green);
-    quad2.setColorBackground(green);
-    quad3.setColorBackground(green);
-  }
-  if (pow >= 5) {
-    quad1.setColorBackground(green);
-    quad2.setColorBackground(green);
-    quad3.setColorBackground(green);
-    quad4.setColorBackground(green);
-  }
-
-
-  //controls button pop up behavior
-  if (mousePressed && waveText.isVisible()) {
-    waveText.hide();
-  }
-  //controls button pop up behavior
-  if (mousePressed && wecText.isVisible()) {
-    wecText.hide();
-  }
+  myMeter.update(pow*WCPowScale);
 
   if (!megaConnected) {
     //do nothing
-  } else if (waveMaker.mode == 1 && position.getValue() != waveMaker.mag*1000) {  //only sends if value has changed  
+  } else if (waveMaker.mode == 1 && position.getValue() != waveMaker.mag*WMJogScale) {  //only sends if value has changed  
     //Jog:
-    waveMaker.mag = position.getValue()/1000;
+    waveMaker.mag = position.getValue()/WMJogScale;
     port1.write('j');
     sendFloat(waveMaker.mag, port1);
     //function:
-  } else if (waveMaker.mode == 2 && !mousePressed && (waveMaker.amp*1000 != h.getValue() || waveMaker.freq != freq.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
-    waveMaker.amp = h.getValue()/1000;
+  } else if (waveMaker.mode == 2 && !mousePressed && (waveMaker.amp*WMAmpScale != h.getValue() || waveMaker.freq != freq.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
+    waveMaker.amp = h.getValue()/WMAmpScale;
     waveMaker.freq = freq.getValue();
     port1.write('a');
     sendFloat(waveMaker.amp, port1);
     port1.write('f');
     sendFloat(waveMaker.freq, port1);
     //Sea State:
-  } else if (waveMaker.mode == 3 && !mousePressed && (waveMaker.sigH*1000 != sigH.getValue() || waveMaker.peakF != peakF.getValue() || waveMaker.gamma != gamma.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
-    waveMaker.sigH = sigH.getValue()/1000;
+  } else if (waveMaker.mode == 3 && !mousePressed && (waveMaker.sigH*WMSigHScale != sigH.getValue() || waveMaker.peakF != peakF.getValue() || waveMaker.gamma != gamma.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
+    waveMaker.sigH = sigH.getValue()/WMSigHScale;
     waveMaker.peakF = peakF.getValue();
     waveMaker.gamma = gamma.getValue();
     port1.write('s');
@@ -203,31 +113,22 @@ int timestamp = 0;   //for debuging
 
   if (!dueConnected) {
     //do nothing
-  } else if (wec.mode == 1 && torqueSlider.getValue()*1000 != wec.mag) {  //only sends if value has changed  
+  } else if (wec.mode == 1 && torqueSlider.getValue() != wec.mag*WCJogScale) {  //only sends if value has changed  
     //Jog:
-    wec.mag = torque.getValue()/1000;
+    wec.mag = torqueSlider.getValue()/WCJogScale;
     port2.write('t');
     sendFloat(wec.mag, port2);
-    println(wec.mag);
-    /*
-    am trying to scale the slider y 1000 to make it more usable, but wec.mag is not doing what it should and a NaN is getting sent to the chart.
-     The 1000 scaler is currently only on this torque value, but if it works I'll apply it to more wec values
-     
-     
-     
-     
-     */
     //feedback:
-  } else if (wec.mode == 2 && !mousePressed && (wec.amp != pGain.getValue() || wec.freq != dGain.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition) //for wec, amp is kp and freq is kd;
-    wec.amp = pGain.getValue();
-    wec.freq = dGain.getValue();
+  } else if (wec.mode == 2 && !mousePressed && (wec.amp*WCPScale != pGain.getValue() || wec.freq*WCDScale != dGain.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition) //for wec, amp is kp and freq is kd;
+    wec.amp = pGain.getValue()/WCPScale;
+    wec.freq = dGain.getValue()/WCDScale;
     port2.write('k');
     sendFloat(wec.amp, port2);
     port2.write('d');
     sendFloat(wec.freq, port2);
     //Sea State:
-  } else if (wec.mode == 3 && !mousePressed && (wec.sigH != sigHWEC.getValue() || wec.peakF != peakFWEC.getValue() || wec.gamma != gammaWEC.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
-    wec.sigH = sigHWEC.getValue();
+  } else if (wec.mode == 3 && !mousePressed && (wec.sigH*WCSigHScale != sigHWEC.getValue() || wec.peakF != peakFWEC.getValue() || wec.gamma != gammaWEC.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
+    wec.sigH = sigHWEC.getValue()/WCSigHScale;
     wec.peakF = peakFWEC.getValue();
     wec.gamma = gammaWEC.getValue();
     port2.write('s');
@@ -245,9 +146,11 @@ int timestamp = 0;   //for debuging
   }
   drawFFT();
   if (initialized) {
-    thread("readMegaSerial");    //will run this funciton in parallel thread
-    thread("readDueSerial");
-    thread("logData");
+    if (dataLogging) {
+      logData();
+    }
+    readMegaSerial();
+    readDueSerial();
   }
 
 //MERGE QUESTION: Was in newGUI but not in develop 

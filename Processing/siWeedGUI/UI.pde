@@ -268,7 +268,7 @@ dataButtonY = buttonSizeY;
 
   // Motor Sea State Mode Sliders
   sigH = cp5.addSlider("Significant Height (MM)")  
-    .setRange(0, sliderSizeY) //slider range
+    .setRange(0, 10) //slider range
     .setPosition(sliderX, sliderY) 
     .setSize(sliderSizeX, sliderSizeY)
     .setFont(sliderFont)
@@ -310,7 +310,8 @@ dataButtonY = buttonSizeY;
 
   // WEC Feedback Sliders   
   pGain = cp5.addSlider("P Gain")  
-    .setRange(-0.0006, 0.0006)    //user needs to be able to command negative //0.1(wave height in meters) * max torque(above)
+    //.setRange(-0.0006, 0.0006)    //user needs to be able to command negative //0.1(wave height in meters) * max torque(above)
+    .setRange(-10, 10)    //scaled in main tab
     .setFont(sliderFont)
     .setPosition(sliderX, sliderY) 
     .setSize(sliderSizeX, sliderSizeY) 
@@ -320,7 +321,8 @@ dataButtonY = buttonSizeY;
     .setColorCaptionLabel(color(buttonblue));
 
   dGain = cp5.addSlider("D Gain")  //name of button
-    .setRange(0, 0.0005)    //user needs to only command positive    //!!will find right values by measuring max vel
+    //.setRange(0, 0.0005)    //user needs to only command positive
+    .setRange(0, 10)    //scaled in main tab
     .setFont(sliderFont)
     .setPosition(sliderX, sliderY + sliderOffset) 
     .setSize(sliderSizeX, sliderSizeY) 
@@ -331,8 +333,9 @@ dataButtonY = buttonSizeY;
 
   //WEC Seastate Sliders 
 
-  sigHWEC = cp5.addSlider("WEC Significant Height (M)")  
-    .setRange(0, 0.05)
+
+  sigHWEC = cp5.addSlider("WEC Significant Tau")  //name of button
+    .setRange(0, 5)
     .setFont(sliderFont)
     .setPosition(sliderX, sliderY) 
     .setSize(sliderSizeX, sliderSizeY)
@@ -361,6 +364,16 @@ dataButtonY = buttonSizeY;
     .setColorBackground(color(buttonblue))
     .setColorCaptionLabel(color(buttonblue));
 
+  //slider default values:    //only non zeros need to be set
+  h.setValue(5);
+  freq.setValue(1.0);
+  sigH.setValue(2.5);
+  peakF.setValue(3.0);
+  gamma.setValue(7.0);
+
+  sigHWEC.setValue(2.5);
+  peakFWEC.setValue(0.3);
+  gammaWEC.setValue(0.3);
 
   waveText = cp5.addTextarea("Wave Infromation") //is this used?
     .setPosition(buttonX, 150)
@@ -395,8 +408,7 @@ dataButtonY = buttonSizeY;
     .setPosition(chartLocationX, chartLocationY)
     .setSize(chartSizeX, chartSizeY)
     .setFont(sliderFont)
-
-    .setRange(-0.10, 0.10) //new value from develop 
+    .setRange(-10, 10)
     .setView(Chart.LINE) // use Chart.LINE, Chart.PIE, Chart.AREA, Chart.BAR_CENTERED
     .setStrokeWeight(10)
     .setColorCaptionLabel(color(40))
@@ -420,11 +432,6 @@ dataButtonY = buttonSizeY;
     .setColorBackground(white)
     .setLabel("");
 
-  h.setValue(5);
-  freq.setValue(1.0);
-  sigH.setValue(2.5);
-  peakF.setValue(3.0);
-  gamma.setValue(7.0);
 
   snlLogo = loadImage("SNL_Stacked_White.png");
   wavePic = loadImage("ocean.jpg");
@@ -444,7 +451,7 @@ dataButtonY = buttonSizeY;
   {
     console = cp5.addConsole(consoleOutput);
   }
-
+/*
   myTextarea = cp5.addTextarea("txtSystemStatus")
 
     .setPosition(zeroLocationX, 385)
@@ -514,7 +521,7 @@ myTextarea = cp5.addTextarea("txtFFT")
     .setFont(headerTextBoxFont)
     .setLineHeight(7)
     .setColor(color(buttonblue));
-
+*/
 }
 //button functions:
 /////////////////// MAKES BUTTONS DO THINGS ////////////////////////////////////
@@ -550,6 +557,7 @@ void jog() {
     port1.write('!');
     sendFloat(0, port1);
   }
+    waveMaker.mag += 1;    //this parameter being adjusted will cause the main loop to send the initial data
 }
 
 void fun() {
@@ -571,6 +579,7 @@ void fun() {
     port1.write('!');
     sendFloat(1, port1);
   }
+    waveMaker.amp += 1;    //this parameter being adjusted will cause the main loop to send the initial data
 }
 
 void sea() {
@@ -591,6 +600,7 @@ void sea() {
     port1.write('!');
     sendFloat(2, port1);
   }
+  waveMaker.sigH += 1;    //this parameter being adjusted will cause the main loop to send the initial data
 }
 
 void off() {
@@ -631,6 +641,7 @@ void torque() {
     port2.write('!');
     sendFloat(0, port2);
   }
+  wec.mag += 1;    //this parameter being adjusted will cause the main loop to send the initial data
 }   
 
 void feedback() {
@@ -649,6 +660,7 @@ void feedback() {
     port2.write('!');
     sendFloat(1, port2);
   }
+  wec.amp += 1;    //this parameter being adjusted will cause the main loop to send the initial data
 }
 
 // Slider pGain, dGain, torqueSlider, sigHWEC, peakFWEC, gammaWEC; 
@@ -671,6 +683,8 @@ void seaWEC() {
     port2.write('!');
     sendFloat(2, port2);
   }
+
+  wec.sigH += 1;    //this parameter being adjusted will cause the main loop to send the initial data
 }
 
 void offWEC() {
@@ -782,16 +796,6 @@ void wecPowData() {
   }
 }
 
-/*   
- wecChart.addDataSet("wecPosition");
- wecChart.setData("wecPosition", new float[360]); 
- 
- wecChart.setData("wecVelocity", new float[360]);    //use to set the domain of the plot. This value is = desired domain(secnods) * 30
- wecChart.addDataSet("wecTorque");
- 
- 
- */
-
 void waveQs() {
   if (waveText.isVisible()) {
     waveText.hide();
@@ -807,25 +811,33 @@ void wecQs() {
     wecText.show();
   }
 }
+//////////////////FFT vars:
+float originx = 1250;    //x and y coordinates of the FFT graph
+float originy = 1150;
+float xScale = 1.5;    //how spaced the graph is horizontally
+float yScale = 50000;    //how tall the data is. axis has to be set separately
+float FFTHeight = 250;    //height of y axis coordinates. Does not scale data
+int yAxisCount = 10;    //how many numbers on the y axis
+float FFTXOffset = 10, FFTYOffset = 10;
 void drawFFT() {
   int nyquist = (int)frameRate/2;    //sampling frequency/2 NOTE: framerate is not a constant variable
-  float initialX = 0;
-  float yScale = 20000;
   textSize(10);
   fill(green);
   stroke(green);
   for (int i=0; i<=queueSize/2; i++) {      //cut in half
-    float x = 1250+1.5*i;    //x coordinate
-    float y = 1150;            //y coordinate
-    if (i == 0) {
-      initialX = x;
+    float x = originx+xScale*i;
+    float y = originy;
+    float maxY = originy - FFTHeight;    //value that saturates the data
+    float yCord = y - yScale*fftArr[i];    //how high to draw the line
+    if (yCord < maxY) {    //saturate, so y doesn't get drawn off the graph(remember coordinates are flipped)
+      yCord = maxY;
     }
-    line(x, y, x, y - yScale*fftArr[i]);
-    if (i%32 == 0) {        //should make 32 into a variable, but frameRate is not an int
-      text((int)(i*(1/((float)queueSize/32))), x, y);    //x-axis: frequency spacing is 1/T, where t is length of sample in seconds
+    line(x+FFTXOffset, y-FFTYOffset, x+FFTXOffset, yCord-FFTYOffset);
+    if (i%32 == 0) {        //should make 32 into a variable, but frameRate is not an int.
+      text((int)(i*(1/((float)queueSize/32))), x+FFTXOffset, y);    //x-axis: frequency spacing is 1/T, where t is length of sample in seconds
     }
-    if (i%1 == 0 && i<=5) {
-      text(i, initialX, y - 50*i);    //y-axis    //units need to be fixed
+    if (i%1 == 0 && i<=yAxisCount && i != 0) {    //mod controls spacing, draws only if less than max count and not zero(to not draw 2 zeros)
+      text(i, originx, y - FFTHeight/yAxisCount*i);    //y-axis    //units need to be fixed
     }
   }
 }
@@ -849,12 +861,11 @@ void displayUpdate() {
   //stroke(turq);
   rect(width/2.7, height*.333, width, height); //mission control banner
 
-  fill(green);
   fill(255,255,255);
   textSize(12);
   textLeading(14);
   //boxes behind the titles
-     fill(turq);
+    fill(turq);
     rect(zeroLocationX, 90, 505, 45); // Change wave dimensions
     fill(green);
     rect(zeroLocationRight, 90, 505, 45); // Change WEC controls
@@ -864,4 +875,49 @@ void displayUpdate() {
     rect(zeroLocationX, 715, 505, 45); // Power Meter
     rect(zeroLocationRight, 715, 505, 45); // FFT
     image(LHSPic, 0, 0, width/2.7, height); //lhs pic
+/* need to double check if this is merged right 
+
+  stroke(buttonblue); //outer color
+  rect(15, 130, 225, 75, 7); //Mission Control Title Box 
+  //Mission Control Text
+  // System Status
+  fill(turq, 150);
+  stroke(buttonblue, 150);
+  rect(780, 150, 1115, 930, 7); // background
+  fill(green);
+  stroke(buttonblue);
+  rect(770, 130, 225, 75, 7); //system title
+  fill(buttonblue);
+  rect(1387, 185, 480, 400, 7); //power box
+  rect(805, 225, 550, 225, 7); // explainer box
+  rect(805, 475, 550, 575, 7); //graph background
+  */
+  //controls button pop up behavior for info boxes
+  if (mousePressed && waveText.isVisible()) {
+    waveText.hide();
+  }
+  if (mousePressed && wecText.isVisible()) { 
+    wecText.hide();
+  }
+  //controls power indicators
+  if (pow >= 1.25) {
+    quad1.setColorBackground(green);
+  }else{
+    quad1.setColorBackground(128,128,128);    //if under threshold, then grey
+  }
+  if (pow >= 3) {
+    quad2.setColorBackground(green);
+  }else{
+    quad2.setColorBackground(128,128,128);    //if under threshold, then grey
+  }
+  if (pow >= 4.25) {
+    quad3.setColorBackground(green);
+  }else{
+    quad3.setColorBackground(128,128,128);    //if under threshold, then grey
+  }
+  if (pow >= 5) {
+    quad4.setColorBackground(green);
+  }else{
+    quad4.setColorBackground(128,128,128);    //if under threshold, then grey
+  }
 }

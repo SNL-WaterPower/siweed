@@ -8,6 +8,7 @@
 
 MiniGen gen(10); //initalize signal generator with FSYNC pin 10
 miniWaveTankJonswap jonswap(512.0 / 128.0, 0.5, 2.5); //period, low frequency, high frequency. frequencies will be rounded to multiples of df(=1/period)
+//jonswap(512.0 / 32.0, 0.5, 2.5);
 //df = 1 / _period; num_fs = (int)((f_high - f_low) / df);
 //^ISSUE. Acuracy seems to fall off after ~50 components when using higher frequencies(1,3 at 64 elements seems wrong).
 volatile double pidOut, pidSet, pidIn;
@@ -32,6 +33,7 @@ volatile float desiredPos;   //used for jog mode
 const int buffSize = 10;    //number of data points buffered in the moving average filter
 volatile float probe1Buffer[buffSize];
 volatile float probe2Buffer[buffSize];
+volatile float jogBuffer[buffSize];
 const float maxRate = 0.25;   //max m/seconds
 /////////would like to put these in the interrupts tab, but cant without changing proect structure to .cpp and .h files.
 const float interval = .01;   //time between each interupt call in seconds //max value: 1.04
@@ -108,10 +110,11 @@ void setup() {
 
   encoderBuff.command2Reg(CNTR, IR_RegisterAction_CLR); //zero encoder
 
-  //fill probe buffers with 0's:
+  //fill moving average buffers with 0's:
   for (int i = 0; i < buffSize; i++) {
     probe1Buffer[i] = 0;
     probe2Buffer[i] = 0;
+    jogBuffer[i] = 0;
   }
   //fill amps freqs and phases with 0's:
   for (int i = 0; i < maxComponents; i++) {
@@ -168,8 +171,10 @@ float lerp(float a, float b, float f) {
   return a + f * (b - a);
 }
 bool ampUnitTest = true, TSUnitTest = true, encoderTest = true;
-float exampleAmps[] = {0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.01, 0.02, 0.05, 0.11, 0.20, 0.33, 0.48, 0.67, 0.87, 1.09, 1.30, 1.51, 1.70, 1.88, 2.03, 2.16};
-float exampleTS[] = {4.07, -3.45, 1.12, 1.56, 0.69, -2.25, -1.17, -6.01, 0.74, 2.85, -4.79, 5.71, -1.66, -3.66, -2.78, 1.38, 4.07, -3.45, 1.12, 1.56, 0.69, -2.25, -1.17, -6.01, 0.74, 2.85, -4.79, 5.71, -1.66, -3.66, -2.78, 1.38};
+//float exampleAmps[] = {0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.01, 0.02, 0.05, 0.11, 0.20, 0.33, 0.48, 0.67, 0.87, 1.09, 1.30, 1.51, 1.70, 1.88, 2.03, 2.16};
+//float exampleTS[] = {4.07, -3.45, 1.12, 1.56, 0.69, -2.25, -1.17, -6.01, 0.74, 2.85, -4.79, 5.71, -1.66, -3.66, -2.78, 1.38, 4.07, -3.45, 1.12, 1.56, 0.69, -2.25, -1.17, -6.01, 0.74, 2.85, -4.79, 5.71, -1.66, -3.66, -2.78, 1.38};
+float exampleAmps[] = {0.00, 0.00, 0.00, 0.00, 0.02, 0.59, 2.58, 5.03};
+float exampleTS[] = {2.11, -3.28, -6.69, -1.38, 2.11, -3.28, -6.69, -1.38};
 void unitTests() {
   newJonswapData = true;
   int oldMode = mode;
@@ -196,7 +201,8 @@ void unitTests() {
     //Serial.print(", ");
     ////////////////////////////
   }
-  //while(1)
+//  Serial.println("done");
+//  while(1);
   //////////////////test encoder buffer:
   //If the initialization and setting functions worked, move on, otherwise, throw error and halt execution.
   if (encoderBuffInit && didItWork_MDR0 && didItWork_MDR1) {
