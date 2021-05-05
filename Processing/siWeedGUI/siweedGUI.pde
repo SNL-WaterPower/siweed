@@ -53,7 +53,7 @@ void setup() {
   myFFT = new fft();
   fftArr = new float[queueSize*2];
   waveMaker.mode = 1;    // 1 = jog, 2 = function, 3 = sea, 4 = off
-  wec.mode = 4;  //1 = , 2= feedback, 3 = "sea", 4 = off
+  wec.mode = 1;  //1 = jog, 2= feedback, 3 = "sea", 4 = off
   initializeDataLogging();
   initializeUI();
   myMeter = new Meter(-5.0, 5.0);    //min and max
@@ -67,7 +67,6 @@ public void settings() {
 
 boolean initialized = false;
 void draw() {
-boolean initialized = false;
 int timestamp = 0;   //for debuging
   if (!initialized) {  //Because these take too long, they need to be run in draw(setup cannot take more that 5 seconds.)
     initializeSerial();    //has a 2+ second delay

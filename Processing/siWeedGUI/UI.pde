@@ -9,22 +9,22 @@ Button wecQs, waveQs; // popup buttons
 Button wavePosData, waveElData, wecPosData, wecVelData, wecTorqData, wecPowData;
 Button quad1, quad2, quad3, quad4; // power bar
 Button consoleButton; //Idealy this would be a toggle, but was getting errors on the ".isVisible()"
-Textarea wecText, waveText;
+Textarea wecText, waveText, myTextarea;
 int zeroLocationX = 780;
 float zeroLocationY = 35;
 float offsetX = 50;
 float offsetY = 50;
-  int chartLocationX = zeroLocationX;
-  int chartLocationY = 475;
-  int zeroLocationRight = 1350;
-  int chartSizeX = 505;
+int chartLocationX = zeroLocationX;
+int chartLocationY = 475;
+int zeroLocationRight = 1350;
+int chartSizeX = 505;
 int chartSizeY = 175;
 
 // Custom colors
-color green = color(176,191,70);
-color turq = color(20,186,215);
+color green = color(176, 191, 70);
+color turq = color(20, 186, 215);
 color dblue = color(0, 83, 118);
-color buttonblue = color(0,102,137);
+color buttonblue = color(0, 102, 137);
 color hoverblue = color(0, 116, 217);
 color grey = color(180, 190, 191);
 color black = color(0, 0, 0);
@@ -43,10 +43,10 @@ PImage snlLogo;
 PImage wavePic;
 PImage LHSPic;
 void initializeUI() {
-  
+
   // starting ControlP5 stuff
   cp5 = new ControlP5(this);
- 
+
   //Fonts
   f = createFont("Arial", 16, true);
   fb = createFont("Arial Bold Italic", 32, true);
@@ -75,17 +75,17 @@ void initializeUI() {
   int buttonSizeX = 125;
   int buttonSizeY = 35;
   int spaceBetweenButtons = 127;
-  
+
   // wave maker buttons //
   jog = cp5.addButton("jog")
     .setPosition(buttonX, buttonY)
     .setSize(buttonSizeX, buttonSizeY)
     .setLabel("Jog Mode")
     .setFont(buttonFont )
-    .setColorBackground(buttonblue);
+    .setColorBackground(turq);    //starts on
 
   function = cp5.addButton("fun")
-    .setPosition(buttonX + spaceBetweenButtons , buttonY)
+    .setPosition(buttonX + spaceBetweenButtons, buttonY)
     .setSize(buttonSizeX, buttonSizeY)
     .setLabel("Function Mode")
     .setFont(buttonFont)
@@ -104,37 +104,36 @@ void initializeUI() {
     .setLabel("OFF")
     .setFont(buttonFont)
     .setColorBackground(buttonblue); 
-    
-buttonY = 1015;
-    //Power meter buttons //
+
+  buttonY = 1015;
+  //Power meter buttons //
   quad1 = cp5.addButton("quad1")
-    .setPosition(buttonX , buttonY)
+    .setPosition(buttonX, buttonY)
     .setColorBackground(grey)
     .setSize(buttonSizeX, buttonSizeY)
     .setLabel("25%");  
 
   quad2 = cp5.addButton("quad2")
-    .setPosition(buttonX + spaceBetweenButtons , buttonY)
+    .setPosition(buttonX + spaceBetweenButtons, buttonY)
     .setColorBackground(grey)
     .setSize(buttonSizeX, buttonSizeY)
     .setLabel("50%"); 
 
   quad3 = cp5.addButton("quad3")
-    .setPosition(buttonX + spaceBetweenButtons*2 , buttonY)
+    .setPosition(buttonX + spaceBetweenButtons*2, buttonY)
     .setColorBackground(grey)
     .setSize(buttonSizeX, buttonSizeY)
     .setLabel("75%"); 
 
   quad4 = cp5.addButton("quad4")
-    .setPosition(buttonX + spaceBetweenButtons*3 , buttonY)
+    .setPosition(buttonX + spaceBetweenButtons*3, buttonY)
     .setColorBackground(grey)
     .setSize(buttonSizeX, buttonSizeY)
     .setLabel("100%");
 
 
- buttonX = buttonX+570;  
- buttonY = 155;
- print(buttonX);
+  buttonX = buttonX+570;  
+  buttonY = 155;
 
   //WEC controls buttons //
   torque = cp5.addButton("torque")
@@ -142,7 +141,7 @@ buttonY = 1015;
     .setSize(buttonSizeX, buttonSizeY)
     .setLabel("Torque")
     .setFont(buttonFont)
-    .setColorBackground(buttonblue);   
+    .setColorBackground(green);       //starts on
 
   feedback = cp5.addButton("feedback")
     .setPosition(buttonX + spaceBetweenButtons, buttonY)
@@ -155,7 +154,7 @@ buttonY = 1015;
   seaWEC = cp5.addButton("seaWEC")
     .setPosition(buttonX + spaceBetweenButtons*2, buttonY)
     .setSize(buttonSizeX, buttonSizeY)
-    .setLabel("Sea State")
+    .setLabel("SID")      //!!!Need to change this name to something more intuitive
     .setFont(buttonFont)
     .setColorBackground(buttonblue);    
 
@@ -165,12 +164,12 @@ buttonY = 1015;
     .setLabel("Off")
     .setFont(buttonFont)
     .setColorBackground(buttonblue);
-    
-  // Data buttons //     
-int dataButtonX, dataButtonY;
 
-dataButtonX =buttonSizeX+127;
-dataButtonY = buttonSizeY;
+  // Data buttons //     
+  int dataButtonX, dataButtonY;
+
+  dataButtonX =buttonSizeX+127;
+  dataButtonY = buttonSizeY;
 
 
   wavePosData = cp5.addButton("wavePosData")
@@ -186,17 +185,16 @@ dataButtonY = buttonSizeY;
     .setSize(dataButtonX, buttonSizeY)
     .setLabel("Wave Elevation")
     .setFont(buttonFont); 
-   
+
 
   //WEC info buttons //
   wecPosData = cp5.addButton("wecPosData")
     .setPosition(buttonX, chartLocationY+chartSizeY)
-
     .setColorBackground(grey)
     .setSize(buttonSizeX, buttonSizeY)
     .setLabel("Position")
     .setFont(buttonFont); 
-    
+
 
   wecVelData = cp5.addButton("wecVelData")
     .setPosition(buttonX + spaceBetweenButtons, chartLocationY+chartSizeY)
@@ -214,7 +212,7 @@ dataButtonY = buttonSizeY;
     .setSize(buttonSizeX, buttonSizeY)
     .setLabel("Torque")
     .setFont(buttonFont);
-    
+
 
   wecPowData = cp5.addButton("wecPowData")
     .setPosition(buttonX + spaceBetweenButtons*3, chartLocationY+chartSizeY)
@@ -223,10 +221,10 @@ dataButtonY = buttonSizeY;
     .setSize(buttonSizeX, buttonSizeY)
     .setLabel("Power")
     .setFont(buttonFont);
-    
+
 
   // Sliders // 
-  
+
   int sliderX, sliderY;
   sliderX = int(zeroLocationX);
   sliderY = 200 ;
@@ -250,7 +248,7 @@ dataButtonY = buttonSizeY;
     .setPosition(sliderX, sliderY) 
     .setSize(sliderSizeX, sliderSizeY)
     .setFont(sliderFont)
-     .setColorCaptionLabel(color(buttonblue))
+    .setColorCaptionLabel(color(buttonblue))
     .hide()
     .setColorForeground(color(turq))
     .setColorBackground(color(buttonblue));
@@ -399,7 +397,7 @@ dataButtonY = buttonSizeY;
     .setText("At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.")
     .hide()
     ;
-    
+
 
   // Charts //
 
@@ -416,7 +414,7 @@ dataButtonY = buttonSizeY;
     .setColorBackground(white)
     .setLabel("");
 
-    
+
   waveChart.addDataSet("debug");
   waveChart.setData("debug", new float[360]);
 
@@ -451,7 +449,7 @@ dataButtonY = buttonSizeY;
   {
     console = cp5.addConsole(consoleOutput);
   }
-/*
+
   myTextarea = cp5.addTextarea("txtSystemStatus")
 
     .setPosition(zeroLocationX, 385)
@@ -471,7 +469,7 @@ dataButtonY = buttonSizeY;
     .setFont(textBoxFont)
     .setLineHeight(10)
     .setColor(color(white)); 
-    
+
   myTextarea = cp5.addTextarea("txtWaveInformation")
     .setPosition(zeroLocationX+160, 448)
     .setText("WAVE INFORMATION" )
@@ -480,7 +478,7 @@ dataButtonY = buttonSizeY;
     .setLineHeight(10)
     .setColor(color(white)); 
 
-           
+
 
   myTextarea = cp5.addTextarea("txtWECControls")
     .setPosition(zeroLocationRight + 100, 100)
@@ -489,24 +487,24 @@ dataButtonY = buttonSizeY;
     .setFont(textBoxFont)
     .setLineHeight(10)
     .setColor(color(white)); 
-  
-    myTextarea = cp5.addTextarea("txtPowerMeter")
+
+  myTextarea = cp5.addTextarea("txtPowerMeter")
     .setPosition(zeroLocationX+180, 720)
     .setText("POWER METER")
     .setSize(300, 40)
     .setFont(smallTextBoxFont)
     .setLineHeight(10)
     .setColor(color(white));
-    
-     myTextarea = cp5.addTextarea("txtWECInformation")
-    .setPosition(zeroLocationRight + 100, 720)
-    .setText("CHANGE WEC CONTROLS")
+
+  myTextarea = cp5.addTextarea("FFTTitle")
+    .setPosition(zeroLocationRight + 170, 720)
+    .setText("Frequency Analysis")
     .setSize(300, 40)
     .setFont(smallTextBoxFont)
     .setLineHeight(10)
     .setColor(color(white));
-    
-myTextarea = cp5.addTextarea("txtFFT")
+
+  myTextarea = cp5.addTextarea("txtFFT")
     .setPosition(zeroLocationRight + 160, 448)
     .setText("WEC INFORMATION")
     .setSize(300, 40)
@@ -521,19 +519,22 @@ myTextarea = cp5.addTextarea("txtFFT")
     .setFont(headerTextBoxFont)
     .setLineHeight(7)
     .setColor(color(buttonblue));
-*/
+
+  //set chart buttons true at startup by virtually pressing the button:
+  wavePosData();
+  wecPosData();
 }
 //button functions:
 /////////////////// MAKES BUTTONS DO THINGS ////////////////////////////////////
 
 // Console Button
 void consoleButton() {
-  consoleButton.setColorBackground(hoverblue);
-
   if (consoleOutput.isVisible()) {
     consoleOutput.hide();
+    consoleButton.setColorBackground(grey);
   } else {
     consoleOutput.show();
+    consoleButton.setColorBackground(hoverblue);
   }
 }
 
@@ -557,7 +558,7 @@ void jog() {
     port1.write('!');
     sendFloat(0, port1);
   }
-    waveMaker.mag += 1;    //this parameter being adjusted will cause the main loop to send the initial data
+  waveMaker.mag += 1;    //this parameter being adjusted will cause the main loop to send the initial data
 }
 
 void fun() {
@@ -579,7 +580,7 @@ void fun() {
     port1.write('!');
     sendFloat(1, port1);
   }
-    waveMaker.amp += 1;    //this parameter being adjusted will cause the main loop to send the initial data
+  waveMaker.amp += 1;    //this parameter being adjusted will cause the main loop to send the initial data
 }
 
 void sea() {
@@ -734,9 +735,8 @@ void waveElData() {
   }
 }
 
-//Button wavePosData, waveElData, wecPosData, wecVelData, wecTorqData, wecPowData;
 
-boolean wecPosClicked = false; 
+boolean wecPosClicked = false;
 void wecPosData() {
   if (wecPosClicked == false) {
     wecPosClicked = true;
@@ -846,52 +846,52 @@ void displayUpdate() {
   // Background color
   background(dblue);
 
-  
 
- 
+
+
   fill(buttonblue);
   stroke(buttonblue);
   strokeWeight(0);
   image(snlLogo, width-snlLogo.width*0.25-5, height-snlLogo.height*0.25-5, snlLogo.width*0.25, snlLogo.height*0.25); //Logo
 
   rect(0, 0, width/2.7, height); // LHS banner 
- fill(white);
+  fill(white);
   rect(width/2.7, 0, width, height*.333); //mission control banner
   fill(turq);
   //stroke(turq);
   rect(width/2.7, height*.333, width, height); //mission control banner
 
-  fill(255,255,255);
+  fill(255, 255, 255);
   textSize(12);
   textLeading(14);
   //boxes behind the titles
-    fill(turq);
-    rect(zeroLocationX, 90, 505, 45); // Change wave dimensions
-    fill(green);
-    rect(zeroLocationRight, 90, 505, 45); // Change WEC controls
-    fill(buttonblue);
-    rect(zeroLocationX, 445, 505, 45); // Wave Information
-    rect(zeroLocationRight, 445, 505, 45); // Wec Information
-    rect(zeroLocationX, 715, 505, 45); // Power Meter
-    rect(zeroLocationRight, 715, 505, 45); // FFT
-    image(LHSPic, 0, 0, width/2.7, height); //lhs pic
-/* need to double check if this is merged right 
-
-  stroke(buttonblue); //outer color
-  rect(15, 130, 225, 75, 7); //Mission Control Title Box 
-  //Mission Control Text
-  // System Status
-  fill(turq, 150);
-  stroke(buttonblue, 150);
-  rect(780, 150, 1115, 930, 7); // background
+  fill(turq);
+  rect(zeroLocationX, 90, 505, 45); // Change wave dimensions
   fill(green);
-  stroke(buttonblue);
-  rect(770, 130, 225, 75, 7); //system title
+  rect(zeroLocationRight, 90, 505, 45); // Change WEC controls
   fill(buttonblue);
-  rect(1387, 185, 480, 400, 7); //power box
-  rect(805, 225, 550, 225, 7); // explainer box
-  rect(805, 475, 550, 575, 7); //graph background
-  */
+  rect(zeroLocationX, 445, 505, 45); // Wave Information
+  rect(zeroLocationRight, 445, 505, 45); // Wec Information
+  rect(zeroLocationX, 715, 505, 45); // Power Meter
+  rect(zeroLocationRight, 715, 505, 45); // FFT
+  image(LHSPic, 0, 0, width/2.7, height); //lhs pic
+  /* need to double check if this is merged right 
+   
+   stroke(buttonblue); //outer color
+   rect(15, 130, 225, 75, 7); //Mission Control Title Box 
+   //Mission Control Text
+   // System Status
+   fill(turq, 150);
+   stroke(buttonblue, 150);
+   rect(780, 150, 1115, 930, 7); // background
+   fill(green);
+   stroke(buttonblue);
+   rect(770, 130, 225, 75, 7); //system title
+   fill(buttonblue);
+   rect(1387, 185, 480, 400, 7); //power box
+   rect(805, 225, 550, 225, 7); // explainer box
+   rect(805, 475, 550, 575, 7); //graph background
+   */
   //controls button pop up behavior for info boxes
   if (mousePressed && waveText.isVisible()) {
     waveText.hide();
@@ -901,23 +901,23 @@ void displayUpdate() {
   }
   //controls power indicators
   if (pow >= 1.25) {
-    quad1.setColorBackground(green);
-  }else{
-    quad1.setColorBackground(128,128,128);    //if under threshold, then grey
+    quad1.setColorBackground(green).setColorActive(green);
+  } else {
+    quad1.setColorBackground(grey).setColorActive(grey);    //if under threshold, then grey
   }
   if (pow >= 3) {
-    quad2.setColorBackground(green);
-  }else{
-    quad2.setColorBackground(128,128,128);    //if under threshold, then grey
+    quad2.setColorBackground(green).setColorActive(green);
+  } else {
+    quad2.setColorBackground(grey).setColorActive(grey);    //if under threshold, then grey
   }
   if (pow >= 4.25) {
-    quad3.setColorBackground(green);
-  }else{
-    quad3.setColorBackground(128,128,128);    //if under threshold, then grey
+    quad3.setColorBackground(green).setColorActive(green);
+  } else {
+    quad3.setColorBackground(grey).setColorActive(grey);    //if under threshold, then grey
   }
   if (pow >= 5) {
-    quad4.setColorBackground(green);
-  }else{
-    quad4.setColorBackground(128,128,128);    //if under threshold, then grey
+    quad4.setColorBackground(green).setColorActive(green);
+  } else {
+    quad4.setColorBackground(grey).setColorActive(grey);    //if under threshold, then grey
   }
 }

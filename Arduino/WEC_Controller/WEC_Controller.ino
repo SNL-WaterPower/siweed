@@ -10,7 +10,7 @@ unsigned char MDR0_settings = MDRO_x4Quad | MDRO_freeRunningCountMode | MDRO_ind
 unsigned char MDR1_settings = MDR1_4ByteCounterMode | MDR1_enableCounting | MDR1_FlagOnIDX_NOP | MDR1_FlagOnCMP_NOP | MDR1_FlagOnBW_NOP | MDR1_FlagOnCY_NOP;
 bool newJonswapData = false, sendUnitTests = false;
 volatile float sigH, peakF, _gamma;
-volatile int mode = -1;    //-1 stop, 0 torque control, 1 feedback control, 2 sea state
+volatile int mode = 0;    //-1 stop, 0 torque control, 1 feedback control, 2 sea state
 volatile int n;   //number of components
 volatile double t = 0;    //time in seconds
 volatile float tau = 0, kp = 0, kd = 0, power = 0, vel = 0;

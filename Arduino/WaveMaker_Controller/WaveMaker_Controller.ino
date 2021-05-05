@@ -1,4 +1,4 @@
-#define MINIGEN_COMPATIBILITY_MODE
+de#define MINIGEN_COMPATIBILITY_MODE
 #include <miniWaveTankJonswap.h>
 #include <SuperDroidEncoderBuffer.h>
 #include<math.h>
@@ -29,7 +29,7 @@ volatile float freqs[maxComponents];
 volatile float sigH, peakF, gam;   //"gamma" is used in another library
 //volatile float encPos;
 bool newJonswapData = false, sendUnitTests = false;
-volatile float desiredPos;   //used for jog mode
+volatile float desiredPos = 0;   //used for jog mode, starts at 0
 const int buffSize = 10;    //number of data points buffered in the moving average filter
 volatile float probe1Buffer[buffSize];
 volatile float probe2Buffer[buffSize];
