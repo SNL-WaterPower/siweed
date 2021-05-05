@@ -35,10 +35,11 @@ int previousMillis = 0;    //used to update fft
 int fftInterval = 100;    //in milliseconds
 
 // meter set up  
-Meter myMeter;
 
-String fundingState = "Sandia National Laboratories is a multi-mission laboratory managed and operated by National Technology and Engineering Solutions of Sandia, LLC., a wholly owned subsidiary \n of Honeywell International, Inc., for the U.S. Department of Energy's National Nuclear Security Administration under contract DE-NA0003525.";
-String welcome = "Can you save the town from its power outage? \nChange the demension and type \n of wave to see how the power changes! \n Change the wave energy converter's controls \n to harvest more power. \n How quickly can you light up all four quadrants?";
+Meter myMeter;
+String fundingState = "Sandia National Laboratories is a multi-mission laboratory managed \n and operated by National Technology and Engineering Solutions of Sandia, LLC., a wholly owned \n subsidiary of Honeywell International, Inc., for the U.S. Department of Energy's \n National Nuclear Security Administration under contract DE-NA0003525.";
+//String welcome = "Can you save the town from its power outage? \nChange the demension and type \n of wave to see how the power changes! \n Change the wave energy converter's controls \n to harvest more power. \n How quickly can you light up all four quadrants?";
+
 void setup() {
   ////////
   frameRate(32);    //sets draw() to run x times a second.
@@ -60,17 +61,21 @@ void setup() {
 
 /*
 public void settings() {
- fullScreen(2);
- }*/
+
+  fullScreen(2);
+}*/
 
 boolean initialized = false;
 void draw() {
+boolean initialized = false;
+int timestamp = 0;   //for debuging
   if (!initialized) {  //Because these take too long, they need to be run in draw(setup cannot take more that 5 seconds.)
     initializeSerial();    //has a 2+ second delay
     unitTests();
     initialized = true;
   }
   displayUpdate(); 
+
 
   //Meter control:
   myMeter.update(pow*WCPowScale);
@@ -147,7 +152,19 @@ void draw() {
     readMegaSerial();
     readDueSerial();
   }
+
+//MERGE QUESTION: Was in newGUI but not in develop 
+/*  if (debug) {
+    print("12 ");
+    println(millis() - timestamp);
+    timestamp = millis();
+  }
+  
+}//draw closing 
+*/
+
 }
+
 
 void updateFFT() {
   Complex[] fftIn = new Complex[queueSize];
