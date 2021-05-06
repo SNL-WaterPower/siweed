@@ -61,9 +61,9 @@ void setup() {
 
 /*
 public void settings() {
-
-  fullScreen(2);
-}*/
+  fullScreen();
+}
+*/
 
 boolean initialized = false;
 void draw() {

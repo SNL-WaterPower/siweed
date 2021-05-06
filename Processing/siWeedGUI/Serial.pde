@@ -68,17 +68,6 @@ void initializeSerial() {
       }
     }
   }
-
-  if (megaConnected) {
-    port1.write('!');
-    sendFloat(0, port1);    //jog mode
-    port1.write('j');
-    sendFloat(0, port1);    //at position 0
-  }
-  if (dueConnected) {
-    port2.write('!');
-    sendFloat(-1, port2);    //off
-  }
 }
 void sendFloat(float f, Serial port)
 {

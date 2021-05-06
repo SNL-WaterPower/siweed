@@ -1,4 +1,4 @@
-de#define MINIGEN_COMPATIBILITY_MODE
+#define MINIGEN_COMPATIBILITY_MODE
 #include <miniWaveTankJonswap.h>
 #include <SuperDroidEncoderBuffer.h>
 #include<math.h>

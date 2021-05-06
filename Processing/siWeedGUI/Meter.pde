@@ -5,7 +5,7 @@ public class Meter {
 
   int xmin = 780;      //coordinates in pixels
   int xmax = 1285;
-  int ymin = 745;
+  int ymin = 725;
   int ymax = ymin+270;
   
 
@@ -32,7 +32,7 @@ public class Meter {
     strokeWeight(height/200);    //relative to frame size
     stroke(turq);    //border color
     fill(buttonblue);            //background color
-    rect(xmin, ymin, xmax - xmin, ymax - ymin, 7);      //background and border
+    //rect(xmin, ymin, xmax - xmin, ymax - ymin, 7);      //background and border    //moved to displayUpdate()
     stroke(white);
     noFill();
     arc(originx, originy, arcR*2, arcR*2, PI, 2 * PI);    //solid arc

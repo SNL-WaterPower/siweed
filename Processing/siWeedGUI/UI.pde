@@ -58,16 +58,12 @@ void initializeUI() {
   smallTextBoxFont = createFont("Arial Bold Italic", 18, true);
 
   // Buttons //
-
   consoleButton = cp5.addButton("consoleButton")
-
-    .setPosition(1390, 810)
-
+    .setPosition(1800, 1040)
     .setSize(100, 50)
     .setLabel("Console")
     .setColorBackground(grey)
     .setFont(buttonFont); 
-
 
   int buttonX, buttonY;
   buttonX = int(zeroLocationX); 
@@ -439,8 +435,8 @@ void initializeUI() {
   //console, this needs to be in the setup to ensure
   //that it catches any errors when program starts
   consoleOutput=cp5.addTextarea("consoleOutput")
-    .setPosition(1460, 710) 
-    .setSize(330, 300)
+    .setPosition(1650, 800) 
+    .setSize(330, 100)
     .setLineHeight(14)
     .setColorValue(green) //color of font
     .scroll(1) //enable scrolling up and down
@@ -812,16 +808,16 @@ void wecQs() {
   }
 }
 //////////////////FFT vars:
-float originx = 1250;    //x and y coordinates of the FFT graph
-float originy = 1150;
+float originx = 1400;    //x and y coordinates of the FFT graph
+float originy = 1000;
 float xScale = 1.5;    //how spaced the graph is horizontally
 float yScale = 50000;    //how tall the data is. axis has to be set separately
-float FFTHeight = 250;    //height of y axis coordinates. Does not scale data
-int yAxisCount = 10;    //how many numbers on the y axis
+float FFTHeight = 200;    //height of y axis coordinates. Does not scale data
+int yAxisCount = 5;    //how many numbers on the y axis
 float FFTXOffset = 10, FFTYOffset = 10;
 void drawFFT() {
   int nyquist = (int)frameRate/2;    //sampling frequency/2 NOTE: framerate is not a constant variable
-  textSize(10);
+  textSize(12);
   fill(green);
   stroke(green);
   for (int i=0; i<=queueSize/2; i++) {      //cut in half
@@ -845,10 +841,6 @@ void displayUpdate() {
 
   // Background color
   background(dblue);
-
-
-
-
   fill(buttonblue);
   stroke(buttonblue);
   strokeWeight(0);
@@ -874,24 +866,10 @@ void displayUpdate() {
   rect(zeroLocationRight, 445, 505, 45); // Wec Information
   rect(zeroLocationX, 715, 505, 45); // Power Meter
   rect(zeroLocationRight, 715, 505, 45); // FFT
+  rect(zeroLocationX, 770, 505, 240,7);  //meter background
+  rect(zeroLocationRight, 770, 505, 240,7);  //FFT background
   image(LHSPic, 0, 0, width/2.7, height); //lhs pic
-  /* need to double check if this is merged right 
-   
-   stroke(buttonblue); //outer color
-   rect(15, 130, 225, 75, 7); //Mission Control Title Box 
-   //Mission Control Text
-   // System Status
-   fill(turq, 150);
-   stroke(buttonblue, 150);
-   rect(780, 150, 1115, 930, 7); // background
-   fill(green);
-   stroke(buttonblue);
-   rect(770, 130, 225, 75, 7); //system title
-   fill(buttonblue);
-   rect(1387, 185, 480, 400, 7); //power box
-   rect(805, 225, 550, 225, 7); // explainer box
-   rect(805, 475, 550, 575, 7); //graph background
-   */
+  
   //controls button pop up behavior for info boxes
   if (mousePressed && waveText.isVisible()) {
     waveText.hide();
