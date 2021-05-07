@@ -16,16 +16,16 @@ void initInterrupts() {
   TCCR4B |= (1 << WGM12);   // turn on CTC mode aka reset on positive compare(I think)
   TCCR4B |= (1 << CS42);// Set CS42 bit for 256 prescaler
   TIMSK4 |= (1 << OCIE4A);  // enable timer compare interrupt
-
-  //////timer 5 for serial sending
-  TCCR5A = 0;// set entire TCCR5A register to 0
-  TCCR5B = 0;// same for TCCR5B
-  TCNT5  = 0;//initialize counter value to 0
-  OCR5A = serialInterval * 16000000.0 / 256.0 - 1; // = (interval in seconds)(16*10^6) / (1*1024)  (must be <65536) -1 to account for overflow(255 -> 0)
-  TCCR5B |= (1 << WGM12);   // turn on CTC mode aka reset on positive compare(I think)
-  TCCR5B |= (1 << CS52);// Set CS42 bit for 256 prescaler
-  TIMSK5 |= (1 << OCIE5A);  // enable timer compare interrupt
-
+  /*
+    //////timer 5 for serial sending
+    TCCR5A = 0;// set entire TCCR5A register to 0
+    TCCR5B = 0;// same for TCCR5B
+    TCNT5  = 0;//initialize counter value to 0
+    OCR5A = serialInterval * 16000000.0 / 256.0 - 1; // = (interval in seconds)(16*10^6) / (1*1024)  (must be <65536) -1 to account for overflow(255 -> 0)
+    TCCR5B |= (1 << WGM12);   // turn on CTC mode aka reset on positive compare(I think)
+    TCCR5B |= (1 << CS52);// Set CS42 bit for 256 prescaler
+    TIMSK5 |= (1 << OCIE5A);  // enable timer compare interrupt
+  */
   sei();//allow interrupts
 }
 /*
@@ -37,9 +37,11 @@ void initInterrupts() {
   TODO: triple check unit conversions, and test linear controller on it's own. Then
   tune PID with 0P, maybe 0D
 */
+volatile float error;
+volatile float velCommand;
 ISR(TIMER4_COMPA_vect) {    //function called by interupt
   volatile float pos = encPos();
-  volatile float error = futurePos - pos;   //where we told it to go vs where it is
+  error = futurePos - pos;   //where we told it to go vs where it is
   ////////vars for linear interpolation:
   prevSampleT = sampleT;
   sampleT = micros();
@@ -50,7 +52,6 @@ ISR(TIMER4_COMPA_vect) {    //function called by interupt
   pidIn = error;
   //myPID.Compute();    //sets pidOut
   /////////
-  volatile float velCommand;
   if (mode != 0 || abs(futurePos - pos) > deadzone) {    //deadband only if in jog mode.
     velCommand = ((futurePos - pos) / interval) + pidOut; //estimated desired velocity in m/s, in order to hit target by next interupt call, + pid error adjustment
   } else {
@@ -78,16 +79,16 @@ ISR(TIMER4_COMPA_vect) {    //function called by interupt
     gen.adjustFreq(MiniGen::FREQ0, freqReg); //start moving
   }
 
-}
+  //}
 
-ISR(TIMER5_COMPA_vect) {   //takes ___ milliseconds
+  //ISR(TIMER5_COMPA_vect) {   //takes ___ milliseconds
   /*
     1: probe 1
     2: probe 2
     p: position
     d: other data for debugging
   */
-  pushBuffer(probe1Buffer, mapFloat(analogRead(probe1Pin), 0.0, 560.0, 0.0, 0.27));     //maps to m and adds to data buffer
+  pushBuffer(probe1Buffer, mapFloat(analogRead(probe1Pin) - initialProbe1 , 0.0, 560.0, 0.0, 0.27));   //maps to m and adds to data buffer. InitialProbe1 zeros value
   pushBuffer(probe2Buffer, mapFloat(analogRead(probe2Pin), 0.0, 560.0, 0.0, 0.27));
   if (sendUnitTests)    //if in unit testing serial mode
   {
@@ -114,7 +115,6 @@ ISR(TIMER5_COMPA_vect) {   //takes ___ milliseconds
     }
     Serial.write('u');
     sendFloat(4);     //4 indicates that all tests have been sent at least once
-
   } else {        //under normal operation
     Serial.write('1');    //to indicate wave probe data
     sendFloat(averageArray(probe1Buffer));
