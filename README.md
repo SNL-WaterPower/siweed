@@ -30,3 +30,8 @@ A detailed illustration of the system layout is shown in the diagram below.
 
 ## Contributing
 Except for very minor changes, we aim to follow a [gitflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) workflow.
+
+## Copyright and license
+Copyright 2021 National Technology & Engineering Solutions of Sandia, LLC (NTESS).
+Under the terms of Contract DE-NA0003525 with NTESS, the U.S. Government retains certain rights in this software.
+The software is distributed under a [GNU General Public License](COPYING).
