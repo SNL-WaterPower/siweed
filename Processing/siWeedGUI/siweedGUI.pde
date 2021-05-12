@@ -13,16 +13,16 @@ float WCPScale = 80;
 float WCDScale = 600;
 float WCSigHScale = 1000; 
 //chart scaling:    //these factors are used in serial upon receipt of variables.
-float waveElevationScale = 100;
+float waveElevationScale = 1000;
 float WMPosScale = 400;
-float WCPosScale = 100;
+float WCPosScale = 500;
 float WCTauScale = 1000;
 float WCPowScale = 5000;
 float WCVelScale = 20;
 ////////////////////////////
 boolean debug = false;    //for debug print statements. Also disables GUI console, and puts it in processing
 boolean guiConsole = true; 
-boolean dataLogging = false;    //if this is true, a .csv with most variables will be written, but it has a memory leak and cannot run at high performance for more than a few minutes
+boolean dataLogging = true;    //if this is true, a .csv with most variables will be written, but it has a memory leak and cannot run at high performance for more than a few minutes
 
 Println console; //Needed for GUI console to work
 Textarea consoleOutput; //Needed for GUI console to work
@@ -56,7 +56,7 @@ void setup() {
   wec.mode = 1;  //1 = jog, 2= feedback, 3 = "sea", 4 = off
   initializeDataLogging();
   initializeUI();
-  myMeter = new Meter(-5.0, 5.0);    //min and max
+  myMeter = new Meter(-2.0, 2.0);    //min and max
 }
 
 /*

@@ -116,6 +116,7 @@ void readMegaSerial() {
         probe1 = readFloat(port1);
         if (waveElClicked == true && !Float.isNaN(probe1)) {
           waveChart.push("waveElevation", probe1*waveElevationScale);
+          //println(probe1);
         }
         break;
       case '2':
@@ -131,6 +132,7 @@ void readMegaSerial() {
         debugData = readFloat(port1);
         if (!Float.isNaN(debugData) && debugData < 1 && debugData > -1) {    //when starting seastate, a "large" value comes through, messing witht the FFT. The saturation prevents that.
           waveChart.push("debug", debugData*WMPosScale);
+          //println(debugData);
           if (waveMaker.mode == 3||waveMaker.mode == 2) fftList.add(debugData);      //adds to the tail if in the right mode
           if (fftList.size() > queueSize) fftList.remove();          //removes from the head
         }

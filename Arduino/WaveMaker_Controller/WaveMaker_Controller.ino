@@ -19,6 +19,7 @@ bool encoderBuffInit, didItWork_MDR0, didItWork_MDR1, didItWork_DTR;   //variabl
 unsigned char MDR0_settings = MDRO_x4Quad | MDRO_freeRunningCountMode | MDRO_indexDisable | MDRO_syncIndex | MDRO_filterClkDivFactor_1;
 unsigned char MDR1_settings = MDR1_4ByteCounterMode | MDR1_enableCounting | MDR1_FlagOnIDX_NOP | MDR1_FlagOnCMP_NOP | MDR1_FlagOnBW_NOP | MDR1_FlagOnCY_NOP;
 const int  dirPin = 5, limitPin = A0, probe1Pin = A1, probe2Pin = A2;
+float initialProbe1;    //initial height of probe 1
 volatile double t = 0;    //time in seconds
 volatile float speedScalar = 0;
 volatile int mode = 0;     //-1 is stop, 0 is jog, 1 is sine, 2 is sea state
@@ -37,7 +38,8 @@ volatile float probe2Buffer[buffSize];
 volatile float jogBuffer[buffSize];
 const float maxRate = 0.25;   //max m/seconds
 /////////would like to put these in the interrupts tab, but cant without changing proect structure to .cpp and .h files.
-const float interval = .01;   //time between each interupt call in seconds //max value: 1.04
+//const float interval = .01;   //time between each interupt call in seconds //max value: 1.04
+const float interval = .03125;   //time between each interupt call in seconds //max value: 1.04
 const float serialInterval = .03125;   //time between each interupt call in seconds //max value: 1.04    .03125 is 32 times a second to match processing's speed(32hz)
 //////////
 //Derived funciton here:
@@ -71,6 +73,7 @@ volatile float inputFnc(volatile float tm) {  //inputs time in seconds //outputs
 
 
 void setup() {
+  initialProbe1 = analogRead(probe1Pin);
   initSerial();
   gen.reset(); //reset signal generator, that way we have a known starting location.
   //At power up, the singal generator will output 100hz
