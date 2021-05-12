@@ -22,7 +22,7 @@ float WCVelScale = 20;
 ////////////////////////////
 boolean debug = false;    //for debug print statements. Also disables GUI console, and puts it in processing
 boolean guiConsole = true; 
-boolean dataLogging = true;    //if this is true, a .csv with most variables will be written, but it has a memory leak and cannot run at high performance for more than a few minutes
+boolean dataLogging = false;    //if this is true, a .csv with most variables will be written, but it has a memory leak and cannot run at high performance for more than a few minutes
 
 Println console; //Needed for GUI console to work
 Textarea consoleOutput; //Needed for GUI console to work
@@ -54,20 +54,22 @@ void setup() {
   fftArr = new float[queueSize*2];
   waveMaker.mode = 1;    // 1 = jog, 2 = function, 3 = sea, 4 = off
   wec.mode = 1;  //1 = jog, 2= feedback, 3 = "sea", 4 = off
-  initializeDataLogging();
+  if (dataLogging) {
+    initializeDataLogging();
+  }
   initializeUI();
   myMeter = new Meter(-2.0, 2.0);    //min and max
 }
 
 /*
 public void settings() {
-  fullScreen();
-}
-*/
+ fullScreen();
+ }
+ */
 
 boolean initialized = false;
 void draw() {
-int timestamp = 0;   //for debuging
+  int timestamp = 0;   //for debuging
   if (!initialized) {  //Because these take too long, they need to be run in draw(setup cannot take more that 5 seconds.)
     initializeSerial();    //has a 2+ second delay
     unitTests();
@@ -152,16 +154,15 @@ int timestamp = 0;   //for debuging
     readWECSerial();
   }
 
-//MERGE QUESTION: Was in newGUI but not in develop 
-/*  if (debug) {
-    print("12 ");
-    println(millis() - timestamp);
-    timestamp = millis();
-  }
-  
-}//draw closing 
-*/
-
+  //MERGE QUESTION: Was in newGUI but not in develop 
+  /*  if (debug) {
+   print("12 ");
+   println(millis() - timestamp);
+   timestamp = millis();
+   }
+   
+   }//draw closing 
+   */
 }
 
 
