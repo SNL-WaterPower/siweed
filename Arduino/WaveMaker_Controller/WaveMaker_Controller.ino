@@ -1,6 +1,7 @@
 #define MINIGEN_COMPATIBILITY_MODE
 #include <miniWaveTankJonswap.h>
 #include <SuperDroidEncoderBuffer.h>
+#include<DueTimer.h>
 #include<math.h>
 #include <PID_v1.h>
 #include <SPI.h>
@@ -11,8 +12,8 @@ miniWaveTankJonswap jonswap(512.0 / 128.0, 0.5, 2.5); //period, low frequency, h
 //jonswap(512.0 / 32.0, 0.5, 2.5);
 //df = 1 / _period; num_fs = (int)((f_high - f_low) / df);
 //^ISSUE. Acuracy seems to fall off after ~50 components when using higher frequencies(1,3 at 64 elements seems wrong).
-volatile double pidOut, pidSet, pidIn;
-PID myPID(&pidIn, &pidOut, &pidSet, 0, 0, 0, P_ON_M, DIRECT); //input, output, setpoint, kp,  ki, kd
+//volatile double pidOut, pidSet, pidIn;
+//PID myPID(&pidIn, &pidOut, &pidSet, 0, 0, 0, P_ON_M, DIRECT); //input, output, setpoint, kp,  ki, kd
 SuperDroidEncoderBuffer encoderBuff = SuperDroidEncoderBuffer(42);
 bool encoderBuffInit, didItWork_MDR0, didItWork_MDR1, didItWork_DTR;   //variables for unit testing
 unsigned char MDR0_settings = MDRO_x4Quad | MDRO_freeRunningCountMode | MDRO_indexDisable | MDRO_syncIndex | MDRO_filterClkDivFactor_1;
@@ -83,8 +84,8 @@ void setup() {
   didItWork_MDR0 = encoderBuff.setMDR0(MDR0_settings);
   didItWork_MDR1 = encoderBuff.setMDR1(MDR1_settings);
 
-  myPID.SetMode(AUTOMATIC);   //starts pid
-  myPID.SetSampleTime((int)(interval * 1000));    //pid interval in milliseconds
+  //myPID.SetMode(AUTOMATIC);   //starts pid
+  //myPID.SetSampleTime((int)(interval * 1000));    //pid interval in milliseconds
 
   pinMode(dirPin, OUTPUT);
   pinMode(13, OUTPUT);

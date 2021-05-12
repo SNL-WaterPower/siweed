@@ -6,9 +6,13 @@ volatile float sampleT = 0;  //timestamp in microseconds of sample
 volatile float prevSampleT;  //previous timestamp in microseconds
 volatile float prevVal;   //value of sample at prevSampleT
 void initInterrupts() {
-  //interupt setup:
+  //interrupt setup for Due:
+  Timer.getAvailable().attachInterrupt(sendSerial).start(serialInterval * 1.0e6);
+  delay(50);
+  Timer.getAvailable().attachInterrupt(controlLoop).start(interval * 1.0e6);
+  /*
+  //interupt setup for mega:
   cli();//stop interrupts
-
   TCCR4A = 0;// set entire TCCR4A register to 0
   TCCR4B = 0;// same for TCCR4B
   TCNT4  = 0;//initialize counter value to 0
@@ -25,8 +29,8 @@ void initInterrupts() {
   TCCR5B |= (1 << WGM12);   // turn on CTC mode aka reset on positive compare(I think)
   TCCR5B |= (1 << CS52);// Set CS42 bit for 256 prescaler
   TIMSK5 |= (1 << OCIE5A);  // enable timer compare interrupt
-
   sei();//allow interrupts
+  */
 }
 /*
   Motor control interupt:
@@ -37,7 +41,8 @@ void initInterrupts() {
   TODO: triple check unit conversions, and test linear controller on it's own. Then
   tune PID with 0P, maybe 0D
 */
-ISR(TIMER4_COMPA_vect) {    //function called by interupt
+//ISR(TIMER4_COMPA_vect) {    //function called by interupt mega version
+void controlLoop(){   //due version
   volatile float pos = encPos();
   volatile float error = futurePos - pos;   //where we told it to go vs where it is
   ////////vars for linear interpolation:
@@ -46,13 +51,13 @@ ISR(TIMER4_COMPA_vect) {    //function called by interupt
   prevVal = futurePos;
   futurePos = inputFnc(t + interval);  //time plus delta time
   //PID calculation:
-  pidSet = 0; //desired error is 0
-  pidIn = error;
+  //pidSet = 0; //desired error is 0
+  //pidIn = error;
   //myPID.Compute();    //sets pidOut
   /////////
   volatile float velCommand;
   if (mode != 0 || abs(futurePos - pos) > deadzone) {    //deadband only if in jog mode.
-    velCommand = ((futurePos - pos) / interval) + pidOut; //estimated desired velocity in m/s, in order to hit target by next interupt call, + pid error adjustment
+    velCommand = ((futurePos - pos) / interval);// + pidOut; //estimated desired velocity in m/s, in order to hit target by next interupt call, + pid error adjustment
   } else {
     velCommand = 0;
   }
@@ -80,7 +85,8 @@ ISR(TIMER4_COMPA_vect) {    //function called by interupt
 
 }
 
-ISR(TIMER5_COMPA_vect) {   //takes ___ milliseconds
+//ISR(TIMER5_COMPA_vect) {   //takes ___ milliseconds //mega version
+void sendSerial() { //Due version
   /*
     1: probe 1
     2: probe 2
