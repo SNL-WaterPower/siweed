@@ -1,67 +1,66 @@
-Serial port1;    //arduino mega //<>// //<>//
-Serial port2;    //arduino Due
-boolean megaConnected, dueConnected;
+Serial port1;    //arduino wavemaker due //<>//
+Serial port2;    //arduino WEC due
+boolean WMConnected, WECConnected;
 int connectionDelay  = 3500;      //how many ms to wait after connecting to a device. Can greatly slow the startup
 int baudRate = 250000;
 void initializeSerial() {
   ///////////initialize Serial
 
   printArray(Serial.list());     //for debugging, shows all attached devices
-  if (debug) println("mega Serial:");
+  if (debug) println("Wavemaker Serial:");
   for (int i = 0; i < Serial.list().length; i++) {    //tries each device
-    if (!megaConnected) {
+    if (!WMConnected) {
       try {
         if (debug) println("trying port"+Serial.list()[i]);
         port1 = new Serial(this, Serial.list()[i], baudRate); //attempts to connect
-        megaConnected = true;
-        if (debug) println("mega test port connected");
+        WMConnected = true;
+        if (debug) println("Wavemaker test port connected");
       }
       catch(Exception e) {
-        megaConnected = false;
+        WMConnected = false;
         if (debug) println("exception caught");
       }
-      if (megaConnected) {    //if the device successfully connected
+      if (WMConnected) {    //if the device successfully connected
         if (debug) println("connected to device, waiting for connection to stabilize");
         delay(connectionDelay);          //wait for connection to stabilize
-
         port1.clear();
         delay(100);        //after the connection stabilizes, this clears all the garbage and gives good data time to come through.
 
-        readMegaSerial();    //reads serial buffer and sets bool true if recieving normal results
-        if (megaUnitTests[0]) {
+        readWMSerial();    //reads serial buffer and sets bool true if recieving normal results
+        if (WMUnitTests[0]) {
           //correct board found
           if (debug) println("correct board found");
         } else {
-          megaConnected = false;    //if not found, keep testing
-          port1.stop();    //disconnect the port so Due function can try
+          WMConnected = false;    //if not found, keep testing
+          port1.stop();    //disconnect the port so next function can try
           if (debug) println("wrong board");
         }
       }
     }
-    if (debug) println("Due Serial:");
-    if (!dueConnected) {
+    if (debug) println("WEC Serial:");
+    if (!WECConnected) {
       try {
-        if (debug) println("trying due port "+Serial.list()[i]);
-        port2 = new Serial(this, Serial.list()[i], baudRate); // all communication with Due
-        dueConnected = true;
-        if (debug) println("due test port connected");
+        if (debug) println("trying WEC port "+Serial.list()[i]);
+        port2 = new Serial(this, Serial.list()[i], baudRate); // all communication with WEC
+        WECConnected = true;
+        if (debug) println("WEC test port connected");
       }
       catch(Exception e) {
-        dueConnected = false;
+        WECConnected = false;
         if (debug) println("exception caught");
       }
-      if (dueConnected) {
+      if (WECConnected) {
         if (debug) println("connected to device, waiting for connection to stabilize");
         delay(connectionDelay);
         port2.clear();
         delay(100);        //after the connection stabilizes, this clears all the garbage and gives good data time to come through.
 
-        readDueSerial();    //reads serial buffer and sets bool true if recieving normal results
-        if (dueUnitTests[0]) {
+        readWECSerial();    //reads serial buffer and sets bool true if recieving normal results
+        if (WECUnitTests[0]) {
           //correct board found
           if (debug) println("correct board found");
         } else {
-          dueConnected = false;
+          WECConnected = false;
           port1.stop();    //disconnect the port
           if (debug) println("wrong board");
         }
@@ -72,7 +71,7 @@ void initializeSerial() {
 void sendFloat(float f, Serial port)
 {
   /* 
-   For mega:
+   For Wavemaker:
   /* '!' indicates mode switch, next int is mode
    j indicates jog position
    a indicates incoming amplitude
@@ -81,7 +80,7 @@ void sendFloat(float f, Serial port)
    p :peakF
    g :gamma
    
-   For Due:
+   For WEC:
    '!' indicates mode switch, next int is mode
    t indicates torque command
    k indicates kp -p was taken
@@ -99,20 +98,20 @@ void sendFloat(float f, Serial port)
     println("sent float: "+f);
   }
 }
-void readMegaSerial() {
+void readWMSerial() {
   /*
-  mega:
+  Wavemaker:
    1:probe 1
    2:probe 2
    p:position
    d:other data for debugging
    u:unit tests
    */
-  if (megaConnected) {
+  if (WMConnected) {
     for (int i = 0; i <port1.available()/20; i++) {    //runs as many times to empty the buffer(bytes availible/ bytes read per loop).
       switch(port1.readChar()) {
       case '1':
-        megaUnitTests[0] = true;      //for unit testing and acquiring serial.
+        WMUnitTests[0] = true;      //for unit testing and acquiring serial.
         probe1 = readFloat(port1);
         if (waveElClicked == true && !Float.isNaN(probe1)) {
           waveChart.push("waveElevation", probe1*waveElevationScale);
@@ -140,26 +139,26 @@ void readMegaSerial() {
       case 'u':
         int testNum = (int)readFloat(port1);    //indicates which jonswap test passed(1 or 2). Negative means that test failed.
         if (debug) {
-          println("MegaUnittestNum: "+testNum);
+          println("WMUnittestNum: "+testNum);
         }
         if (testNum > 0) {    //only changes if test was passed
-          megaUnitTests[testNum] = true;
+          WMUnitTests[testNum] = true;
         }
         break;
       }
     }
   }
 }
-void readDueSerial() {
+void readWECSerial() {
   /*
-  Due:
+  WEC:
    e: encoder position
    t: tau commanded to motor
    p: power
    v: velocity
    u: unit testing
    */
-  if (dueConnected) {
+  if (WECConnected) {
     for (int i = 0; i <port2.available()/20; i++) {    //runs as many times to empty the buffer(bytes availible/ bytes read per loop). Since it runs 30 times a second, the arduino will send many samples per execution.
       switch(port2.readChar()) {
       case 'e':
@@ -169,7 +168,7 @@ void readDueSerial() {
         }
         break;
       case 't':
-        dueUnitTests[0] = true;
+        WECUnitTests[0] = true;
         tau = readFloat(port2);
         if (wecTorqClicked == true && !Float.isNaN(tau)) {
           wecChart.push("wecTorque", tau*WCTauScale);
@@ -190,10 +189,10 @@ void readDueSerial() {
       case 'u':
         int testNum = (int)readFloat(port2);    //indicates which jonswap test passed(1 or 2)
         if (debug) {
-          println("DueUnittestNum: "+testNum);
+          println("WECUnittestNum: "+testNum);
         }
         if (testNum > 0) {    //only changes if test was passed
-          dueUnitTests[testNum] = true;
+          WECUnitTests[testNum] = true;
         }   
         break;
       }

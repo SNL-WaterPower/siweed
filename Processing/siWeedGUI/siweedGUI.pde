@@ -79,7 +79,7 @@ int timestamp = 0;   //for debuging
   //Meter control:
   myMeter.update(pow*WCPowScale);
 
-  if (!megaConnected) {
+  if (!WMConnected) {
     //do nothing
   } else if (waveMaker.mode == 1 && position.getValue() != waveMaker.mag*WMJogScale) {  //only sends if value has changed  
     //Jog:
@@ -110,7 +110,7 @@ int timestamp = 0;   //for debuging
     }
   }
 
-  if (!dueConnected) {
+  if (!WECConnected) {
     //do nothing
   } else if (wec.mode == 1 && torqueSlider.getValue() != wec.mag*WCJogScale) {  //only sends if value has changed  
     //Jog:
@@ -148,8 +148,8 @@ int timestamp = 0;   //for debuging
     if (dataLogging) {
       logData();
     }
-    readMegaSerial();
-    readDueSerial();
+    readWMSerial();
+    readWECSerial();
   }
 
 //MERGE QUESTION: Was in newGUI but not in develop 

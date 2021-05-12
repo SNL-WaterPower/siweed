@@ -38,8 +38,6 @@ void initInterrupts() {
   linearly, then apply a PID calculated error correction. The sum is then converted from a velociy to
   a frequency.
 
-  TODO: triple check unit conversions, and test linear controller on it's own. Then
-  tune PID with 0P, maybe 0D
 */
 volatile float error;
 volatile float velCommand;
