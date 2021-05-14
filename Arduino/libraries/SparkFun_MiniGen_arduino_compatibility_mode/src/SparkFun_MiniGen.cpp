@@ -18,9 +18,9 @@ Code developed in Arduino 1.0.5, on an Arduino Pro Mini 5V.
 //  Mini Arduino and want to use the default chip select pin.
 MiniGen::MiniGen()
 {
-  _FSYNCPin = 10;
-  _SPI_CLK_FREQ = 2000000;
-  configSPIPeripheral();
+  //_FSYNCPin = 10;
+  //SPI_CLK_FREQ = 2000000;
+  //configSPIPeripheral();      //This function cannot be run before setup, so the default contructor needs to be empty if you want your MiniGen object global.  We left the old code here so you don't run into the same issue.
 }
 
 // Overloaded constructor, for cases where the chip select pin is not

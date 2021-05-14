@@ -77,7 +77,6 @@ void draw() {
   }
   displayUpdate(); 
 
-
   //Meter control:
   myMeter.update(pow*WCPowScale);
 

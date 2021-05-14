@@ -3,18 +3,19 @@
 #include <SuperDroidEncoderBuffer.h>
 #include<DueTimer.h>
 #include<math.h>
-#include <PID_v1.h>
+//#include <PID_v1.h>
 #include <SPI.h>
 #include <SparkFun_MiniGen.h>
 
-MiniGen gen(10); //initalize signal generator with FSYNC pin 10
+MiniGen gen; //signal generator
 miniWaveTankJonswap jonswap(512.0 / 128.0, 0.5, 2.5); //period, low frequency, high frequency. frequencies will be rounded to multiples of df(=1/period)
 //jonswap(512.0 / 32.0, 0.5, 2.5);
 //df = 1 / _period; num_fs = (int)((f_high - f_low) / df);
 //^ISSUE. Acuracy seems to fall off after ~50 components when using higher frequencies(1,3 at 64 elements seems wrong).
 //volatile double pidOut, pidSet, pidIn;
 //PID myPID(&pidIn, &pidOut, &pidSet, 0, 0, 0, P_ON_M, DIRECT); //input, output, setpoint, kp,  ki, kd
-SuperDroidEncoderBuffer encoderBuff = SuperDroidEncoderBuffer(42);
+//SuperDroidEncoderBuffer encoderBuff = SuperDroidEncoderBuffer(42);
+SuperDroidEncoderBuffer encoderBuff(52);
 bool encoderBuffInit, didItWork_MDR0, didItWork_MDR1, didItWork_DTR;   //variables for unit testing
 unsigned char MDR0_settings = MDRO_x4Quad | MDRO_freeRunningCountMode | MDRO_indexDisable | MDRO_syncIndex | MDRO_filterClkDivFactor_1;
 unsigned char MDR1_settings = MDR1_4ByteCounterMode | MDR1_enableCounting | MDR1_FlagOnIDX_NOP | MDR1_FlagOnCMP_NOP | MDR1_FlagOnBW_NOP | MDR1_FlagOnCY_NOP;
@@ -73,8 +74,9 @@ volatile float inputFnc(volatile float tm) {  //inputs time in seconds //outputs
 
 
 void setup() {
-  initialProbe1 = analogRead(probe1Pin);
   initSerial();
+  initialProbe1 = analogRead(probe1Pin);
+  gen = MiniGen(10);//initalize signal generator with FSYNC pin 10. This constructor needs to be run in setup, not before
   gen.reset(); //reset signal generator, that way we have a known starting location.
   //At power up, the singal generator will output 100hz
   gen.setMode(MiniGen::SQUARE); //setting signal generator to make a square wave.
@@ -82,11 +84,17 @@ void setup() {
 
   unsigned long freqReg = gen.freqCalc(0);
   gen.adjustFreq(MiniGen::FREQ0, freqReg); //Making sure the signal generator isnt making the motor move at start
-
-  encoderBuffInit = encoderBuff.begin();    //configure encoder buffer and assign bools for unit testing
-  didItWork_MDR0 = encoderBuff.setMDR0(MDR0_settings);
-  didItWork_MDR1 = encoderBuff.setMDR1(MDR1_settings);
-
+  //encoder buffer setup:
+  for (int i = 0; i < 10; i++)      //tries i times or until it works. Messy but functional
+  {
+    encoderBuffInit = encoderBuff.begin();    //configure encoder buffer and assign bools for unit testing
+    didItWork_MDR0 = encoderBuff.setMDR0(MDR0_settings);
+    didItWork_MDR1 = encoderBuff.setMDR1(MDR1_settings);
+    if (encoderBuffInit && didItWork_MDR0 && didItWork_MDR1)
+    {
+      break;
+    }
+  }
   //myPID.SetMode(AUTOMATIC);   //starts pid
   //myPID.SetSampleTime((int)(interval * 1000));    //pid interval in milliseconds
 
@@ -136,9 +144,9 @@ void loop() {   //__ microseconds
   t = micros() / 1.0e6;
   readSerial();
   updateSpeedScalar();
-//  newJonswapData = true;    //to see what n is
-//  inputFnc(0);
-//  Serial.println(n);
+  //  newJonswapData = true;    //to see what n is
+  //  inputFnc(0);
+  //  Serial.println(n);
 }
 void updateSpeedScalar() {    //used to prevent jumps/smooth start
   //Serial.println(speedScalar);
@@ -205,8 +213,8 @@ void unitTests() {
     //Serial.print(", ");
     ////////////////////////////
   }
-//  Serial.println("done");
-//  while(1);
+  //  Serial.println("done");
+  //  while(1);
   //////////////////test encoder buffer:
   //If the initialization and setting functions worked, move on, otherwise, throw error and halt execution.
   if (encoderBuffInit && didItWork_MDR0 && didItWork_MDR1) {

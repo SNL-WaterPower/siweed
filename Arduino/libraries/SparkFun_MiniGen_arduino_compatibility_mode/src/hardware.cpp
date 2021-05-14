@@ -27,7 +27,6 @@ void MiniGen::configSPIPeripheral()
 {
   pinMode(_FSYNCPin, OUTPUT);    // Make the FSYCPin an output; this is analogous
                                  //  to chip select in most systems.
-  pinMode(10, OUTPUT);
   digitalWrite(_FSYNCPin, HIGH);
 
 
