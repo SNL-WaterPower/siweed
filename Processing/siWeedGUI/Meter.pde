@@ -24,7 +24,7 @@ public class Meter {
     minVal = min;
     maxVal = max;
     arcR = (int)((ymax-ymin) * 0.6);    //how much of the window the arc fills times 2
-    labelR = (int)(arcR + height/75);    //slightly more than arc
+    labelR = (int)(arcR + height/65);    //slightly more than arc
     markR = (int)(arcR - height/100);
     radiansPerSubDivision = PI/divisionCount/subDivisionCount;
   }
@@ -39,12 +39,12 @@ public class Meter {
     strokeWeight(height/150);
     point(originx, originy);    //origin point
     //draw numbers:
-    textFont(fb, 10);
+    textFont(fb, 14);
     textAlign(CENTER);
     fill(white);
     for (int i=0; i <= divisionCount; i++) {
       float labelVal = minVal + i*(float)(maxVal-minVal)/(float)divisionCount;
-      labelVal = ((int)(labelVal*100))/100.0;    //rounds to 2 decimal places
+      labelVal = (round(labelVal*100))/100.0;    //rounds
       String label = String.valueOf(labelVal);
       float angle = PI*((float)i/(float)divisionCount);    //angle in radians
       int labelx = (int)(originx - labelR*Math.cos(angle));
