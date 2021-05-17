@@ -10,8 +10,8 @@ Button wavePosData, waveElData, wecPosData, wecVelData, wecTorqData, wecPowData;
 Button quad1, quad2, quad3, quad4; // power bar
 Button consoleButton; //Idealy this would be a toggle, but was getting errors on the ".isVisible()"
 Textarea wecText, waveText, myTextarea;
-final int zeroLocationLeft = 780;    //origin of the left column
-final int zeroLocationRight = 1350;   //origin of the right column
+int zeroLocationLeft = 780;    //origin of the left column
+int zeroLocationRight = 1350;   //origin of the right column
 int zeroLocationY = 35;
 int chartLocationY = 475;
 int columnWidth = 504;      //if you imagine the right half of the GUI as 2 columns, this is the width of those columns
