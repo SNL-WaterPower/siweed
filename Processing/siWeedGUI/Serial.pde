@@ -129,11 +129,14 @@ void readWMSerial() {
         break;
       case 'd':
         debugData = readFloat(port1);
-        if (!Float.isNaN(debugData) && debugData < 1 && debugData > -1) {    //when starting seastate, a "large" value comes through, messing witht the FFT. The saturation prevents that.
+        if (!Float.isNaN(debugData) && debugData < 0.01 && debugData > -0.01) {    //when starting seastate immediately, a "large" value comes through, messing witht the FFT. The saturation prevents that.
           waveChart.push("debug", debugData*WMPosScale);
           //println(debugData);
           if (waveMaker.mode == 3||waveMaker.mode == 2) fftList.add(debugData);      //adds to the tail if in the right mode
           if (fftList.size() > queueSize) fftList.remove();          //removes from the head
+        } else
+        {
+          waveMaker.sigH += 1;    //if values coming in are too large, this makes the draw loop resend the values
         }
         break;
       case 'u':

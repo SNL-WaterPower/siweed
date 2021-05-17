@@ -361,9 +361,9 @@ void initializeUI() {
   //slider default values:    //only non zeros need to be set
   h.setValue(5);
   freq.setValue(1.0);
-  sigH.setValue(2.5);
-  peakF.setValue(3.0);
-  gamma.setValue(7.0);
+  sigH.setValue(5.0);
+  peakF.setValue(2.0);
+  gamma.setValue(3.5);
 
   sigHWEC.setValue(2.5);
   peakFWEC.setValue(0.3);
@@ -812,14 +812,19 @@ float originx = 1400;    //x and y coordinates of the FFT graph
 float originy = 1000;
 float xScale = 1.5;    //how spaced the graph is horizontally
 float yScale = 50000;    //how tall the data is. axis has to be set separately
-float FFTHeight = 200;    //height of y axis coordinates. Does not scale data
+int FFTHeight = 200;    //height of y axis coordinates. Does not scale data
 int yAxisCount = 5;    //how many numbers on the y axis
-float FFTXOffset = 10, FFTYOffset = 10;
+float FFTXOffset = 10, FFTYOffset = 20;
 void drawFFT() {
   int nyquist = (int)frameRate/2;    //sampling frequency/2 NOTE: framerate is not a constant variable
-  textSize(12);
-  fill(green);
-  stroke(green);
+  textSize(14);
+  if (waveMaker.mode == 2 || waveMaker.mode == 3) {    //if in a mode where the FFT is meaningful, and data is added
+    fill(green);
+    stroke(green);
+  } else {
+    fill(grey);
+    stroke(grey);
+  }
   for (int i=0; i<=queueSize/2; i++) {      //cut in half
     float x = originx+xScale*i;
     float y = originy;
@@ -866,10 +871,10 @@ void displayUpdate() {
   rect(zeroLocationRight, 445, 505, 45); // Wec Information
   rect(zeroLocationX, 715, 505, 45); // Power Meter
   rect(zeroLocationRight, 715, 505, 45); // FFT
-  rect(zeroLocationX, 770, 505, 240,7);  //meter background
-  rect(zeroLocationRight, 770, 505, 240,7);  //FFT background
+  rect(zeroLocationX, 770, 505, 240, 7);  //meter background
+  rect(zeroLocationRight, 770, 505, 240, 7);  //FFT background
   image(LHSPic, 0, 0, width/2.7, height); //lhs pic
-  
+
   //controls button pop up behavior for info boxes
   if (mousePressed && waveText.isVisible()) {
     waveText.hide();
