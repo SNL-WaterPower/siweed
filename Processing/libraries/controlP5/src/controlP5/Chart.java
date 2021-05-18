@@ -423,29 +423,29 @@ public class Chart extends Controller< Chart > {
 	public class ChartViewLine implements ControllerView< Chart > {
 
 		public void display( PGraphics theGraphics , Chart theController ) {
+				theGraphics.pushStyle( );
+				theGraphics.fill( getColor( ).getBackground( ) );
+				theGraphics.rect( 0 , 0 , getWidth( ) , getHeight( ) );
+				theGraphics.noFill( );
+				Iterator< String > it = getDataSet( ).keySet( ).iterator( );
+				String index = null;
+				while ( it.hasNext( ) ) {
+					index = it.next( );
+					theGraphics.stroke( getDataSet( index ).getColor( 0 ) );
+					theGraphics.strokeWeight( getDataSet( index ).getStrokeWeight( ) );
 
-			theGraphics.pushStyle( );
-			theGraphics.fill( getColor( ).getBackground( ) );
-			theGraphics.rect( 0 , 0 , getWidth( ) , getHeight( ) );
-			theGraphics.noFill( );
-			Iterator< String > it = getDataSet( ).keySet( ).iterator( );
-			String index = null;
-			while ( it.hasNext( ) ) {
-				index = it.next( );
-				theGraphics.stroke( getDataSet( index ).getColor( 0 ) );
-				theGraphics.strokeWeight( getDataSet( index ).getStrokeWeight( ) );
-
-				theGraphics.beginShape( );
-				float res = ( ( float ) getWidth( ) ) / ( getDataSet( index ).size( ) - 1 );
-				for ( int i = 0 ; i < getDataSet( index ).size( ) ; i++ ) {
-					float hh = PApplet.map( getDataSet( index ).get( i ).getValue( ) , _myMin , _myMax , getHeight( ) , 0 );
-					theGraphics.vertex( i * res , PApplet.min( getHeight( ) , PApplet.max( 0 , hh ) ) );
+					theGraphics.beginShape( );
+					for ( int i = 0 ; i < getDataSet( index ).size( ) ; i++ ) {
+					float res = ( ( float ) getWidth( ) ) / ( getDataSet( index ).size( ) - 1 );
+						float hh = PApplet.map( getDataSet( index ).get( i ).getValue( ) , _myMin , _myMax , getHeight( ) , 0 );
+						theGraphics.vertex( i * res , PApplet.min( getHeight( ) , PApplet.max( 0 , hh ) ) );
+					}
+					theGraphics.endShape( );
 				}
-				theGraphics.endShape( );
-			}
-			theGraphics.noStroke( );
-			theGraphics.popStyle( );
-			getCaptionLabel( ).draw( theGraphics , 0 , 0 , theController );
+				theGraphics.noStroke( );
+				theGraphics.popStyle( );
+				getCaptionLabel( ).draw( theGraphics , 0 , 0 , theController );
+
 		}
 	}
 
