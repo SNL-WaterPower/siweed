@@ -44,8 +44,11 @@ void setup() {
   ////////
   frameRate(32);    //sets draw() to run x times a second.
   ///////initialize objects
-
-  size(1920, 1100, P2D); //need this for the touch screen
+  //size(1000, 1000, P2D);
+  //size(1920, 1100, P2D); //need this for the touch screen
+  //size(displayWidth, displayHeight, P2D); //need this for the touch screen
+  fullScreen();
+  //surface.setResizable(true);
   surface.setTitle("SIWEED");
   waveMaker = new UIData();
   wec = new UIData();
@@ -76,7 +79,7 @@ void draw() {
     initialized = true;
   }
   displayUpdate(); 
-
+  drawFFT();
   //Meter control:
   myMeter.update(pow*WCPowScale);
 
@@ -144,7 +147,6 @@ void draw() {
     previousMillis = millis();
     updateFFT();
   }
-  drawFFT();
   if (initialized) {
     if (dataLogging) {
       logData();
@@ -152,16 +154,6 @@ void draw() {
     readWMSerial();
     readWECSerial();
   }
-
-  //MERGE QUESTION: Was in newGUI but not in develop 
-  /*  if (debug) {
-   print("12 ");
-   println(millis() - timestamp);
-   timestamp = millis();
-   }
-   
-   }//draw closing 
-   */
 }
 
 

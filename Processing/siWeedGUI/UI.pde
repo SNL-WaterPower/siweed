@@ -10,20 +10,8 @@ Button wavePosData, waveElData, wecPosData, wecVelData, wecTorqData, wecPowData;
 Button quad1, quad2, quad3, quad4; // power bar
 Button consoleButton; //Idealy this would be a toggle, but was getting errors on the ".isVisible()"
 Textarea wecText, waveText, myTextarea;
-int zeroLocationLeft = 780;    //origin of the left column
-int zeroLocationRight = 1350;   //origin of the right column
-int zeroLocationY = 35;
-int chartLocationY = 475;
-int columnWidth = 504;      //if you imagine the right half of the GUI as 2 columns, this is the width of those columns
-int chartSizeY = 185;
-int chartStroke = 2;
-int buttonHeight = 35;      //used for buttons and some title boxes
-int bannerHeight = 45;     //used for the top two title boxes
-int modeButtonsY = 155;     //y coordinate of the mode select buttons
-int chartButtonsY = chartLocationY+chartSizeY;
-int powerMeterButtonsY = 1010;
-int buttonWidth = columnWidth/4;    //most of the GUI has 4 buttons per column
-int spaceBetweenButtons = 2;    
+//These varibles are defined in nitializeUI() so width and height variables return non zero values
+int zeroLocationLeft, zeroLocationRight, zeroLocationY, chartLocationY, columnWidth, chartSizeY, chartStroke, buttonHeight, bannerHeight, modeButtonsY, chartButtonsY, powerMeterButtonsY, buttonWidth, spaceBetweenButtons;    
 
 // Custom colors
 color green = color(176, 191, 70);
@@ -48,24 +36,39 @@ PImage snlLogo;
 PImage wavePic;
 PImage LHSPic;
 void initializeUI() {
-
+  //These variables need to be defined here so that the height and width variables do not return 0
+   zeroLocationLeft = 780*width/1920;    //origin of the left column
+   zeroLocationRight = 1350*width/1920;   //origin of the right column
+   zeroLocationY = 35*height/1100;
+   chartLocationY = 475*height/1100;
+   columnWidth = 504*width/1920;      //if you imagine the right half of the GUI as 2 columns, this is the width of those columns
+   chartSizeY = 185*height/1100;
+   chartStroke = 2*height/1100;
+   if(chartStroke < 1){chartStroke = 1;}    //make sure the stroke is at least 1
+   buttonHeight = 35*height/1100;      //used for buttons and some title boxes
+   bannerHeight = 45*height/1100;     //used for the top two title boxes
+   modeButtonsY = 155*height/1100;     //y coordinate of the mode select buttons
+   chartButtonsY = chartLocationY+chartSizeY;
+   powerMeterButtonsY = 1010*height/1100;
+   buttonWidth = columnWidth/4;    //most of the GUI has 4 buttons per column
+   spaceBetweenButtons = 2*width/1920;    
   // starting ControlP5 stuff
   cp5 = new ControlP5(this);
 
   //Fonts
-  f = createFont("Arial", 16, true);
-  fb = createFont("Arial Bold Italic", 32, true);
-  titleTextBoxFont = buttonFont = createFont("Arial Bold Italic", 40, true);
-  buttonFont = createFont("Arial Bold Italic", 12, true);
-  sliderFont = createFont("Arial Bold Italic", 12, true);
-  headerTextBoxFont = createFont("Arial Bold", 35, false);
-  textBoxFont = createFont("Arial Bold Italic", 22, true);
-  smallTextBoxFont = createFont("Arial Bold Italic", 18, true);
+  f = createFont("Arial", 16*width/1920, true);
+  fb = createFont("Arial Bold Italic", 32*width/1920, true);
+  titleTextBoxFont = buttonFont = createFont("Arial Bold Italic", 40*width/1920, true);
+  buttonFont = createFont("Arial Bold Italic", 12*width/1920, true);
+  sliderFont = createFont("Arial Bold Italic", 12*width/1920, true);
+  headerTextBoxFont = createFont("Arial Bold", 35*width/1920, false);
+  textBoxFont = createFont("Arial Bold Italic", 22*width/1920, true);
+  smallTextBoxFont = createFont("Arial Bold Italic", 18*width/1920, true);
 
   // Buttons //
   consoleButton = cp5.addButton("consoleButton")
-    .setPosition(1800, 1065)
-    .setSize(100, 25)
+    .setPosition(1800*width/1920, 1065*height/1100)
+    .setSize(100*width/1920, 25*height/1100)
     .setLabel("Console")
     .setColorBackground(grey)
     .setFont(buttonFont); 
@@ -205,10 +208,10 @@ void initializeUI() {
   // Sliders // 
   int sliderX, sliderY;
   sliderX = zeroLocationLeft;
-  sliderY = 200 ;
-  int sliderSizeX = 380 ;
-  int sliderSizeY = 35;
-  int sliderOffset = 48;
+  sliderY = 200*height/1100;
+  int sliderSizeX = 380*width/1920;
+  int sliderSizeY = 35*height/1100;
+  int sliderOffset = 48*height/1100;
 
   // Motor Jog Mode Sliders
   position = cp5.addSlider("Position (MM)")  //name slider
@@ -350,10 +353,10 @@ void initializeUI() {
   gammaWEC.setValue(0.3);
 
   waveText = cp5.addTextarea("Wave Infromation") //is this used?
-    .setPosition(zeroLocationLeft, 150)
+    .setPosition(zeroLocationLeft, 150*height/1100)
     .setSize(550, 400)
-    .setFont(createFont("arial", 16))
-    .setLineHeight(14)
+    .setFont(createFont("arial", 16*width/1920))
+    .setLineHeight(14*height/1100)
     .setColor(turq)
     .setColorBackground(buttonblue)
     .setColorForeground(color(255, 100))
@@ -362,10 +365,10 @@ void initializeUI() {
     ;
 
   wecText = cp5.addTextarea("WEC Infromation")//is this used?
-    .setPosition(260, 750)
-    .setSize(550, 400)
+    .setPosition(260*width/1920, 750*height/1100)
+    .setSize(550*width/1920, 400*height/1100)
     .setFont(createFont("arial", 16))
-    .setLineHeight(14)
+    .setLineHeight(14*height/1100)
     .setColor(turq)
     .setColorBackground(buttonblue)
     .setColorForeground(color(255, 100))
@@ -405,9 +408,9 @@ void initializeUI() {
   //console, this needs to be in the setup to ensure
   //that it catches any errors when program starts
   consoleOutput=cp5.addTextarea("consoleOutput")
-    .setPosition(1650, 800) 
-    .setSize(330, 100)
-    .setLineHeight(14)
+    .setPosition(1650*width/1920, 800*height/1100) 
+    .setSize(330*width/1920, 100*height/1100)
+    .setLineHeight(14*height/1100)
     .setColorValue(green) //color of font
     .scroll(1) //enable scrolling up and down
     .hide(); //hidden on startup   
@@ -417,67 +420,67 @@ void initializeUI() {
   }
 
   myTextarea = cp5.addTextarea("txtSystemStatus")
-    .setPosition(zeroLocationLeft, 385)
+    .setPosition(zeroLocationLeft, 385*height/1100)
     .setText("SYSTEM STATUS")
-    .setSize(350, 75)
+    .setSize(350*width/1920, 75*height/1100)
     .setFont(headerTextBoxFont)
-    .setLineHeight(7)
+    .setLineHeight(7*height/1100)
     .setColor(color(buttonblue));
 
   myTextarea = cp5.addTextarea("txtWaveDimensions")
-    .setPosition(zeroLocationLeft+100, 100)
+    .setPosition(zeroLocationLeft+100*width/1920, 100*height/1100)
     .setText("CHANGE WAVE DIMENSIONS" )
-    .setSize(350, 40)
+    .setSize(350*width/1920, 40*height/1100)
     .setFont(textBoxFont)
-    .setLineHeight(10)
+    .setLineHeight(10*height/1100)
     .setColor(color(white)); 
 
   myTextarea = cp5.addTextarea("txtWaveInformation")
-    .setPosition(zeroLocationLeft+160, 448)
+    .setPosition(zeroLocationLeft+160*width/1920, 448*height/1100)
     .setText("WAVE INFORMATION" )
-    .setSize(350, 40)
+    .setSize(350*width/1920, 40*height/1100)
     .setFont(smallTextBoxFont)
-    .setLineHeight(10)
+    .setLineHeight(10*height/1100)
     .setColor(color(white)); 
 
   myTextarea = cp5.addTextarea("txtWECControls")
-    .setPosition(zeroLocationRight + 100, 100)
+    .setPosition(zeroLocationRight + 100*width/1920, 100*height/1100)
     .setText("CHANGE WEC CONTROLS")
-    .setSize(300, 40)
+    .setSize(300*width/1920, 40*height/1100)
     .setFont(textBoxFont)
-    .setLineHeight(10)
+    .setLineHeight(10*height/1100)
     .setColor(color(white)); 
 
   myTextarea = cp5.addTextarea("txtPowerMeter")
-    .setPosition(zeroLocationLeft+180, 730)
+    .setPosition(zeroLocationLeft+180*width/1920, 730*height/1100)
     .setText("POWER METER")
-    .setSize(300, 40)
+    .setSize(300*width/1920, 40*height/1100)
     .setFont(smallTextBoxFont)
-    .setLineHeight(10)
+    .setLineHeight(10*height/1100)
     .setColor(color(white));
 
   myTextarea = cp5.addTextarea("FFTTitle")
-    .setPosition(zeroLocationRight + 170, 730)
+    .setPosition(zeroLocationRight + 170*width/1920, 730*height/1100)
     .setText("Frequency Analysis")
-    .setSize(300, 40)
+    .setSize(300*width/1920, 40*height/1100)
     .setFont(smallTextBoxFont)
-    .setLineHeight(10)
+    .setLineHeight(10*height/1100)
     .setColor(color(white));
 
   myTextarea = cp5.addTextarea("txtFFT")
-    .setPosition(zeroLocationRight + 160, 448)
+    .setPosition(zeroLocationRight + 160*width/1920, 448*height/1100)
     .setText("WEC INFORMATION")
-    .setSize(300, 40)
+    .setSize(300*width/1920, 40*height/1100)
     .setFont(smallTextBoxFont)
-    .setLineHeight(10)
+    .setLineHeight(10*height/1100)
     .setColor(color(white));
 
   myTextarea = cp5.addTextarea("txtMissionControl")
     .setPosition(zeroLocationLeft, zeroLocationY)
     .setText("Mission Control")
-    .setSize(300, 55)
+    .setSize(300*width/1920, 55*height/1100)
     .setFont(headerTextBoxFont)
-    .setLineHeight(7)
+    .setLineHeight(7*height/1100)
     .setColor(color(buttonblue));
 
   //set chart buttons true at startup by virtually pressing the button:
@@ -776,17 +779,20 @@ void wecQs() {
     wecText.show();
   }
 }
-//////////////////FFT vars:
-float originx = 1375;    //x and y coordinates of the FFT graph
-float originy = 1025;
-float xScale = 1.6;    //how spaced the graph is horizontally
-float yScale = 50000;    //how tall the data is. axis has to be set separately
-int FFTHeight = 225;    //height of y axis coordinates. Does not scale data
-int yAxisCount = 5;    //how many numbers on the y axis
-float FFTXOffset = 10, FFTYOffset = 20;
+
 void drawFFT() {
+  //////////////////FFT vars: These need to be in the function in order for width and height scaling to work
+  float originx = 1375*width/1920;    //x and y coordinates of the FFT graph
+  float originy = 1025*height/1100;
+  float xScale = 1.6*width/1920;    //how spaced the graph is horizontally
+  float yScale = 50000*height/1100;    //how tall the data is. axis has to be set separately
+  int FFTHeight = 225*height/1100;    //height of y axis coordinates. Does not scale data
+  int yAxisCount = 5;    //how many numbers on the y axis
+  float FFTXOffset = 10*width/1920, FFTYOffset = 20*height/1100;
   int nyquist = (int)frameRate/2;    //sampling frequency/2 NOTE: framerate is not a constant variable
-  textSize(14);
+  //////////
+  textSize(14*height/1100);
+  strokeWeight(3*width/1920);
   for (int i=0; i<=queueSize/2; i++) {      //cut in half
     if (waveMaker.mode == 2 || waveMaker.mode == 3) {    //if in a mode where the FFT is meaningful, and data is added
       fill(green);
@@ -799,7 +805,7 @@ void drawFFT() {
     float y = originy;
     float maxY = originy - FFTHeight;    //value that saturates the data
     float yCord = y - yScale*fftArr[i];    //how high to draw the line
-    if (yCord < maxY) {    //saturate, so y doesn't get drawn off the graph(remember coordinates are flipped)
+    if (yCord < maxY) {    //saturate, so y doesn't get drawn off the graph(remember y coordinates are flipped)
       yCord = maxY;
     }
     line(x+FFTXOffset, y-FFTYOffset, x+FFTXOffset, yCord-FFTYOffset);
@@ -808,7 +814,7 @@ void drawFFT() {
       text((int)(i*(1/((float)queueSize/32))), x+FFTXOffset, y);    //x-axis: frequency spacing is 1/T, where t is length of sample in seconds
     }
     if (i%1 == 0 && i<=yAxisCount && i != 0) {    //mod controls spacing, draws only if less than max count and not zero(to not draw 2 zeros)
-      text(i, originx, y - FFTHeight/yAxisCount*i);    //y-axis    //units need to be fixed
+      text(i, originx, y - FFTHeight/yAxisCount*i);    //y-axis
     }
   }
 }
@@ -832,16 +838,16 @@ void displayUpdate() {
   textLeading(14);
   //boxes behind the titles
   fill(turq);
-  rect(zeroLocationLeft, 90, columnWidth, bannerHeight); // Change wave dimensions
+  rect(zeroLocationLeft, 90*height/1100, columnWidth, bannerHeight); // Change wave dimensions
   fill(green);
-  rect(zeroLocationRight, 90, columnWidth, bannerHeight); // Change WEC controls
+  rect(zeroLocationRight, 90*height/1100, columnWidth, bannerHeight); // Change WEC controls
   fill(buttonblue);
-  rect(zeroLocationLeft, 445, columnWidth, buttonHeight); // Wave Information
-  rect(zeroLocationRight, 445, columnWidth, buttonHeight); // Wec Information
-  rect(zeroLocationLeft, 725, columnWidth, buttonHeight); // Power Meter title
-  rect(zeroLocationRight, 725, columnWidth, buttonHeight); // FFT title
-  rect(zeroLocationLeft, 760, columnWidth, 250, 0);  //meter background
-  rect(zeroLocationRight, 760, columnWidth, 250+buttonHeight, 0);  //FFT background
+  rect(zeroLocationLeft, 445*height/1100, columnWidth, buttonHeight); // Wave Information
+  rect(zeroLocationRight, 445*height/1100, columnWidth, buttonHeight); // Wec Information
+  rect(zeroLocationLeft, 725*height/1100, columnWidth, buttonHeight); // Power Meter title
+  rect(zeroLocationRight, 725*height/1100, columnWidth, buttonHeight); // FFT title
+  rect(zeroLocationLeft, 760*height/1100, columnWidth, 250*height/1100);  //meter background
+  rect(zeroLocationRight, 760*height/1100, columnWidth, 250*height/1100+buttonHeight);  //FFT background
   //draw white rectangles behind the buttons to make it look like there are lines separating them:
   fill(white);
   rect(zeroLocationLeft, chartButtonsY, buttonWidth*4, buttonHeight);
@@ -850,8 +856,8 @@ void displayUpdate() {
   //draw lines to separate FFT and Meter titles from data
   stroke(white);
   strokeWeight(2);
-  line(zeroLocationLeft, 725+buttonHeight, zeroLocationLeft + columnWidth, 725+buttonHeight);
-  line(zeroLocationRight, 725+buttonHeight, zeroLocationRight + columnWidth, 725+buttonHeight);
+  line(zeroLocationLeft, 725*height/1100+buttonHeight, zeroLocationLeft + columnWidth, 725*height/1100+buttonHeight);
+  line(zeroLocationRight, 725*height/1100+buttonHeight, zeroLocationRight + columnWidth, 725*height/1100+buttonHeight);
   image(LHSPic, 0, 0, width/2.7, height); //lhs pic
 
   //controls button pop up behavior for info boxes
@@ -862,22 +868,22 @@ void displayUpdate() {
     wecText.hide();
   }
   //controls power indicators
-  if (pow >= 1.25) {
+  if (pow*WCPowScale >= 1.25) {
     quad1.setColorBackground(green).setColorActive(green);
   } else {
     quad1.setColorBackground(grey).setColorActive(grey);    //if under threshold, then grey
   }
-  if (pow >= 3) {
+  if (pow*WCPowScale >= 3) {
     quad2.setColorBackground(green).setColorActive(green);
   } else {
     quad2.setColorBackground(grey).setColorActive(grey);    //if under threshold, then grey
   }
-  if (pow >= 4.25) {
+  if (pow*WCPowScale >= 4.25) {
     quad3.setColorBackground(green).setColorActive(green);
   } else {
     quad3.setColorBackground(grey).setColorActive(grey);    //if under threshold, then grey
   }
-  if (pow >= 5) {
+  if (pow*WCPowScale >= 5) {
     quad4.setColorBackground(green).setColorActive(green);
   } else {
     quad4.setColorBackground(grey).setColorActive(grey);    //if under threshold, then grey

@@ -2,12 +2,10 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class Meter {
-
-  int xmin = 780;      //coordinates in pixels
-  int xmax = 1285;
-  int ymin = 725;
-  int ymax = ymin+270;
-  
+  int xmin = 780*width/1920;      //coordinates in pixels
+  int xmax = 1284*width/1920;
+  int ymin = 725*height/1100;
+  int ymax = ymin+270*height/1100;
 
   Queue<Float> q;      //queue for moving average
   int buffSize = 10;
@@ -23,9 +21,15 @@ public class Meter {
     originy = ymin + (ymax-ymin) - height/75;    //slightly above frame
     minVal = min;
     maxVal = max;
-    arcR = (int)((ymax-ymin) * 0.6);    //how much of the window the arc fills times 2
-    labelR = (int)(arcR + height/65);    //slightly more than arc
-    markR = (int)(arcR - height/100);
+    if ((ymax-ymin) < 0.5*(xmax-xmin)) {      //scales by whichever axis is smaller. Meter is twice as wide as it is tall
+      arcR = (int)((ymax-ymin) * 0.6); 
+      labelR = (int)(arcR + height/60);    //slightly more than arc
+      markR = (int)(arcR - height/100);
+    } else {
+      arcR = (int)((xmax-xmin) * 0.3); 
+      labelR = (int)(arcR + width/105);    //slightly more than arc
+      markR = (int)(arcR - width/175);
+    }
     radiansPerSubDivision = PI/divisionCount/subDivisionCount;
   }
   public void update(float val) {
@@ -39,7 +43,7 @@ public class Meter {
     strokeWeight(height/150);
     point(originx, originy);    //origin point
     //draw numbers:
-    textFont(fb, 14);
+    textFont(fb, 14*height/1100);
     textAlign(CENTER);
     fill(white);
     for (int i=0; i <= divisionCount; i++) {
