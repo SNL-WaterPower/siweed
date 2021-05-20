@@ -37,21 +37,23 @@ PImage wavePic;
 PImage LHSPic;
 void initializeUI() {
   //These variables need to be defined here so that the height and width variables do not return 0
-   zeroLocationLeft = 780*width/1920;    //origin of the left column
-   zeroLocationRight = 1350*width/1920;   //origin of the right column
-   zeroLocationY = 35*height/1100;
-   chartLocationY = 475*height/1100;
-   columnWidth = 504*width/1920;      //if you imagine the right half of the GUI as 2 columns, this is the width of those columns
-   chartSizeY = 185*height/1100;
-   chartStroke = 2*height/1100;
-   if(chartStroke < 1){chartStroke = 1;}    //make sure the stroke is at least 1
-   buttonHeight = 35*height/1100;      //used for buttons and some title boxes
-   bannerHeight = 45*height/1100;     //used for the top two title boxes
-   modeButtonsY = 155*height/1100;     //y coordinate of the mode select buttons
-   chartButtonsY = chartLocationY+chartSizeY;
-   powerMeterButtonsY = 1010*height/1100;
-   buttonWidth = columnWidth/4;    //most of the GUI has 4 buttons per column
-   spaceBetweenButtons = 2*width/1920;    
+  zeroLocationLeft = 780*width/1920;    //origin of the left column
+  zeroLocationRight = 1350*width/1920;   //origin of the right column
+  zeroLocationY = 35*height/1100;
+  chartLocationY = 475*height/1100;
+  columnWidth = 504*width/1920;      //if you imagine the right half of the GUI as 2 columns, this is the width of those columns
+  chartSizeY = 185*height/1100;
+  chartStroke = 2*height/1100;
+  if (chartStroke < 1) {
+    chartStroke = 1;
+  }    //make sure the stroke is at least 1
+  buttonHeight = 35*height/1100;      //used for buttons and some title boxes
+  bannerHeight = 45*height/1100;     //used for the top two title boxes
+  modeButtonsY = 155*height/1100;     //y coordinate of the mode select buttons
+  chartButtonsY = chartLocationY+chartSizeY;
+  powerMeterButtonsY = 1010*height/1100;
+  buttonWidth = columnWidth/4;    //most of the GUI has 4 buttons per column
+  spaceBetweenButtons = 2*width/1920;    
   // starting ControlP5 stuff
   cp5 = new ControlP5(this);
 

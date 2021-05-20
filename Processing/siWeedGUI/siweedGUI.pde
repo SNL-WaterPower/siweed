@@ -21,7 +21,7 @@ float WCPowScale = 5000;
 float WCVelScale = 20;
 ////////////////////////////
 boolean debug = false;    //for debug print statements. Also disables GUI console, and puts it in processing
-boolean guiConsole = false; 
+boolean guiConsole = true; 
 boolean dataLogging = false;    //if this is true, a .csv with most variables will be written, but it has a memory leak and cannot run at high performance for more than a few minutes
 
 Println console; //Needed for GUI console to work
@@ -31,6 +31,7 @@ int queueSize = 512;    //power of 2 closest to 30(15) seconds at 32 samples/sec
 LinkedList fftList;
 fft myFFT;
 float[] fftArr;
+//int originalx, originaly;    //used to track when the window is resized
 int previousMillis = 0;    //used to update fft 
 int fftInterval = 100;    //in milliseconds
 
@@ -44,10 +45,9 @@ void setup() {
   ////////
   frameRate(32);    //sets draw() to run x times a second.
   ///////initialize objects
-  size(1920, 1100, P2D); //need this for the touch screen
-  //size(displayWidth, displayHeight, P2D); //need this for the touch screen
-  //fullScreen();
-  //surface.setResizable(true);
+  //size(1920, 1100, P2D); //need this for the touch screen
+  fullScreen(P2D);
+  //surface.setResizable(true);    //throws an error
   surface.setTitle("SIWEED");
   waveMaker = new UIData();
   wec = new UIData();
@@ -61,14 +61,9 @@ void setup() {
   }
   initializeUI();
   myMeter = new Meter(-2.0, 2.0);    //min and max
+  //originalx = width;
+  //originaly = height;
 }
-
-/*
-public void settings() {
- fullScreen();
- }
- */
-
 boolean initialized = false;
 void draw() {
   int timestamp = 0;   //for debuging
@@ -81,7 +76,12 @@ void draw() {
   drawFFT();
   //Meter control:
   myMeter.update(pow*WCPowScale);
-
+  //if (originalx != width || originaly != height) {    //if window is resized, reinitialize UI
+  //  originalx = width;
+  //  originaly = height;
+  //  initializeUI();
+  //  println("resized");
+  //}
   if (!WMConnected) {
     //do nothing
   } else if (waveMaker.mode == 1 && position.getValue() != waveMaker.mag*WMJogScale) {  //only sends if value has changed  
