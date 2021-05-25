@@ -22,7 +22,7 @@ const float encStepsPerTurn = 8192;   //for 800 ppr/3200 counts per revolution s
 const float teethPerTurn = 20;   
 const float mPerTooth = 0.002;
 const float minPwm = .1, maxPwm = .9;
-const float minAmps = 0, maxAmps = 0.7620;    //amperage at min and max pwm
+const float minAmps = 0, maxAmps = 0.7620;    //amperage at min and max pwm //0.456
 const float torqueConstant = 0.0078;   //7.8 mNm/A
 
 const int maxComponents = 100;   //max needed number of frequency components

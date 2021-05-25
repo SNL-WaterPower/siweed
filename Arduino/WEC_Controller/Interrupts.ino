@@ -20,6 +20,7 @@ void updateTau()    //called by interupt
       break;
     case 0:
       tauCommand = tau;       //direct control
+      //tauCommand = 0.6*tau*sin(0.05*2*PI*millis()/1000);
       break;
     case 1:
       tauCommand = kp * pos + -kd * vel;      //PD feedback control

@@ -64,6 +64,14 @@ void setup() {
   //originalx = width;
   //originaly = height;
 }
+//void keyPressed() {
+//  println("test start");
+//  port2.write('!');
+//  sendFloat(0, port2);
+//  wec.mode = 5;
+//  testTime = millis();
+//}
+//int testTime = 0;
 boolean initialized = false;
 void draw() {
   int timestamp = 0;   //for debuging
@@ -86,9 +94,11 @@ void draw() {
     //do nothing
   } else if (waveMaker.mode == 1 && position.getValue() != waveMaker.mag*WMJogScale) {  //only sends if value has changed  
     //Jog:
-    waveMaker.mag = position.getValue()/WMJogScale;
-    port1.write('j');
-    sendFloat(waveMaker.mag, port1);
+    if (frameCount % 2 == 0) {      //limits how often data is sent
+      waveMaker.mag = position.getValue()/WMJogScale;
+      port1.write('j');
+      sendFloat(waveMaker.mag, port1);
+    }
     //function:
   } else if (waveMaker.mode == 2 && !mousePressed && (waveMaker.amp*WMAmpScale != h.getValue() || waveMaker.freq != freq.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
     waveMaker.amp = h.getValue()/WMAmpScale;
@@ -111,15 +121,18 @@ void draw() {
     if (debug) {
       println("sending jonswap values");
     }
-  }
+  } 
 
   if (!WECConnected) {
     //do nothing
   } else if (wec.mode == 1 && torqueSlider.getValue() != wec.mag*WCJogScale) {  //only sends if value has changed  
     //Jog:
-    wec.mag = torqueSlider.getValue()/WCJogScale;
-    port2.write('t');
-    sendFloat(wec.mag, port2);
+    if (frameCount % 2 == 0) {      //limits how often data is sent
+      wec.mag = torqueSlider.getValue()/WCJogScale;
+      //wec.mag = sin(0.1*2*PI*millis()/1000)*torqueSlider.getValue()/WCJogScale;
+      port2.write('t');
+      sendFloat(wec.mag, port2);
+    }
     //feedback:
   } else if (wec.mode == 2 && !mousePressed && (wec.amp*WCPScale != pGain.getValue() || wec.freq*WCDScale != dGain.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition) //for wec, amp is kp and freq is kd;
     wec.amp = pGain.getValue()/WCPScale;
@@ -139,7 +152,15 @@ void draw() {
     sendFloat(wec.peakF, port2);
     port2.write('g');
     sendFloat(wec.gamma, port2);    //gamma always needs to be the last sent
-  }
+  } //else if (wec.mode == 5 && frameCount % 10 == 0) {    //if testing mode. Only updates every 10 frames
+  //  if (millis() < 1) {
+  //    wec.mag = 0;
+  //    println(1);
+  //  }
+
+  //  port2.write('t');
+  //  sendFloat(wec.mag, port2);
+  //}
 
   /////FFT section(move to fft tab eventually):  //!!needs to be activated and deactivated based on mode(maybe)
   if (millis() > previousMillis+fftInterval) {
