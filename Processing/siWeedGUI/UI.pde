@@ -411,7 +411,7 @@ void initializeUI() {
   //that it catches any errors when program starts
   consoleOutput=cp5.addTextarea("consoleOutput")
     .setPosition(1650*width/1920, 800*height/1100) 
-    .setSize(330*width/1920, 100*height/1100)
+    .setSize(330*width/1920, 150*height/1100)
     .setLineHeight(14*height/1100)
     .setColorValue(green) //color of font
     .scroll(1) //enable scrolling up and down
@@ -561,6 +561,7 @@ void sea() {
   peakF.show();
   gamma.show();
   //set mode on arduino:
+  draw();    //this sends values before changing mode, which increases stability
   if (WMConnected) {
     port1.write('!');
     sendFloat(2, port1);
@@ -644,6 +645,7 @@ void seaWEC() {
   sigHWEC.show();
   peakFWEC.show();
   gammaWEC.show();
+  draw();    //this sends values before changing mode, which increases stability
   if (WECConnected) {
     port2.write('!');
     sendFloat(2, port2);

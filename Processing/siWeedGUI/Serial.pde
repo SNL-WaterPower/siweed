@@ -2,7 +2,7 @@ Serial port1;    //arduino wavemaker due //<>//
 Serial port2;    //arduino WEC due
 boolean WMConnected, WECConnected;
 int connectionDelay  = 3500;      //how many ms to wait after connecting to a device. Can greatly slow the startup
-int baudRate = 250000;
+int baudRate = 57600;
 void initializeSerial() {
   ///////////initialize Serial
 

@@ -1,5 +1,5 @@
 void initSerial() {
-  Serial.begin(250000);
+  Serial.begin(57600);
 }
 void readSerial()
 {

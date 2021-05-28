@@ -7,7 +7,7 @@ volatile float prevSampleT;  //previous timestamp in microseconds
 volatile float prevVal;   //value of sample at prevSampleT
 void initInterrupts() {
   //interrupt setup for Due:
-  //Timer.getAvailable().attachInterrupt(sendSerial).start(serialInterval * 1.0e6);
+  Timer.getAvailable().attachInterrupt(sendSerial).start(serialInterval * 1.0e6);
   delay(50);
   Timer.getAvailable().attachInterrupt(controlLoop).start(interval * 1.0e6);
   /*

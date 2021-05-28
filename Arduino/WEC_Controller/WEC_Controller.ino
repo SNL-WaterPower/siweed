@@ -2,7 +2,7 @@
 #include<DueTimer.h>
 #include<math.h>
 #include <miniWaveTankJonswap.h>
-miniWaveTankJonswap jonswap(512.0 / 32.0, 0.5, 2.5); //period, low frequency, high frequency. frequencies will be rounded to multiples of df(=1/period)
+miniWaveTankJonswap jonswap(512.0 / 64.0, 0.5, 2.5); //period, low frequency, high frequency. frequencies will be rounded to multiples of df(=1/period)
 //^ISSUE. Acuracy seems to fall off after ~50 components when using higher frequencies(1,3 at 64 elements seems wrong).
 SuperDroidEncoderBuffer encoderBuff = SuperDroidEncoderBuffer(52);
 bool encoderBuffInit, didItWork_MDR0, didItWork_MDR1, didItWork_DTR;   //variables for unit testing
@@ -132,7 +132,7 @@ volatile float calcTS(volatile float tm) {      //calculate jonswap timeseries v
     }
   }
   volatile float val = 0;
-  for (volatile int i = 0; i < n; i++)           //function mode
+  for (volatile int i = 0; i < n; i++) 
   {
     val += amps[i] * sin(2 * PI * tm * freqs[i] + phases[i]);
   }
@@ -145,9 +145,7 @@ void unitTests() {
   delay(100);
   newJonswapData = true;
   int oldMode = mode;
-  //miniWaveTankJonswap jonswapTest(16.0, 1.0, 2.0)
   mode = 2;
-  //jonswap.update(5.0, 3.0, 7.0);
   sigH = 5.0;
   peakF = 3.0;
   _gamma = 7.0;

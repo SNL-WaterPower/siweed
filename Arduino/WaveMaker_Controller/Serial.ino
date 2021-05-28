@@ -1,5 +1,5 @@
 void initSerial() {
-  Serial.begin(250000);
+  Serial.begin(57600);
 }
 /* '!' indicates mode switch, next int is mode
    j indicates jog position
@@ -22,8 +22,9 @@ void readSerial() {
         }
         break;
       case 'j':
-        pushBuffer(jogBuffer, readFloat());   //pushes in the latest value to the moving average buffer
-        desiredPos = averageArray(jogBuffer);     //averages the array for the the moving average
+        //pushBuffer(jogBuffer, readFloat());   //pushes in the latest value to the moving average buffer
+        //desiredPos = averageArray(jogBuffer);     //averages the array for the the moving average
+        desiredPos = readFloat();
         break;
       case 'a':
         amps[0] = readFloat();

@@ -152,17 +152,9 @@ void draw() {
     sendFloat(wec.peakF, port2);
     port2.write('g');
     sendFloat(wec.gamma, port2);    //gamma always needs to be the last sent
-  } //else if (wec.mode == 5 && frameCount % 10 == 0) {    //if testing mode. Only updates every 10 frames
-  //  if (millis() < 1) {
-  //    wec.mag = 0;
-  //    println(1);
-  //  }
+  } 
 
-  //  port2.write('t');
-  //  sendFloat(wec.mag, port2);
-  //}
-
-  /////FFT section(move to fft tab eventually):  //!!needs to be activated and deactivated based on mode(maybe)
+  /////FFT section(move to fft tab eventually): 
   if (millis() > previousMillis+fftInterval) {
     previousMillis = millis();
     updateFFT();
