@@ -19,8 +19,8 @@ void updateTau()    //called by interupt
       tauCommanded = 0;   //allows GUI to see 0 torque
       break;
     case 0:
-      tauCommand = tau;       //direct control
-      //tauCommand = 0.6*tau*sin(0.05*2*PI*millis()/1000);
+      //tauCommand = tau;       //direct control
+      tauCommand = 0.6*tau*sin(0.5F*2*PI*millis()/1000);
       break;
     case 1:
       tauCommand = kp * pos + -kd * vel;      //PD feedback control
@@ -41,11 +41,12 @@ void updateTau()    //called by interupt
     if (ampCommand > maxAmps) {    //ensure maximum so that duty cycle does not exceed 90%
       ampCommand = maxAmps;
     }
-    if (tauCommand != 0) {
+    /*if (tauCommand != 0) {
       tauCommanded = ampCommand * torqueConstant * (abs(tauCommand) / tauCommand);  // converts the ampCommand back to tau, and adds sign from original command. This is to account for saturation.
     } else {
       tauCommanded = 0;   //this prevents dividing by 0
     }
+    */
     float minCommand = mapFloat(minPwm, 0, 1, 0, 4095);    //maps 10% to 0-4095 for analogWrite   //!could be a constant
     float maxCommand = mapFloat(maxPwm, 0, 1, 0, 4095);    //maps 90% to 0-4095 for analogWrite   //!could be a constant
     analogWrite(tauPin, mapFloat(ampCommand, minAmps, maxAmps, minCommand, maxCommand));    //sends to the motor controller after mapping from amps to pwm
@@ -91,6 +92,8 @@ void sendSerial() {  //called by interupt
     Serial.write('e');
     sendFloat(encPos());
     Serial.write('t');
+    //takes analog value from pin(0-4095), and maps from 10%-90% to amperage, and converts to toruqe
+    tauCommanded = map(analogRead(tauInPin),0.1*4095, 0.9*4095, -0.5, 0.5) * torqueConstant;    //!!!!!
     sendFloat(tauCommanded);
     Serial.write('p');
     sendFloat(power);

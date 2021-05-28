@@ -15,7 +15,7 @@ volatile int n;   //number of components
 volatile double t = 0;    //time in seconds
 volatile float tau = 0, kp = 0, kd = 0, power = 0, vel = 0;
 volatile float tauCommand = 0, tauCommanded = 0;   //incoming tau and outgoing tau(in case it saturates)
-const int tauPin = 4, enablePin = 5, dirPin = 6, l1Pin = 10, l2Pin = 11, l3Pin = 12, l4Pin = 13;  //tauPin = DAC0
+const int tauPin = 4, enablePin = 5, dirPin = 6, l1Pin = 10, l2Pin = 11, l3Pin = 12, l4Pin = 13, tauInPin = A0;
 const float l1Lim = 1.1, l2Lim = 2.2, l3Lim = 3.3, l4Lim = 4.4;       //!!NEEDS EDITING!!the power threshholds of the led groups
 //volatile float encPos;
 const float encStepsPerTurn = 8192;   //for 800 ppr/3200 counts per revolution set dip switches(0100) //2048ppr/8192 counts per revolution max(0000)
@@ -34,6 +34,7 @@ void setup()
 {
   initSerial();
   analogWriteResolution(12);    //analog write now runs from 0 to 4095
+  analogReadResolution(12);     //analog read now runs from 0 to 4095
   pinMode(enablePin, OUTPUT);
   digitalWrite(enablePin, LOW);
   pinMode(dirPin, OUTPUT);
