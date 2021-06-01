@@ -25,14 +25,14 @@ MiniGen::MiniGen()
 
 // Overloaded constructor, for cases where the chip select pin is not
 //  connected to the regular pin. Still assumes standard SPI connections.
-MiniGen::MiniGen(int16_t FSYNCPin)
+MiniGen::MiniGen(uint8_t FSYNCPin)
 {
   _FSYNCPin = FSYNCPin;
   _SPI_CLK_FREQ = 2000000;
   configSPIPeripheral();
 }
 
-MiniGen::MiniGen(int16_t FSYNCPin, int16_t SPI_CLK_FREQ)
+MiniGen::MiniGen(uint8_t FSYNCPin, uint32_t SPI_CLK_FREQ)
 {
   _FSYNCPin = FSYNCPin;
   _SPI_CLK_FREQ = SPI_CLK_FREQ;

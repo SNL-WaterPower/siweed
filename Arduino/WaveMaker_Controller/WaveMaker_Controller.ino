@@ -8,7 +8,7 @@
 #include <SparkFun_MiniGen.h>
 
 MiniGen gen; //signal generator
-miniWaveTankJonswap jonswap(512.0 / 32.0, 0.5, 2.5); //period, low frequency, high frequency. frequencies will be rounded to multiples of df(=1/period)
+miniWaveTankJonswap jonswap(512.0 / 64.0, 0.5, 2.5); //period, low frequency, high frequency. frequencies will be rounded to multiples of df(=1/period)
 //jonswap(512.0 / 32.0, 0.5, 2.5);
 //df = 1 / _period; num_fs = (int)((f_high - f_low) / df);
 //^ISSUE. Acuracy seems to fall off after ~50 components when using higher frequencies(1,3 at 64 elements seems wrong).
@@ -75,12 +75,11 @@ volatile float inputFnc(volatile float tm) {  //inputs time in seconds //outputs
 void setup() {
   initSerial();
   initialProbe1 = analogRead(probe1Pin);
-  gen = MiniGen(10);//initalize signal generator with FSYNC pin 10. This constructor needs to be run in setup, not before
+  gen = MiniGen(10, 100000);//initalize signal generator with FSYNC pin 10. This constructor needs to be run in setup, not before
   gen.reset(); //reset signal generator, that way we have a known starting location.
   //At power up, the singal generator will output 100hz
   gen.setMode(MiniGen::SQUARE); //setting signal generator to make a square wave.
   gen.setFreqAdjustMode(MiniGen::FULL); //Full takes the longest longer to write, but allows to change from any frequency to any other frequency
-
   unsigned long freqReg = gen.freqCalc(0);
   gen.adjustFreq(MiniGen::FREQ0, freqReg); //Making sure the signal generator isnt making the motor move at start
   //encoder buffer setup:
@@ -94,6 +93,7 @@ void setup() {
       break;
     }
   }
+
   //myPID.SetMode(AUTOMATIC);   //starts pid
   //myPID.SetSampleTime((int)(interval * 1000));    //pid interval in milliseconds
 
@@ -182,8 +182,10 @@ float lerp(float a, float b, float f) {
   return a + f * (b - a);
 }
 bool ampUnitTest = true, TSUnitTest = true, encoderTest = true;
-float exampleAmps[] = {0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.01, 0.02, 0.05, 0.11, 0.20, 0.33, 0.48, 0.67, 0.87, 1.09, 1.30, 1.51, 1.7, 1.88, 2.03, 2.16};
-float exampleTS[] = {2.13, -1.08, 3.21, 3.02, -0.65, 0.42, 0.96, -3.35, 3.49, -3.32, 1.43, 4.24, 3.59, 2.01, -7.29, 4.79, 2.13, -1.08, 3.21, 3.02, -0.65, 0.42, 0.96, -3.35, 3.49, -3.32, 1.43, 4.24, 3.59, 2.01, -7.29, 4.79};
+//float exampleAmps[] = {0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.01, 0.02, 0.05, 0.11, 0.20, 0.33, 0.48, 0.67, 0.87, 1.09, 1.30, 1.51, 1.7, 1.88, 2.03, 2.16};
+float exampleAmps[] = {0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.01, 0.09, 0.32, 0.77, 1.39, 2.08, 2.72, 3.25};
+//float exampleTS[] = {2.13, -1.08, 3.21, 3.02, -0.65, 0.42, 0.96, -3.35, 3.49, -3.32, 1.43, 4.24, 3.59, 2.01, -7.29, 4.79, 2.13, -1.08, 3.21, 3.02, -0.65, 0.42, 0.96, -3.35, 3.49, -3.32, 1.43, 4.24, 3.59, 2.01, -7.29, 4.79};
+float exampleTS[] = {2.24, -0.75, 3.53, -3.00, -3.04, 8.26, 2.77, 0.98, 2.24, -0.75, 3.53, -3.00, -3.04, 8.26, 2.77, 0.98};
 void unitTests() {
   newJonswapData = true;
   int oldMode = mode;

@@ -80,7 +80,9 @@ public class Meter {
       }
     }
     //draw needle:
-    q.add(val);
+    if (!Float.isNaN(val)) {    //verify that val is float
+      q.add(val);
+    }
     if (q.size() > buffSize) {
       q.remove();
     }

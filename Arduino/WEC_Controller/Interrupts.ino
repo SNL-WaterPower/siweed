@@ -93,7 +93,7 @@ void sendSerial() {  //called by interupt
     sendFloat(encPos());
     Serial.write('t');
     //takes analog value from pin(0-4095), and maps from 10%-90% to amperage, and converts to toruqe
-    tauCommanded = map(analogRead(tauInPin),0.1*4095, 0.9*4095, -0.5, 0.5) * torqueConstant;    //!!!!!
+    tauCommanded = map(analogRead(tauInPin),0, 4095, -0.7620, 0.7620) * torqueConstant;    //!!!!!
     sendFloat(tauCommanded);
     Serial.write('p');
     sendFloat(power);
