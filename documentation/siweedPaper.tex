@@ -115,10 +115,16 @@ This is a novel expansion on similar small-scale educational wave tanks, as the 
 
 \section{Hardware description} % Describe the hardware, highlighting the customization rather than the steps of the procedure. Highlight how it differs/which advantage it offers over pre-existing methods. For example, how could this hardware: be compared to other hardware in terms of cost or ease of use, be used in the development of further designs in a particular area, and so on. Add 3-5 bulleted points to broadly explain to other researchers how the hardware could be potentially useful to them, for either standard or novel laboratory tasks, inside or outside of the original user community.
 The SIWEED is composed of a 1.5\,m $\times{}$ 0.3\,m $\times{}$ 0.5\,m (filled to roughly 0.3\,m deep) acrylic tank, housing a vertical plunger style wave maker (see, e.g., \cite{hyun1976simplified}), and a single body WEC modeled on the WaveBot~\cite{Coe2016a}.
-A system diagram is shown in \figurename~XX.
-
+A system diagram is shown in \figurename~\ref{fig:siweed_layout}.
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=1\textwidth]{diagrams/System Layout.png}
+  \caption{System Layout Diagram. XX-update}
+  \label{fig:siweed_layout}
+\end{figure}
 The system is controlled by a Windows PC running a graphical user interface (GUI) developed using Processing\footnote{\url{https://processing.org}} and the controlP5 library\footnote{\url{http://www.sojamo.de/libraries/controlP5/}}.
 A screen shot of the GUI is shown in \figurename~\ref{fig:siweed_guiScreenShot}.
+
 The upper left hand part of the GUI pertains to control of the wave maker, which allows the user to switch between operational modes (``jog,'' ``function,'' ``sea state,'' and ``off'') and set the relevant parameters.
 If, for example, the system is in ``sea state'' mode, the user can set the significant wave height ($H_s$), peak frequency ($f_p$), and peakedness factor ($\gamma$) for a JONSWAP wave spectrum.
 
@@ -134,7 +140,7 @@ The lower left hand quadrant of the GUI contains controls for the WEC, which can
 The right hand portion of the GUI shows plots and indicators of the system status.
 XX\dots{}
 
-Two Arduino microcontrollers, one Due and one Mega, are used to control and acquire signals from the WEC and wave maker.
+Two Arduino Due microcontrollers are used to control and acquire signals from the WEC and wave maker.
 
 A number of key factors of SIWEED are:
 
@@ -203,7 +209,23 @@ A number of key factors of SIWEED are:
 
 %Insert items here
 \textit{Designator 1} & \textit{Name of Component 1} & \textit{Number of units} & \textit{Cost per unit} & \textit{Total cost} & \textit{Source} & \textit{Material type} \\\hline
-\textit{Designator 2} & \dots & \dots & \dots & \dots & \dots & \dots \\\hline
+\textit{Touchscreen Laptop} & \textit{Dell 210-ARYY} & \textit{1} & \textit{Cost per unit} & \textit{Total cost} & \textit{Source} & \textit{Material type} \\\hline
+\textit{Usb Isolator} & \textit{Name of Component 1} & \textit{1} & \textit{Cost per unit} & \textit{Total cost} & \textit{Digikey} & \textit{Material type} \\\hline
+\textit{Usb Hub} & \textit{Name of Component 1} & \textit{1 & \textit{Cost per unit} & \textit{Total cost} & \textit{Source} & \textit{Material type} \\\hline
+\textit{Arduino Due} & \textit{Arduino Due} & \textit{2} & \textit{Cost per unit} & \textit{Total cost} & \textit{Digikey} & \textit{Material type} \\\hline
+\textit{Level Shifter} & \textit{BSS138} & \textit{3} & \textit{Cost per unit} & \textit{Total cost} & \textit{Digikey} & \textit{Material type} \\\hline
+\textit{Encoder Buffer} & \textit{Dual LS7366RR} & \textit{2} & \textit{Cost per unit} & \textit{Total cost} & \textit{Digikey} & \textit{Material type} \\\hline
+\textit{Encoder} & \textit{AMT102-V} & \textit{2} & \textit{Cost per unit} & \textit{Total cost} & \textit{Digikey} & \textit{Material type} \\\hline
+\textit{WEC Motor Controller} & \textit{Maxon ESCON Module 24/2} & \textit{1} & \textit{Cost per unit} & \textit{Total cost} & \textit{Maxon} & \textit{Material type} \\\hline
+\textit{WEC Motor} & \textit{Moxon EC-max 16, 283828} & \textit{1} & \textit{Cost per unit} & \textit{Total cost} & \textit{Maxon} & \textit{Material type} \\\hline
+\textit{Wavemaker Motor Controller} & \textit{StepperOnline DM542T} & \textit{1} & \textit{Cost per unit} & \textit{Total cost} & \textit{Source} & \textit{Material type} \\\hline
+\textit{WaveMaker Motor} & \textit{StepperOnline 23HS45-4204S} & \textit{1} & \textit{Cost per unit} & \textit{Total cost} & \textit{Source} & \textit{Material type} \\\hline
+\textit{Power Supply} & \textit{MDS-400ADB24AA} & \textit{1} & \textit{Cost per unit} & \textit{Total cost} & \textit{Digikey} & \textit{Material type} \\\hline
+\textit{Power Bus} & \textit{Name of Component 1} & \textit{1} & \textit{Cost per unit} & \textit{Total cost} & \textit{Digikey} & \textit{Material type} \\\hline
+\textit{Estop} & \textit{Name of Component 1} & \textit{1} & \textit{Cost per unit} & \textit{Total cost} & \textit{Source} & \textit{Material type} \\\hline
+\textit{Inferred Limit} & \textit{485-2168} & \textit{1} & \textit{Cost per unit} & \textit{Total cost} & \textit{Digikey} & \textit{Material type} \\\hline
+\textit{Physical Limit} & \textit{0659NB-C283} & \textit{2} & \textit{Cost per unit} & \textit{Total cost} & \textit{Digikey} & \textit{Material type} \\\hline
+\textit{Wave Probe} & \textit{OSSI-010-002E Wave Staff} & \textit{2} & \textit{Cost per unit} & \textit{Total cost} & \textit{OSSI} & \textit{Material type} \\\hline
 % Designator 3 & Name of Component 2 & Number of units & Cost per unit & Total cost & Source of materials & Material type \\\hline
 \end{tabu}
 
