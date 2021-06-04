@@ -28,7 +28,8 @@ void MiniGen::configSPIPeripheral()
   pinMode(_FSYNCPin, OUTPUT);    // Make the FSYCPin an output; this is analogous
                                  //  to chip select in most systems.
   digitalWrite(_FSYNCPin, HIGH);
-
+  SPI.setDataMode(SPI_MODE2);  // Clock idle high, data capture on falling edge
+  SPI.begin();
 
   #ifndef MINIGEN_COMPATIBILITY_MODE
     if (SPI_HAS_TRANSACTION) {     // needed for Teensy and Teensy-like uCs
