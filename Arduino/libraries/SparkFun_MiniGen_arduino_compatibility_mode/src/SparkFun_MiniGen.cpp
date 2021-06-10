@@ -211,6 +211,7 @@ void MiniGen::adjustFreq(FREQREG reg, uint32_t newFreq)
   if (reg==FREQ0) temp |= 0x4000;
   else            temp |= 0x8000;
   // Now, we can write temp out to the device.
+  Serial.println();		//!!!!!!!!!!!!!!!remove this
   SPIWrite(temp);
   // Okay, that's the lower 14 bits. Now let's grab the upper 14.
   temp = (uint16_t)(newFreq>>14);

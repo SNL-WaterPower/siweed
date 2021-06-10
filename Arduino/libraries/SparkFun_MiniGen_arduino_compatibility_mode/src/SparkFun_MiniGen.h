@@ -27,6 +27,7 @@ class MiniGen
 
   void configSPIPeripheral();
   void SPIWrite(uint16_t data);
+  void print16(uint16_t toPrint);
 
   public:
   enum MODE {TRIANGLE, SINE, SQUARE, SQUARE_2};

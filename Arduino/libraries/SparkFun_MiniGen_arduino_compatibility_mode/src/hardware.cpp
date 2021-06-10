@@ -25,12 +25,14 @@ Tested and working on Teensy 3.2 and ATMEGA328.
 //  code to fit the new target.
 void MiniGen::configSPIPeripheral()
 {
-  pinMode(_FSYNCPin, OUTPUT);    // Make the FSYCPin an output; this is analogous
+  //pinMode(_FSYNCPin, OUTPUT);    // Make the FSYCPin an output; this is analogous
                                  //  to chip select in most systems.
-  digitalWrite(_FSYNCPin, HIGH);
-  SPI.setDataMode(SPI_MODE2);  // Clock idle high, data capture on falling edge
-  SPI.begin();
-
+  //digitalWrite(_FSYNCPin, HIGH);
+  //SPI.setDataMode(_FSYNCPin, SPI_MODE2);  // Clock idle high, data capture on falling edge
+  //SPI.setBitOrder(_FSYNCPin, MSBFIRST);
+  //SPI.setClockDivider(_FSYNCPin, 1000);
+  SPI.begin(_FSYNCPin);
+/*
   #ifndef MINIGEN_COMPATIBILITY_MODE
     if (SPI_HAS_TRANSACTION) {     // needed for Teensy and Teensy-like uCs
       SPI.begin();
@@ -40,6 +42,7 @@ void MiniGen::configSPIPeripheral()
       SPI.begin();
     }
   #endif
+  */
 }
 
 // SPIWrite is optimized for this part. All writes are 16-bits; some registers
@@ -48,16 +51,31 @@ void MiniGen::configSPIPeripheral()
 //  functions will properly prepare the data with that information.
 void MiniGen::SPIWrite(uint16_t data)
 {
+	Serial.println(data, DEC);
+	uint16_t temp = data;
+	for(int i = 15; i >= 0; i--){             
+    byte val = (byte)((temp >> i) & B00000001);
+    switch(val){
+      case 0:
+        Serial.print("0");
+        break;
+      case 1:
+        Serial.print("1");
+        break;
+		}
+	}
+  Serial.println("");
   //#if defined(MINIGEN_COMPATIBILITY_MODE)
-    SPI.beginTransaction(SPISettings(_SPI_CLK_FREQ,MSBFIRST,SPI_MODE2));
+  SPI.beginTransaction(_FSYNCPin, SPISettings(_SPI_CLK_FREQ,MSBFIRST,SPI_MODE2));
   //#endif
 
-  digitalWrite(_FSYNCPin, LOW);
-  SPI.transfer((byte)(data>>8));
-  SPI.transfer((byte)data);
-  digitalWrite(_FSYNCPin, HIGH);
+  //digitalWrite(_FSYNCPin, LOW);
+  SPI.transfer(_FSYNCPin, (byte)(data>>8));//, SPI_CONTINUE);
+  SPI.transfer(_FSYNCPin, (byte)data);
+  //SPI.transfer16(_FSYNCPin, data, SPI_CONTINUE);
+  //digitalWrite(_FSYNCPin, HIGH);
 
   //#if defined(MINIGEN_COMPATIBILITY_MODE)
-    SPI.endTransaction();
+  SPI.endTransaction();
   //#endif
 }
