@@ -24,16 +24,10 @@ The Sandia Interactive Wave Energy Education Display (SIWEED) is a small portabl
 ### Prerequisites
 - SIWEED requires 
 	- [Arduino IDE 1.8.13](https://www.arduino.cc/en/main/software) or higher for programming Arduinos
-		- Libraries 
-			- DueTimer(1.4.7)
-			- Encoder (1.4.1)
-			- Jonswan
-	- [Processing IDE 3.5.4](https://processing.org/download/) or higher for programming the GU
-		- Libraries
-			- Sound
-			- Console
-			- Meter
-			- ControlP5
+		- Libraries are included in the repo. Many are modified, so you need to use the versions in the repo.
+		- Arduino SAM boards package
+	- [Processing IDE 3.5.4](https://processing.org/download/) or higher for programming the GUI
+		- Libraries are included in the repo. Many are modified, so you need to use the versions in the repo.
 
 
 ### Installation
@@ -53,12 +47,20 @@ Open Processing IDE
 Change the location of your sketchbook folder to ~\siweed\Processing at File > Preferences > Sketchbook location to 
 Ex: C:\Users\user\Documents\GitHub\siweed\Processing
 ```
-5. Change Arduino IDE board to "Arduino Mega or Mega 2560"
+5. Change Arduino IDE board to "Arduino Due Programming Port"
 ```
-This can be found at Tools > Board > Arduino Mega or Mega 2560
+This can be found at Tools > Board > Arduino ARM(32 - bits) Boards > Arduino Due Programming Port
+
+If you do not see the Arduino ARM(32 - bits) Boards, you need to install the SAM boards package by going to tools > board > boards manager, searching SAM, 
+and installing the SAM package.
 ```
-NOTE: When programming the Arduino DUE board, make sure to change the selected board to: Arduino DUE (Progamming Port).
-Also, make sure that the microUSB is plugged into the programming port of the DUE
+6. Upload the sketches to the Arduinos
+```
+With the Arduinos connected, select a port in tools > port, be sure to choose a port with an arduino plugged in. Go to file > sketchbook, and open WaveMaker_Controller.
+Upload the sketch. 
+
+Switch the port to the other arduino, and open WEC_Controller. Upload the sketch. That is all for the arduinos, you can close the IDE if you wish.
+```
 <!-- Running the GUI -->
 ### Running the GUI
 1. Open processing.exe 
@@ -68,7 +70,7 @@ Also, make sure that the microUSB is plugged into the programming port of the DU
 
 <!-- System layout -->
 ## System layout
-SIWEED uses a PC to control two Arduinos: (1) an Arduino Mega to run the wavemaker and (2) an Arduino Due to run the WEC.
+SIWEED uses a PC to control two Arduino Dues: (1) to run the wavemaker and (2) to run the WEC.
 A detailed illustration of the system layout is shown in the diagram below.
 
 ![system layout](https://github.com/SNL-WaterPower/siweed/blob/develop/documentation/diagrams/systemLayoutPNG.png)
@@ -87,10 +89,10 @@ A detailed illustration of the system layout is shown in the diagram below.
  - System update rates:
  	- Processing (GUI): 30 Hz
  	- Arduinos:
- 		- Wave make (Mega)
+ 		- Wave maker
  			- General: 100 Hz
  			- Serial communication: 30 Hz
- 		- WEC (Due)
+ 		- WEC
  			- General: 100 Hz
  			- Serial communication: 30 Hz
 
