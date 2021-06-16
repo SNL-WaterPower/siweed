@@ -20,7 +20,7 @@ void updateTau()    //called by interupt
       break;
     case 0:
       tauCommand = tau;       //direct control
-      //tauCommand = 0.6*tau*sin(0.5F*2*PI*millis()/1000);
+      //tauCommand = 0.0035*sin(0.05*2*PI*millis()/1000);
       break;
     case 1:
       tauCommand = kp * pos + -kd * vel;      //PD feedback control
@@ -92,8 +92,8 @@ void sendSerial() {  //called by interupt
     Serial.write('e');
     sendFloat(encPos());
     Serial.write('t');
-    //takes analog value from pin(0-4095), and maps from 10%-90% to amperage, and converts to toruqe
-    tauCommanded = map(analogRead(tauInPin),0, 4095, -0.7620, 0.7620) * torqueConstant;    //!!!!!
+    //takes analog value from pin(0-4095)(0-3.3v), and maps to amperage, and converts to toruqe and adds sign
+    tauCommanded = mapFloat(analogRead(tauInPin),0, 4095, -0.7620, 0.7620) * torqueConstant;//* tauCommand/abs(tauCommand);    //!!!!!
     sendFloat(tauCommanded);
     Serial.write('p');
     sendFloat(power);

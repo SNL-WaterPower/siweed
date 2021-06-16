@@ -22,7 +22,7 @@ float WCVelScale = 20;
 ////////////////////////////
 boolean debug = false;    //for debug print statements. Also disables GUI console, and puts it in processing
 boolean guiConsole = true; 
-boolean dataLogging = false;    //if this is true, a .csv with most variables will be written, but it has a memory leak and cannot run at high performance for more than a few minutes
+boolean dataLogging = true;    //if this is true, a .csv with most variables will be written, but it has a memory leak and cannot run at high performance for more than a few minutes
 
 Println console; //Needed for GUI console to work
 Textarea consoleOutput; //Needed for GUI console to work
