@@ -3,27 +3,27 @@ import processing.serial.*;
 import java.lang.Math.*;
 import java.util.LinkedList;
 
-
-boolean debug = false;    //for debug print statements. Also disables GUI console, and puts it in processing
-boolean guiConsole = true; 
-boolean dataLogging = false;    //if this is true, a .csv with most variables will be written, but it has a memory leak and cannot run at high performance for more than a few minutes
-boolean basicMode = false;
+//MODIFIERS: Change these booleans to adjust runtime functionality:
+static final boolean debug = false;    //for debug print statements. Also disables GUI console, and puts it in processing
+static final boolean guiConsole = true; 
+static final boolean dataLogging = false;    //if this is true, a .csv with most variables will be written in the data folder with the sketch
+static final boolean basicMode = true;      //disables some control modes, to make the GUI simpler to use
 ////////////////////Scaling section:
 //input scaling:
-float WMJogScale = 1000;
-float WMAmpScale = 1000;
-float WMSigHScale = 1000;    //These should be a multiple of 10, so units can stay accurate
-float WCJogScale = 1000;
-float WCPScale = 80;
-float WCDScale = 600;
-float WCSigHScale = 1000; 
+static final float WMJogScale = 1000;
+static final float WMAmpScale = 1000;
+static final float WMSigHScale = 1000;    //These should be a multiple of 10, so units can stay accurate
+static final float WCJogScale = 1000;
+static final float WCPScale = 80;
+static final float WCDScale = 600;
+static final float WCSigHScale = 1000; 
 //chart scaling:    //these factors are used in serial upon receipt of variables.
-float waveElevationScale = 1000;
-float WMPosScale = 400;
-float WCPosScale = 500;
-float WCTauScale = 1000;
-float WCPowScale = 5000;
-float WCVelScale = 20;
+static final float waveElevationScale = 1000;
+static final float WMPosScale = 400;
+static final float WCPosScale = 500;
+static final float WCTauScale = 1000;
+static final float WCPowScale = 5000;
+static final float WCVelScale = 20;
 ////////////////////////////
 
 Println console; //Needed for GUI console to work
@@ -61,7 +61,7 @@ void setup() {
   if (dataLogging) {
     initializeDataLogging();
   }
-  initializeUI();
+  //initializeUI();
   myMeter = new Meter(-2.0, 2.0);    //min and max
 }
 boolean initialized = false;
@@ -70,6 +70,7 @@ void draw() {
   if (!initialized) {  //Because these take too long, they need to be run in draw(setup cannot take more that 5 seconds.)
     initializeSerial();    //has a 2+ second delay
     unitTests();
+    initializeUI();    //This needs to be done last, so that modes are set up properly
     initialized = true;
   }
   displayUpdate(); 

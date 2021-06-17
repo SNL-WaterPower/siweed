@@ -104,7 +104,6 @@ void initializeUI() {
     .setFont(buttonFont)
     .setColorBackground(buttonblue); 
 
-
   //WEC controls buttons //
   torque = cp5.addButton("torque")
     .setPosition(zeroLocationRight, modeButtonsY)
@@ -119,7 +118,6 @@ void initializeUI() {
     .setLabel("Feedback")
     .setFont(buttonFont)
     .setColorBackground(buttonblue); 
-
 
   seaWEC = cp5.addButton("seaWEC")
     .setPosition(zeroLocationRight + buttonWidth*2, modeButtonsY)
@@ -149,7 +147,6 @@ void initializeUI() {
     .setSize(buttonWidth*2, buttonHeight)
     .setLabel("Wave Elevation")
     .setFont(buttonFont); 
-
 
   //WEC info buttons //
   wecPosData = cp5.addButton("wecPosData")
@@ -498,7 +495,38 @@ void initializeUI() {
     .setFont(headerTextBoxFont)
     .setLineHeight(7*height/1100)
     .setColor(color(buttonblue));
+  if (basicMode) {      //These settings if in basic mode. Removes some functionality
+    //Reset size and position of buttons we do want:
+    function.setPosition(zeroLocationLeft, modeButtonsY)
+    .setSize(buttonWidth*2 - spaceBetweenButtons, buttonHeight)
+    .setLabel("Function Mode")
+    .setFont(buttonFont)
+    .setColorBackground(buttonblue); 
 
+    off.setPosition(zeroLocationLeft + buttonWidth*2, modeButtonsY)
+      .setSize(buttonWidth*2, buttonHeight)
+      .setLabel("OFF")
+      .setFont(buttonFont)
+      .setColorBackground(buttonblue); 
+    //WEC control buttons: //
+    feedback.setPosition(zeroLocationRight, modeButtonsY)
+      .setSize(buttonWidth*2 - spaceBetweenButtons, buttonHeight)
+      .setLabel("Feedback")
+      .setFont(buttonFont)
+      .setColorBackground(buttonblue);   
+
+    offWEC.setPosition(zeroLocationRight + buttonWidth*2, modeButtonsY)
+      .setSize(buttonWidth*2, buttonHeight)
+      .setLabel("Off")
+      .setFont(buttonFont)
+      .setColorBackground(buttonblue);
+    //hide buttons we don't want:
+    jog.hide();
+    sea.hide(); 
+    torque.hide();
+    seaWEC.hide();
+    //virtually press the remaining buttons to be in the correct mode at startup:
+  }
   //set chart buttons true at startup by virtually pressing the button:
   wavePosData();
   wecPosData();
