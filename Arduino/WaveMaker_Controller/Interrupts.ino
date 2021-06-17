@@ -74,11 +74,9 @@ void controlLoop() {  //due version
   volatile float stepsPerSecond = mToSteps(sp);
   volatile unsigned long freqReg;
   if (mode == -1 || stepsPerSecond < 12) {  //stop
-    freqReg = gen.freqCalc(0);
-    gen.adjustFreq(MiniGen::FREQ0, freqReg); //stop moving
+    AD.setFrequency(MD_AD9833::CHAN_0, 0);
   } else {
-    freqReg = gen.freqCalc(stepsPerSecond);
-    gen.adjustFreq(MiniGen::FREQ0, freqReg); //start moving
+    AD.setFrequency(MD_AD9833::CHAN_0, stepsPerSecond); //start moving
   }
 
 }

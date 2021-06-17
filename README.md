@@ -84,9 +84,9 @@ A detailed illustration of the system layout is shown in the diagram below.
  	- Mass of dry tank: ?
  	- Volume: 135 L (~36 gal)
  - WEC: 
- 	- Diameter: 6 cm
-   	- Mass: 0.04 kg list item
-   	- Natural frequency: ~3.4 Hz list item
+ 	- Diameter: 12 cm
+   	- Mass: 0.04 kg list item		!!needs updating
+   	- Natural frequency: ~3.4 Hz list item	!!needs updating
  - System update rates:
  	- Processing (GUI): 30 Hz
  	- Arduinos:

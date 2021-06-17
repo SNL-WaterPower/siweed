@@ -1,13 +1,11 @@
-#define MINIGEN_COMPATIBILITY_MODE
 #include <miniWaveTankJonswap.h>
 #include <SuperDroidEncoderBuffer.h>
 #include<DueTimer.h>
 #include<math.h>
 //#include <PID_v1.h>
 #include <SPI.h>
-#include <SparkFun_MiniGen.h>
-
-MiniGen gen; //signal generator
+#include <MD_AD9833.h>
+MD_AD9833  AD(10);  // Hardware SPI
 miniWaveTankJonswap jonswap(512.0 / 64.0, 0.5, 2.5); //period, low frequency, high frequency. frequencies will be rounded to multiples of df(=1/period)
 //jonswap(512.0 / 32.0, 0.5, 2.5);
 //df = 1 / _period; num_fs = (int)((f_high - f_low) / df);
@@ -75,13 +73,8 @@ volatile float inputFnc(volatile float tm) {  //inputs time in seconds //outputs
 void setup() {
   initSerial();
   initialProbe1 = analogRead(probe1Pin);
-  gen = MiniGen(10, 100000);//initalize signal generator with FSYNC pin 10. This constructor needs to be run in setup, not before
-  gen.reset(); //reset signal generator, that way we have a known starting location.
-  //At power up, the singal generator will output 100hz
-  gen.setMode(MiniGen::SQUARE); //setting signal generator to make a square wave.
-  gen.setFreqAdjustMode(MiniGen::FULL); //Full takes the longest longer to write, but allows to change from any frequency to any other frequency
-  unsigned long freqReg = gen.freqCalc(0);
-  gen.adjustFreq(MiniGen::FREQ0, freqReg); //Making sure the signal generator isnt making the motor move at start
+  AD.begin();
+  AD.setMode(MD_AD9833::MODE_SQUARE1);
   //encoder buffer setup:
   for (int i = 0; i < 10; i++)      //tries i times or until it works. Messy but functional
   {
@@ -102,22 +95,20 @@ void setup() {
   digitalWrite(13, LOW);    //initialization of maxRate indicator led
   /////////Zero encoder:
   digitalWrite(dirPin, HIGH);
-  freqReg = gen.freqCalc(100); //setting the signal generator to x hz
-  gen.adjustFreq(MiniGen::FREQ0, freqReg); //start moving
+  AD.setFrequency(MD_AD9833::CHAN_0, 100);
   float initialPos = encPos();
   delay(10);
   while (analogRead(limitPin) > 500) {   //move up until the beam is broken
     if (encPos() - initialPos == 0)    //if motor is not moving(software testing), move on.
       break;
   }
-  digitalWrite(dirPin, LOW);
+  digitalWrite(dirPin, LOW);    //switch direction
   delay(10);
   while (analogRead(limitPin) < 500) {  //move down until the beam is unbroken
     if (encPos() - initialPos == 0)    //if motor is not moving(software testing), move on.
       break;
   }
-  freqReg = gen.freqCalc(0); //stop moving motor
-  gen.adjustFreq(MiniGen::FREQ0, freqReg);
+  AD.setFrequency(MD_AD9833::CHAN_0, 0);
 
   encoderBuff.command2Reg(CNTR, IR_RegisterAction_CLR); //zero encoder
 
