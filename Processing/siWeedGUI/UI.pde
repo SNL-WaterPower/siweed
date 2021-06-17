@@ -526,6 +526,8 @@ void initializeUI() {
     torque.hide();
     seaWEC.hide();
     //virtually press the remaining buttons to be in the correct mode at startup:
+    off();
+    feedback();
   }
   //set chart buttons true at startup by virtually pressing the button:
   wavePosData();
