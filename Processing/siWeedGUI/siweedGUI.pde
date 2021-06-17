@@ -3,6 +3,11 @@ import processing.serial.*;
 import java.lang.Math.*;
 import java.util.LinkedList;
 
+
+boolean debug = false;    //for debug print statements. Also disables GUI console, and puts it in processing
+boolean guiConsole = true; 
+boolean dataLogging = false;    //if this is true, a .csv with most variables will be written, but it has a memory leak and cannot run at high performance for more than a few minutes
+boolean basicMode = false;
 ////////////////////Scaling section:
 //input scaling:
 float WMJogScale = 1000;
@@ -20,9 +25,6 @@ float WCTauScale = 1000;
 float WCPowScale = 5000;
 float WCVelScale = 20;
 ////////////////////////////
-boolean debug = false;    //for debug print statements. Also disables GUI console, and puts it in processing
-boolean guiConsole = true; 
-boolean dataLogging = true;    //if this is true, a .csv with most variables will be written, but it has a memory leak and cannot run at high performance for more than a few minutes
 
 Println console; //Needed for GUI console to work
 Textarea consoleOutput; //Needed for GUI console to work
@@ -61,17 +63,7 @@ void setup() {
   }
   initializeUI();
   myMeter = new Meter(-2.0, 2.0);    //min and max
-  //originalx = width;
-  //originaly = height;
 }
-//void keyPressed() {
-//  println("test start");
-//  port2.write('!');
-//  sendFloat(0, port2);
-//  wec.mode = 5;
-//  testTime = millis();
-//}
-//int testTime = 0;
 boolean initialized = false;
 void draw() {
   int timestamp = 0;   //for debuging
@@ -84,12 +76,6 @@ void draw() {
   drawFFT();
   //Meter control:
   myMeter.update(pow*WCPowScale);
-  //if (originalx != width || originaly != height) {    //if window is resized, reinitialize UI
-  //  originalx = width;
-  //  originaly = height;
-  //  initializeUI();
-  //  println("resized");
-  //}
   if (!WMConnected) {
     //do nothing
   } else if (waveMaker.mode == 1 && position.getValue() != waveMaker.mag*WMJogScale) {  //only sends if value has changed  

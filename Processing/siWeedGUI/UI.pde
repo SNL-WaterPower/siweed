@@ -207,6 +207,20 @@ void initializeUI() {
     .setSize(buttonWidth, buttonHeight)
     .setLabel("100%");
 
+  //pop up buttons:
+  waveQs = cp5.addButton("waveQs")
+    .setPosition(zeroLocationLeft + columnWidth - 30*width/2560, 90*height/1100)
+    .setSize(30*width/2560, 30*height/1440)
+    .setColorBackground(buttonblue)
+    .setFont(buttonFont)
+    .setLabel("?");
+  wecQs = cp5.addButton("wecQs")
+    .setPosition(zeroLocationRight + columnWidth - 30*width/2560, 90*height/1100)
+    .setSize(30*width/2560, 30*height/1440)
+    .setColorBackground(buttonblue)
+    .setFont(buttonFont)
+    .setLabel("?");
+
   // Sliders // 
   int sliderX, sliderY;
   sliderX = zeroLocationLeft;
@@ -226,7 +240,7 @@ void initializeUI() {
     .setColorCaptionLabel(color(buttonblue));
 
   // Motor Function Mode Sliders
-  h = cp5.addSlider("Height (MM)") 
+  h = cp5.addSlider("Amplitude (MM)") 
     .setRange(0, 20) //slider range
     .setPosition(sliderX, sliderY) 
     .setSize(sliderSizeX, sliderSizeY)
@@ -248,7 +262,7 @@ void initializeUI() {
 
 
   // Motor Sea State Mode Sliders
-  sigH = cp5.addSlider("Significant Height (MM)")  
+  sigH = cp5.addSlider("Significant Amplitude (MM)")  
     .setRange(0, 10) //slider range
     .setPosition(sliderX, sliderY) 
     .setSize(sliderSizeX, sliderSizeY)
@@ -769,6 +783,7 @@ void wecPowData() {
 }
 
 void waveQs() {
+  println("clicked");
   if (waveText.isVisible()) {
     waveText.hide();
   } else {
@@ -863,14 +878,14 @@ void displayUpdate() {
   line(zeroLocationLeft, 725*height/1100+buttonHeight, zeroLocationLeft + columnWidth, 725*height/1100+buttonHeight);
   line(zeroLocationRight, 725*height/1100+buttonHeight, zeroLocationRight + columnWidth, 725*height/1100+buttonHeight);
   image(LHSPic, 0, 0, width/2.7, height); //lhs pic
-
+  /*
   //controls button pop up behavior for info boxes
-  if (mousePressed && waveText.isVisible()) {
-    waveText.hide();
-  }
-  if (mousePressed && wecText.isVisible()) { 
-    wecText.hide();
-  }
+   if (mousePressed && waveText.isVisible()) {
+   waveText.hide();
+   }
+   if (mousePressed && wecText.isVisible()) { 
+   wecText.hide();
+   }*/
   //controls power indicators
   if (pow*WCPowScale >= 1.25) {
     quad1.setColorBackground(green).setColorActive(green);
