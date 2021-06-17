@@ -7,7 +7,7 @@ import java.util.LinkedList;
 static final boolean debug = false;    //for debug print statements. Also disables GUI console, and puts it in processing
 static final boolean guiConsole = true; 
 static final boolean dataLogging = false;    //if this is true, a .csv with most variables will be written in the data folder with the sketch
-static final boolean basicMode = true;      //disables some control modes, to make the GUI simpler to use
+static final boolean basicMode = false;      //disables some control modes, to make the GUI simpler to use
 ////////////////////Scaling section:
 //input scaling:
 static final float WMJogScale = 1000;
@@ -61,7 +61,7 @@ void setup() {
   if (dataLogging) {
     initializeDataLogging();
   }
-  //initializeUI();
+  initializeUI();
   myMeter = new Meter(-2.0, 2.0);    //min and max
 }
 boolean initialized = false;
@@ -70,7 +70,17 @@ void draw() {
   if (!initialized) {  //Because these take too long, they need to be run in draw(setup cannot take more that 5 seconds.)
     initializeSerial();    //has a 2+ second delay
     unitTests();
-    initializeUI();    //This needs to be done last, so that modes are set up properly
+    //press buttons to initialize GUI and Arduino modes:
+    //set chart buttons true at startup by virtually pressing the button:
+    wavePosData();
+    wecPosData();
+    if (!basicMode) {    //if in normal mode, virtually press these buttons
+      jog();
+      torque();
+    } else {    //if in basic mode, start with theses buttons pressed:
+      off();
+      feedback();
+    }
     initialized = true;
   }
   displayUpdate(); 

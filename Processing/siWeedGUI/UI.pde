@@ -81,7 +81,7 @@ void initializeUI() {
     .setSize(buttonWidth - spaceBetweenButtons, buttonHeight)
     .setLabel("Jog Mode")
     .setFont(buttonFont )
-    .setColorBackground(turq);    //starts on
+    .setColorBackground(buttonblue);
 
   function = cp5.addButton("fun")
     .setPosition(zeroLocationLeft + buttonWidth, modeButtonsY)
@@ -110,7 +110,7 @@ void initializeUI() {
     .setSize(buttonWidth - spaceBetweenButtons, buttonHeight)
     .setLabel("Torque")
     .setFont(buttonFont)
-    .setColorBackground(green);       //starts on
+    .setColorBackground(buttonblue);
 
   feedback = cp5.addButton("feedback")
     .setPosition(zeroLocationRight + buttonWidth, modeButtonsY)
@@ -156,7 +156,6 @@ void initializeUI() {
     .setLabel("Position")
     .setFont(buttonFont); 
 
-
   wecVelData = cp5.addButton("wecVelData")
     .setPosition(zeroLocationRight + buttonWidth, chartButtonsY)
     .setColorBackground(grey)
@@ -170,7 +169,6 @@ void initializeUI() {
     .setSize(buttonWidth - spaceBetweenButtons, buttonHeight)
     .setLabel("Torque")
     .setFont(buttonFont);
-
 
   wecPowData = cp5.addButton("wecPowData")
     .setPosition(zeroLocationRight + buttonWidth*3, chartButtonsY)
@@ -234,6 +232,7 @@ void initializeUI() {
     .setSize(sliderSizeX, sliderSizeY)
     .setColorForeground(color(turq))
     .setColorBackground(color(buttonblue))
+    .hide()
     .setColorCaptionLabel(color(buttonblue));
 
   // Motor Function Mode Sliders
@@ -298,6 +297,7 @@ void initializeUI() {
     .setSize(sliderSizeX, sliderSizeY)
     .setColorForeground(color(green))
     .setColorBackground(color(buttonblue))
+    .hide()
     .setColorCaptionLabel(color(buttonblue)); 
 
   // WEC Feedback Sliders   
@@ -528,13 +528,7 @@ void initializeUI() {
     sea.hide(); 
     torque.hide();
     seaWEC.hide();
-    //virtually press the remaining buttons to be in the correct mode at startup:
-    off();
-    feedback();
   }
-  //set chart buttons true at startup by virtually pressing the button:
-  wavePosData();
-  wecPosData();
 }
 //button functions:
 /////////////////// MAKES BUTTONS DO THINGS ////////////////////////////////////
