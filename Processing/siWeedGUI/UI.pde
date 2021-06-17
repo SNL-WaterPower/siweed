@@ -498,10 +498,10 @@ void initializeUI() {
   if (basicMode) {      //These settings if in basic mode. Removes some functionality
     //Reset size and position of buttons we do want:
     function.setPosition(zeroLocationLeft, modeButtonsY)
-    .setSize(buttonWidth*2 - spaceBetweenButtons, buttonHeight)
-    .setLabel("Function Mode")
-    .setFont(buttonFont)
-    .setColorBackground(buttonblue); 
+      .setSize(buttonWidth*2 - spaceBetweenButtons, buttonHeight)
+      .setLabel("Function Mode")
+      .setFont(buttonFont)
+      .setColorBackground(buttonblue); 
 
     off.setPosition(zeroLocationLeft + buttonWidth*2, modeButtonsY)
       .setSize(buttonWidth*2, buttonHeight)
@@ -520,6 +520,9 @@ void initializeUI() {
       .setLabel("Off")
       .setFont(buttonFont)
       .setColorBackground(buttonblue);
+    //move dGain slider up
+    dGain.setPosition(sliderX, sliderY);
+
     //hide buttons we don't want:
     jog.hide();
     sea.hide(); 
@@ -661,7 +664,11 @@ void feedback() {
   offWEC.setColorBackground(buttonblue);
   wec.mode = 2; 
   torqueSlider.hide();
-  pGain.show();
+  if (!basicMode) {    //don't show the pgain slider in basic mode
+    pGain.show();
+  } else {
+    pGain.hide();
+  }
   dGain.show();
   sigHWEC.hide();
   peakFWEC.hide();
