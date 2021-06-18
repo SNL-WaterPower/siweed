@@ -1,0 +1,3 @@
+With these controls you can adjust the wavemaker to create larger, smaller, faster, or slower waves. The "Sea State" mode will allow you to adjust the parameters of a more natural wave sequence, whereas "Function Mode" gives you control of a standard sine wave. See how adjusting wave parameters affects how much power can be harvested from the waves.
+
+**Only the first line of this file is read.
