@@ -365,27 +365,25 @@ void initializeUI() {
   peakFWEC.setValue(0.3);
   gammaWEC.setValue(0.3);
 
-  waveText = cp5.addTextarea("Wave Infromation") //is this used?
+  waveText = cp5.addTextarea("Wave Infromation")
     .setPosition(zeroLocationLeft, 150*height/1100)
-    .setSize(550, 400)
+    .setSize(columnWidth, 200*height/1080)
     .setFont(createFont("arial", 16*width/1920))
-    .setLineHeight(14*height/1100)
-    .setColor(turq)
+    .setLineHeight(18*height/1100)
+    .setColor(white)
     .setColorBackground(buttonblue)
-    .setColorForeground(color(255, 100))
-    .setText("At vero eos et: accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas. Molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.")
+    .setText(loadStrings("waveText.txt")[0])      //loads the first line of text in this text file in the data folder
     .hide()
     ;
 
-  wecText = cp5.addTextarea("WEC Infromation")//is this used?
-    .setPosition(260*width/1920, 750*height/1100)
-    .setSize(550*width/1920, 400*height/1100)
-    .setFont(createFont("arial", 16))
-    .setLineHeight(14*height/1100)
-    .setColor(turq)
+  wecText = cp5.addTextarea("WEC Infromation")
+    .setPosition(zeroLocationRight, 150*height/1100)
+    .setSize(columnWidth, 200*height/1080)
+    .setFont(createFont("arial", 16*width/1920))
+    .setLineHeight(18*height/1100)
+    .setColor(white)
     .setColorBackground(buttonblue)
-    .setColorForeground(color(255, 100))
-    .setText("At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.")
+    .setText(loadStrings("wecText.txt")[0])    //loads the first line of text in this text file in the data folder
     .hide()
     ;
 
