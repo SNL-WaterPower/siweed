@@ -814,7 +814,6 @@ void wecPowData() {
 }
 
 void waveQs() {
-  println("clicked");
   if (waveText.isVisible()) {
     waveText.hide();
   } else {
