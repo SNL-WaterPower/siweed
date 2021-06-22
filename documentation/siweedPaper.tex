@@ -124,23 +124,23 @@ A system diagram is shown in \figurename~\ref{fig:siweed_layout}.
 \end{figure}
 The system is controlled by a Windows PC running a graphical user interface (GUI) developed using Processing\footnote{\url{https://processing.org}} and the controlP5 library\footnote{\url{http://www.sojamo.de/libraries/controlP5/}}.
 A screen shot of the GUI is shown in \figurename~\ref{fig:siweed_guiScreenShot}.
-
-The upper left hand part of the GUI pertains to control of the wave maker, which allows the user to switch between operational modes (``jog,'' ``function,'' ``sea state,'' and ``off'') and set the relevant parameters.
-If, for example, the system is in ``sea state'' mode, the user can set the significant wave height ($H_s$), peak frequency ($f_p$), and peakedness factor ($\gamma$) for a JONSWAP wave spectrum.
+It is divided into three sections: The left instructional side, ``Mission Control", and ``System Status"
 
 \begin{figure}[tb]
   \centering
   \includegraphics[width=1\textwidth]{diagrams/siweed_guiScreenShot.png}
-  \caption{Graphical user interface (GUI) screenshot. XX-update}
+  \caption{Graphical user interface (GUI) screenshot.}
   \label{fig:siweed_guiScreenShot}
 \end{figure}
 
-The lower left hand quadrant of the GUI contains controls for the WEC, which can be set into ``torque'' mode; in which the user directly sets a commanded torque, ``feedback'' mode; where proportional and integral feedback factors can be set by the user; ``multi-sine'' mode, which allows for open-loop multi-sine signals to be set by the user; and ``off.''
+The left side of the ``Mission Control" section of the GUI pertains to control of the wave maker, which allows the user to switch between operational modes (``jog,'' ``function,'' ``sea state,'' and ``off'') and set the relevant parameters.
+If, for example, the system is in ``sea state'' mode, the user can set the significant wave height ($H_s$), peak frequency ($f_p$), and peakedness factor ($\gamma$) for a JONSWAP wave spectrum.
 
-The right hand portion of the GUI shows plots and indicators of the system status.
-XX\dots{}
+The right side of the ``Mission Control" section of the GUI  contains controls for the WEC, which can be set into ``torque'' mode; in which the user directly sets a commanded torque, ``feedback'' mode; where proportional and integral feedback factors can be set by the user; ``multi-sine'' mode, which allows for open-loop multi-sine signals to be set by the user; and ``off.''
 
-Two Arduino Due microcontrollers are used to control and acquire signals from the WEC and wave maker.
+The ``System Status" section shows two plots, one for the WEC and one for the Wavemaker, with each allowing the user to choose what data is plotted. Below the plots are an FFT of the generated waves, and a radial meter that displays the hypothetical generated power of the WEC.
+
+Two Arduino Due microcontrollers are used to control and acquire signals from the WEC and Wavemaker.
 
 A number of key factors of SIWEED are:
 
@@ -218,14 +218,17 @@ A number of key factors of SIWEED are:
 % > Clearly reference design files and component parts described in the Design File Summary and Bill of Materials. 
 % >Highlight potential safety concerns that may arise
 
-\textit{Provide detailed, step by step instructions for the construction of the reported hardware
- include all necessary information for reproducing the submitted hardware.
+Using the System Layout diagram in \figurename~\ref{fig:siweed_layout}, the bill of materials, and other dimensions listed in this document, a functionally similar version of this wavetank can be reconstructed. Many parts can be substituted with similar ones, such as the laptop, transistors, power supply, or the tank itself. Software specific hardware, such as the Arduinos or Encoder Buffers should not be substituted. 
+Software setup:
 \begin{itemize}
-\item Explain and, when possible, characterize design decisions. Including design alternatives if they exist. 
-\item Use visual instructions such as schematics, images, and videos. 
-\item Clearly reference design files and component parts described in the Design File Summary and Bill of Materials. 
-\item Highlight potential safety concerns that may arise
-\end{itemize}}
+\item Download the latest version of Arduino IDE and Processing IDE.
+\item Download the Master SIWEED Repository.
+\item Change the Sketchbook Location for the Arduino IDE to \textbackslash siweed\textbackslash Arduino.
+\item Change Sketchbook Location for the Processing IDE to \textbackslash siweed\textbackslash Processing.
+\item Change Arduino IDE board to ``Arduino Due Programming Port".
+\item Upload the sketches to the Arduinos.
+\item A more detailed version of these instructions can be found in the README file of the repository.
+\end{itemize}
 
 \section{Operation instructions}
 %Provide detailed instructions for the safe and proper operation of the hardware. 
@@ -233,12 +236,16 @@ A number of key factors of SIWEED are:
 %> Use visual instructions as necessary. 
 %> Highlight potential safety hazards.
 
-\textit{Provide detailed instructions for the safe and proper operation of the hardware. 
+After performing the setup described in the build instructions, the project can be operated as follows:
 \begin{itemize}
-\item Step-by-step operational instructions for operating the hardware. 
-\item Use visual instructions as necessary. 
-\item Highlight potential safety hazards.
-\end{itemize}}
+\item Power on the wavetank, ensuring any kill switches are closed, and any pinch points are clear.
+\item Open processing.exe.
+\item File $>$ Open $>$ siweedGUI.pde (Ex: C\textbackslash Users\textbackslash user\textbackslash Documents\textbackslash GitHub\textbackslash siweed\textbackslash Processing\textbackslash siWeedGUI\textbackslash siweedGUI.pde) 
+\item (optional)Edit modifiers. These are booleans at the top of the code that will do things like enable basic mode, debugging, or data logging.
+\item Click ``Run".
+\item The GUI will open, allow some time for it to load.
+\item In the console, which will either be in the GUI, made visible by pressing the console button in the bottom right corner, or in the Processing console, depending on your boolean modifiers, unit tests should be visible that can be used to verify that everything is functioning properly.
+\end{itemize}
 
 \section{Validation and characterization}
 %Demonstrate the operation of the hardware and characterize its performance over relevant critical metrics
@@ -246,12 +253,13 @@ A number of key factors of SIWEED are:
 %> If possible, characterize performance of the hardware over operational parameters. 
 %> Create a bulleted list that describes the capabilities (and limitations) of the hardware. For example consider descriptions of load, operation time, spin speed, coefficient of variation, accuracy, precision and etc. 
 
-\textit{Demonstrate the operation of the hardware and characterize its performance over relevant critical metrics
+Demonstrate the operation of the hardware and characterize its performance over relevant critical metrics -XX
 \begin{itemize}
-\item Demonstrate the use of the hardware for a relevant use case. 
-\item If possible, characterize performance of the hardware over operational parameters. 
-\item Create a bulleted list that describes the capabilities (and limitations) of the hardware. For example consider descriptions of load, operation time, spin speed, coefficient of variation, accuracy, precision and etc. 
-\end{itemize}}
+\item \textbf{Torque constant verification:} The factory torque constant was verfied by logging the position and amperage of the WEC while commanding a slow sinusoidal amperage. This data was used with the diameter of the WEC to find the displacement, and calculate the torque applied for each point of given amerage. This resulted in a constant of 7.52 mNm/A, and a coefficient of friction of about 0.45mNm. The detailed process and data can be found here: https://github.com/SNL-WaterPower/siweed/issues/59 -XX insert this link properly
+\item \textbf{Wave Probes:} -XX
+\item \textbf{WEC feedback control} - XX
+% >Create a bulleted list that describes the capabilities (and limitations) of the hardware. For example consider descriptions of load, operation time, spin speed, coefficient of variation, accuracy, precision and etc. 
+\end{itemize}
 
 \section{Declaration of interest}
 Declarations of interest: none
