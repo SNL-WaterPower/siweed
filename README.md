@@ -65,9 +65,9 @@ Switch the port to the other arduino, and open WEC_Controller. Upload the sketch
 ### Running the GUI
 1. Open processing.exe 
 2. File > Open > siweedGUI.pde (Ex: C:\Users\user\Documents\GitHub\siweed\Processing\siWeedGUI\siweedGUI.pde)
-2.5. (optional)Edit modifiers. These are booleans at the top of the code that will do things like enable basic mode, debugging, or data logging.
-3. Click "Run"
-4. The GUI will open, allow some time for it to load. 
+3. (optional)Edit modifiers. These are booleans at the top of the code that will do things like enable basic mode, debugging, or data logging.
+4. Click "Run"
+5. The GUI will open, allow some time for it to load. 
 
 <!-- System layout -->
 ## System layout
