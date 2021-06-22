@@ -14,16 +14,16 @@ static final float WMJogScale = 1000;
 static final float WMAmpScale = 1000;
 static final float WMSigHScale = 1000;    //These should be a multiple of 10, so units can stay accurate
 static final float WCJogScale = 1000;
-static final float WCPScale = 80;
-static final float WCDScale = 600;
+static final float WCPScale = 40;
+static final float WCDScale = 200;
 static final float WCSigHScale = 1000; 
 //chart scaling:    //these factors are used in serial upon receipt of variables.
-static final float waveElevationScale = 1000;
-static final float WMPosScale = 400;
+static final float waveElevationScale = 500;
+static final float WMPosScale = 250;
 static final float WCPosScale = 500;
 static final float WCTauScale = 1000;
-static final float WCPowScale = 5000;
-static final float WCVelScale = 20;
+static final float WCPowScale = 15000;
+static final float WCVelScale = 60;
 ////////////////////////////
 
 Println console; //Needed for GUI console to work
@@ -66,6 +66,10 @@ void setup() {
 }
 boolean initialized = false;
 void draw() {
+  if (debug) {
+    print("framerate: ");
+    println(frameRate);
+  }
   int timestamp = 0;   //for debuging
   if (!initialized) {  //Because these take too long, they need to be run in draw(setup cannot take more that 5 seconds.)
     initializeSerial();    //has a 2+ second delay

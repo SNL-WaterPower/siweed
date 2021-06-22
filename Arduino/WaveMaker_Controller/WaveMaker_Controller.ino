@@ -97,13 +97,13 @@ void setup() {
   digitalWrite(dirPin, HIGH);
   AD.setFrequency(MD_AD9833::CHAN_0, 100);
   float initialPos = encPos();
-  delay(10);
+  delay(20);
   while (analogRead(limitPin) > 500) {   //move up until the beam is broken
     if (encPos() - initialPos == 0)    //if motor is not moving(software testing), move on.
       break;
   }
   digitalWrite(dirPin, LOW);    //switch direction
-  delay(10);
+  delay(20);
   while (analogRead(limitPin) < 500) {  //move down until the beam is unbroken
     if (encPos() - initialPos == 0)    //if motor is not moving(software testing), move on.
       break;
@@ -142,12 +142,10 @@ void updateSpeedScalar() {    //used to prevent jumps/smooth start
   //Serial.println(speedScalar);
 
   if (speedScalar < 1) {
-    speedScalar += .0007;   //value determined by testing
+    speedScalar += .00007;   //value determined by testing
   } else {
     speedScalar = 1.0;
   }
-
-  //speedScalar = 1.0;
 }
 volatile float mToSteps(volatile float m) {
   return m * (1 / leadPitch) * gearRatio * motorStepsPerTurn; //m*(lead turns/m)*(motor turns/lead turn)*(steps per motor turn)

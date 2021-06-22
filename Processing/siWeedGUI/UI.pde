@@ -915,22 +915,22 @@ void displayUpdate() {
    wecText.hide();
    }*/
   //controls power indicators
-  if (pow*WCPowScale >= 1.25) {
+  if (myMeter.getAverageVal() >= 0.5) {
     quad1.setColorBackground(green).setColorActive(green);
   } else {
     quad1.setColorBackground(grey).setColorActive(grey);    //if under threshold, then grey
   }
-  if (pow*WCPowScale >= 3) {
+  if (myMeter.getAverageVal() >= 1) {
     quad2.setColorBackground(green).setColorActive(green);
   } else {
     quad2.setColorBackground(grey).setColorActive(grey);    //if under threshold, then grey
   }
-  if (pow*WCPowScale >= 4.25) {
+  if (myMeter.getAverageVal() >= 1.5) {
     quad3.setColorBackground(green).setColorActive(green);
   } else {
     quad3.setColorBackground(grey).setColorActive(grey);    //if under threshold, then grey
   }
-  if (pow*WCPowScale >= 5) {
+  if (myMeter.getAverageVal() >= 1.8) {
     quad4.setColorBackground(green).setColorActive(green);
   } else {
     quad4.setColorBackground(grey).setColorActive(grey);    //if under threshold, then grey
