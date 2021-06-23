@@ -2,8 +2,8 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class Meter {
-  int xmin = 780*width/1920;      //coordinates in pixels
-  int xmax = 1284*width/1920;
+  int xmin = 1350*width/1920;      //coordinates in pixels
+  int xmax = 1854*width/1920;
   int ymin = 725*height/1100;
   int ymax = ymin+270*height/1100;
 

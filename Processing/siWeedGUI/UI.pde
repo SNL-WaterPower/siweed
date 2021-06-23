@@ -179,25 +179,25 @@ void initializeUI() {
 
   //Power meter buttons //
   quad1 = cp5.addButton("quad1")
-    .setPosition(zeroLocationLeft, powerMeterButtonsY)
+    .setPosition(zeroLocationRight, powerMeterButtonsY)
     .setColorBackground(grey)
     .setSize(buttonWidth - spaceBetweenButtons, buttonHeight)
     .setLabel("25%");  
 
   quad2 = cp5.addButton("quad2")
-    .setPosition(zeroLocationLeft + buttonWidth, powerMeterButtonsY)
+    .setPosition(zeroLocationRight + buttonWidth, powerMeterButtonsY)
     .setColorBackground(grey)
     .setSize(buttonWidth - spaceBetweenButtons, buttonHeight)
     .setLabel("50%"); 
 
   quad3 = cp5.addButton("quad3")
-    .setPosition(zeroLocationLeft + buttonWidth*2, powerMeterButtonsY)
+    .setPosition(zeroLocationRight + buttonWidth*2, powerMeterButtonsY)
     .setColorBackground(grey)
     .setSize(buttonWidth - spaceBetweenButtons, buttonHeight)
     .setLabel("75%"); 
 
   quad4 = cp5.addButton("quad4")
-    .setPosition(zeroLocationLeft + buttonWidth*3, powerMeterButtonsY)
+    .setPosition(zeroLocationRight + buttonWidth*3, powerMeterButtonsY)
     .setColorBackground(grey)
     .setSize(buttonWidth, buttonHeight)
     .setLabel("100%");
@@ -463,7 +463,7 @@ void initializeUI() {
     .setColor(color(white)); 
 
   myTextarea = cp5.addTextarea("txtPowerMeter")
-    .setPosition(zeroLocationLeft+180*width/1920, 730*height/1100)
+    .setPosition(zeroLocationRight+170*width/1920, 730*height/1100)
     .setText("POWER METER")
     .setSize(300*width/1920, 40*height/1100)
     .setFont(smallTextBoxFont)
@@ -471,14 +471,14 @@ void initializeUI() {
     .setColor(color(white));
 
   myTextarea = cp5.addTextarea("FFTTitle")
-    .setPosition(zeroLocationRight + 170*width/1920, 730*height/1100)
+    .setPosition(zeroLocationLeft + 170*width/1920, 730*height/1100)
     .setText("Frequency Analysis")
     .setSize(300*width/1920, 40*height/1100)
     .setFont(smallTextBoxFont)
     .setLineHeight(10*height/1100)
     .setColor(color(white));
 
-  myTextarea = cp5.addTextarea("txtFFT")
+  myTextarea = cp5.addTextarea("txtWECInformation")
     .setPosition(zeroLocationRight + 160*width/1920, 448*height/1100)
     .setText("WEC INFORMATION")
     .setSize(300*width/1920, 40*height/1100)
@@ -829,7 +829,7 @@ void wecQs() {
 
 void drawFFT() {
   //////////////////FFT vars: These need to be in the function in order for width and height scaling to work
-  float originx = 1375*width/1920;    //x and y coordinates of the FFT graph
+  float originx = zeroLocationLeft+25*width/1920;    //x and y coordinates of the FFT graph
   float originy = 1025*height/1100;
   float xScale = 1.6*width/1920;    //how spaced the graph is horizontally
   float yScale = 50000*height/1100;    //how tall the data is. axis has to be set separately
@@ -891,29 +891,21 @@ void displayUpdate() {
   fill(buttonblue);
   rect(zeroLocationLeft, 445*height/1100, columnWidth, buttonHeight); // Wave Information
   rect(zeroLocationRight, 445*height/1100, columnWidth, buttonHeight); // Wec Information
-  rect(zeroLocationLeft, 725*height/1100, columnWidth, buttonHeight); // Power Meter title
-  rect(zeroLocationRight, 725*height/1100, columnWidth, buttonHeight); // FFT title
-  rect(zeroLocationLeft, 760*height/1100, columnWidth, 250*height/1100);  //meter background
-  rect(zeroLocationRight, 760*height/1100, columnWidth, 250*height/1100+buttonHeight);  //FFT background
+  rect(zeroLocationRight, 725*height/1100, columnWidth, buttonHeight); // Power Meter title
+  rect(zeroLocationLeft, 725*height/1100, columnWidth, buttonHeight); // FFT title
+  rect(zeroLocationRight, 760*height/1100, columnWidth, 250*height/1100);  //meter background
+  rect(zeroLocationLeft, 760*height/1100, columnWidth, 250*height/1100+buttonHeight);  //FFT background
   //draw white rectangles behind the buttons to make it look like there are lines separating them:
   fill(white);
   rect(zeroLocationLeft, chartButtonsY, buttonWidth*4, buttonHeight);
   rect(zeroLocationRight, chartButtonsY, buttonWidth*4, buttonHeight);
-  rect(zeroLocationLeft, powerMeterButtonsY, buttonWidth*4, buttonHeight);
+  rect(zeroLocationRight, powerMeterButtonsY, buttonWidth*4, buttonHeight);
   //draw lines to separate FFT and Meter titles from data
   stroke(white);
   strokeWeight(2);
   line(zeroLocationLeft, 725*height/1100+buttonHeight, zeroLocationLeft + columnWidth, 725*height/1100+buttonHeight);
   line(zeroLocationRight, 725*height/1100+buttonHeight, zeroLocationRight + columnWidth, 725*height/1100+buttonHeight);
   image(LHSPic, 0, 0, width/2.7, height); //lhs pic
-  /*
-  //controls button pop up behavior for info boxes
-   if (mousePressed && waveText.isVisible()) {
-   waveText.hide();
-   }
-   if (mousePressed && wecText.isVisible()) { 
-   wecText.hide();
-   }*/
   //controls power indicators
   if (myMeter.getAverageVal() >= 0.5) {
     quad1.setColorBackground(green).setColorActive(green);
