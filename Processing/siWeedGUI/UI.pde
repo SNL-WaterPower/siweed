@@ -217,13 +217,13 @@ void initializeUI() {
     .setFont(buttonFont)
     .setLabel("?");
   waveChartQs = cp5.addButton("waveChartQs")
-    .setPosition(zeroLocationLeft + columnWidth - 30*width/2560, chartLocationY-50)
+    .setPosition(zeroLocationLeft + columnWidth - 30*width/2560, chartLocationY-30*height/1100)
     .setSize(30*width/2560, 30*height/1440)
     .setColorBackground(buttonblue)
     .setFont(buttonFont)
     .setLabel("?");
   wecChartQs = cp5.addButton("wecChartQs")
-    .setPosition(zeroLocationRight + columnWidth - 30*width/2560, chartLocationY-50)
+    .setPosition(zeroLocationRight + columnWidth - 30*width/2560, chartLocationY-30*height/1100)
     .setSize(30*width/2560, 30*height/1440)
     .setColorBackground(buttonblue)
     .setFont(buttonFont)
@@ -444,7 +444,7 @@ void initializeUI() {
   myTextarea = cp5.addTextarea("txtWaveInformation")
     .setPosition(zeroLocationLeft+160*width/1920, 448*height/1100)
     .setText("WAVE INFORMATION" )
-    .setSize(350*width/1920, 40*height/1100)
+    .setSize(300*width/1920, 40*height/1100)
     .setFont(smallTextBoxFont)
     .setLineHeight(10*height/1100)
     .setColor(color(white)); 
@@ -504,7 +504,7 @@ void initializeUI() {
     .setLineHeight(18*height/1100)
     .setColor(black)
     .setColorBackground(white)
-    .setText(loadStrings("waveText.txt")[0])      //loads the first line of text in this text file in the data folder
+    .setText(loadStrings("popUpText.txt")[1])      //loads the first line of text in this text file in the data folder
     .hide();
 
   wecText = cp5.addTextarea("WEC Information")
@@ -512,49 +512,49 @@ void initializeUI() {
     .setSize(columnWidth, 200*height/1080)
     .setFont(createFont("arial", 16*width/1920))
     .setLineHeight(18*height/1100)
-    .setColor(white)
-    .setColorBackground(buttonblue)
-    .setText(loadStrings("wecText.txt")[0])    //loads the first line of text in this text file in the data folder
+    .setColor(black)
+    .setColorBackground(white)
+    .setText(loadStrings("popUpText.txt")[3])    //loads the first line of text in this text file in the data folder
     .hide();
 
   waveChartText = cp5.addTextarea("Wave Chart Information")
     .setPosition(zeroLocationLeft, chartLocationY)
-    .setSize(columnWidth, 200*height/1080)
+    .setSize(columnWidth, chartSizeY+buttonHeight)
     .setFont(createFont("arial", 16*width/1920))
     .setLineHeight(18*height/1100)
     .setColor(black)
     .setColorBackground(white)
-    .setText(loadStrings("waveText.txt")[0])      //loads the first line of text in this text file in the data folder
+    .setText(loadStrings("popUpText.txt")[5])      //loads the first line of text in this text file in the data folder
     .hide();
 
   wecChartText = cp5.addTextarea("WEC Chart Information")
     .setPosition(zeroLocationRight, chartLocationY)
-    .setSize(columnWidth, 200*height/1080)
-    .setFont(createFont("arial", 16*width/1920))
-    .setLineHeight(18*height/1100)
-    .setColor(white)
-    .setColorBackground(buttonblue)
-    .setText(loadStrings("wecText.txt")[0])    //loads the first line of text in this text file in the data folder
-    .hide();
-
-  FFTText = cp5.addTextarea("FFT Information")
-    .setPosition(zeroLocationLeft, 760*height/1100)
-    .setSize(columnWidth, 200*height/1080)
+    .setSize(columnWidth, chartSizeY+buttonHeight)
     .setFont(createFont("arial", 16*width/1920))
     .setLineHeight(18*height/1100)
     .setColor(black)
     .setColorBackground(white)
-    .setText(loadStrings("waveText.txt")[0])      //loads the first line of text in this text file in the data folder
+    .setText(loadStrings("popUpText.txt")[7])    //loads the first line of text in this text file in the data folder
+    .hide();
+
+  FFTText = cp5.addTextarea("FFT Information")
+    .setPosition(zeroLocationLeft, 760*height/1100)
+    .setSize(columnWidth, 250*height/1100+buttonHeight)
+    .setFont(createFont("arial", 16*width/1920))
+    .setLineHeight(18*height/1100)
+    .setColor(black)
+    .setColorBackground(white)
+    .setText(loadStrings("popUpText.txt")[9])      //loads the first line of text in this text file in the data folder
     .hide();
 
   meterText = cp5.addTextarea("Meter Information")
     .setPosition(zeroLocationRight, 760*height/1100)
-    .setSize(columnWidth, 200*height/1080)
+    .setSize(columnWidth, 250*height/1100+buttonHeight)
     .setFont(createFont("arial", 16*width/1920))
     .setLineHeight(18*height/1100)
-    .setColor(white)
-    .setColorBackground(buttonblue)
-    .setText(loadStrings("wecText.txt")[0])    //loads the first line of text in this text file in the data folder
+    .setColor(black)
+    .setColorBackground(white)
+    .setText(loadStrings("popUpText.txt")[11])    //loads the first line of text in this text file in the data folder
     .hide();
 
   if (basicMode) {      //These settings if in basic mode. Removes some functionality
@@ -571,7 +571,8 @@ void initializeUI() {
     offWEC.setPosition(zeroLocationRight + buttonWidth*2, modeButtonsY)
       .setSize(buttonWidth*2, buttonHeight);
     //move dGain slider up
-    dGain.setPosition(sliderX, sliderY);
+    dGain.setPosition(sliderX, sliderY)
+    .setLabel("Damping");
 
     //hide buttons we don't want:
     jog.hide();
@@ -969,8 +970,8 @@ void displayUpdate() {
   fill(green);
   rect(zeroLocationRight, 90*height/1100, columnWidth, bannerHeight); // Change WEC controls
   fill(buttonblue);
-  rect(zeroLocationLeft, 445*height/1100, columnWidth, buttonHeight); // Wave Information
-  rect(zeroLocationRight, 445*height/1100, columnWidth, buttonHeight); // Wec Information
+  rect(zeroLocationLeft, chartLocationY - 30*height/1100, columnWidth, buttonHeight); // Wave Information
+  rect(zeroLocationRight, chartLocationY - 30*height/1100, columnWidth, buttonHeight); // Wec Information
   rect(zeroLocationRight, 725*height/1100, columnWidth, buttonHeight); // Power Meter title
   rect(zeroLocationLeft, 725*height/1100, columnWidth, buttonHeight); // FFT title
   rect(zeroLocationRight, 760*height/1100, columnWidth, 250*height/1100);  //meter background

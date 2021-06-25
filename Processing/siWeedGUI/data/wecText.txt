@@ -1,3 +1,0 @@
-These controls adjust the wave energy converter. "Torque" mode will apply a constant force up or down, regardless of what the wave looks like. "Feedback" mode will act like car's suspension. The P gain will determine how much the WEC reacts to a change in positoin, much like a spring. The D gain will change how much the WEC resists change, like a damper. With a high D gain, and no P gain, the WEC won't care where it is, but will always resist movement. With high P gain and no D gain, the WEC will only try to push towards or away from its original position. Try to balance these to maximize power output.
-
-**Only the first line of this file is read.
