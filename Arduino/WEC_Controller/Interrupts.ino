@@ -2,6 +2,8 @@ const float interval = .01;    //interval of updateTau interupt in seconds
 const float serialInterval = .03125; //interval of serial interupt
 
 void initInterrupts() {
+  //This could instead be done with the setFrequency() function, but the control loop uses the time interval,
+  //so it's simpler to do this. Unit is microseconds
   Timer.getAvailable().attachInterrupt(sendSerial).start(serialInterval * 1.0e6);
   delay(50);
   Timer.getAvailable().attachInterrupt(updateTau).start(interval * 1.0e6);
@@ -40,11 +42,6 @@ void updateTau()    //called by interupt
     if (ampCommand > maxAmps) {    //ensure maximum so that duty cycle does not exceed 90%
       ampCommand = maxAmps;
     }
-//    if (tauCommand != 0) {
-//      tauCommanded = ampCommand * torqueConstant * (abs(tauCommand) / tauCommand);  // converts the ampCommand back to tau, and adds sign from original command. This is to account for saturation.
-//    } else {
-//      tauCommanded = 0;   //this prevents dividing by 0
-//    }
     
     float minCommand = mapFloat(minPwm, 0, 1, 0, 4095);    //maps 10% to 0-4095 for analogWrite   //!could be a constant
     float maxCommand = mapFloat(maxPwm, 0, 1, 0, 4095);    //maps 90% to 0-4095 for analogWrite   //!could be a constant
@@ -92,7 +89,7 @@ void sendSerial() {  //called by interupt
     sendFloat(encPos());
     Serial.write('t');
     //takes analog value from pin(0-4095)(0-3.3v), and maps to amperage, and converts to toruqe and adds sign
-    tauCommanded = mapFloat(analogRead(tauInPin),0, 4095, -0.7620, 0.7620) * torqueConstant;//* tauCommand/abs(tauCommand);    //!!!!!
+    tauCommanded = mapFloat(analogRead(tauInPin),0, 4095, -0.7620, 0.7620) * torqueConstant;
     sendFloat(tauCommanded);
     Serial.write('p');
     sendFloat(power);

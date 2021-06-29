@@ -36,11 +36,6 @@ volatile float probe1Buffer[buffSize];
 volatile float probe2Buffer[buffSize];
 volatile float jogBuffer[buffSize];
 const float maxRate = 0.25;   //max m/seconds
-/////////would like to put these in the interrupts tab, but cant without changing proect structure to .cpp and .h files.
-const float interval = .01;   //time between each interupt call in seconds //max value: 1.04
-//const float interval = .03125;   //time between each interupt call in seconds //max value: 1.04
-const float serialInterval = .03125;   //time between each interupt call in seconds //max value: 1.04    .03125 is 32 times a second to match processing's speed(32hz)
-//////////
 //Derived funciton here:
 const float leadPitch = .01;     //m/turn
 const float gearRatio = 12.0 / 60.0; //motor turns per lead screw turns
