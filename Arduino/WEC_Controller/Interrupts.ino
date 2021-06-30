@@ -16,21 +16,21 @@ void updateTau()    //called by interupt
   pos = encPos();
   vel = (pos - prevPos) / interval;
   switch (mode) {
-    case -1:
+    case 4:
       digitalWrite(enablePin, LOW);   //stop
       break;
-    case 0:
+    case 1:
       tauCommand = tau;       //direct control
       //tauCommand = 0.0035*sin(0.05*2*PI*millis()/1000);
       break;
-    case 1:
+    case 2:
       tauCommand = kp * pos + -kd * vel;      //PD feedback control
       break;
-    case 2:
+    case 3:
       tauCommand = calcTS(t);
       break;
   }
-  if (mode != -1) {
+  if (mode != 4) {
     //arduino needs to write a pwm signal to the motor controller with a duty cycle between 10% and 90%
     if (tauCommand > 0) {   //write direction
       digitalWrite(dirPin, HIGH);
@@ -42,12 +42,14 @@ void updateTau()    //called by interupt
     if (ampCommand > maxAmps) {    //ensure maximum so that duty cycle does not exceed 90%
       ampCommand = maxAmps;
     }
-    
+
     float minCommand = mapFloat(minPwm, 0, 1, 0, 4095);    //maps 10% to 0-4095 for analogWrite   //!could be a constant
     float maxCommand = mapFloat(maxPwm, 0, 1, 0, 4095);    //maps 90% to 0-4095 for analogWrite   //!could be a constant
     analogWrite(tauPin, mapFloat(ampCommand, minAmps, maxAmps, minCommand, maxCommand));    //sends to the motor controller after mapping from amps to pwm
     //analogWrite(tauPin, mapFloat(0.76*pos/100, minAmps, maxAmps, minCommand, maxCommand));  //makes a positive spring
     digitalWrite(enablePin, HIGH);
+  } else {
+    digitalWrite(enablePin, LOW);
   }
 }
 
@@ -83,17 +85,21 @@ void sendSerial() {  //called by interupt
     }
     Serial.write('u');
     sendFloat(4);     //4 indicates that all tests have been sent at least once
-
+    Serial.write('u');
+    sendFloat(4);     //sends again to match the packet size of normal serial
   } else {        //under normal operation
     Serial.write('e');
     sendFloat(encPos());
     Serial.write('t');
     //takes analog value from pin(0-4095)(0-3.3v), and maps to amperage, and converts to toruqe and adds sign
-    tauCommanded = mapFloat(analogRead(tauInPin),0, 4095, -0.7620, 0.7620) * torqueConstant;
+    tauCommanded = mapFloat(analogRead(tauInPin), 0, 4095, -0.7620, 0.7620) * torqueConstant;
     sendFloat(tauCommanded);
     Serial.write('p');
     sendFloat(power);
     Serial.write('v');
     sendFloat(vel);
+    Serial.write('c');
+    volatile float checksum = mode + tau + kp + kd + sigH + peakF + gam;//adds the values of anything that can ba changes by processing.
+    sendFloat(checksum);
   }
 }

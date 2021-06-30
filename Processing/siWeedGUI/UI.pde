@@ -572,7 +572,7 @@ void initializeUI() {
       .setSize(buttonWidth*2, buttonHeight);
     //move dGain slider up
     dGain.setPosition(sliderX, sliderY)
-    .setLabel("Damping");
+      .setLabel("Damping");
 
     //hide buttons we don't want:
     jog.hide();
@@ -611,8 +611,7 @@ void jog() {
 
   //set mode on arduino:
   if (WMConnected) {
-    port1.write('!');
-    sendFloat(0, port1);
+    sendSerial('!', waveMaker.mode, port1);
   }
   waveMaker.mag += 1;    //this parameter being adjusted will cause the main loop to send the initial data
 }
@@ -628,13 +627,11 @@ void fun() {
   sigH.hide();
   peakF.hide();
   gamma.hide();
-
   h.show();
   freq.show();
   //set mode on arduino:
   if (WMConnected) {
-    port1.write('!');
-    sendFloat(1, port1);
+    sendSerial('!', waveMaker.mode, port1);
   }
   waveMaker.amp += 1;    //this parameter being adjusted will cause the main loop to send the initial data
 }
@@ -653,10 +650,9 @@ void sea() {
   peakF.show();
   gamma.show();
   //set mode on arduino:
-  draw();    //this sends values before changing mode, which increases stability
+  //draw();    //this sends values before changing mode, which increases stability
   if (WMConnected) {
-    port1.write('!');
-    sendFloat(2, port1);
+    sendSerial('!', waveMaker.mode, port1);
   }
   waveMaker.sigH += 1;    //this parameter being adjusted will cause the main loop to send the initial data
 }
@@ -676,8 +672,7 @@ void off() {
   gamma.hide();
   //set mode on arduino:
   if (WMConnected) {
-    port1.write('!');
-    sendFloat(-1, port1);
+    Serial('!', sendFloat(waveMaker.mode, port1);
   }
 }
 
@@ -696,8 +691,7 @@ void torque() {
   peakFWEC.hide();
   gammaWEC.hide();
   if (WECConnected) {
-    port2.write('!');
-    sendFloat(0, port2);
+    sendSerial('!', wec.mode, port2);
   }
   wec.mag += 1;    //this parameter being adjusted will cause the main loop to send the initial data
 }   
@@ -719,8 +713,7 @@ void feedback() {
   peakFWEC.hide();
   gammaWEC.hide();
   if (WECConnected) {
-    port2.write('!');
-    sendFloat(1, port2);
+    sendSerial('!', wec.mode, port2);
   }
   wec.amp += 1;    //this parameter being adjusted will cause the main loop to send the initial data
 }
@@ -741,12 +734,10 @@ void seaWEC() {
   sigHWEC.show();
   peakFWEC.show();
   gammaWEC.show();
-  draw();    //this sends values before changing mode, which increases stability
+  //draw();    //this sends values before changing mode, which increases stability
   if (WECConnected) {
-    port2.write('!');
-    sendFloat(2, port2);
+    sendSerial('!', wec.mode, port2);
   }
-
   wec.sigH += 1;    //this parameter being adjusted will cause the main loop to send the initial data
 }
 
@@ -763,8 +754,7 @@ void offWEC() {
   peakFWEC.hide();
   gammaWEC.hide();
   if (WECConnected) {
-    port2.write('!');
-    sendFloat(-1, port2);
+    sendSerial('!', wec.mode, port2);
   }
 }
 
@@ -909,6 +899,10 @@ void meterQs() {
 }
 
 void drawFFT() {
+  if (millis() > previousMillis+fftInterval) {
+    previousMillis = millis();
+    updateFFT();
+  }
   //////////////////FFT vars: These need to be in the function in order for width and height scaling to work
   float originx = zeroLocationLeft+25*width/1920;    //x and y coordinates of the FFT graph
   float originy = 1025*height/1100;

@@ -9,8 +9,8 @@ bool encoderBuffInit, didItWork_MDR0, didItWork_MDR1, didItWork_DTR;   //variabl
 unsigned char MDR0_settings = MDRO_x4Quad | MDRO_freeRunningCountMode | MDRO_indexDisable | MDRO_syncIndex | MDRO_filterClkDivFactor_1;
 unsigned char MDR1_settings = MDR1_4ByteCounterMode | MDR1_enableCounting | MDR1_FlagOnIDX_NOP | MDR1_FlagOnCMP_NOP | MDR1_FlagOnBW_NOP | MDR1_FlagOnCY_NOP;
 bool newJonswapData = false, sendUnitTests = false;
-volatile float sigH, peakF, _gamma;
-volatile int mode = 0;    //-1 stop, 0 torque control, 1 feedback control, 2 sea state
+volatile float sigH, peakF, gam;
+volatile int mode = 0;     //1 = jog, 2= feedback, 3 = "sea", 4 = off
 volatile int n;   //number of components
 volatile double t = 0;    //time in seconds
 volatile float tau = 0, kp = 0, kd = 0, power = 0, vel = 0;
@@ -123,7 +123,7 @@ volatile float mapFloat(volatile float x, volatile float in_min, volatile float 
 volatile float calcTS(volatile float tm) {      //calculate jonswap timeseries values at time tm
   if (newJonswapData) {
     newJonswapData = false;
-    jonswap.update(sigH, peakF, _gamma);
+    jonswap.update(sigH, peakF, gam);
     n = jonswap.getNum();
     for (int i = 0; i < n; i++) {
       amps[i] = jonswap.getAmp(i);
@@ -150,7 +150,7 @@ void unitTests() {
   mode = 2;
   sigH = 5.0;
   peakF = 3.0;
-  _gamma = 7.0;
+  gam = 7.0;
   calcTS(0);   //assign amps and update jonswap
   for (int i = 0; i < jonswap.getNum(); i++) {
     //test amplitude array:

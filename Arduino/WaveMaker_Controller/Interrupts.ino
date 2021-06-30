@@ -29,7 +29,7 @@ void controlLoop() {  //due version
   sampleT = micros();
   prevVal = futurePos;
   futurePos = inputFnc(t + interval);  //time plus delta time
-  if (mode != 0 || abs(futurePos - pos) > deadzone) {    //deadband only if in jog mode.
+  if (mode != 1 || abs(futurePos - pos) > deadzone) {    //deadband only if in jog mode.
     velCommand = ((futurePos - pos) / interval); //estimated desired velocity in m/s, in order to hit target by next interupt call
   } else {
     velCommand = 0;
@@ -47,12 +47,11 @@ void controlLoop() {  //due version
   }
   volatile float stepsPerSecond = mToSteps(sp);
   volatile unsigned long freqReg;
-  if (mode == -1 || stepsPerSecond < 12) {  //stop
+  if (mode == 4 || stepsPerSecond < 12) {  //stop
     AD.setFrequency(MD_AD9833::CHAN_0, 0);
   } else {
     AD.setFrequency(MD_AD9833::CHAN_0, stepsPerSecond); //start moving
   }
-
 }
 
 void sendSerial() { //Due version
@@ -90,6 +89,8 @@ void sendSerial() { //Due version
     }
     Serial.write('u');
     sendFloat(4);     //4 indicates that all tests have been sent at least once
+    Serial.write('u');
+    sendFloat(4);     //sends again to match the packet size of normal serial
   } else {        //under normal operation
     Serial.write('1');    //to indicate wave probe data
     sendFloat(averageArray(probe1Buffer));
@@ -98,7 +99,10 @@ void sendSerial() { //Due version
     Serial.write('p');    //to indicate position
     sendFloat(encPos());
     Serial.write('d');    //to indicate alternate data
-    float lerpVal = lerp(prevVal, futurePos, (interval * 1.0e6) / (sampleT - prevSampleT)); //linear interpolate(initial value, final value, percentatge)//percentage is desired interval/actual interval
+    volatile float lerpVal = lerp(prevVal, futurePos, (interval * 1.0e6) / (sampleT - prevSampleT)); //linear interpolate(initial value, final value, percentatge)//percentage is desired interval/actual interval
     sendFloat(lerpVal);
+    Serial.write('c');
+    volatile float checksum = mode + j + a + f + sigH + peakF + gam;//adds the values of anything that can ba changes by processing.
+    sendFloat(checksum);
   }
 }

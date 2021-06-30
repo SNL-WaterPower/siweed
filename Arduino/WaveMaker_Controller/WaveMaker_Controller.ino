@@ -21,16 +21,16 @@ const int  dirPin = 5, limitPin = A0, probe1Pin = A1, probe2Pin = A2;
 float initialProbe1;    //initial height of probe 1
 volatile double t = 0;    //time in seconds
 volatile float speedScalar = 0;
-volatile int mode = 0;     //-1 is stop, 0 is jog, 1 is sine, 2 is sea state
+volatile int mode = 1;     // 1 = jog, 2 = function, 3 = sea, 4 = off
 volatile int n = 1;            //number of functions for the time series(either 1 or jonswap.getNum())
 const int maxComponents = 100;   //max needed number of frequency components
 volatile float amps[maxComponents];
 volatile float phases[maxComponents];
 volatile float freqs[maxComponents];
-volatile float sigH, peakF, gam;   //"gamma" is used in another library
+volatile float sigH, peakF, gam, a, f;  //jonswap vars and amplitude and frequncy of sine wave //"gamma" is used in another library
 //volatile float encPos;
 bool newJonswapData = false, sendUnitTests = false;
-volatile float desiredPos = 0;   //used for jog mode, starts at 0
+volatile float j = 0;   //used for jog mode, starts at 0
 const int buffSize = 10;    //number of data points buffered in the moving average filter
 volatile float probe1Buffer[buffSize];
 volatile float probe2Buffer[buffSize];
@@ -44,11 +44,12 @@ const float encStepsPerTurn = 3200.0;
 
 volatile float inputFnc(volatile float tm) {  //inputs time in seconds //outputs position in m
   volatile float val = 0;
-  if (mode == 0) {    //jog
-    val = desiredPos;
-  }
-  else if (mode > 0) {   //1 or 2
-    if (newJonswapData && mode == 2) {
+  if (mode == 1) {    //jog
+    val = j;
+  }else if (mode == 2) {    //sine mode
+    val = a * sin(2 * M_PI * tm * f);   
+  }else if(mode == 3){    //sea state mode
+    if (newJonswapData) {
       newJonswapData = false;
       jonswap.update(sigH, peakF, gam);
       n = jonswap.getNum();
@@ -81,9 +82,6 @@ void setup() {
       break;
     }
   }
-
-  //myPID.SetMode(AUTOMATIC);   //starts pid
-  //myPID.SetSampleTime((int)(interval * 1000));    //pid interval in milliseconds
 
   pinMode(dirPin, OUTPUT);
   pinMode(13, OUTPUT);

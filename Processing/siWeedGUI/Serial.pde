@@ -3,9 +3,11 @@ Serial port2;    //arduino WEC due
 boolean WMConnected, WECConnected;
 int connectionDelay  = 3500;      //how many ms to wait after connecting to a device. Can greatly slow the startup
 int baudRate = 57600;
-void initializeSerial() {
-  ///////////initialize Serial
 
+float WMChecksum, WECChecksum;
+int WMcmdCount, WECcmdCount;    //The cmdCount is the number of items sent with the last command ie. amplitude and frequency would give 2. This helps when verifying checksums
+void initializeSerial() {
+  ///////////initialize Serial:
   printArray(Serial.list());     //for debugging, shows all attached devices
   if (debug) println("Wavemaker Serial:");
   for (int i = 0; i < Serial.list().length; i++) {    //tries each device
@@ -68,36 +70,6 @@ void initializeSerial() {
     }
   }
 }
-void sendFloat(float f, Serial port)
-{
-  /* 
-   For Wavemaker:
-  /* '!' indicates mode switch, next int is mode
-   j indicates jog position
-   a indicates incoming amplitude
-   f indicates incoming frequency
-   s :sigH
-   p :peakF
-   g :gamma
-   
-   For WEC:
-   '!' indicates mode switch, next int is mode
-   t indicates torque command
-   k indicates kp -p was taken
-   d indicates kd
-   s :sigH
-   p :peakF
-   g :gamma
-   
-   EDIT: numbers are now in this format:  p1234>  has a scalar of 100, so no decimal, and no start char
-   */
-  byte[] byteArray = floatToByteArray(f);
-
-  port.write(byteArray);
-  if (debug) {
-    println("sent float: "+f);
-  }
-}
 void readWMSerial() {
   /*
   Wavemaker:
@@ -108,14 +80,13 @@ void readWMSerial() {
    u:unit tests
    */
   if (WMConnected) {
-    for (int i = 0; i <port1.available()/20; i++) {    //runs as many times to empty the buffer(bytes availible/ bytes read per loop).
+    for (int i = 0; i < port1.available()/5; i++) {    //runs as many times to empty the buffer(bytes availible/ bytes read per loop).
       switch(port1.readChar()) {
       case '1':
         WMUnitTests[0] = true;      //for unit testing and acquiring serial.
         probe1 = readFloat(port1);
         if (waveElClicked == true && !Float.isNaN(probe1)) {
           waveChart.push("waveElevation", probe1*waveElevationScale);
-          //println(probe1);
         }
         break;
       case '2':
@@ -148,6 +119,9 @@ void readWMSerial() {
           WMUnitTests[testNum] = true;
         }
         break;
+      case 'c':
+        WMChecksum = readFloat(port2);  
+        break;
       }
     }
   }
@@ -162,7 +136,7 @@ void readWECSerial() {
    u: unit testing
    */
   if (WECConnected) {
-    for (int i = 0; i <port2.available()/20; i++) {    //runs as many times to empty the buffer(bytes availible/ bytes read per loop). Since it runs 30 times a second, the arduino will send many samples per execution.
+    for (int i = 0; i < port2.available()/5; i++) {    //runs as many times to empty the buffer(bytes availible/ bytes read per loop).
       switch(port2.readChar()) {
       case 'e':
         wecPos = readFloat(port2);
@@ -198,8 +172,49 @@ void readWECSerial() {
           WECUnitTests[testNum] = true;
         }   
         break;
+      case 'c':
+        WECChecksum = readFloat(port2);  
+        break;
       }
     }
+  }
+}
+void sendSerial(char c, float f, Serial port, int cmdCount) {      //to send a command as a part of a set, cmdcount should be more than 1. For example, mode and then amplitude and frequency makes 3 commands. This is used for checksum verification.
+  port1.write((char)c);
+  sendFloat(f, port);
+  if (port == port1) {      //assigns the cmd count based on which port is sent to.
+    WMcmdCount = cmdCount;
+  } else if(port == port2) {
+    WECcmdCount = cmdCount;
+  }
+}
+void sendSerial(char c, float f, Serial port) {    //used for checksum verification of standalone commands.
+  sendSerial(c, f, port, 1);
+}
+void sendFloat(float f, Serial port) {
+  /* 
+   For Wavemaker:
+  /* '!' indicates mode switch, next int is mode
+   j indicates jog position
+   a indicates incoming amplitude
+   f indicates incoming frequency
+   s :sigH
+   p :peakF
+   g :gamma
+   
+   For WEC:
+   '!' indicates mode switch, next int is mode
+   t indicates torque command
+   k indicates kp -p was taken
+   d indicates kd
+   s :sigH
+   p :peakF
+   g :gamma
+   */
+  byte[] byteArray = floatToByteArray(f);
+  port.write(byteArray);
+  if (debug) {
+    println("sent float: "+f);
   }
 }
 float readFloat(Serial port) {
@@ -222,6 +237,18 @@ public static float byteArrayToFloat(byte[] bytes) {
   int intBits = 
     bytes[0] << 24 | (bytes[1] & 0xFF) << 16 | (bytes[2] & 0xFF) << 8 | (bytes[3] & 0xFF);
   return Float.intBitsToFloat(intBits);
+}
+void verifyChecksum() {
+  //TODO: make sendSerial() track what values are sent
+  //make this funciton check this checksum vs the one revcieved by serial
+  //if not matching, send mode and the last x functions
+  //for both arduinos
+}
+float WMChecksum() {
+  return waveMaker.mode + waveMaker.mag + waveMaker.amp + waveMaker.freq + waveMaker.sigH + waveMaker.peakF + waveMaker.gamma;
+}
+float WCChecksum() {
+  return wec.mode + wec.mag + wec.amp + wec.freq + wec.sigH + wec.peakF + wec.gamma;
 }
 //boolean isFloat(float val) {
 //  if (Float.isNaN(val)){

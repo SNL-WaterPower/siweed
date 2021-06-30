@@ -29,7 +29,7 @@ static final float WCVelScale = 60;
 Println console; //Needed for GUI console to work
 Textarea consoleOutput; //Needed for GUI console to work
 
-int queueSize = 512;    //power of 2 closest to 30(15) seconds at 32 samples/second    !!Needs to match arduino
+int queueSize = 512;    //power of 2 closest to 15 seconds at 32 samples/second    !!Needs to match sampling rate of arduino
 LinkedList fftList;
 fft myFFT;
 float[] fftArr;
@@ -87,42 +87,45 @@ void draw() {
     }
     initialized = true;
   }
+  if (initialized) {
+    if (dataLogging) {
+      logData();
+    }
+    readWMSerial();
+    readWECSerial();
+    verifyChecksum
+  }
   displayUpdate(); 
   drawFFT();
   //Meter control:
   myMeter.update(pow*WCPowScale);
+  //slider input:
   if (!WMConnected) {
     //do nothing
   } else if (waveMaker.mode == 1 && position.getValue() != waveMaker.mag*WMJogScale) {  //only sends if value has changed  
     //Jog:
     if (frameCount % 2 == 0) {      //limits how often data is sent
       waveMaker.mag = position.getValue()/WMJogScale;
-      port1.write('j');
-      sendFloat(waveMaker.mag, port1);
+      sendSerial('j', waveMaker.mag, port1, 1);
     }
     //function:
   } else if (waveMaker.mode == 2 && !mousePressed && (waveMaker.amp*WMAmpScale != h.getValue() || waveMaker.freq != freq.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
     waveMaker.amp = h.getValue()/WMAmpScale;
     waveMaker.freq = freq.getValue();
-    port1.write('a');
-    sendFloat(waveMaker.amp, port1);
-    port1.write('f');
-    sendFloat(waveMaker.freq, port1);
+    sendSerial('a', waveMaker.amp, port1);
+    sendSerial('f', waveMaker.freq, port1, 2);
     //Sea State:
   } else if (waveMaker.mode == 3 && !mousePressed && (waveMaker.sigH*WMSigHScale != sigH.getValue() || waveMaker.peakF != peakF.getValue() || waveMaker.gamma != gamma.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
     waveMaker.sigH = sigH.getValue()/WMSigHScale;
     waveMaker.peakF = peakF.getValue();
     waveMaker.gamma = gamma.getValue();
-    port1.write('s');
-    sendFloat(waveMaker.sigH, port1);
-    port1.write('p');
-    sendFloat(waveMaker.peakF, port1);
-    port1.write('g');
-    sendFloat(waveMaker.gamma, port1);    //gamma always needs to be the last sent
+    sendSerial('s', waveMaker.sigH, port1);
+    sendSerial('p', waveMaker.peakF, port1);
+    sendSerial('g', waveMaker.gamma, port1, 3);    //gamma always needs to be the last sent
     if (debug) {
       println("sending jonswap values");
     }
-  } 
+  }
 
   if (!WECConnected) {
     //do nothing
@@ -131,41 +134,22 @@ void draw() {
     if (frameCount % 2 == 0) {      //limits how often data is sent
       wec.mag = torqueSlider.getValue()/WCJogScale;
       //wec.mag = sin(0.1*2*PI*millis()/1000)*torqueSlider.getValue()/WCJogScale;
-      port2.write('t');
-      sendFloat(wec.mag, port2);
+      sendSerial('t', wec.mag, port2, 1);
     }
     //feedback:
   } else if (wec.mode == 2 && !mousePressed && (wec.amp*WCPScale != pGain.getValue() || wec.freq*WCDScale != dGain.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition) //for wec, amp is kp and freq is kd;
     wec.amp = pGain.getValue()/WCPScale;
     wec.freq = dGain.getValue()/WCDScale;
-    port2.write('k');
-    sendFloat(wec.amp, port2);
-    port2.write('d');
-    sendFloat(wec.freq, port2);
+    sendSerial('k', wec.amp, port2);
+    sendSerial('d', wec.freq, port2, 2);
     //Sea State:
   } else if (wec.mode == 3 && !mousePressed && (wec.sigH*WCSigHScale != sigHWEC.getValue() || wec.peakF != peakFWEC.getValue() || wec.gamma != gammaWEC.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
     wec.sigH = sigHWEC.getValue()/WCSigHScale;
     wec.peakF = peakFWEC.getValue();
     wec.gamma = gammaWEC.getValue();
-    port2.write('s');
-    sendFloat(wec.sigH, port2);
-    port2.write('p');
-    sendFloat(wec.peakF, port2);
-    port2.write('g');
-    sendFloat(wec.gamma, port2);    //gamma always needs to be the last sent
-  } 
-
-  /////FFT section(move to fft tab eventually): 
-  if (millis() > previousMillis+fftInterval) {
-    previousMillis = millis();
-    updateFFT();
-  }
-  if (initialized) {
-    if (dataLogging) {
-      logData();
-    }
-    readWMSerial();
-    readWECSerial();
+    sendSerial('s', wec.sigH, port2);
+    sendSerial('p', wec.peakF, port2);
+    sendSerial('g', wec.gamma, port2, 3);    //gamma always needs to be the last sent
   }
 }
 
