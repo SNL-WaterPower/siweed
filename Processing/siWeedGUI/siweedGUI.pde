@@ -67,8 +67,8 @@ void setup() {
 boolean initialized = false;
 void draw() {
   if (debug) {
-    print("framerate: ");
-    println(frameRate);
+    //print("framerate: ");
+    //println(frameRate);
   }
   int timestamp = 0;   //for debuging
   if (!initialized) {  //Because these take too long, they need to be run in draw(setup cannot take more that 5 seconds.)
