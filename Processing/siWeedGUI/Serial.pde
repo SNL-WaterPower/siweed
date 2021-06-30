@@ -5,8 +5,19 @@ int connectionDelay  = 3500;      //how many ms to wait after connecting to a de
 int baudRate = 57600;
 
 float WMChecksum, WECChecksum;
-int WMcmdCount, WECcmdCount;    //The cmdCount is the number of items sent with the last command ie. amplitude and frequency would give 2. This helps when verifying checksums
+int WMCmdCount, WECCmdCount;    //The cmdCount is the number of items sent with the last command ie. amplitude and frequency would give 2. This helps when verifying checksums
+public class Cmd {      //used to store each command
+  public char c;
+  public float f;
+  Cmd(char _c, float _f) {
+    c = _c;
+    f = _f;
+  }
+}
+LinkedList<Cmd> WMCmdList, WECCmdList;
 void initializeSerial() {
+  WMCmdList = new LinkedList<Cmd>();
+  WECCmdList = new LinkedList<Cmd>();
   ///////////initialize Serial:
   printArray(Serial.list());     //for debugging, shows all attached devices
   if (debug) println("Wavemaker Serial:");
@@ -27,7 +38,6 @@ void initializeSerial() {
         delay(connectionDelay);          //wait for connection to stabilize
         port1.clear();
         delay(100);        //after the connection stabilizes, this clears all the garbage and gives good data time to come through.
-
         readWMSerial();    //reads serial buffer and sets bool true if recieving normal results
         if (WMUnitTests[0]) {
           //correct board found
@@ -80,6 +90,7 @@ void readWMSerial() {
    u:unit tests
    */
   if (WMConnected) {
+    println(port1.available());
     for (int i = 0; i < port1.available()/5; i++) {    //runs as many times to empty the buffer(bytes availible/ bytes read per loop).
       switch(port1.readChar()) {
       case '1':
@@ -183,9 +194,13 @@ void sendSerial(char c, float f, Serial port, int cmdCount) {      //to send a c
   port1.write((char)c);
   sendFloat(f, port);
   if (port == port1) {      //assigns the cmd count based on which port is sent to.
-    WMcmdCount = cmdCount;
-  } else if(port == port2) {
-    WECcmdCount = cmdCount;
+    WMCmdCount = cmdCount;
+    WMCmdList.add(new Cmd(c, f));    //!!make sure this doesn't cause memory leak
+    if (WMCmdList.size() > 5) WMCmdList.remove();    //number of items stored in the list. Just needs to be at least the largest group of commands
+  } else if (port == port2) {
+    WECCmdCount = cmdCount;
+    WECCmdList.add(new Cmd(c, f));
+    if (WECCmdList.size() > 5) WECCmdList.remove();
   }
 }
 void sendSerial(char c, float f, Serial port) {    //used for checksum verification of standalone commands.
@@ -239,15 +254,32 @@ public static float byteArrayToFloat(byte[] bytes) {
   return Float.intBitsToFloat(intBits);
 }
 void verifyChecksum() {
-  //TODO: make sendSerial() track what values are sent
-  //make this funciton check this checksum vs the one revcieved by serial
-  //if not matching, send mode and the last x functions
-  //for both arduinos
+  if (WMConnected && WMChecksum != WMChecksumCalc()) {      //checks if calculated checksum and serial recieved checksum match
+    resendSerial(port1, WMCmdList, WMCmdCount, waveMaker.mode);
+    if (debug) println("Wavemaker checksum match failed");
+  }
+  if (WECConnected && WECChecksum != WMChecksumCalc()) {
+    resendSerial(port2, WECCmdList, WECCmdCount, wec.mode);
+    if (debug) println("WEC checksum match failed");
+  }
 }
-float WMChecksum() {
+void resendSerial(Serial port, LinkedList<Cmd> cmdList, int count, int mode) {
+  if (cmdList.size() < count)    //this will likely happen the first call, as the checksum is unlikely to match at initialization
+  {
+    if (debug) println("did not resend Serial, not enough command history");
+    return;
+  }
+  sendSerial('!', mode, port);     //always update mode
+  for (int i = count; i > 0; i--) {    //for the number of cmds
+    Cmd tempCmd = cmdList.get(cmdList.size() - i);          //resends in the order the commands were sent.
+    sendSerial(tempCmd.c, tempCmd.f, port, count);    //resend the values, and preserve cmdCount
+    if (debug) println("resent command: " + tempCmd.c + " " + tempCmd.f);
+  }
+}
+float WMChecksumCalc() {
   return waveMaker.mode + waveMaker.mag + waveMaker.amp + waveMaker.freq + waveMaker.sigH + waveMaker.peakF + waveMaker.gamma;
 }
-float WCChecksum() {
+float WCChecksumCalc() {
   return wec.mode + wec.mag + wec.amp + wec.freq + wec.sigH + wec.peakF + wec.gamma;
 }
 //boolean isFloat(float val) {

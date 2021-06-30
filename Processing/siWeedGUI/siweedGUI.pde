@@ -4,7 +4,7 @@ import java.lang.Math.*;
 import java.util.LinkedList;
 
 //MODIFIERS: Change these booleans to adjust runtime functionality:
-static final boolean debug = false;    //for debug print statements. Also disables GUI console, and puts it in processing
+static final boolean debug = true;    //for debug print statements. Also disables GUI console, and puts it in processing
 static final boolean guiConsole = true; 
 static final boolean dataLogging = false;    //if this is true, a .csv with most variables will be written in the data folder with the sketch
 static final boolean basicMode = false;      //disables some control modes, to make the GUI simpler to use
@@ -30,9 +30,9 @@ Println console; //Needed for GUI console to work
 Textarea consoleOutput; //Needed for GUI console to work
 
 int queueSize = 512;    //power of 2 closest to 15 seconds at 32 samples/second    !!Needs to match sampling rate of arduino
-LinkedList fftList;
+LinkedList<Float> fftList;     //used to store the data coming into the FFT
 fft myFFT;
-float[] fftArr;
+float[] fftArr;        //used to store the output from the fft
 //int originalx, originaly;    //used to track when the window is resized
 int previousMillis = 0;    //used to update fft 
 int fftInterval = 100;    //in milliseconds
@@ -53,9 +53,9 @@ void setup() {
   surface.setTitle("SIWEED");
   waveMaker = new UIData();
   wec = new UIData();
-  fftList = new LinkedList();
+  fftList = new LinkedList<Float>(); 
   myFFT = new fft();
-  fftArr = new float[queueSize*2];
+  fftArr = new float[queueSize*2];    //used to 
   waveMaker.mode = 1;    // 1 = jog, 2 = function, 3 = sea, 4 = off
   wec.mode = 1;  //1 = jog, 2= feedback, 3 = "sea", 4 = off
   if (dataLogging) {
@@ -86,14 +86,13 @@ void draw() {
       feedback();
     }
     initialized = true;
-  }
-  if (initialized) {
+  } else {      //if initialized
     if (dataLogging) {
       logData();
     }
     readWMSerial();
     readWECSerial();
-    verifyChecksum
+    verifyChecksum();
   }
   displayUpdate(); 
   drawFFT();

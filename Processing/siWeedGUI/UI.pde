@@ -672,7 +672,7 @@ void off() {
   gamma.hide();
   //set mode on arduino:
   if (WMConnected) {
-    Serial('!', sendFloat(waveMaker.mode, port1);
+    sendSerial('!', waveMaker.mode, port1);
   }
 }
 
