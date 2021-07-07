@@ -49,7 +49,7 @@ void setup() {
   frameRate(32);    //sets draw() to run x times a second.
   ///////initialize objects
   //size(1920, 1100, P2D); //need this for the touch screen
-  fullScreen(P2D);
+  fullScreen(P2D, 2);
   //surface.setResizable(true);    //throws an error
   surface.setTitle("SIWEED");
   waveMaker = new UIData();

@@ -60,13 +60,13 @@ void initializeUI() {
   //Fonts
   f = createFont("Arial", 16*width/1920, true);
   fb = createFont("Arial Bold Italic", 32*width/1920, true);
-  buttonFont = createFont("Arial Bold Italic", 12*width/1920, true);
-  bigButtonFont = createFont("Arial Bold Italic", 16*width/1920, true);
+  buttonFont = createFont("Arial Bold", 12*width/1920, true);
+  bigButtonFont = createFont("Arial Bold", 16*width/1920, true);
   sliderFont = createFont("Arial Bold Italic", 12*width/1920, true);
   headerTextBoxFont = createFont("Arial", 35*width/1920, true);
   headerTextBoxFontBold = createFont("Arial Bold", 35*width/1920, true);
   textBoxFont = createFont("Arial Bold Italic", 22*width/1920, true);
-  smallTextBoxFont = createFont("Arial Bold Italic", 18*width/1920, true);
+  smallTextBoxFont = createFont("Arial Bold", 18*width/1920, true);
 
   // Buttons //
   consoleButton = cp5.addButton("consoleButton")
@@ -183,25 +183,29 @@ void initializeUI() {
     .setPosition(zeroLocationRight, powerMeterButtonsY)
     .setColorBackground(grey)
     .setSize(buttonWidth - spaceBetweenButtons, buttonHeight)
-    .setLabel("25%");  
+    .setLabel("25%")
+    .setFont(buttonFont);
 
   quad2 = cp5.addButton("quad2")
     .setPosition(zeroLocationRight + buttonWidth, powerMeterButtonsY)
     .setColorBackground(grey)
     .setSize(buttonWidth - spaceBetweenButtons, buttonHeight)
-    .setLabel("50%"); 
+    .setLabel("50%")
+    .setFont(buttonFont); 
 
   quad3 = cp5.addButton("quad3")
     .setPosition(zeroLocationRight + buttonWidth*2, powerMeterButtonsY)
     .setColorBackground(grey)
     .setSize(buttonWidth - spaceBetweenButtons, buttonHeight)
-    .setLabel("75%"); 
+    .setLabel("75%")
+    .setFont(buttonFont);
 
   quad4 = cp5.addButton("quad4")
     .setPosition(zeroLocationRight + buttonWidth*3, powerMeterButtonsY)
     .setColorBackground(grey)
     .setSize(buttonWidth, buttonHeight)
-    .setLabel("100%");
+    .setLabel("100%")
+    .setFont(buttonFont);
 
   //pop up buttons:
   waveQs = cp5.addButton("waveQs")
@@ -226,7 +230,7 @@ void initializeUI() {
     .setPosition(zeroLocationRight + columnWidth - buttonHeight, chartLocationY-buttonHeight)
     .setSize(buttonHeight, buttonHeight)
     .setColorBackground(buttonblue)
-    .setFont(buttonFont)
+    .setFont(bigButtonFont)
     .setLabel("?");
   FFTQs = cp5.addButton("FFTQs")
     .setPosition(zeroLocationLeft + columnWidth - buttonHeight, 725*height/1100)
@@ -451,14 +455,14 @@ void initializeUI() {
   myTextarea = cp5.addTextarea("txtSystem")
     .setPosition(zeroLocationLeft, 385*height/1100)
     .setText("SYSTEM")
-    .setSize(350*width/1920, 75*height/1100)
+    .setSize(350*width/1920, 55*height/1100)
     .setFont(headerTextBoxFont)
     .setLineHeight(7*height/1100)
     .setColor(color(buttonblue));
   myTextarea = cp5.addTextarea("txtStatus")
     .setPosition(zeroLocationLeft+145*width/1920, 385*height/1100)
     .setText("STATUS")
-    .setSize(350*width/1920, 75*height/1100)
+    .setSize(350*width/1920, 55*height/1100)
     .setFont(headerTextBoxFontBold)
     .setLineHeight(7*height/1100)
     .setColor(white);
@@ -480,7 +484,7 @@ void initializeUI() {
     .setColor(color(white));
 
   myTextarea = cp5.addTextarea("txtWaveDimensions")
-    .setPosition(zeroLocationLeft+100*width/1920, 100*height/1100)
+    .setPosition(zeroLocationLeft+100*width/1920, 97*height/1100)
     .setText("CHANGE WAVE DIMENSIONS" )
     .setSize(350*width/1920, 40*height/1100)
     .setFont(textBoxFont)
@@ -488,7 +492,7 @@ void initializeUI() {
     .setColor(color(white)); 
 
   myTextarea = cp5.addTextarea("txtWECControls")
-    .setPosition(zeroLocationRight + 100*width/1920, 100*height/1100)
+    .setPosition(zeroLocationRight + 100*width/1920, 97*height/1100)
     .setText("CHANGE WEC CONTROLS")
     .setSize(300*width/1920, 40*height/1100)
     .setFont(textBoxFont)
@@ -504,8 +508,8 @@ void initializeUI() {
     .setColor(color(white));
 
   myTextarea = cp5.addTextarea("FFTTitle")
-    .setPosition(zeroLocationLeft + 170*width/1920, 730*height/1100)
-    .setText("Frequency Analysis")
+    .setPosition(zeroLocationLeft + 150*width/1920, 730*height/1100)
+    .setText("FREQUENCY ANALYSIS")
     .setSize(300*width/1920, 40*height/1100)
     .setFont(smallTextBoxFont)
     .setLineHeight(10*height/1100)
@@ -516,7 +520,7 @@ void initializeUI() {
   waveText = cp5.addTextarea("Wave Information")
     .setPosition(zeroLocationLeft, 150*height/1100)
     .setSize(columnWidth, 200*height/1080)
-    .setFont(createFont("arial", 16*width/1920))
+    .setFont(f)
     .setLineHeight(18*height/1100)
     .setColor(black)
     .setColorBackground(white)
@@ -526,7 +530,7 @@ void initializeUI() {
   wecText = cp5.addTextarea("WEC Information")
     .setPosition(zeroLocationRight, 150*height/1100)
     .setSize(columnWidth, 200*height/1080)
-    .setFont(createFont("arial", 16*width/1920))
+    .setFont(f)
     .setLineHeight(18*height/1100)
     .setColor(black)
     .setColorBackground(white)
@@ -536,7 +540,7 @@ void initializeUI() {
   waveChartText = cp5.addTextarea("Wave Chart Information")
     .setPosition(zeroLocationLeft, chartLocationY)
     .setSize(columnWidth, chartSizeY+buttonHeight)
-    .setFont(createFont("arial", 16*width/1920))
+    .setFont(f)
     .setLineHeight(18*height/1100)
     .setColor(black)
     .setColorBackground(white)
@@ -546,7 +550,7 @@ void initializeUI() {
   wecChartText = cp5.addTextarea("WEC Chart Information")
     .setPosition(zeroLocationRight, chartLocationY)
     .setSize(columnWidth, chartSizeY+buttonHeight)
-    .setFont(createFont("arial", 16*width/1920))
+    .setFont(f)
     .setLineHeight(18*height/1100)
     .setColor(black)
     .setColorBackground(white)
@@ -556,7 +560,7 @@ void initializeUI() {
   FFTText = cp5.addTextarea("FFT Information")
     .setPosition(zeroLocationLeft, 760*height/1100)
     .setSize(columnWidth, 250*height/1100+buttonHeight)
-    .setFont(createFont("arial", 16*width/1920))
+    .setFont(f)
     .setLineHeight(18*height/1100)
     .setColor(black)
     .setColorBackground(white)
@@ -566,7 +570,7 @@ void initializeUI() {
   meterText = cp5.addTextarea("Meter Information")
     .setPosition(zeroLocationRight, 760*height/1100)
     .setSize(columnWidth, 250*height/1100+buttonHeight)
-    .setFont(createFont("arial", 16*width/1920))
+    .setFont(f)
     .setLineHeight(18*height/1100)
     .setColor(black)
     .setColorBackground(white)
