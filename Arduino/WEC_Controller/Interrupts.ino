@@ -99,7 +99,6 @@ void sendSerial() {  //called by interupt
     Serial.write('v');
     sendFloat(vel);
     Serial.write('c');
-    volatile float checksum = mode + tau + kp + kd + sigH + peakF + gam;//adds the values of anything that can ba changes by processing.
-    sendFloat(checksum);
+    sendFloat(checksum());
   }
 }

@@ -608,12 +608,11 @@ void jog() {
   peakF.hide();
   gamma.hide();
   position.show();
-
   //set mode on arduino:
   if (WMConnected) {
     sendSerial('!', waveMaker.mode, port1);
   }
-  waveMaker.mag += 1;    //this parameter being adjusted will cause the main loop to send the initial data
+  sendNewDataWM = true;    //this parameter being adjusted will cause the main loop to send the initial data
 }
 
 void fun() {
@@ -633,7 +632,7 @@ void fun() {
   if (WMConnected) {
     sendSerial('!', waveMaker.mode, port1);
   }
-  waveMaker.amp += 1;    //this parameter being adjusted will cause the main loop to send the initial data
+  sendNewDataWM = true;    //this parameter being adjusted will cause the main loop to send the initial data
 }
 
 void sea() {
@@ -654,7 +653,7 @@ void sea() {
   if (WMConnected) {
     sendSerial('!', waveMaker.mode, port1);
   }
-  waveMaker.sigH += 1;    //this parameter being adjusted will cause the main loop to send the initial data
+  sendNewDataWM = true;    //this parameter being adjusted will cause the main loop to send the initial data
 }
 
 void off() {
@@ -693,7 +692,7 @@ void torque() {
   if (WECConnected) {
     sendSerial('!', wec.mode, port2);
   }
-  wec.mag += 1;    //this parameter being adjusted will cause the main loop to send the initial data
+  sendNewDataWEC = true;    //this parameter being adjusted will cause the main loop to send the initial data
 }   
 
 void feedback() {
@@ -715,7 +714,7 @@ void feedback() {
   if (WECConnected) {
     sendSerial('!', wec.mode, port2);
   }
-  wec.amp += 1;    //this parameter being adjusted will cause the main loop to send the initial data
+  sendNewDataWEC = true;     //this parameter being adjusted will cause the main loop to send the initial data
 }
 
 // Slider pGain, dGain, torqueSlider, sigHWEC, peakFWEC, gammaWEC; 
@@ -738,7 +737,7 @@ void seaWEC() {
   if (WECConnected) {
     sendSerial('!', wec.mode, port2);
   }
-  wec.sigH += 1;    //this parameter being adjusted will cause the main loop to send the initial data
+  sendNewDataWEC = true;     //this parameter being adjusted will cause the main loop to send the initial data
 }
 
 void offWEC() {

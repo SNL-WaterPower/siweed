@@ -163,6 +163,9 @@ volatile void pushBuffer(volatile float* arr, volatile float f) {
 float lerp(float a, float b, float f) {
   return a + f * (b - a);
 }
+volatile float checksum() {
+    return mode + j + a + f + sigH + peakF + gam;//adds the values of anything that can ba changes by processing.
+}
 bool ampUnitTest = true, TSUnitTest = true, encoderTest = true;
 //float exampleAmps[] = {0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.01, 0.02, 0.05, 0.11, 0.20, 0.33, 0.48, 0.67, 0.87, 1.09, 1.30, 1.51, 1.7, 1.88, 2.03, 2.16};
 float exampleAmps[] = {0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.01, 0.09, 0.32, 0.77, 1.39, 2.08, 2.72, 3.25};
@@ -196,6 +199,9 @@ void unitTests() {
   }
   //Serial.println("done");
   //while(1);
+  sigH = 0;   //return values to 0, so checksum is correct
+  peakF = 0;
+  gam = 0;
   //////////////////test encoder buffer:
   //If the initialization and setting functions worked, move on, otherwise, throw error and halt execution.
   if (encoderBuffInit && didItWork_MDR0 && didItWork_MDR1) {

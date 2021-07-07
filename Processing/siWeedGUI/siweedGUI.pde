@@ -35,7 +35,8 @@ fft myFFT;
 float[] fftArr;        //used to store the output from the fft
 //int originalx, originaly;    //used to track when the window is resized
 int previousMillis = 0;    //used to update fft 
-int fftInterval = 100;    //in milliseconds
+int fftInterval = 100;    //in milliseconds. This is the time between FFT calculations, so it can run at a slower rate
+boolean sendNewDataWM = false, sendNewDataWEC = false;    //when a mode button is switched, this flag is set true to indicate that slider values need to be sent
 
 // meter set up  
 
@@ -101,26 +102,29 @@ void draw() {
   //slider input:
   if (!WMConnected) {
     //do nothing
-  } else if (waveMaker.mode == 1 && position.getValue() != waveMaker.mag*WMJogScale) {  //only sends if value has changed  
+  } else if (waveMaker.mode == 1 && (position.getValue() != waveMaker.mag*WMJogScale || sendNewDataWM)) {  //send data if mode is right and value has changed or button has been pressed
     //Jog:
     if (frameCount % 2 == 0) {      //limits how often data is sent
       waveMaker.mag = position.getValue()/WMJogScale;
       sendSerial('j', waveMaker.mag, port1, 1);
+      sendNewDataWM = false;
     }
     //function:
-  } else if (waveMaker.mode == 2 && !mousePressed && (waveMaker.amp*WMAmpScale != h.getValue() || waveMaker.freq != freq.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
+  } else if (waveMaker.mode == 2 && ( (!mousePressed && (waveMaker.amp*WMAmpScale != h.getValue() || waveMaker.freq != freq.getValue()) ) || sendNewDataWM) ) {    //only executes if mode is right and ( (value has changed and mouse is lifted) or mode button has been pressed)
     waveMaker.amp = h.getValue()/WMAmpScale;
     waveMaker.freq = freq.getValue();
     sendSerial('a', waveMaker.amp, port1);
     sendSerial('f', waveMaker.freq, port1, 2);
+    sendNewDataWM = false;
     //Sea State:
-  } else if (waveMaker.mode == 3 && !mousePressed && (waveMaker.sigH*WMSigHScale != sigH.getValue() || waveMaker.peakF != peakF.getValue() || waveMaker.gamma != gamma.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
+  } else if (waveMaker.mode == 3 && ( (!mousePressed && (waveMaker.sigH*WMSigHScale != sigH.getValue() || waveMaker.peakF != peakF.getValue() || waveMaker.gamma != gamma.getValue()) ) || sendNewDataWM) ) {    //only executes if mode is right and ( (value has changed and mouse is lifted) or mode button has been pressed)
     waveMaker.sigH = sigH.getValue()/WMSigHScale;
     waveMaker.peakF = peakF.getValue();
     waveMaker.gamma = gamma.getValue();
     sendSerial('s', waveMaker.sigH, port1);
     sendSerial('p', waveMaker.peakF, port1);
     sendSerial('g', waveMaker.gamma, port1, 3);    //gamma always needs to be the last sent
+    sendNewDataWM = false;
     if (debug) {
       println("sending jonswap values");
     }
@@ -128,27 +132,30 @@ void draw() {
 
   if (!WECConnected) {
     //do nothing
-  } else if (wec.mode == 1 && torqueSlider.getValue() != wec.mag*WCJogScale) {  //only sends if value has changed  
+  } else if (wec.mode == 1 && (torqueSlider.getValue() != wec.mag*WCJogScale || sendNewDataWEC)) {  //send data if mode is right and value has changed or button has been pressed
     //Jog:
     if (frameCount % 2 == 0) {      //limits how often data is sent
       wec.mag = torqueSlider.getValue()/WCJogScale;
       //wec.mag = sin(0.1*2*PI*millis()/1000)*torqueSlider.getValue()/WCJogScale;
       sendSerial('t', wec.mag, port2, 1);
+      sendNewDataWEC = false;
     }
     //feedback:
-  } else if (wec.mode == 2 && !mousePressed && (wec.amp*WCPScale != pGain.getValue() || wec.freq*WCDScale != dGain.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition) //for wec, amp is kp and freq is kd;
+  } else if (wec.mode == 2 && ( (!mousePressed && (wec.amp*WCPScale != pGain.getValue() || wec.freq*WCDScale != dGain.getValue()) )|| sendNewDataWEC) ) {    //only executes if mode is right and ( (value has changed and mouse is lifted) or mode button has been pressed) //for wec, amp is kp and freq is kd;
     wec.amp = pGain.getValue()/WCPScale;
     wec.freq = dGain.getValue()/WCDScale;
     sendSerial('k', wec.amp, port2);
     sendSerial('d', wec.freq, port2, 2);
+    sendNewDataWEC = false;
     //Sea State:
-  } else if (wec.mode == 3 && !mousePressed && (wec.sigH*WCSigHScale != sigHWEC.getValue() || wec.peakF != peakFWEC.getValue() || wec.gamma != gammaWEC.getValue())) {    //only executes if a value has changed and the mouse is lifted(smooths transition)
+  } else if (wec.mode == 3 && ( (!mousePressed && (wec.sigH*WCSigHScale != sigHWEC.getValue() || wec.peakF != peakFWEC.getValue() || wec.gamma != gammaWEC.getValue()) )|| sendNewDataWEC) ) {    //only executes if mode is right and ( (value has changed and mouse is lifted) or mode button has been pressed)
     wec.sigH = sigHWEC.getValue()/WCSigHScale;
     wec.peakF = peakFWEC.getValue();
     wec.gamma = gammaWEC.getValue();
     sendSerial('s', wec.sigH, port2);
     sendSerial('p', wec.peakF, port2);
     sendSerial('g', wec.gamma, port2, 3);    //gamma always needs to be the last sent
+    sendNewDataWEC = false;
   }
 }
 

@@ -102,7 +102,6 @@ void sendSerial() { //Due version
     volatile float lerpVal = lerp(prevVal, futurePos, (interval * 1.0e6) / (sampleT - prevSampleT)); //linear interpolate(initial value, final value, percentatge)//percentage is desired interval/actual interval
     sendFloat(lerpVal);
     Serial.write('c');
-    volatile float checksum = mode + j + a + f + sigH + peakF + gam;//adds the values of anything that can ba changes by processing.
-    sendFloat(checksum);
+    sendFloat(checksum());
   }
 }

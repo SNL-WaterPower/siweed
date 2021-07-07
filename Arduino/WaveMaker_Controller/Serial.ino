@@ -47,6 +47,8 @@ void readSerial() {
         }
         break;
     }
+    Serial.write('c');    //after recieving a byte, send checksum back
+    sendFloat(checksum());
   }
 }
 volatile float readFloat() {

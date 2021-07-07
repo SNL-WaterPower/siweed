@@ -138,6 +138,9 @@ volatile float calcTS(volatile float tm) {      //calculate jonswap timeseries v
   }
   return val;
 }
+volatile float checksum() {
+    return mode + tau + kp + kd + sigH + peakF + gam;//adds the values of anything that can ba changes by processing.
+}
 bool ampUnitTest = true, TSUnitTest = true, encoderTest = true;
 //float exampleAmps[] = {0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.01, 0.02, 0.05, 0.11, 0.20, 0.33, 0.48, 0.67, 0.87, 1.09, 1.30, 1.51, 1.7, 1.88, 2.03, 2.16};
 float exampleAmps[] = {0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.01, 0.09, 0.32, 0.77, 1.39, 2.08, 2.72, 3.25};

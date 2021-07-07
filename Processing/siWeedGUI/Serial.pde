@@ -1,4 +1,4 @@
- Serial port1;    //arduino wavemaker due //<>//
+Serial port1;    //arduino wavemaker due //<>//
 Serial port2;    //arduino WEC due
 boolean WMConnected, WECConnected;
 int connectionDelay  = 3500;      //how many ms to wait after connecting to a device. Can greatly slow the startup
@@ -192,8 +192,8 @@ void readWECSerial() {
 void sendSerial(char c, float f, Serial port, int cmdCount) {      //to send a command as a part of a set, cmdcount should be more than 1. For example, mode and then amplitude and frequency makes 3 commands. This is used for checksum verification.
   port1.write((char)c);
   sendFloat(f, port);
-  if (cmdCount == 0){    //if the count is 0, don't add to log or update cmdCount. This allows commands in the resend function to be sent without logging
-  }else if (port == port1) {      //assigns the cmd count based on which port is sent to.
+  if (cmdCount == 0) {    //if the count is 0, don't add to log or update cmdCount. This allows commands in the resend function to be sent without logging
+  } else if (port == port1) {      //assigns the cmd count based on which port is sent to.
     WMCmdCount = cmdCount;
     WMCmdList.add(new Cmd(c, f));    //!!make sure this doesn't cause memory leak
     if (WMCmdList.size() > 5) WMCmdList.remove();    //number of items stored in the list. Just needs to be at least the largest group of commands
@@ -228,9 +228,7 @@ void sendFloat(float f, Serial port) {
    */
   byte[] byteArray = floatToByteArray(f);
   port.write(byteArray);
-  if (debug) {
-    println("sent float: "+f);
-  }
+  if (debug) println("sent float: "+f);
 }
 float readFloat(Serial port) {
   while (port.available() <= 4) {    //wait for full array to be in buffer
@@ -253,18 +251,33 @@ public static float byteArrayToFloat(byte[] bytes) {
     bytes[0] << 24 | (bytes[1] & 0xFF) << 16 | (bytes[2] & 0xFF) << 8 | (bytes[3] & 0xFF);
   return Float.intBitsToFloat(intBits);
 }
+int WMFailCount = 0, WECFailCount = 0;
 void verifyChecksum() {
   if (WMConnected && WMChecksum != WMChecksumCalc()) {      //checks if calculated checksum and serial recieved checksum match
     if (debug) println("Wavemaker checksum match failed: "+WMChecksum+" "+WMChecksumCalc());
-    resendSerial(port1, WMCmdList, WMCmdCount, waveMaker.mode);
+    WMFailCount++;
+    if (WMFailCount > 2) {      //only resends serial if the check is contiuously failing.
+      resendSerial(port1, WMCmdList, WMCmdCount, waveMaker.mode);
+      WMFailCount = 0;    //reset the count
+    }
+  } else if (WMConnected) {
+    //if (debug) println("Wavemaker checksum match Passed: "+WMChecksum+" "+WMChecksumCalc());
+    WMFailCount = 0;    //reset failCount if the the checksum passes
   }
   if (WECConnected && WCChecksum != WMChecksumCalc()) {
     if (debug) println("WEC checksum match failed: "+WCChecksum+" "+WCChecksumCalc());
-    resendSerial(port2, WECCmdList, WECCmdCount, wec.mode);
+    WECFailCount++;
+    if (WECFailCount > 2) {    //only resends serial if the check is contiuously failing.
+      resendSerial(port2, WECCmdList, WECCmdCount, wec.mode);
+      WECFailCount = 0;    //reset the count
+    }
+  } else if (WECConnected) {
+    //if (debug) println("WEC checksum match Passed: "+WCChecksum+" "+WCChecksumCalc());
+    WECFailCount = 0;      //reset failCount if the the checksum passes
   }
 }
 void resendSerial(Serial port, LinkedList<Cmd> cmdList, int count, int mode) {
-  if (cmdList.size() < count)    //this will likely happen the first call, as the checksum is unlikely to match at initialization
+  if (cmdList.size() < count)    //this may happen the first call, as the checksum is unlikely to match at initialization
   {
     if (debug) println("did not resend Serial, not enough command history");
     return;
