@@ -4,7 +4,7 @@ boolean WMConnected, WECConnected;
 int connectionDelay  = 3500;      //how many ms to wait after connecting to a device. Can greatly slow the startup
 int baudRate = 57600;
 
-float WMChecksum, WCChecksum;
+float WMChecksum, WECChecksum;
 int WMCmdCount, WECCmdCount;    //The cmdCount is the number of items sent with the last command ie. amplitude and frequency would give 2. This helps when verifying checksums
 public class Cmd {      //used to store each command
   public char c;
@@ -183,7 +183,7 @@ void readWECSerial() {
         }   
         break;
       case 'c':
-        WCChecksum = readFloat(port2);  
+        WECChecksum = readFloat(port2);  
         break;
       }
     }
@@ -267,16 +267,21 @@ void verifyChecksum() {
     //if (debug) println("Wavemaker checksum match Passed: "+WMChecksum+" "+WMChecksumCalc());
     WMFailCount = 0;    //reset failCount if the the checksum passes
   }
-  if (WECConnected && WCChecksum != WMChecksumCalc()) {
-    if (debug) println("WEC checksum match failed: "+WCChecksum+" "+WCChecksumCalc());
+  if (WECConnected && WECChecksum != WECChecksumCalc()) {
+    if (debug) println("WEC checksum match failed: "+WECChecksum+" "+WECChecksumCalc());
     WECFailCount++;
     if (WECFailCount > 2) {    //only resends serial if the check is contiuously failing. This often happens at least once
       resendSerial(port2, WECCmdList, WECCmdCount, wec.mode);
       WECFailCount = 0;    //reset the count
     }
   } else if (WECConnected) {
-    //if (debug) println("WEC checksum match Passed: "+WCChecksum+" "+WCChecksumCalc());
+    //if (debug) println("WEC checksum match Passed: "+WECChecksum+" "+WECChecksumCalc());
     WECFailCount = 0;      //reset failCount if the the checksum passes
+  }
+  if((!WECConnected || WECChecksum == WECChecksumCalc()) && (!WMConnected || WMChecksum == WMChecksumCalc())){    //color of console button indicates if any connected arduinos are in sync
+    consoleButton.setColorBackground(green);
+  }else{
+    consoleButton.setColorBackground(grey);
   }
 }
 void resendSerial(Serial port, LinkedList<Cmd> cmdList, int count, int mode) {
@@ -296,7 +301,7 @@ void resendSerial(Serial port, LinkedList<Cmd> cmdList, int count, int mode) {
 float WMChecksumCalc() {
   return waveMaker.mode + waveMaker.mag + waveMaker.amp + waveMaker.freq + waveMaker.sigH + waveMaker.peakF + waveMaker.gamma;
 }
-float WCChecksumCalc() {
+float WECChecksumCalc() {
   return wec.mode + wec.mag + wec.amp + wec.freq + wec.sigH + wec.peakF + wec.gamma;
 }
 //boolean isFloat(float val) {
