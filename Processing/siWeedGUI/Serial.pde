@@ -196,6 +196,9 @@ void sendSerial(char c, float f, Serial port, int cmdCount) {      //to send a c
   } else if (port == port1) {      //assigns the cmd count based on which port is sent to.
     WMCmdCount = cmdCount;
     WMCmdList.add(new Cmd(c, f));    //!!make sure this doesn't cause memory leak
+    /////
+    //for(int i = 0; i < WMCmdList.size(); i++) println(WMCmdList.get(i).c);    //can print the list of commands
+    ///
     if (WMCmdList.size() > 5) WMCmdList.remove();    //number of items stored in the list. Just needs to be at least the largest group of commands
   } else if (port == port2) {
     WECCmdCount = cmdCount;
@@ -267,7 +270,7 @@ void verifyChecksum() {
   if (WECConnected && WCChecksum != WMChecksumCalc()) {
     if (debug) println("WEC checksum match failed: "+WCChecksum+" "+WCChecksumCalc());
     WECFailCount++;
-    if (WECFailCount > 2) {    //only resends serial if the check is contiuously failing.
+    if (WECFailCount > 2) {    //only resends serial if the check is contiuously failing. This often happens at least once
       resendSerial(port2, WECCmdList, WECCmdCount, wec.mode);
       WECFailCount = 0;    //reset the count
     }
@@ -285,9 +288,9 @@ void resendSerial(Serial port, LinkedList<Cmd> cmdList, int count, int mode) {
   sendSerial('!', mode, port, 0);     //always update mode. The 0 prevents it from being added to the log
   for (int i = count; i > 0; i--) {    //for the number of cmds
     Cmd tempCmd = cmdList.get(cmdList.size() - i);          //resends in the order the commands were sent.
-    sendSerial(tempCmd.c, tempCmd.f, port, count);    //resend the values, and preserve cmdCount
+    sendSerial(tempCmd.c, tempCmd.f, port, 0);    //resend the values, and preserve cmdCount and don't add to log
     if (debug) println("resent mode and command: " + tempCmd.c + " " + tempCmd.f);
-    println(millis());
+    //println(millis());
   }
 }
 float WMChecksumCalc() {
