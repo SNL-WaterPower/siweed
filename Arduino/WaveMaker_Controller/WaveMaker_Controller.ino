@@ -42,30 +42,6 @@ const float gearRatio = 12.0 / 60.0; //motor turns per lead screw turns
 const float motorStepsPerTurn = 400.0;   //steps per motor revolution
 const float encStepsPerTurn = 3200.0;
 
-volatile float inputFnc(volatile float tm) {  //inputs time in seconds //outputs position in m
-  volatile float val = 0;
-  if (mode == 1) {    //jog
-    val = j;
-  }else if (mode == 2) {    //sine mode
-    val = a * sin(2 * M_PI * tm * f);   
-  }else if(mode == 3){    //sea state mode
-    if (newJonswapData) {
-      newJonswapData = false;
-      jonswap.update(sigH, peakF, gam);
-      n = jonswap.getNum();
-      for (volatile int i = 0; i < n; i++) {
-        amps[i] = jonswap.getAmp(i);
-        freqs[i] = jonswap.getF(i);
-        phases[i] = jonswap.getPhase(i);
-      }
-    }
-    for (volatile int i = 0; i < n; i++) {
-      val += amps[i] * sin(2 * M_PI * tm * freqs[i] + phases[i]);
-    }
-  }
-  return val;
-}
-
 void setup() {
   initSerial();
   initialProbe1 = analogRead(probe1Pin);
@@ -180,7 +156,7 @@ void unitTests() {
   sigH = 5.0;
   peakF = 3.0;
   gam = 7.0;
-  inputFnc(0);   //assign amps and update jonswap
+  posFnc(0);   //assign amps and update jonswap
   for (int i = 0; i < jonswap.getNum(); i++) {
     //test amplitude array:
     if (abs(amps[i] - exampleAmps[i]) > 0.01) {
@@ -188,7 +164,7 @@ void unitTests() {
     }
 
     //test time series:
-    if (abs(inputFnc(i) - exampleTS[i]) > 0.01) {      //i acts as an arbitrary time
+    if (abs(posFnc(i) - exampleTS[i]) > 0.01) {      //i acts as an arbitrary time
       TSUnitTest = false;
     }
     //////////////////////////////

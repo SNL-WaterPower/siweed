@@ -13,6 +13,36 @@ void initInterrupts() {
   delay(50);
   Timer.getAvailable().attachInterrupt(controlLoop).start(interval * 1.0e6);
 }
+volatile float posFnc(volatile float tm) {  //inputs time in seconds //outputs position in m
+  volatile float val = 0;
+  switch (mode) {
+    case 1:     //jog
+      val = j;
+      break;
+    case 2:   //sine wave
+      val = a * sin(2 * M_PI * tm * f);
+      break;
+    case 3:   //sea state
+      if (newJonswapData) {
+        newJonswapData = false;
+        jonswap.update(sigH, peakF, gam);
+        n = jonswap.getNum();
+        for (volatile int i = 0; i < n; i++) {
+          amps[i] = jonswap.getAmp(i);
+          freqs[i] = jonswap.getF(i);
+          phases[i] = jonswap.getPhase(i);
+        }
+      }
+      for (volatile int i = 0; i < n; i++) {
+        val += amps[i] * sin(2 * M_PI * tm * freqs[i] + phases[i]);
+      }
+      break;
+    default:
+      val = 0;
+      break;
+  }
+  return val;
+}
 /*
   Motor control interupt:
   After calculating desired position with inputFnc(), this controller should estimate the command
@@ -21,14 +51,14 @@ void initInterrupts() {
 */
 //volatile float error;
 volatile float velCommand;
-void controlLoop() {  //due version
+void controlLoop() {  //Due version
   volatile float pos = encPos();
   //error = futurePos - pos;   //where we told it to go vs where it is
   ////////vars for linear interpolation:
   prevSampleT = sampleT;
   sampleT = micros();
   prevVal = futurePos;
-  futurePos = inputFnc(t + interval);  //time plus delta time
+  futurePos = posFnc(t + interval);  //time plus delta time
   if (mode != 1 || abs(futurePos - pos) > deadzone) {    //deadband only if in jog mode.
     velCommand = ((futurePos - pos) / interval); //estimated desired velocity in m/s, in order to hit target by next interupt call
   } else {
