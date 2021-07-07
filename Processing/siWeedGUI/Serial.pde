@@ -257,7 +257,7 @@ public static float byteArrayToFloat(byte[] bytes) {
 int WMFailCount = 0, WECFailCount = 0;
 void verifyChecksum() {
   if (WMConnected && WMChecksum != WMChecksumCalc()) {      //checks if calculated checksum and serial recieved checksum match
-    if (debug) println("Wavemaker checksum match failed: "+WMChecksum+" "+WMChecksumCalc());
+    if (debug) println("Wavemaker checksum match failed "+ (WMFailCount+1) +" times. Arduino checksum: "+WMChecksum+" calculated checksum: "+WMChecksumCalc());
     WMFailCount++;
     if (WMFailCount > 2) {      //only resends serial if the check is contiuously failing.
       resendSerial(port1, WMCmdList, WMCmdCount, waveMaker.mode);
@@ -268,7 +268,7 @@ void verifyChecksum() {
     WMFailCount = 0;    //reset failCount if the the checksum passes
   }
   if (WECConnected && WECChecksum != WECChecksumCalc()) {
-    if (debug) println("WEC checksum match failed: "+WECChecksum+" "+WECChecksumCalc());
+    if (debug) println("WEC checksum match failed "+ (WECFailCount+1) +" times. Arduino checksum: "+WECChecksum+" calculated checksum: "+WECChecksumCalc());
     WECFailCount++;
     if (WECFailCount > 2) {    //only resends serial if the check is contiuously failing. This often happens at least once
       resendSerial(port2, WECCmdList, WECCmdCount, wec.mode);

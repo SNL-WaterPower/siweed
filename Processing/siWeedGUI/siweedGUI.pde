@@ -4,7 +4,7 @@ import java.lang.Math.*;
 import java.util.LinkedList;
 
 //MODIFIERS: Change these booleans to adjust runtime functionality:
-static final boolean debug = true;    //for debug print statements. Also disables GUI console, and puts it in processing
+static final boolean debug = false;    //for debug print statements. Also disables GUI console, and puts it in processing
 static final boolean guiConsole = true; 
 static final boolean dataLogging = false;    //if this is true, a .csv with most variables will be written in the data folder with the sketch
 static final boolean basicMode = false;      //disables some control modes, to make the GUI simpler to use

@@ -23,12 +23,13 @@ color grey = color(180, 190, 191);
 color black = color(0, 0, 0);
 color white = color(255, 255, 255);
 color red = color(255, 0, 0);
+color clear = color(grey, 100);
 
 
 // Fonts
 PFont f; // Regular font
 PFont fb; // Bold font
-PFont buttonFont, sliderFont, titleTextBoxFont, headerTextBoxFont, textBoxFont, smallTextBoxFont; 
+PFont buttonFont, bigButtonFont, sliderFont, headerTextBoxFont, headerTextBoxFontBold, textBoxFont, smallTextBoxFont; 
 
 
 // Sandia logo
@@ -61,10 +62,11 @@ void initializeUI() {
   //Fonts
   f = createFont("Arial", 16*width/1920, true);
   fb = createFont("Arial Bold Italic", 32*width/1920, true);
-  titleTextBoxFont = buttonFont = createFont("Arial Bold Italic", 40*width/1920, true);
   buttonFont = createFont("Arial Bold Italic", 12*width/1920, true);
+  bigButtonFont = createFont("Arial Bold Italic", 16*width/1920, true);
   sliderFont = createFont("Arial Bold Italic", 12*width/1920, true);
-  headerTextBoxFont = createFont("Arial Bold", 35*width/1920, false);
+  headerTextBoxFont = createFont("Arial", 35*width/1920, true);
+  headerTextBoxFontBold = createFont("Arial Bold", 35*width/1920, true);
   textBoxFont = createFont("Arial Bold Italic", 22*width/1920, true);
   smallTextBoxFont = createFont("Arial Bold Italic", 18*width/1920, true);
 
@@ -205,40 +207,40 @@ void initializeUI() {
 
   //pop up buttons:
   waveQs = cp5.addButton("waveQs")
-    .setPosition(zeroLocationLeft + columnWidth - 30*width/2560, 90*height/1100)
-    .setSize(30*width/2560, 30*height/1440)
-    .setColorBackground(buttonblue)
-    .setFont(buttonFont)
+    .setPosition(zeroLocationLeft + columnWidth - bannerHeight, 90*height/1100)
+    .setSize(bannerHeight, bannerHeight)
+    .setColorBackground(turq)
+    .setFont(bigButtonFont)
     .setLabel("?");
   wecQs = cp5.addButton("wecQs")
-    .setPosition(zeroLocationRight + columnWidth - 30*width/2560, 90*height/1100)
-    .setSize(30*width/2560, 30*height/1440)
-    .setColorBackground(buttonblue)
-    .setFont(buttonFont)
+    .setPosition(zeroLocationRight + columnWidth - bannerHeight, 90*height/1100)
+    .setSize(bannerHeight, bannerHeight)
+    .setColorBackground(green)
+    .setFont(bigButtonFont)
     .setLabel("?");
   waveChartQs = cp5.addButton("waveChartQs")
-    .setPosition(zeroLocationLeft + columnWidth - 30*width/2560, chartLocationY-30*height/1100)
-    .setSize(30*width/2560, 30*height/1440)
+    .setPosition(zeroLocationLeft + columnWidth - buttonHeight, chartLocationY-buttonHeight)
+    .setSize(buttonHeight, buttonHeight)
     .setColorBackground(buttonblue)
-    .setFont(buttonFont)
+    .setFont(bigButtonFont)
     .setLabel("?");
   wecChartQs = cp5.addButton("wecChartQs")
-    .setPosition(zeroLocationRight + columnWidth - 30*width/2560, chartLocationY-30*height/1100)
-    .setSize(30*width/2560, 30*height/1440)
+    .setPosition(zeroLocationRight + columnWidth - buttonHeight, chartLocationY-buttonHeight)
+    .setSize(buttonHeight, buttonHeight)
     .setColorBackground(buttonblue)
     .setFont(buttonFont)
     .setLabel("?");
   FFTQs = cp5.addButton("FFTQs")
-    .setPosition(zeroLocationLeft + columnWidth - 30*width/2560, 725*height/1100)
-    .setSize(30*width/2560, 30*height/1440)
+    .setPosition(zeroLocationLeft + columnWidth - buttonHeight, 725*height/1100)
+    .setSize(buttonHeight, buttonHeight)
     .setColorBackground(buttonblue)
-    .setFont(buttonFont)
+    .setFont(bigButtonFont)
     .setLabel("?");
   meterQs = cp5.addButton("meterQs")
-    .setPosition(zeroLocationRight + columnWidth - 30*width/2560, 725*height/1100)
-    .setSize(30*width/2560, 30*height/1440)
+    .setPosition(zeroLocationRight + columnWidth - buttonHeight, 725*height/1100)
+    .setSize(buttonHeight, buttonHeight)
     .setColorBackground(buttonblue)
-    .setFont(buttonFont)
+    .setFont(bigButtonFont)
     .setLabel("?");
 
   // Sliders // 
@@ -432,17 +434,37 @@ void initializeUI() {
   {
     console = cp5.addConsole(consoleOutput);
   }
-
-  myTextarea = cp5.addTextarea("txtSystemStatus")
+  myTextarea = cp5.addTextarea("txtMission")
+    .setPosition(zeroLocationLeft, zeroLocationY)
+    .setText("MISSION")
+    .setSize(300*width/1920, 55*height/1100)
+    .setFont(headerTextBoxFont)
+    .setLineHeight(7*height/1100)
+    .setColor(buttonblue);
+  myTextarea = cp5.addTextarea("txtControl")
+    .setPosition(zeroLocationLeft+150*width/1920, zeroLocationY)
+    .setText("CONTROL")
+    .setSize(300*width/1920, 55*height/1100)
+    .setFont(headerTextBoxFontBold)
+    .setLineHeight(7*height/1100)
+    .setColor(turq);
+  myTextarea = cp5.addTextarea("txtSystem")
     .setPosition(zeroLocationLeft, 385*height/1100)
-    .setText("SYSTEM STATUS")
+    .setText("SYSTEM")
     .setSize(350*width/1920, 75*height/1100)
     .setFont(headerTextBoxFont)
     .setLineHeight(7*height/1100)
     .setColor(color(buttonblue));
+  myTextarea = cp5.addTextarea("txtStatus")
+    .setPosition(zeroLocationLeft+145*width/1920, 385*height/1100)
+    .setText("STATUS")
+    .setSize(350*width/1920, 75*height/1100)
+    .setFont(headerTextBoxFontBold)
+    .setLineHeight(7*height/1100)
+    .setColor(white);
 
   myTextarea = cp5.addTextarea("txtWaveInformation")
-    .setPosition(zeroLocationLeft+160*width/1920, 448*height/1100)
+    .setPosition(zeroLocationLeft+160*width/1920, 445*height/1100)
     .setText("WAVE INFORMATION" )
     .setSize(300*width/1920, 40*height/1100)
     .setFont(smallTextBoxFont)
@@ -450,7 +472,7 @@ void initializeUI() {
     .setColor(color(white)); 
 
   myTextarea = cp5.addTextarea("txtWECInformation")
-    .setPosition(zeroLocationRight + 160*width/1920, 448*height/1100)
+    .setPosition(zeroLocationRight + 160*width/1920, 445*height/1100)
     .setText("WEC INFORMATION")
     .setSize(300*width/1920, 40*height/1100)
     .setFont(smallTextBoxFont)
@@ -489,13 +511,7 @@ void initializeUI() {
     .setLineHeight(10*height/1100)
     .setColor(color(white));
 
-  myTextarea = cp5.addTextarea("txtMissionControl")
-    .setPosition(zeroLocationLeft, zeroLocationY)
-    .setText("Mission Control")
-    .setSize(300*width/1920, 55*height/1100)
-    .setFont(headerTextBoxFont)
-    .setLineHeight(7*height/1100)
-    .setColor(color(buttonblue));
+
   //Pop up text areas:
   waveText = cp5.addTextarea("Wave Information")
     .setPosition(zeroLocationLeft, 150*height/1100)
@@ -963,8 +979,8 @@ void displayUpdate() {
   fill(green);
   rect(zeroLocationRight, 90*height/1100, columnWidth, bannerHeight); // Change WEC controls
   fill(buttonblue);
-  rect(zeroLocationLeft, chartLocationY - 30*height/1100, columnWidth, buttonHeight); // Wave Information
-  rect(zeroLocationRight, chartLocationY - 30*height/1100, columnWidth, buttonHeight); // Wec Information
+  rect(zeroLocationLeft, chartLocationY-buttonHeight, columnWidth, buttonHeight); // Wave Information
+  rect(zeroLocationRight, chartLocationY-buttonHeight, columnWidth, buttonHeight); // Wec Information
   rect(zeroLocationRight, 725*height/1100, columnWidth, buttonHeight); // Power Meter title
   rect(zeroLocationLeft, 725*height/1100, columnWidth, buttonHeight); // FFT title
   rect(zeroLocationRight, 760*height/1100, columnWidth, 250*height/1100);  //meter background
@@ -978,8 +994,8 @@ void displayUpdate() {
   //draw lines to separate FFT and Meter titles from data
   stroke(white);
   strokeWeight(2);
-  line(zeroLocationLeft, 725*height/1100+buttonHeight, zeroLocationLeft + columnWidth, 725*height/1100+buttonHeight);
-  line(zeroLocationRight, 725*height/1100+buttonHeight, zeroLocationRight + columnWidth, 725*height/1100+buttonHeight);
+  line(zeroLocationLeft, 727*height/1100+buttonHeight, zeroLocationLeft + columnWidth, 727*height/1100+buttonHeight);
+  line(zeroLocationRight, 727*height/1100+buttonHeight, zeroLocationRight + columnWidth, 727*height/1100+buttonHeight);
   image(LHSPic, 0, 0, width/2.7, height); //lhs pic
   //controls power indicators
   if (myMeter.getAverageVal() >= 0.5) {
