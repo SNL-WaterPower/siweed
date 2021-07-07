@@ -32,10 +32,8 @@ PFont fb; // Bold font
 PFont buttonFont, bigButtonFont, sliderFont, headerTextBoxFont, headerTextBoxFontBold, textBoxFont, smallTextBoxFont; 
 
 
-// Sandia logo
-PImage snlLogo;
-PImage wavePic;
-PImage LHSPic;
+//Pics
+PImage snlLogo, wavePic, LHSPic, pic1, pic2;
 void initializeUI() {
   //These variables need to be defined here so that the height and width variables do not return 0
   //Every variable is scaled by the size of the window, the GUI will look similar no matter the screen dimensions
@@ -420,6 +418,8 @@ void initializeUI() {
   snlLogo = loadImage("SNL_Stacked_White.png");
   wavePic = loadImage("ocean.jpg");
   LHSPic = loadImage("LHS.png");
+  pic1 = loadImage("1.png");
+  pic2 = loadImage("2.png");
 
   //console, this needs to be in the setup to ensure
   //that it catches any errors when program starts
@@ -997,6 +997,8 @@ void displayUpdate() {
   line(zeroLocationLeft, 727*height/1100+buttonHeight, zeroLocationLeft + columnWidth, 727*height/1100+buttonHeight);
   line(zeroLocationRight, 727*height/1100+buttonHeight, zeroLocationRight + columnWidth, 727*height/1100+buttonHeight);
   image(LHSPic, 0, 0, width/2.7, height); //lhs pic
+  image(pic1, zeroLocationLeft + 20*width/1920, 90*height/1100, bannerHeight, bannerHeight);
+  image(pic2, zeroLocationRight + 20*width/1920, 90*height/1100, bannerHeight, bannerHeight);
   //controls power indicators
   if (myMeter.getAverageVal() >= 0.5) {
     quad1.setColorBackground(green).setColorActive(green);
