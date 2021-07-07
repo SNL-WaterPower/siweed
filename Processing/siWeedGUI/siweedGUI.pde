@@ -54,9 +54,9 @@ void setup() {
   surface.setTitle("SIWEED");
   waveMaker = new UIData();
   wec = new UIData();
-  fftList = new LinkedList<Float>(); 
+  fftList = new LinkedList<Float>();     //stores the input to the FFT
   myFFT = new fft();
-  fftArr = new float[queueSize*2];    //used to 
+  fftArr = new float[queueSize*2];    //used to store the output from the FFT
   waveMaker.mode = 1;    // 1 = jog, 2 = function, 3 = sea, 4 = off
   wec.mode = 1;  //1 = jog, 2= feedback, 3 = "sea", 4 = off
   if (dataLogging) {
