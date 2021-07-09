@@ -261,8 +261,25 @@ After performing the setup described in the build instructions, the project can 
 
 Demonstrate the operation of the hardware and characterize its performance over relevant critical metrics -XX
 \begin{itemize}
-\item \textbf{Torque constant verification:} The factory torque constant was verfied by logging the position and amperage of the WEC while commanding a slow sinusoidal amperage. This data was used with the diameter of the WEC to find the displacement, and calculate the torque applied for each point of given amerage. This resulted in a constant of 7.52 mNm/A, and a coefficient of friction of about 0.45mNm. The detailed process and data can be found here: \footnote{\url{https://github.com/SNL-WaterPower/siweed/issues/59}} -XX  add equation, make this a subsection, add plot as vector graphic.
-\item \textbf{Wave Probes:} -XX
+\item \textbf{Torque constant verification:} 
+The factory torque constant was verfied by logging the position and current of the WEC while commanding a slow sinusoidal current.
+The position displacement time series was converted to a time series of the applied physical torque with the following equation:
+-XX insert equation
+It is important to note that the torque values at this point did not account for friction or hysteresis.
+Plotting this torque data against the recorded commanded current values gives the following(only one of the three data sets used is shown here):
+-XX add vector graphics
+The data points at the highest and lowest currents are affected by static friction at the extreme values, so cutting them from the data set improves the torque constant estimation:
+-XX
+This gives us an estimated torque constant of about 7.52mNm/A, which is within 4\% of the factory stated constant of 7.8mNm/A
+\linebreak
+Since torque is being estimated from displacement and the frequency is low (inertial and viscous effects are small), the friction shows up as a "constant" offset from the ideal torque constant and doesn't affect the slope.
+This allows the friction to be seen as half the offset between the data points as the wavemaker moves up, and the points as it moves down. 
+Plotting the torque error using the calculated torque constant against the current gives the following:
+-XX
+The average offset shows that the friction is about 0.45mNm.
+
+\item \textbf{Wave Probes:}The readings from the wave probes could be verified by attaching them to the wave maker, which has a very precise encoder that allows for accurate changes in displacement. 
+Moving the wave maker with the wave probe attached and comparing the displacement data from both of them was used to make sure the wave probe was providing accurate readings. 
 \item \textbf{WEC feedback control} - XX
 % >Create a bulleted list that describes the capabilities (and limitations) of the hardware. For example consider descriptions of load, operation time, spin speed, coefficient of variation, accuracy, precision and etc. 
 \end{itemize}
