@@ -264,18 +264,31 @@ Demonstrate the operation of the hardware and characterize its performance over 
 \item \textbf{Torque constant verification:} 
 The factory torque constant was verfied by logging the position and current of the WEC while commanding a slow sinusoidal current.
 The position displacement time series was converted to a time series of the applied physical torque with the following equation:
--XX insert equation
+%\linebreak
+\[\tau=\sigma*\gamma *d* \pi*r^2\]
+%\linebreak
+Where $\tau$ is torque, $\sigma$ is the radius of the pinion gear, $\gamma$ is the specific weight of water, d is the displacement of the buoy in the water, and r is the radius of the buoy.
+%Torque = pinon radius (M)*  [9810(N/m^3)*pos(m)*pi*radius(m)^2]
 It is important to note that the torque values at this point did not account for friction or hysteresis.
-Plotting this torque data against the recorded commanded current values gives the following(only one of the three data sets used is shown here):
--XX add vector graphics
-The data points at the highest and lowest currents are affected by static friction at the extreme values, so cutting them from the data set improves the torque constant estimation:
--XX
+Plotting this torque data against the recorded commanded current values gives  \figurename~\ref{fig:TorqueConstant}.
+The fit1 represents the best linear fit of the entire data set, but the data points at the highest and lowest currents are affected more significatntly by static friction, so cutting them from the data set improves the torque constant estimation, as shown in with fit2 in \figurename~\ref{fig:TorqueConstant}.
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=0.5\textwidth]{diagrams/TorqueConstant.jpeg}
+  \caption{Torque vs commanded current, with linear fits of the entire and partial data set.}
+  \label{fig:TorqueConstant}
+\end{figure}
 This gives us an estimated torque constant of about 7.52mNm/A, which is within 4\% of the factory stated constant of 7.8mNm/A
 \linebreak
 Since torque is being estimated from displacement and the frequency is low (inertial and viscous effects are small), the friction shows up as a "constant" offset from the ideal torque constant and doesn't affect the slope.
 This allows the friction to be seen as half the offset between the data points as the wavemaker moves up, and the points as it moves down. 
-Plotting the torque error using the calculated torque constant against the current gives the following:
--XX
+Plotting the torque error using the calculated torque constant against the current gives \figurename~\ref{fig:TorqueError}.
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=0.5\textwidth]{diagrams/TorqueError.jpeg}
+  \caption{Torque error vs commanded current.}
+  \label{fig:TorqueError}
+\end{figure}
 The average offset shows that the friction is about 0.45mNm.
 
 \item \textbf{Wave Probes:}The readings from the wave probes could be verified by attaching them to the wave maker, which has a very precise encoder that allows for accurate changes in displacement. 
