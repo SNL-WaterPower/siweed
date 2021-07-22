@@ -156,6 +156,10 @@ A number of key factors of SIWEED are:
   \item \textbf{Portability:} To allow for transport to conferences and outreach events, the SIWEED has been specifically designed to allow for easy transportation.
   \item \textbf{WEC control:} In addition to demonstrating the physics of ocean waves, the SIWEED allows users to interact with a WEC control system to better understand the principles of reactive feedback control to maximize power absorption for the waves.
   \item \textbf{Student-led design:} The SIWEED project has been a student-led design project involving XX undergraduate engineering students.
+  \item \textbf{Curriculum:} The SIWEED repository includes a curriculum for students K-12 based on the Next Generation Science Standards \cite{NextGenScience2021}. 
+The repository contains a presentation and a document intended to be given to the teacher beforehand. 
+The presentation explains water power and Sandia National Labs' role within it, and then goes into more detail about wave energy converters and how the SIWEED demonstration works.
+The teacher resources document contains general information about the project, and a multitude of resources surrounding wave energy education, including videos, worksheets, vocabulary words, general topics, and Next Generation Science standards for each grade level.
 \end{itemize}
 
 \section{Design files}
@@ -246,7 +250,9 @@ After performing the setup described in the build instructions, the project can 
 \begin{itemize}
 \item Power on the wavetank, ensuring any kill switches are closed, and any pinch points are clear.
 \item Open processing.exe.
-\item File $>$ Open $>$ siweedGUI.pde (Ex: C\textbackslash Users\textbackslash user\textbackslash Documents\textbackslash GitHub\textbackslash siweed\textbackslash Processing\textbackslash siWeedGUI\textbackslash siweedGUI.pde) 
+\item File $>$ Open $>$ siweedGUI.pde 
+
+(Ex: C\textbackslash Users\textbackslash user\textbackslash Documents\textbackslash GitHub\textbackslash siweed\textbackslash Processing\textbackslash siWeedGUI\textbackslash siweedGUI.pde) 
 \item (optional)Edit modifiers. These are booleans at the top of the code that will do things like enable basic mode, debugging, or data logging.
 \item Click ``Run".
 \item The GUI will open, allow some time for it to load.
@@ -278,7 +284,7 @@ The fit1 represents the best linear fit of the entire data set, but the data poi
   \caption{Torque vs commanded current, with linear fits of the entire and partial data set.}
   \label{fig:TorqueConstant}
 \end{figure}
-This gives us an estimated torque constant of about 7.52mNm/A, which is within 4\% of the factory stated constant of 7.8mNm/A
+This gives us an estimated torque constant of about 7.52mNm/A, which is within 4\% of the factory stated constant of 7.8mNm/A.
 \linebreak
 Since torque is being estimated from displacement and the frequency is low (inertial and viscous effects are small), the friction shows up as a "constant" offset from the ideal torque constant and doesn't affect the slope.
 This allows the friction to be seen as half the offset between the data points as the wavemaker moves up, and the points as it moves down. 

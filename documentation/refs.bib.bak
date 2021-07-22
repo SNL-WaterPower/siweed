@@ -8033,6 +8033,14 @@ controller.},
   url         = {https://www.nrel.gov/docs/fy15osti/62951.pdf},
 }
 
+@Online{Ivan2016,
+  author       = {Ivan},
+  date         = {2016-07-05},
+  title        = {New educational tank in the National Museum of Scotland’s Energy Laboratory},
+  url          = {http://www4.edesign.co.uk/2016/07/new-tank-at-the-national-museum-of-scotlands-new-energy-laboratory/},
+  organization = {Edinburgh Designs Ltd},
+}
+
 @Comment{jabref-meta: databaseType:biblatex;}
 
 @Comment{jabref-meta: fileDirectory:./pdfs;}
