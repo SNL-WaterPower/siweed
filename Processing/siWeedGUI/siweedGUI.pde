@@ -22,7 +22,7 @@ static final float waveElevationScale = 500;
 static final float WMPosScale = 250;
 static final float WCPosScale = 500;
 static final float WCTauScale = 1000;
-static final float WCPowScale = 15000;
+static final float WCPowScale = 35000;
 static final float WCVelScale = 60;
 ////////////////////////////
 
@@ -63,7 +63,7 @@ void setup() {
     initializeDataLogging();
   }
   initializeUI();
-  myMeter = new Meter(-2.0, 2.0);    //min and max
+  myMeter = new Meter(-5.0, 5.0);    //min and max
 }
 boolean initialized = false;
 void draw() {

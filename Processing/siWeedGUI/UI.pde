@@ -1004,24 +1004,24 @@ void displayUpdate() {
   image(pic1, zeroLocationLeft + 20*width/1920, 90*height/1100, bannerHeight, bannerHeight);
   image(pic2, zeroLocationRight + 20*width/1920, 90*height/1100, bannerHeight, bannerHeight);
   //controls power indicators
-  if (myMeter.getAverageVal() >= 0.5) {
+  if (myMeter.getAverageVal() >= 1) {
     quad1.setColorBackground(green).setColorActive(green);
   } else {
     quad1.setColorBackground(grey).setColorActive(grey);    //if under threshold, then grey
   }
-  if (myMeter.getAverageVal() >= 1) {
+  if (myMeter.getAverageVal() >= 2) {
     quad2.setColorBackground(green).setColorActive(green);
   } else {
-    quad2.setColorBackground(grey).setColorActive(grey);    //if under threshold, then grey
+    quad2.setColorBackground(grey).setColorActive(grey);
   }
-  if (myMeter.getAverageVal() >= 1.5) {
+  if (myMeter.getAverageVal() >= 3) {
     quad3.setColorBackground(green).setColorActive(green);
   } else {
-    quad3.setColorBackground(grey).setColorActive(grey);    //if under threshold, then grey
+    quad3.setColorBackground(grey).setColorActive(grey);
   }
-  if (myMeter.getAverageVal() >= 1.8) {
+  if (myMeter.getAverageVal() >= 4) {
     quad4.setColorBackground(green).setColorActive(green);
   } else {
-    quad4.setColorBackground(grey).setColorActive(grey);    //if under threshold, then grey
+    quad4.setColorBackground(grey).setColorActive(grey);
   }
 }
