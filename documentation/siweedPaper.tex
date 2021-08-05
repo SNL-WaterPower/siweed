@@ -88,8 +88,7 @@ The system has been designed using commercial off-the-shelf components and the a
   GNU GENERAL PUBLIC LICENSE
   \\
 \hline \textbf{Cost of hardware} &
-  %Approximate cost of hardware (complete breakdown will be included in the Bill of Materials).
-  \textit{\$6763 - Approximate cost of hardware (complete breakdown will be included in the Bill of Materials).}
+  \textit{\$6763 - Approximate cost of hardware (complete breakdown included in the Bill of Materials).}
   \\
 \hline \textbf{Source file repository} & 
   % Link to the source file repository, e.g. https://osf.io/q3nr5/ 
@@ -130,7 +129,7 @@ A system diagram is shown in \figurename~\ref{fig:siweed_layout}.
 \end{figure}
 The system is controlled by a Windows PC running a graphical user interface (GUI) developed using Processing\footnote{\url{https://processing.org}} and the controlP5 library\footnote{\url{http://www.sojamo.de/libraries/controlP5/}}.
 A screen shot of the GUI is shown in \figurename~\ref{fig:siweed_guiScreenShot}.
-It is divided into three sections: The left instructional side, ``Mission Control", and ``System Status"
+It is divided into three sections: The left instructional side, ``Mission Control", and ``System Status".
 
 \begin{figure}[tb]
   \centering
@@ -144,7 +143,8 @@ If, for example, the system is in ``sea state'' mode, the user can set the signi
 
 The right side of the ``Mission Control" section of the GUI  contains controls for the WEC, which can be set into ``torque'' mode; in which the user directly sets a commanded torque, ``feedback'' mode; where proportional and integral feedback factors can be set by the user; ``multi-sine'' mode, which allows for open-loop multi-sine signals to be set by the user; and ``off.''
 
-The ``System Status" section shows two plots, one for the WEC and one for the Wavemaker, with each allowing the user to choose what data is plotted. Below the plots are an FFT of the generated waves, and a radial meter that displays the hypothetical generated power of the WEC.
+The ``System Status" section shows two plots, one for the WEC and one for the Wavemaker, with each allowing the user to choose what data is plotted. 
+Below the plots are an FFT of the generated waves, and a radial meter that displays the hypothetical generated power of the WEC.
 
 Two Arduino Due microcontrollers are used to control and acquire signals from the WEC and Wavemaker.
 
@@ -175,14 +175,14 @@ The teacher resources document contains general information about the project, a
 %Open Hardware Repository: http://www.ohwr.org/
 % > Software and firmware. All software files used in the design and operation of the hardware should be included in the repository. Provide a description of software and firmware and use extensive comments in the code.
 
-\textit{The complete design files must be either uploaded to an approved online repository, uploaded at the time of submission on the online Elsevier submission interface as supplementary materials [CAD files, videos,\dots], or included in the body of the manuscript [e.g. figures]. The two approved online repositories are Mendeley Data and the Open Science Framework [OSF instructions]. Mendeley data: https://data.mendeley.com/ Open Science Framework: https://osf.io/ Open Science Framework HardwareX instructions: https://osf.io/wgk7q/wiki/home/
-\begin{itemize}
-\item CAD files. Authors are encouraged to use free and open source software packages for creating the files. For CAD files, OpenSCAD, FreeCAD, or Blender are encouraged, but if not available source files from proprietary CAD packages such as Autocad or Solidworks and other drawing packages are acceptable. OpenSCAD: %http://www.openscad.org/
-\item 3D printing. Supplementary files that facilitate the digital replication of the devices are encouraged. For example, STL files for 3-D printing components. We recommend uploading CAD files to the NIH 3D Print Exchange as Custom Labware and providing a link to the location. NIH 3D Print Exchange: http://3dprint.nih.gov/
-\item Electronics. PCB layouts and other electronics design files can be uploaded to the Open Hardware Repository or other repositories. Open Hardware Repository: http://www.ohwr.org/
-\item Software and firmware. All software files used in the design and operation of the hardware should be included in the repository. Provide a description of software and firmware and use extensive comments in the code.
-\end{itemize}
-}
+%\textit{The complete design files must be either uploaded to an approved online repository, uploaded at the time of submission on the online Elsevier submission interface as supplementary materials [CAD files, videos,\dots], or included in the body of the manuscript [e.g. figures]. The two approved online repositories are Mendeley Data and the Open Science Framework [OSF instructions]. Mendeley data: https://data.mendeley.com/ Open Science Framework: https://osf.io/ Open Science Framework HardwareX instructions: https://osf.io/wgk7q/wiki/home/
+%\begin{itemize}
+%\item CAD files. Authors are encouraged to use free and open source software packages for creating the files. For CAD files, OpenSCAD, FreeCAD, or Blender are encouraged, but if not available source files from proprietary CAD packages such as Autocad or Solidworks and other drawing packages are acceptable. OpenSCAD: %http://www.openscad.org/
+%\item 3D printing. Supplementary files that facilitate the digital replication of the devices are encouraged. For example, STL files for 3-D printing components. We recommend uploading CAD files to the NIH 3D Print Exchange as Custom Labware and providing a link to the location. NIH 3D Print Exchange: http://3dprint.nih.gov/
+%\item Electronics. PCB layouts and other electronics design files can be uploaded to the Open Hardware Repository or other repositories. Open Hardware Repository: http://www.ohwr.org/
+%\item Software and firmware. All software files used in the design and operation of the hardware should be included in the repository. Provide a description of software and firmware and use extensive comments in the code.
+%\end{itemize}
+%}
 \subsection{Design Files Summary}
 % Please include a summary of all design files for your hardware by filling rows of the table below
 
@@ -194,9 +194,10 @@ The teacher resources document contains general information about the project, a
 \textit{Design file 1} & \textit{e.g. CAD file, figures, videos} & \textit{All designs must be submitted under an open hardware license. Enter the corresponding open source license for the file.} & \textit{Enter a link to the online location or the sentence: ``available with the article'', as appropriate}  \\\hline
 \textit{Decoration CAD} & XX& \dots & \dots \\\hline
 \textit{Functional CAD} & XX & \dots & \dots \\\hline
-\textit{Spade CAD?} & XX & \dots & \dots \\\hline
+\textit{Plunger CAD?} & XX & \dots & \dots \\\hline
 \textit{miniWEC dimensions?} & XX & \dots & \dots \\\hline
-\textit{System Layout Diagram} & XX & \dots & \dots \\\hline
+\textit{Processing sketches} & XX & \dots & \dots \\\hline
+\textit{Arduino sketches} & XX & \dots & \dots \\\hline
 % Design file 3 & File type & License & Link \\\hline
 
 \end{tabu}
@@ -269,7 +270,6 @@ After performing the setup described in the build instructions, the project can 
 %> If possible, characterize performance of the hardware over operational parameters. 
 %> Create a bulleted list that describes the capabilities (and limitations) of the hardware. For example consider descriptions of load, operation time, spin speed, coefficient of variation, accuracy, precision and etc. 
 
-Demonstrate the operation of the hardware and characterize its performance over relevant critical metrics -XX
 \begin{itemize}
 \item \textbf{Torque constant verification:} 
 The factory torque constant was verfied by logging the position and current of the WEC while commanding a slow sinusoidal current.
@@ -301,10 +301,10 @@ Plotting the torque error using the calculated torque constant against the curre
 \end{figure}
 The average offset shows that the friction is about 0.45mNm.
 
-\item \textbf{Wave Probes:}The readings from the wave probes could be verified by attaching them to the wave maker, which has a very precise encoder that allows for accurate changes in displacement. 
+\item \textbf{Wave Probes:}
+The readings from the wave probes could be verified by attaching them to the wave maker, which has a very precise encoder that allows for accurate changes in displacement. 
 Moving the wave maker with the wave probe attached and comparing the displacement data from both of them was used to make sure the wave probe was providing accurate readings. 
 \item \textbf{WEC feedback control} - XX
-% >Create a bulleted list that describes the capabilities (and limitations) of the hardware. For example consider descriptions of load, operation time, spin speed, coefficient of variation, accuracy, precision and etc. 
 \end{itemize}
 
 \section{Declaration of interest}
