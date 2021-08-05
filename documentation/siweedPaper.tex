@@ -88,7 +88,7 @@ The system has been designed using commercial off-the-shelf components and the a
   GNU GENERAL PUBLIC LICENSE
   \\
 \hline \textbf{Cost of hardware} &
-  \textit{\$6763 - Approximate cost of hardware (complete breakdown included in the Bill of Materials).}
+  \textit{\$7736 - Approximate cost of hardware (complete breakdown included in the Bill of Materials).}
   \\
 \hline \textbf{Source file repository} & 
   % Link to the source file repository, e.g. https://osf.io/q3nr5/ 
@@ -106,20 +106,20 @@ Specifically, the SIWEED demonstrates the causal feedback control and device des
 
 
 A wide variety of similar educational wave tanks and tow tanks have been built, but few have been documented.
-\citet{unger2006creating} reworked the a tow tank at MIT to enable remote operation via the internet.
+\citet{unger2006creating} reworked a tow tank at MIT to enable remote operation via the internet.
 \citet{Trust2015} created a tank with a similar size and objective, but oriented at demostrating the effectiveness of coastal flood controls.
-There seem to be two major iterations, one electrically driven by a paddle like wavemaker, and one plunger type driven mechanically by hand. 
-\citet{Trust2015} has also make multiple similar hydraulic flume tanks for demonstration purposes.
+There seem to be two major iterations, one electrically driven by a paddle like wave maker, and one plunger type driven mechanically by hand. 
+That team has also make multiple similar hydraulic flume tanks for demonstration purposes.
 \citet{Ivan2016} has an educational wave tank on display in the National Museum of Scotland, but the waves do not explicitly interact with any bodies on the surface. 
 %\citet{Y.H.Yu} Made a wave tank to study floating- point absorbers as wave energy converters, showing similarities to this project, but they use a flap-type wavemaker, and their tank is much larger and not portable.
 
-This is a novel expansion on similar small-scale educational wave tanks, as the user is able to control both the waves and the WEC device, and the Wavemaker is driven by a ballscrew.
+This is a novel expansion on similar small-scale educational wave tanks, as the user is able to control both the waves and the WEC device, and the wave maker is driven by a ballscrew.
 The parameters of the wave are also much more controllable in this project than in similar small wave tanks.
 The primary intended audience is college students and above, but there is implemented functionality to run a simplified version of the GUI for lower age groups.
 
 
 \section{Hardware description} % Describe the hardware, highlighting the customization rather than the steps of the procedure. Highlight how it differs/which advantage it offers over pre-existing methods. For example, how could this hardware: be compared to other hardware in terms of cost or ease of use, be used in the development of further designs in a particular area, and so on. Add 3-5 bulleted points to broadly explain to other researchers how the hardware could be potentially useful to them, for either standard or novel laboratory tasks, inside or outside of the original user community.
-The SIWEED is composed of a 1.5\,m $\times{}$ 0.3\,m $\times{}$ 0.5\,m (filled to roughly 0.3\,m deep) acrylic tank, housing a vertical plunger style wave maker (see, e.g., \cite{hyun1976simplified}), and a single body WEC modeled on the WaveBot~\cite{Coe2016a}.
+The SIWEED is composed of a 1.5\,m $\times{}$ 0.3\,m $\times{}$ 0.5\,m acrylic tank, filled to roughly 0.3\,m deep, housing a vertical plunger style wave maker (see, e.g., \cite{hyun1976simplified}), and a single body WEC modeled on the WaveBot~\cite{Coe2016a}.
 A system diagram is shown in \figurename~\ref{fig:siweed_layout}.
 \begin{figure}[tb]
   \centering
@@ -143,10 +143,10 @@ If, for example, the system is in ``sea state'' mode, the user can set the signi
 
 The right side of the ``Mission Control" section of the GUI  contains controls for the WEC, which can be set into ``torque'' mode; in which the user directly sets a commanded torque, ``feedback'' mode; where proportional and integral feedback factors can be set by the user; ``multi-sine'' mode, which allows for open-loop multi-sine signals to be set by the user; and ``off.''
 
-The ``System Status" section shows two plots, one for the WEC and one for the Wavemaker, with each allowing the user to choose what data is plotted. 
+The ``System Status" section shows two plots, one for the WEC and one for the wave maker, with each allowing the user to choose what data is plotted. 
 Below the plots are an FFT of the generated waves, and a radial meter that displays the hypothetical generated power of the WEC.
 
-Two Arduino Due microcontrollers are used to control and acquire signals from the WEC and Wavemaker.
+Two Arduino Due microcontrollers are used to control and acquire signals from the WEC and wave maker.
 
 A number of key factors of SIWEED are:
 
@@ -272,7 +272,7 @@ After performing the setup described in the build instructions, the project can 
 
 \begin{itemize}
 \item \textbf{Torque constant verification:} 
-The factory torque constant was verfied by logging the position and current of the WEC while commanding a slow sinusoidal current.
+The factory torque constant was verfied by logging the position and current of the free floating WEC while commanding a slow sinusoidal current.
 The position displacement time series was converted to a time series of the applied physical torque with the following equation:
 %\linebreak
 \[\tau=\sigma*\gamma *d* \pi*r^2\]
@@ -281,17 +281,17 @@ Where $\tau$ is torque, $\sigma$ is the radius of the pinion gear, $\gamma$ is t
 %Torque = pinon radius (M)*  [9810(N/m^3)*pos(m)*pi*radius(m)^2]
 It is important to note that the torque values at this point did not account for friction or hysteresis.
 Plotting this torque data against the recorded commanded current values gives  \figurename~\ref{fig:TorqueConstant}.
-The fit1 represents the best linear fit of the entire data set, but the data points at the highest and lowest currents are affected more significatntly by static friction, so cutting them from the data set improves the torque constant estimation, as shown in with fit2 in \figurename~\ref{fig:TorqueConstant}.
+The fit1 line represents the best linear fit of the entire data set, but the data points at the highest and lowest currents are affected more significatntly by static friction, so omitting them from the data set improves the torque constant estimation, as shown with the fit2 line in \figurename~\ref{fig:TorqueConstant}.
 \begin{figure}[tb]
   \centering
   \includegraphics[width=0.5\textwidth]{diagrams/TorqueConstant.jpeg}
   \caption{Torque vs commanded current, with linear fits of the entire and partial data set.}
   \label{fig:TorqueConstant}
 \end{figure}
-This gives us an estimated torque constant of about 7.52mNm/A, which is within 4\% of the factory stated constant of 7.8mNm/A.
+This provides an estimated torque constant of about 7.52mNm/A, which is within 4\% of the factory stated constant of 7.8mNm/A.
 \linebreak
 Since torque is being estimated from displacement and the frequency is low (inertial and viscous effects are small), the friction shows up as a "constant" offset from the ideal torque constant and doesn't affect the slope.
-This allows the friction to be seen as half the offset between the data points as the wavemaker moves up, and the points as it moves down. 
+This allows the friction to be seen as half the offset between the data points as the wave maker moves up, and the points as it moves down. 
 Plotting the torque error using the calculated torque constant against the current gives \figurename~\ref{fig:TorqueError}.
 \begin{figure}[tb]
   \centering
