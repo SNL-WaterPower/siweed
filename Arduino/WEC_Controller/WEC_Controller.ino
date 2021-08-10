@@ -16,10 +16,10 @@ volatile double t = 0;    //time in seconds
 volatile float tau = 0, kp = 0, kd = 0, power = 0, vel = 0;
 volatile float tauCommand = 0, tauCommanded = 0;   //incoming tau and outgoing tau(in case it saturates)
 const int tauPin = 4, enablePin = 5, dirPin = 6, l1Pin = 10, l2Pin = 11, l3Pin = 12, l4Pin = 13, tauInPin = A0;
-const float l1Lim = 1/35000, l2Lim = 2/35000, l3Lim = 3/35000, l4Lim = 4/35000;       //the power thresholds of the led groups. threshold/WEC Power scale in processing
+const float l1Lim = 1 / 35000, l2Lim = 2 / 35000, l3Lim = 3 / 35000, l4Lim = 4 / 35000; //the power thresholds of the led groups. threshold/WEC Power scale in processing
 //volatile float encPos;
 const float encStepsPerTurn = 8192;   //for 800 ppr/3200 counts per revolution set dip switches(0100) //2048ppr/8192 counts per revolution max(0000)
-const float teethPerTurn = 20;   
+const float teethPerTurn = 20;
 const float mPerTooth = 0.002;
 const float minPwm = .1, maxPwm = .9;
 const float minAmps = 0, maxAmps = 0.7620;    //amperage at min and max pwm //0.456
@@ -132,14 +132,14 @@ volatile float calcTS(volatile float tm) {      //calculate jonswap timeseries v
     }
   }
   volatile float val = 0;
-  for (volatile int i = 0; i < n; i++) 
+  for (volatile int i = 0; i < n; i++)
   {
     val += amps[i] * sin(2 * PI * tm * freqs[i] + phases[i]);
   }
   return val;
 }
 volatile float checksum() {
-    return mode + tau + kp + kd + sigH + peakF + gam;//adds the values of anything that can ba changes by processing.
+  return mode + tau + kp + kd + sigH + peakF + gam;//adds the values of anything that can ba changes by processing.
 }
 bool ampUnitTest = true, TSUnitTest = true, encoderTest = true;
 //float exampleAmps[] = {0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.01, 0.02, 0.05, 0.11, 0.20, 0.33, 0.48, 0.67, 0.87, 1.09, 1.30, 1.51, 1.7, 1.88, 2.03, 2.16};
@@ -169,6 +169,9 @@ void unitTests() {
     //Serial.print(calcTS(i));
     //Serial.print(", ");
   }
+  sigH = 0;   //return values to 0, so checksum is correct
+  peakF = 0;
+  gam = 0;
   //////////////////test encoder buffer:
   //If the initialization and setting functions worked, move on, otherwise, throw error and halt execution.
   if (encoderBuffInit && didItWork_MDR0 && didItWork_MDR1) {

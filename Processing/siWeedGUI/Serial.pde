@@ -190,7 +190,7 @@ void readWECSerial() {
   }
 }
 void sendSerial(char c, float f, Serial port, int cmdCount) {      //to send a command as a part of a set, cmdcount should be more than 1. For example, mode and then amplitude and frequency makes 3 commands. This is used for checksum verification.
-  port1.write((char)c);
+  port.write((char)c);
   sendFloat(f, port);
   if (cmdCount == 0) {    //if the count is 0, don't add to log or update cmdCount. This allows commands in the resend function to be sent without logging
   } else if (port == port1) {      //assigns the cmd count based on which port is sent to.
