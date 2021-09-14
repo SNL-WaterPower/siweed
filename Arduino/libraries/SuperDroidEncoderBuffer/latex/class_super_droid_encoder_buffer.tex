@@ -1,0 +1,311 @@
+\hypertarget{class_super_droid_encoder_buffer}{}\doxysection{Super\+Droid\+Encoder\+Buffer Class Reference}
+\label{class_super_droid_encoder_buffer}\index{SuperDroidEncoderBuffer@{SuperDroidEncoderBuffer}}
+
+
+A definition of the encoder buffer object, internal vars, and methods.  
+
+
+
+
+{\ttfamily \#include $<$Super\+Droid\+Encoder\+Buffer.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_super_droid_encoder_buffer_afa5a37dbe185e645bb4422a9228ccfee}{Super\+Droid\+Encoder\+Buffer}} (uint8\+\_\+t S\+S\+\_\+pin)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_super_droid_encoder_buffer_a51ce8a029ede8f681aab239f8c37a38e}{begin}} (uint32\+\_\+t S\+P\+I\+\_\+clock\+Freq)
+\begin{DoxyCompactList}\small\item\em Initialization function of the object (Overloaded) \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_super_droid_encoder_buffer_a25c3fb0de7ea9a602295b9f726aec48d}{begin}} (void)
+\begin{DoxyCompactList}\small\item\em Initialization function of the object (Overloaded) \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_super_droid_encoder_buffer_a3a15aa2802ab0bf2e11ef6ac35168c0a}{set\+M\+D\+R0}} (unsigned char M\+D\+R0\+\_\+setting)
+\begin{DoxyCompactList}\small\item\em sets the 8-\/bit M\+D\+R0 register to desired value \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_super_droid_encoder_buffer_af2260363335d0b7649d44aadcaa5bf58}{set\+M\+D\+R1}} (unsigned char M\+D\+R1\+\_\+setting)
+\begin{DoxyCompactList}\small\item\em sets the 8-\/bit M\+D\+R1 register to desired value \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_super_droid_encoder_buffer_add383a3f8cb68301e983890fe5f8dacc}{set\+D\+TR}} (unsigned char $\ast$D\+T\+Rsetting, int number\+Of\+Bytes)
+\begin{DoxyCompactList}\small\item\em Sets the variable-\/sized D\+TR register to desired value (Overloaded) \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_super_droid_encoder_buffer_a7c2e02cf90e225ae434b3cb688db5a4c}{set\+D\+TR}} (long D\+T\+Rsetting)
+\begin{DoxyCompactList}\small\item\em Sets the variable-\/sized D\+TR register to desired value (Overloaded) \end{DoxyCompactList}\item 
+long \mbox{\hyperlink{class_super_droid_encoder_buffer_a4017165c819f2e7b76ebb32a5e25a891}{read\+C\+N\+TR}} ()
+\begin{DoxyCompactList}\small\item\em Reads the variable-\/sized C\+N\+TR register. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_super_droid_encoder_buffer_a4dd3932bde836419e83a3bcfb322c9d4}{command2\+Reg}} (unsigned char reg, unsigned char command)
+\begin{DoxyCompactList}\small\item\em Sends a command to a register. \end{DoxyCompactList}\item 
+unsigned char \mbox{\hyperlink{class_super_droid_encoder_buffer_abd5cb265e1bfefb3a2a20b896b0d87f5}{read\+Reg}} (unsigned char reg)
+\begin{DoxyCompactList}\small\item\em Reads values form a register (Overloaded) \end{DoxyCompactList}\item 
+long \mbox{\hyperlink{class_super_droid_encoder_buffer_a43e6cd11719938c5795ffd6deb7405bc}{read\+Reg}} (unsigned char reg, int number\+Of\+Bytes)
+\begin{DoxyCompactList}\small\item\em Reads values form a register (Overloaded) \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_super_droid_encoder_buffer_a0d70950e414c62d237aa5cfaf4a665c5}{read\+Reg}} (unsigned char reg, unsigned char $\ast$read\+Buffer, int number\+Of\+Bytes)
+\begin{DoxyCompactList}\small\item\em Reads values form a register (Overloaded) \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_super_droid_encoder_buffer_a739c5834910f02488487471fd2c6a68f}{write2\+Reg}} (unsigned char reg, unsigned char val)
+\begin{DoxyCompactList}\small\item\em writes values to a register (Overloaded) \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_super_droid_encoder_buffer_a49076d1ca5826a627d9636737ed25739}{write2\+Reg}} (unsigned char reg, unsigned char $\ast$val, int val\+Number)
+\begin{DoxyCompactList}\small\item\em writes values to a register (Overloaded) \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A definition of the encoder buffer object, internal vars, and methods. 
+
+This class contains all necessary methods and variables to interface with the L\+S7366 IC. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_super_droid_encoder_buffer_afa5a37dbe185e645bb4422a9228ccfee}\label{class_super_droid_encoder_buffer_afa5a37dbe185e645bb4422a9228ccfee}} 
+\index{SuperDroidEncoderBuffer@{SuperDroidEncoderBuffer}!SuperDroidEncoderBuffer@{SuperDroidEncoderBuffer}}
+\index{SuperDroidEncoderBuffer@{SuperDroidEncoderBuffer}!SuperDroidEncoderBuffer@{SuperDroidEncoderBuffer}}
+\doxysubsubsection{\texorpdfstring{SuperDroidEncoderBuffer()}{SuperDroidEncoderBuffer()}}
+{\footnotesize\ttfamily Super\+Droid\+Encoder\+Buffer\+::\+Super\+Droid\+Encoder\+Buffer (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{S\+S\+\_\+\+P\+IN }\end{DoxyParamCaption})}
+
+
+
+Constructor. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em S\+S\+\_\+pin} & The object\textquotesingle{}s S\+PI slave select pin number \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_super_droid_encoder_buffer_a51ce8a029ede8f681aab239f8c37a38e}\label{class_super_droid_encoder_buffer_a51ce8a029ede8f681aab239f8c37a38e}} 
+\index{SuperDroidEncoderBuffer@{SuperDroidEncoderBuffer}!begin@{begin}}
+\index{begin@{begin}!SuperDroidEncoderBuffer@{SuperDroidEncoderBuffer}}
+\doxysubsubsection{\texorpdfstring{begin()}{begin()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily bool Super\+Droid\+Encoder\+Buffer\+::begin (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{S\+P\+I\+\_\+clock\+Freq }\end{DoxyParamCaption})}
+
+
+
+Initialization function of the object (Overloaded) 
+
+Initializes the object by testing some of the functionality 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em S\+P\+I\+\_\+clock\+Freq} & Defines the object\textquotesingle{}s preffered S\+PI clock frequency (in Hz) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A boolean representing the method\textquotesingle{}s success 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_super_droid_encoder_buffer_a25c3fb0de7ea9a602295b9f726aec48d}\label{class_super_droid_encoder_buffer_a25c3fb0de7ea9a602295b9f726aec48d}} 
+\index{SuperDroidEncoderBuffer@{SuperDroidEncoderBuffer}!begin@{begin}}
+\index{begin@{begin}!SuperDroidEncoderBuffer@{SuperDroidEncoderBuffer}}
+\doxysubsubsection{\texorpdfstring{begin()}{begin()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily bool Super\+Droid\+Encoder\+Buffer\+::begin (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Initialization function of the object (Overloaded) 
+
+Initializes the object by testing some of the functionality Sets the S\+PI clock frequency to a default value of 500000; \begin{DoxyReturn}{Returns}
+A boolean representing the method\textquotesingle{}s success 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_super_droid_encoder_buffer_a4dd3932bde836419e83a3bcfb322c9d4}\label{class_super_droid_encoder_buffer_a4dd3932bde836419e83a3bcfb322c9d4}} 
+\index{SuperDroidEncoderBuffer@{SuperDroidEncoderBuffer}!command2Reg@{command2Reg}}
+\index{command2Reg@{command2Reg}!SuperDroidEncoderBuffer@{SuperDroidEncoderBuffer}}
+\doxysubsubsection{\texorpdfstring{command2Reg()}{command2Reg()}}
+{\footnotesize\ttfamily void Super\+Droid\+Encoder\+Buffer\+::command2\+Reg (\begin{DoxyParamCaption}\item[{unsigned char}]{reg,  }\item[{unsigned char}]{command }\end{DoxyParamCaption})}
+
+
+
+Sends a command to a register. 
+
+Sends an 8-\/bit value to the IR register, which contains a Command Word and a Target Register to perform the command on. The specific set of commands and available registers are included in \mbox{\hyperlink{_super_droid_encoder_buffer___defs_8h_source}{Super\+Droid\+Encoder\+Buffer\+\_\+\+Defs.\+h}} 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em reg} & The 8-\/bit value specifying the target register \\
+\hline
+\mbox{\texttt{ in}}  & {\em command} & The 8-\/bit value specifying the desired command word \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_super_droid_encoder_buffer_a4017165c819f2e7b76ebb32a5e25a891}\label{class_super_droid_encoder_buffer_a4017165c819f2e7b76ebb32a5e25a891}} 
+\index{SuperDroidEncoderBuffer@{SuperDroidEncoderBuffer}!readCNTR@{readCNTR}}
+\index{readCNTR@{readCNTR}!SuperDroidEncoderBuffer@{SuperDroidEncoderBuffer}}
+\doxysubsubsection{\texorpdfstring{readCNTR()}{readCNTR()}}
+{\footnotesize\ttfamily long Super\+Droid\+Encoder\+Buffer\+::read\+C\+N\+TR (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Reads the variable-\/sized C\+N\+TR register. 
+
+Passes a R\+E\+AD command to the IC, receives the value as a n-\/byte array, and combines the elements of the array into a Long Integer for return \begin{DoxyReturn}{Returns}
+A long integer representing the value read from the C\+N\+TR 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_super_droid_encoder_buffer_abd5cb265e1bfefb3a2a20b896b0d87f5}\label{class_super_droid_encoder_buffer_abd5cb265e1bfefb3a2a20b896b0d87f5}} 
+\index{SuperDroidEncoderBuffer@{SuperDroidEncoderBuffer}!readReg@{readReg}}
+\index{readReg@{readReg}!SuperDroidEncoderBuffer@{SuperDroidEncoderBuffer}}
+\doxysubsubsection{\texorpdfstring{readReg()}{readReg()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily unsigned char Super\+Droid\+Encoder\+Buffer\+::read\+Reg (\begin{DoxyParamCaption}\item[{unsigned char}]{reg }\end{DoxyParamCaption})}
+
+
+
+Reads values form a register (Overloaded) 
+
+Sends a R\+E\+AD command for the Target Register to the IR register, and returns the value returned from the IC. The specific set of available registers are included in \mbox{\hyperlink{_super_droid_encoder_buffer___defs_8h_source}{Super\+Droid\+Encoder\+Buffer\+\_\+\+Defs.\+h}} 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em reg} & The 8-\/bit value specifying the target register \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The 8-\/bit value returned from the IC, representing the value of the Target Register. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_super_droid_encoder_buffer_a43e6cd11719938c5795ffd6deb7405bc}\label{class_super_droid_encoder_buffer_a43e6cd11719938c5795ffd6deb7405bc}} 
+\index{SuperDroidEncoderBuffer@{SuperDroidEncoderBuffer}!readReg@{readReg}}
+\index{readReg@{readReg}!SuperDroidEncoderBuffer@{SuperDroidEncoderBuffer}}
+\doxysubsubsection{\texorpdfstring{readReg()}{readReg()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily long Super\+Droid\+Encoder\+Buffer\+::read\+Reg (\begin{DoxyParamCaption}\item[{unsigned char}]{reg,  }\item[{int}]{number\+Of\+Bytes }\end{DoxyParamCaption})}
+
+
+
+Reads values form a register (Overloaded) 
+
+Sends a R\+E\+AD command for the Target Register to the IR register, and returns the value returned from the IC. The specific set of available registers are included in \mbox{\hyperlink{_super_droid_encoder_buffer___defs_8h_source}{Super\+Droid\+Encoder\+Buffer\+\_\+\+Defs.\+h}} 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em reg} & The 8-\/bit value specifying the target register \\
+\hline
+\mbox{\texttt{ in}}  & {\em number\+Of\+Bytes} & The integer specifying the size (in bytes) of the expected return value \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The n-\/byte value returned from the IC, representing the value of the Target Register. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_super_droid_encoder_buffer_a0d70950e414c62d237aa5cfaf4a665c5}\label{class_super_droid_encoder_buffer_a0d70950e414c62d237aa5cfaf4a665c5}} 
+\index{SuperDroidEncoderBuffer@{SuperDroidEncoderBuffer}!readReg@{readReg}}
+\index{readReg@{readReg}!SuperDroidEncoderBuffer@{SuperDroidEncoderBuffer}}
+\doxysubsubsection{\texorpdfstring{readReg()}{readReg()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily void Super\+Droid\+Encoder\+Buffer\+::read\+Reg (\begin{DoxyParamCaption}\item[{unsigned char}]{reg,  }\item[{unsigned char $\ast$}]{read\+Buffer,  }\item[{int}]{number\+Of\+Bytes }\end{DoxyParamCaption})}
+
+
+
+Reads values form a register (Overloaded) 
+
+Sends a R\+E\+AD command for the Target Register to the IR register, and returns the value returned from the IC. The specific set of available registers are included in \mbox{\hyperlink{_super_droid_encoder_buffer___defs_8h_source}{Super\+Droid\+Encoder\+Buffer\+\_\+\+Defs.\+h}} 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em reg} & The 8-\/bit value specifying the target register \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em read\+Buffer} & A pointer to the beginning of n-\/element 8-\/bit array (preferably empty or zero\textquotesingle{}d) n = number\+Of\+Bytes, this pointer will also be the memory address where the read value is returned. \\
+\hline
+\mbox{\texttt{ in}}  & {\em number\+Of\+Bytes} & The integer specifying the size (in bytes) of the expected return value \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+return values are located in the address provided by read\+Buffer, with the same size provided by number\+Of\+Bytes 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_super_droid_encoder_buffer_a7c2e02cf90e225ae434b3cb688db5a4c}\label{class_super_droid_encoder_buffer_a7c2e02cf90e225ae434b3cb688db5a4c}} 
+\index{SuperDroidEncoderBuffer@{SuperDroidEncoderBuffer}!setDTR@{setDTR}}
+\index{setDTR@{setDTR}!SuperDroidEncoderBuffer@{SuperDroidEncoderBuffer}}
+\doxysubsubsection{\texorpdfstring{setDTR()}{setDTR()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily bool Super\+Droid\+Encoder\+Buffer\+::set\+D\+TR (\begin{DoxyParamCaption}\item[{long}]{D\+T\+Rsetting }\end{DoxyParamCaption})}
+
+
+
+Sets the variable-\/sized D\+TR register to desired value (Overloaded) 
+
+Sets the D\+TR register to a value, loads the value into C\+N\+TR, reads from C\+N\+TR and validates that it matches the desired value, then resets the C\+N\+TR register to 0. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em D\+T\+Rsetting} & A Long Integer to be written to a 4-\/byte D\+TR register. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A boolean representing the method\textquotesingle{}s success. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_super_droid_encoder_buffer_add383a3f8cb68301e983890fe5f8dacc}\label{class_super_droid_encoder_buffer_add383a3f8cb68301e983890fe5f8dacc}} 
+\index{SuperDroidEncoderBuffer@{SuperDroidEncoderBuffer}!setDTR@{setDTR}}
+\index{setDTR@{setDTR}!SuperDroidEncoderBuffer@{SuperDroidEncoderBuffer}}
+\doxysubsubsection{\texorpdfstring{setDTR()}{setDTR()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily bool Super\+Droid\+Encoder\+Buffer\+::set\+D\+TR (\begin{DoxyParamCaption}\item[{unsigned char $\ast$}]{D\+T\+Rsetting,  }\item[{int}]{number\+Of\+Bytes }\end{DoxyParamCaption})}
+
+
+
+Sets the variable-\/sized D\+TR register to desired value (Overloaded) 
+
+Sets the D\+TR register to a value, loads the value into C\+N\+TR, reads from C\+N\+TR and validates that it matches the desired value, then resets the C\+N\+TR register to 0. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em D\+T\+Rsetting} & A pointer to a 1 to 4 element array of 8-\/bit values to be loaded into D\+TR. \\
+\hline
+\mbox{\texttt{ in}}  & {\em number\+Of\+Bytes} & An integer specifying the size (in bytes) of D\+T\+Rsetting. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A boolean representing the method\textquotesingle{}s success. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_super_droid_encoder_buffer_a3a15aa2802ab0bf2e11ef6ac35168c0a}\label{class_super_droid_encoder_buffer_a3a15aa2802ab0bf2e11ef6ac35168c0a}} 
+\index{SuperDroidEncoderBuffer@{SuperDroidEncoderBuffer}!setMDR0@{setMDR0}}
+\index{setMDR0@{setMDR0}!SuperDroidEncoderBuffer@{SuperDroidEncoderBuffer}}
+\doxysubsubsection{\texorpdfstring{setMDR0()}{setMDR0()}}
+{\footnotesize\ttfamily bool Super\+Droid\+Encoder\+Buffer\+::set\+M\+D\+R0 (\begin{DoxyParamCaption}\item[{unsigned char}]{M\+D\+R0\+\_\+setting }\end{DoxyParamCaption})}
+
+
+
+sets the 8-\/bit M\+D\+R0 register to desired value 
+
+Macros for the various M\+D\+R0 settings are found in \mbox{\hyperlink{_super_droid_encoder_buffer___defs_8h_source}{Super\+Droid\+Encoder\+Buffer\+\_\+\+Defs.\+h}} 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em M\+D\+R0\+\_\+setting} & An 8-\/bit value containing the desired bit-\/register values, M\+SB (B7) first \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A boolean representing the method\textquotesingle{}s success 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_super_droid_encoder_buffer_af2260363335d0b7649d44aadcaa5bf58}\label{class_super_droid_encoder_buffer_af2260363335d0b7649d44aadcaa5bf58}} 
+\index{SuperDroidEncoderBuffer@{SuperDroidEncoderBuffer}!setMDR1@{setMDR1}}
+\index{setMDR1@{setMDR1}!SuperDroidEncoderBuffer@{SuperDroidEncoderBuffer}}
+\doxysubsubsection{\texorpdfstring{setMDR1()}{setMDR1()}}
+{\footnotesize\ttfamily bool Super\+Droid\+Encoder\+Buffer\+::set\+M\+D\+R1 (\begin{DoxyParamCaption}\item[{unsigned char}]{M\+D\+R1\+\_\+setting }\end{DoxyParamCaption})}
+
+
+
+sets the 8-\/bit M\+D\+R1 register to desired value 
+
+Macros for the various M\+D\+R1 settings are found in \mbox{\hyperlink{_super_droid_encoder_buffer___defs_8h_source}{Super\+Droid\+Encoder\+Buffer\+\_\+\+Defs.\+h}} 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em M\+D\+R1\+\_\+setting} & An 8-\/bit value containing the desired bit-\/register values, M\+SB (B7) first \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A boolean representing the method\textquotesingle{}s success 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_super_droid_encoder_buffer_a49076d1ca5826a627d9636737ed25739}\label{class_super_droid_encoder_buffer_a49076d1ca5826a627d9636737ed25739}} 
+\index{SuperDroidEncoderBuffer@{SuperDroidEncoderBuffer}!write2Reg@{write2Reg}}
+\index{write2Reg@{write2Reg}!SuperDroidEncoderBuffer@{SuperDroidEncoderBuffer}}
+\doxysubsubsection{\texorpdfstring{write2Reg()}{write2Reg()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily bool Super\+Droid\+Encoder\+Buffer\+::write2\+Reg (\begin{DoxyParamCaption}\item[{unsigned char}]{reg,  }\item[{unsigned char $\ast$}]{val,  }\item[{int}]{val\+Number }\end{DoxyParamCaption})}
+
+
+
+writes values to a register (Overloaded) 
+
+Sends a W\+R\+I\+TE command for the Target Register to the IR register, then sends a value to be written to the target buffer. The specific set of available registers are included in \mbox{\hyperlink{_super_droid_encoder_buffer___defs_8h_source}{Super\+Droid\+Encoder\+Buffer\+\_\+\+Defs.\+h}} 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em reg} & The 8-\/bit value specifying the target register \\
+\hline
+\mbox{\texttt{ in}}  & {\em val} & The pointer to an n-\/element 8-\/bit array containing the value to be written to the target register \\
+\hline
+\mbox{\texttt{ in}}  & {\em val\+Number} & The integer the number of elements in the val array \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A boolean indicating the success of the write operation 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_super_droid_encoder_buffer_a739c5834910f02488487471fd2c6a68f}\label{class_super_droid_encoder_buffer_a739c5834910f02488487471fd2c6a68f}} 
+\index{SuperDroidEncoderBuffer@{SuperDroidEncoderBuffer}!write2Reg@{write2Reg}}
+\index{write2Reg@{write2Reg}!SuperDroidEncoderBuffer@{SuperDroidEncoderBuffer}}
+\doxysubsubsection{\texorpdfstring{write2Reg()}{write2Reg()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily bool Super\+Droid\+Encoder\+Buffer\+::write2\+Reg (\begin{DoxyParamCaption}\item[{unsigned char}]{reg,  }\item[{unsigned char}]{val }\end{DoxyParamCaption})}
+
+
+
+writes values to a register (Overloaded) 
+
+Sends a W\+R\+I\+TE command for the Target Register to the IR register, then sends a value to be written to the target buffer. The specific set of available registers are included in \mbox{\hyperlink{_super_droid_encoder_buffer___defs_8h_source}{Super\+Droid\+Encoder\+Buffer\+\_\+\+Defs.\+h}} 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em reg} & The 8-\/bit value specifying the target register \\
+\hline
+\mbox{\texttt{ in}}  & {\em val} & The 8-\/bit values to be written to the target register \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A boolean indicating the success of the write operation 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{_super_droid_encoder_buffer_8h}{Super\+Droid\+Encoder\+Buffer.\+h}}\item 
+\mbox{\hyperlink{_super_droid_encoder_buffer_8cpp}{Super\+Droid\+Encoder\+Buffer.\+cpp}}\end{DoxyCompactItemize}

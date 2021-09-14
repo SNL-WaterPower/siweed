@@ -1,5 +1,6 @@
-boolean[] megaUnitTests = {false, false, false};      //serial, jonswap amplitude array, jonswap timeSeries
-boolean[] dueUnitTests = {false, false, false};
+int onboardTestDelay = 200;    //ms to wait for arduino to send unit tests
+boolean[] WMUnitTests = {false, false, false, false, false};      //serial, jonswap amplitude array, jonswap timeSeries, encoder buffer, unit tests recieved
+boolean[] WECUnitTests = {false, false, false, false, false};
 void unitTests() {
   /////////////FFT:
   for (int i = 0; i < queueSize; i++) {
@@ -26,48 +27,153 @@ void unitTests() {
   } else {
     println("FFT Test FAILED");
   }
-  /////////////verify mega serial:    //maybe change method to : send value -> recieve value
-  readMegaSerial();    //reads serial buffer and sets bool true if recieving normal results
-  if (megaUnitTests[0]) {
-    println("Mega Serial Test PASSED");
+  ////////////////////Byte conversions:
+  float testFloat = 123.456789;
+  byte[] byteArray = floatToByteArray(testFloat);
+  //println(byteArray);
+  float resultFloat = byteArrayToFloat(byteArray);
+  if (testFloat == resultFloat) {
+    println("Byte Conversion Test PASSED");
   } else {
-    println("Mega Serial Test FAILED");
+    println("Byte Conversion Test FAILED");
   }
-  ////////////verify due serial:
-  readDueSerial();    //reads serial buffer and sets bool true if recieving normal results
-  if (dueUnitTests[0]) {
-    println("Due Serial Test PASSED");
+  /////////////verify WM serial:    //maybe change method to : send value -> recieve value
+  readWMSerial();    //reads serial buffer and sets bool true if recieving normal results
+  if (WMUnitTests[0]) {
+    println("WM Serial Test PASSED");
   } else {
-    println("Due Serial Test FAILED");
+    println("WM Serial Test FAILED");
   }
-  ////////////verify mega jonswap:
-  readMegaSerial();    //clear buffer
-  if (megaConnected) port1.write('u');    //sends to begin test
-  delay(100);          //give time to complete
-  readMegaSerial();
-  if (megaUnitTests[1]) {
-    println("Mega Jonswap Amplitide Test PASSED");
-  } else {    
-    println("Mega Jonswap Amplitude Test FAILED");
+  ////////////verify WEC serial:
+  readWECSerial();    //reads serial buffer and sets bool true if recieving normal results
+  if (WECUnitTests[0]) {
+    println("WEC Serial Test PASSED");
+  } else {
+    println("WEC Serial Test FAILED");
   }
-  if (megaUnitTests[2]) {
-    println("Mega Jonswap TimeSeries Test PASSED");
-  } else {    
-    println("Mega Jonswap TimeSeries Test FAILED");
+  ////////////verify WM on board unit tests:
+  if (WMConnected) { 
+    port1.clear();    //clear buffer
+    port1.write('u');    //sends to begin test
+    sendFloat(1.0, port1);    //flips to unit test serial mode
+    delay(onboardTestDelay);    //time for arduino to send tests
+    for (int i = 0; i < 10 && !WMUnitTests[4]; i++) {   //tries i times or until the confimation flag is recieved
+      readWMSerial();
+      if (debug) {
+        println("retrieving WM unit tests");
+      }
+      if (i == 5) {    //if failed after 5 tries, send command again.
+        port1.clear();    //clear buffer
+        port1.write('u');    //sends to begin test
+        sendFloat(1.0, port1);    //flips to unit test serial mode
+        delay(onboardTestDelay);    //time for arduino to send tests
+        if (debug) {
+          println("did not recieve WM unit tests, sending new request");
+        }
+      }
+    }
+    if (debug && WMUnitTests[4]) {
+      println("WM unit tests recieved");
+    } else if (debug) {
+      println("WM unit tests timed out");
+    }
+    WMUnitTests[0] = false;
+    for (int i = 0; i < 10 && !WMUnitTests[0]; i++) {    //tries i times or until back to normal operation.
+      port1.clear();
+      port1.write('u'); 
+      sendFloat(0, port1);    //back to normal operation
+      delay(onboardTestDelay);
+      WMUnitTests[0] = false;
+      readWMSerial();
+      if (debug){
+        println("testing if WM returned to normal operation");
+      }
+    }
+    if(!WMUnitTests[0]){
+      println("WM failed to exit Unit Testing mode");
+    }
   }
-  ////////////verify due jonswap:
-  readDueSerial();    //clear buffer
-  if(dueConnected)port2.write('u');    //sends to begin test
-  delay(100);          //give time to complete
-  readDueSerial();
-  if (dueUnitTests[1]) {
-    println("Due Jonswap Amplitide Test PASSED");
-  } else {    
-    println("Due Jonswap Amplitude Test FAILED");
+  if (!WMConnected) {
+  } else if (WMUnitTests[4]) {    //if the tests were recived correctly
+    if (WMUnitTests[1]) {
+      println("WM Jonswap Amplitide Test PASSED");
+    } else {    
+      println("WM Jonswap Amplitude Test FAILED");
+    }
+    if (WMUnitTests[2]) {
+      println("WM Jonswap TimeSeries Test PASSED");
+    } else {    
+      println("WM Jonswap TimeSeries Test FAILED");
+    }
+    if (WMUnitTests[3]) {
+      println("WM Encoder Buffer Test PASSED");
+    } else {    
+      println("WM Encoder Buffer Test FAILED");
+    }
+  } else {          //if the tests were not recieved correctly
+    println("WM On-Board Units Tests FAILED");
   }
-  if (dueUnitTests[2]) {
-    println("Due Jonswap TimeSeries Test PASSED");
+  ////////////verify WEC on board unit tests:
+  if (WECConnected) {
+    port2.clear();    //clear buffer
+    port2.write('u');    //sends to begin test
+    sendFloat(1.0, port2);    //flips to unit test serial mode
+    delay(onboardTestDelay);    //time for arduino to send tests
+    for (int i = 0; i < 10 && !WECUnitTests[4]; i++)    //tries i times or until the confimation flag is recieved
+    {
+      readWECSerial();      
+      if (debug) {
+        println("retrieving WEC unit tests");
+      }
+      if (i == 5) {    //if failed after 5 tries, send command again.
+        port2.clear();    //clear buffer
+        port2.write('u');    //sends to begin test
+        sendFloat(1.0, port2);    //flips to unit test serial mode
+        delay(onboardTestDelay);    //time for arduino to send tests
+        if (debug) {
+          println("did not recieve WEC unit tests, sending new request");
+        }
+      }
+    }
+    if (debug && WECUnitTests[4]) {
+      println("WEC unit tests recieved");
+    } else if (debug) {
+      println("WEC unit tests timed out");
+    }
+    WECUnitTests[0] = false;
+    for (int i = 0; i < 10 && !WECUnitTests[0]; i++) {    //tries i times or until back to normal operation.
+      port2.clear();
+      port2.write('u');
+      sendFloat(0, port2);    //back to normal operation
+      delay(onboardTestDelay);
+      WECUnitTests[0] = false;
+      readWECSerial();
+      if (debug){
+        println("testing if WEC returned to normal operation");
+      }
+    }
+    if(WECUnitTests[0] == false){
+      println("WEC failed to exit Unit Testing mode");
+    }
+  }
+  if (!WECConnected) {
+  } else if (WECUnitTests[4]) {
+    if (WECUnitTests[1]) {
+      println("WEC Jonswap Amplitide Test PASSED");
+    } else {    
+      println("WEC Jonswap Amplitude Test FAILED");
+    }
+    if (WECUnitTests[2]) {
+      println("WEC Jonswap TimeSeries Test PASSED");
+    } else {    
+      println("WEC Jonswap TimeSeries Test FAILED");
+    }
+    if (WECUnitTests[3]) {
+      println("WEC Encoder Buffer Test PASSED");
+    } else {    
+      println("WEC Encoder Buffer Test FAILED");
+    }
   } else {    
-    println("Due Jonswap TimeSeries Test FAILED");
+    println("WEC On-Board Units Tests FAILED");
   }
 }

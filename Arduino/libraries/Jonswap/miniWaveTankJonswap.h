@@ -7,7 +7,7 @@
 class miniWaveTankJonswap
 {
   public:
-  static double period;
+  //static double period;
   static double df;
   static double f_low;
   static double f_high;
@@ -23,11 +23,10 @@ class miniWaveTankJonswap
   static void update(double sigH, double peakF, double gamma);
 
   public:
-  virtual int getNum();
-  virtual float* getAmp();
-  virtual float* getPhase();
-  virtual float* getF();
-  float* copyArraydf(double d[]);
+  int getNum();
+  float getAmp(int);
+  float getPhase(int);
+  float getF(int);
 };
 
 #endif
