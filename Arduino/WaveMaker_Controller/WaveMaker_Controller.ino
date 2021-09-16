@@ -1,14 +1,12 @@
-#define MINIGEN_COMPATIBILITY_MODE
 #include <miniWaveTankJonswap.h>
 #include <SuperDroidEncoderBuffer.h>
 #include<DueTimer.h>
 #include<math.h>
 //#include <PID_v1.h>
 #include <SPI.h>
-#include <SparkFun_MiniGen.h>
-
-MiniGen gen; //signal generator
-miniWaveTankJonswap jonswap(512.0 / 32.0, 0.5, 2.5); //period, low frequency, high frequency. frequencies will be rounded to multiples of df(=1/period)
+#include <MD_AD9833.h>
+MD_AD9833  AD(10);  // Hardware SPI
+miniWaveTankJonswap jonswap(512.0 / 64.0, 0.5, 2.5); //period, low frequency, high frequency. frequencies will be rounded to multiples of df(=1/period)
 //jonswap(512.0 / 32.0, 0.5, 2.5);
 //df = 1 / _period; num_fs = (int)((f_high - f_low) / df);
 //^ISSUE. Acuracy seems to fall off after ~50 components when using higher frequencies(1,3 at 64 elements seems wrong).
@@ -23,67 +21,32 @@ const int  dirPin = 5, limitPin = A0, probe1Pin = A1, probe2Pin = A2;
 float initialProbe1;    //initial height of probe 1
 volatile double t = 0;    //time in seconds
 volatile float speedScalar = 0;
-volatile int mode = 0;     //-1 is stop, 0 is jog, 1 is sine, 2 is sea state
+volatile int mode = 1;     // 1 = jog, 2 = function, 3 = sea, 4 = off
 volatile int n = 1;            //number of functions for the time series(either 1 or jonswap.getNum())
 const int maxComponents = 100;   //max needed number of frequency components
 volatile float amps[maxComponents];
 volatile float phases[maxComponents];
 volatile float freqs[maxComponents];
-volatile float sigH, peakF, gam;   //"gamma" is used in another library
+volatile float sigH, peakF, gam, a, f;  //jonswap vars and amplitude and frequncy of sine wave //"gamma" is used in another library
 //volatile float encPos;
 bool newJonswapData = false, sendUnitTests = false;
-volatile float desiredPos = 0;   //used for jog mode, starts at 0
+volatile float j = 0;   //used for jog mode, starts at 0
 const int buffSize = 10;    //number of data points buffered in the moving average filter
 volatile float probe1Buffer[buffSize];
 volatile float probe2Buffer[buffSize];
 volatile float jogBuffer[buffSize];
 const float maxRate = 0.25;   //max m/seconds
-/////////would like to put these in the interrupts tab, but cant without changing proect structure to .cpp and .h files.
-//const float interval = .01;   //time between each interupt call in seconds //max value: 1.04
-const float interval = .03125;   //time between each interupt call in seconds //max value: 1.04
-const float serialInterval = .03125;   //time between each interupt call in seconds //max value: 1.04    .03125 is 32 times a second to match processing's speed(32hz)
-//////////
 //Derived funciton here:
 const float leadPitch = .01;     //m/turn
 const float gearRatio = 12.0 / 60.0; //motor turns per lead screw turns
 const float motorStepsPerTurn = 400.0;   //steps per motor revolution
 const float encStepsPerTurn = 3200.0;
 
-volatile float inputFnc(volatile float tm) {  //inputs time in seconds //outputs position in m
-  volatile float val = 0;
-  if (mode == 0) {    //jog
-    val = desiredPos;
-  }
-  else if (mode > 0) {   //1 or 2
-    if (newJonswapData && mode == 2) {
-      newJonswapData = false;
-      jonswap.update(sigH, peakF, gam);
-      n = jonswap.getNum();
-      for (volatile int i = 0; i < n; i++) {
-        amps[i] = jonswap.getAmp(i);
-        freqs[i] = jonswap.getF(i);
-        phases[i] = jonswap.getPhase(i);
-      }
-    }
-    for (volatile int i = 0; i < n; i++) {
-      val += amps[i] * sin(2 * M_PI * tm * freqs[i] + phases[i]);
-    }
-  }
-  return val;
-}
-
-
 void setup() {
   initSerial();
   initialProbe1 = analogRead(probe1Pin);
-  gen = MiniGen(10);//initalize signal generator with FSYNC pin 10. This constructor needs to be run in setup, not before
-  gen.reset(); //reset signal generator, that way we have a known starting location.
-  //At power up, the singal generator will output 100hz
-  gen.setMode(MiniGen::SQUARE); //setting signal generator to make a square wave.
-  gen.setFreqAdjustMode(MiniGen::FULL); //Full takes the longest longer to write, but allows to change from any frequency to any other frequency
-
-  unsigned long freqReg = gen.freqCalc(0);
-  gen.adjustFreq(MiniGen::FREQ0, freqReg); //Making sure the signal generator isnt making the motor move at start
+  AD.begin();
+  AD.setMode(MD_AD9833::MODE_SQUARE1);
   //encoder buffer setup:
   for (int i = 0; i < 10; i++)      //tries i times or until it works. Messy but functional
   {
@@ -95,30 +58,26 @@ void setup() {
       break;
     }
   }
-  //myPID.SetMode(AUTOMATIC);   //starts pid
-  //myPID.SetSampleTime((int)(interval * 1000));    //pid interval in milliseconds
 
   pinMode(dirPin, OUTPUT);
   pinMode(13, OUTPUT);
   digitalWrite(13, LOW);    //initialization of maxRate indicator led
   /////////Zero encoder:
   digitalWrite(dirPin, HIGH);
-  freqReg = gen.freqCalc(100); //setting the signal generator to 10hz
-  gen.adjustFreq(MiniGen::FREQ0, freqReg); //start moving
+  AD.setFrequency(MD_AD9833::CHAN_0, 100);
   float initialPos = encPos();
-  delay(10);
+  delay(20);
   while (analogRead(limitPin) > 500) {   //move up until the beam is broken
     if (encPos() - initialPos == 0)    //if motor is not moving(software testing), move on.
       break;
   }
-  digitalWrite(dirPin, LOW);
-  delay(10);
+  digitalWrite(dirPin, LOW);    //switch direction
+  delay(20);
   while (analogRead(limitPin) < 500) {  //move down until the beam is unbroken
     if (encPos() - initialPos == 0)    //if motor is not moving(software testing), move on.
       break;
   }
-  freqReg = gen.freqCalc(0); //stop moving motor
-  gen.adjustFreq(MiniGen::FREQ0, freqReg);
+  AD.setFrequency(MD_AD9833::CHAN_0, 0);
 
   encoderBuff.command2Reg(CNTR, IR_RegisterAction_CLR); //zero encoder
 
@@ -152,12 +111,10 @@ void updateSpeedScalar() {    //used to prevent jumps/smooth start
   //Serial.println(speedScalar);
 
   if (speedScalar < 1) {
-    speedScalar += .0007;   //value determined by testing
+    speedScalar += .00007;   //value determined by testing
   } else {
     speedScalar = 1.0;
   }
-
-  //speedScalar = 1.0;
 }
 volatile float mToSteps(volatile float m) {
   return m * (1 / leadPitch) * gearRatio * motorStepsPerTurn; //m*(lead turns/m)*(motor turns/lead turn)*(steps per motor turn)
@@ -182,9 +139,14 @@ volatile void pushBuffer(volatile float* arr, volatile float f) {
 float lerp(float a, float b, float f) {
   return a + f * (b - a);
 }
+volatile float checksum() {
+    return mode + j + a + f + sigH + peakF + gam;//adds the values of anything that can ba changes by processing.
+}
 bool ampUnitTest = true, TSUnitTest = true, encoderTest = true;
-float exampleAmps[] = {0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.01, 0.02, 0.05, 0.11, 0.20, 0.33, 0.48, 0.67, 0.87, 1.09, 1.30, 1.51, 1.7, 1.88, 2.03, 2.16};
-float exampleTS[] = {2.13, -1.08, 3.21, 3.02, -0.65, 0.42, 0.96, -3.35, 3.49, -3.32, 1.43, 4.24, 3.59, 2.01, -7.29, 4.79, 2.13, -1.08, 3.21, 3.02, -0.65, 0.42, 0.96, -3.35, 3.49, -3.32, 1.43, 4.24, 3.59, 2.01, -7.29, 4.79};
+//float exampleAmps[] = {0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.01, 0.02, 0.05, 0.11, 0.20, 0.33, 0.48, 0.67, 0.87, 1.09, 1.30, 1.51, 1.7, 1.88, 2.03, 2.16};
+float exampleAmps[] = {0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.01, 0.09, 0.32, 0.77, 1.39, 2.08, 2.72, 3.25};
+//float exampleTS[] = {2.13, -1.08, 3.21, 3.02, -0.65, 0.42, 0.96, -3.35, 3.49, -3.32, 1.43, 4.24, 3.59, 2.01, -7.29, 4.79, 2.13, -1.08, 3.21, 3.02, -0.65, 0.42, 0.96, -3.35, 3.49, -3.32, 1.43, 4.24, 3.59, 2.01, -7.29, 4.79};
+float exampleTS[] = {2.24, -0.75, 3.53, -3.00, -3.04, 8.26, 2.77, 0.98, 2.24, -0.75, 3.53, -3.00, -3.04, 8.26, 2.77, 0.98};
 void unitTests() {
   newJonswapData = true;
   int oldMode = mode;
@@ -194,7 +156,7 @@ void unitTests() {
   sigH = 5.0;
   peakF = 3.0;
   gam = 7.0;
-  inputFnc(0);   //assign amps and update jonswap
+  posFnc(0);   //assign amps and update jonswap
   for (int i = 0; i < jonswap.getNum(); i++) {
     //test amplitude array:
     if (abs(amps[i] - exampleAmps[i]) > 0.01) {
@@ -202,7 +164,7 @@ void unitTests() {
     }
 
     //test time series:
-    if (abs(inputFnc(i) - exampleTS[i]) > 0.01) {      //i acts as an arbitrary time
+    if (abs(posFnc(i) - exampleTS[i]) > 0.01) {      //i acts as an arbitrary time
       TSUnitTest = false;
     }
     //////////////////////////////
@@ -213,6 +175,9 @@ void unitTests() {
   }
   //Serial.println("done");
   //while(1);
+  sigH = 0;   //return values to 0, so checksum is correct
+  peakF = 0;
+  gam = 0;
   //////////////////test encoder buffer:
   //If the initialization and setting functions worked, move on, otherwise, throw error and halt execution.
   if (encoderBuffInit && didItWork_MDR0 && didItWork_MDR1) {

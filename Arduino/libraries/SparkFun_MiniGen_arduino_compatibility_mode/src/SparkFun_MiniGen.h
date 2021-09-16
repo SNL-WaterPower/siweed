@@ -22,11 +22,12 @@ class MiniGen
   private:
   uint16_t configReg;
 
-  uint16_t _FSYNCPin;
-  uint16_t _SPI_CLK_FREQ;
+  uint8_t _FSYNCPin;
+  uint32_t _SPI_CLK_FREQ;
 
   void configSPIPeripheral();
   void SPIWrite(uint16_t data);
+  void print16(uint16_t toPrint);
 
   public:
   enum MODE {TRIANGLE, SINE, SQUARE, SQUARE_2};
@@ -35,8 +36,8 @@ class MiniGen
   enum FREQADJUSTMODE {FULL, COARSE, FINE};
 
   MiniGen();
-  MiniGen(int16_t FSYNCPin);
-  MiniGen(int16_t FSYNCPin, int16_t SPI_CLK_FREQ);
+  MiniGen(uint8_t FSYNCPin);
+  MiniGen(uint8_t FSYNCPin, uint32_t SPI_CLK_FREQ);
 
   void reset();
   void setMode(MODE newMode);

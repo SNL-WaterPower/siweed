@@ -85,11 +85,11 @@ void unitTests() {
       delay(onboardTestDelay);
       WMUnitTests[0] = false;
       readWMSerial();
-      if (debug){
+      if (debug) {
         println("testing if WM returned to normal operation");
       }
     }
-    if(!WMUnitTests[0]){
+    if (!WMUnitTests[0]) {
       println("WM failed to exit Unit Testing mode");
     }
   }
@@ -148,11 +148,11 @@ void unitTests() {
       delay(onboardTestDelay);
       WECUnitTests[0] = false;
       readWECSerial();
-      if (debug){
+      if (debug) {
         println("testing if WEC returned to normal operation");
       }
     }
-    if(WECUnitTests[0] == false){
+    if (WECUnitTests[0] == false) {
       println("WEC failed to exit Unit Testing mode");
     }
   }

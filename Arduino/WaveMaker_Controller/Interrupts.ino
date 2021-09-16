@@ -1,62 +1,66 @@
-bool dir = true;
-
+const float interval = .01;   //time between each interupt call in seconds
+const float serialInterval = .03125;   //time between each interupt call in seconds    .03125 is 32 times a second to match processing's speed(32hz)
 const float deadzone = 0.0001;  //dead band in meters
+bool dir = true;
 volatile float futurePos;
 volatile float sampleT = 0;  //timestamp in microseconds of sample
 volatile float prevSampleT;  //previous timestamp in microseconds
 volatile float prevVal;   //value of sample at prevSampleT
 void initInterrupts() {
-  //interrupt setup for Due:
+  //This could instead be done with the setFrequency() function, but the control loop uses the time interval,
+  //so it's simpler to do this. Unit is microseconds
   Timer.getAvailable().attachInterrupt(sendSerial).start(serialInterval * 1.0e6);
   delay(50);
   Timer.getAvailable().attachInterrupt(controlLoop).start(interval * 1.0e6);
-  /*
-    //interupt setup for mega:
-    cli();//stop interrupts
-    TCCR4A = 0;// set entire TCCR4A register to 0
-    TCCR4B = 0;// same for TCCR4B
-    TCNT4  = 0;//initialize counter value to 0
-    OCR4A = interval * 16000000.0 / 256.0 - 1; // = (interval in seconds)(16*10^6) / (1*1024)  (must be <65536) -1 to account for overflow(255 -> 0)
-    TCCR4B |= (1 << WGM12);   // turn on CTC mode aka reset on positive compare(I think)
-    TCCR4B |= (1 << CS42);// Set CS42 bit for 256 prescaler
-    TIMSK4 |= (1 << OCIE4A);  // enable timer compare interrupt
-
-    //////timer 5 for serial sending
-    TCCR5A = 0;// set entire TCCR5A register to 0
-    TCCR5B = 0;// same for TCCR5B
-    TCNT5  = 0;//initialize counter value to 0
-    OCR5A = serialInterval * 16000000.0 / 256.0 - 1; // = (interval in seconds)(16*10^6) / (1*1024)  (must be <65536) -1 to account for overflow(255 -> 0)
-    TCCR5B |= (1 << WGM12);   // turn on CTC mode aka reset on positive compare(I think)
-    TCCR5B |= (1 << CS52);// Set CS42 bit for 256 prescaler
-    TIMSK5 |= (1 << OCIE5A);  // enable timer compare interrupt
-    sei();//allow interrupts
-  */
+}
+volatile float posFnc(volatile float tm) {  //inputs time in seconds //outputs position in m
+  volatile float val = 0;
+  switch (mode) {
+    case 1:     //jog
+      val = j;
+      break;
+    case 2:   //sine wave
+      val = a * sin(2 * M_PI * tm * f);
+      break;
+    case 3:   //sea state
+      if (newJonswapData) {
+        newJonswapData = false;
+        jonswap.update(sigH, peakF, gam);
+        n = jonswap.getNum();
+        for (volatile int i = 0; i < n; i++) {
+          amps[i] = jonswap.getAmp(i);
+          freqs[i] = jonswap.getF(i);
+          phases[i] = jonswap.getPhase(i);
+        }
+      }
+      for (volatile int i = 0; i < n; i++) {
+        val += amps[i] * sin(2 * M_PI * tm * freqs[i] + phases[i]);
+      }
+      break;
+    default:
+      val = 0;
+      break;
+  }
+  return val;
 }
 /*
   Motor control interupt:
   After calculating desired position with inputFnc(), this controller should estimate the command
-  linearly, then apply a PID calculated error correction. The sum is then converted from a velociy to
+  linearly, then apply a PID calculated error correction(not anymore). The sum is then converted from a velociy to
   a frequency.
-
 */
-volatile float error;
+//volatile float error;
 volatile float velCommand;
-//ISR(TIMER4_COMPA_vect) {    //function called by interupt mega version
-void controlLoop() {  //due version
+void controlLoop() {  //Due version
   volatile float pos = encPos();
-  error = futurePos - pos;   //where we told it to go vs where it is
+  //error = futurePos - pos;   //where we told it to go vs where it is
   ////////vars for linear interpolation:
   prevSampleT = sampleT;
   sampleT = micros();
   prevVal = futurePos;
-  futurePos = inputFnc(t + interval);  //time plus delta time
-  //PID calculation:
-  //pidSet = 0; //desired error is 0
-  //pidIn = error;
-  //myPID.Compute();    //sets pidOut
-  /////////
-  if (mode != 0 || abs(futurePos - pos) > deadzone) {    //deadband only if in jog mode.
-    velCommand = ((futurePos - pos) / interval);// + pidOut; //estimated desired velocity in m/s, in order to hit target by next interupt call, + pid error adjustment
+  futurePos = posFnc(t + interval);  //time plus delta time
+  if (mode != 1 || abs(futurePos - pos) > deadzone) {    //deadband only if in jog mode.
+    velCommand = ((futurePos - pos) / interval); //estimated desired velocity in m/s, in order to hit target by next interupt call
   } else {
     velCommand = 0;
   }
@@ -71,20 +75,15 @@ void controlLoop() {  //due version
     sp = maxRate;
     digitalWrite(13, HIGH);   //on board led turns on if max speed was reached
   }
-
   volatile float stepsPerSecond = mToSteps(sp);
   volatile unsigned long freqReg;
-  if (mode == -1 || stepsPerSecond < 12) {  //stop
-    freqReg = gen.freqCalc(0);
-    gen.adjustFreq(MiniGen::FREQ0, freqReg); //stop moving
+  if (mode == 4 || stepsPerSecond < 12) {  //stop
+    AD.setFrequency(MD_AD9833::CHAN_0, 0);
   } else {
-    freqReg = gen.freqCalc(stepsPerSecond);
-    gen.adjustFreq(MiniGen::FREQ0, freqReg); //start moving
+    AD.setFrequency(MD_AD9833::CHAN_0, stepsPerSecond); //start moving
   }
-
 }
 
-//ISR(TIMER5_COMPA_vect) {   //takes ___ milliseconds //mega version
 void sendSerial() { //Due version
 
   /*
@@ -120,6 +119,8 @@ void sendSerial() { //Due version
     }
     Serial.write('u');
     sendFloat(4);     //4 indicates that all tests have been sent at least once
+    Serial.write('u');
+    sendFloat(4);     //sends again to match the packet size of normal serial
   } else {        //under normal operation
     Serial.write('1');    //to indicate wave probe data
     sendFloat(averageArray(probe1Buffer));
@@ -128,7 +129,9 @@ void sendSerial() { //Due version
     Serial.write('p');    //to indicate position
     sendFloat(encPos());
     Serial.write('d');    //to indicate alternate data
-    float lerpVal = lerp(prevVal, futurePos, (interval * 1.0e6) / (sampleT - prevSampleT)); //linear interpolate(initial value, final value, percentatge)//percentage is desired interval/actual interval
+    volatile float lerpVal = lerp(prevVal, futurePos, (interval * 1.0e6) / (sampleT - prevSampleT)); //linear interpolate(initial value, final value, percentatge)//percentage is desired interval/actual interval
     sendFloat(lerpVal);
+    Serial.write('c');
+    sendFloat(checksum());
   }
 }

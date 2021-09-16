@@ -2,10 +2,23 @@ Serial port1;    //arduino wavemaker due //<>//
 Serial port2;    //arduino WEC due
 boolean WMConnected, WECConnected;
 int connectionDelay  = 3500;      //how many ms to wait after connecting to a device. Can greatly slow the startup
-int baudRate = 250000;
-void initializeSerial() {
-  ///////////initialize Serial
+int baudRate = 57600;
 
+float WMChecksum, WECChecksum;
+int WMCmdCount, WECCmdCount;    //The cmdCount is the number of items sent with the last command ie. amplitude and frequency would give 2. This helps when verifying checksums
+public class Cmd {      //used to store each command
+  public char c;
+  public float f;
+  Cmd(char _c, float _f) {
+    c = _c;
+    f = _f;
+  }
+}
+LinkedList<Cmd> WMCmdList, WECCmdList;
+void initializeSerial() {
+  WMCmdList = new LinkedList<Cmd>();
+  WECCmdList = new LinkedList<Cmd>();
+  ///////////initialize Serial:
   printArray(Serial.list());     //for debugging, shows all attached devices
   if (debug) println("Wavemaker Serial:");
   for (int i = 0; i < Serial.list().length; i++) {    //tries each device
@@ -25,7 +38,6 @@ void initializeSerial() {
         delay(connectionDelay);          //wait for connection to stabilize
         port1.clear();
         delay(100);        //after the connection stabilizes, this clears all the garbage and gives good data time to come through.
-
         readWMSerial();    //reads serial buffer and sets bool true if recieving normal results
         if (WMUnitTests[0]) {
           //correct board found
@@ -68,36 +80,6 @@ void initializeSerial() {
     }
   }
 }
-void sendFloat(float f, Serial port)
-{
-  /* 
-   For Wavemaker:
-  /* '!' indicates mode switch, next int is mode
-   j indicates jog position
-   a indicates incoming amplitude
-   f indicates incoming frequency
-   s :sigH
-   p :peakF
-   g :gamma
-   
-   For WEC:
-   '!' indicates mode switch, next int is mode
-   t indicates torque command
-   k indicates kp -p was taken
-   d indicates kd
-   s :sigH
-   p :peakF
-   g :gamma
-   
-   EDIT: numbers are now in this format:  p1234>  has a scalar of 100, so no decimal, and no start char
-   */
-  byte[] byteArray = floatToByteArray(f);
-
-  port.write(byteArray);
-  if (debug) {
-    println("sent float: "+f);
-  }
-}
 void readWMSerial() {
   /*
   Wavemaker:
@@ -108,14 +90,13 @@ void readWMSerial() {
    u:unit tests
    */
   if (WMConnected) {
-    for (int i = 0; i <port1.available()/20; i++) {    //runs as many times to empty the buffer(bytes availible/ bytes read per loop).
+    for (int i = 0; i < port1.available()/5; i++) {    //runs as many times to empty the buffer(bytes availible/ bytes read per loop).
       switch(port1.readChar()) {
       case '1':
         WMUnitTests[0] = true;      //for unit testing and acquiring serial.
         probe1 = readFloat(port1);
         if (waveElClicked == true && !Float.isNaN(probe1)) {
           waveChart.push("waveElevation", probe1*waveElevationScale);
-          //println(probe1);
         }
         break;
       case '2':
@@ -148,6 +129,9 @@ void readWMSerial() {
           WMUnitTests[testNum] = true;
         }
         break;
+      case 'c':
+        WMChecksum = readFloat(port1);  
+        break;
       }
     }
   }
@@ -162,7 +146,7 @@ void readWECSerial() {
    u: unit testing
    */
   if (WECConnected) {
-    for (int i = 0; i <port2.available()/20; i++) {    //runs as many times to empty the buffer(bytes availible/ bytes read per loop). Since it runs 30 times a second, the arduino will send many samples per execution.
+    for (int i = 0; i < port2.available()/5; i++) {    //runs as many times to empty the buffer(bytes availible/ bytes read per loop).
       switch(port2.readChar()) {
       case 'e':
         wecPos = readFloat(port2);
@@ -198,9 +182,56 @@ void readWECSerial() {
           WECUnitTests[testNum] = true;
         }   
         break;
+      case 'c':
+        WECChecksum = readFloat(port2);  
+        break;
       }
     }
   }
+}
+void sendSerial(char c, float f, Serial port, int cmdCount) {      //to send a command as a part of a set, cmdcount should be more than 1. For example, mode and then amplitude and frequency makes 3 commands. This is used for checksum verification.
+  port.write((char)c);
+  sendFloat(f, port);
+  if (cmdCount == 0) {    //if the count is 0, don't add to log or update cmdCount. This allows commands in the resend function to be sent without logging
+  } else if (port == port1) {      //assigns the cmd count based on which port is sent to.
+    WMCmdCount = cmdCount;
+    WMCmdList.add(new Cmd(c, f));    //!!make sure this doesn't cause memory leak
+    /////
+    //for(int i = 0; i < WMCmdList.size(); i++) println(WMCmdList.get(i).c);    //can print the list of commands
+    ///
+    if (WMCmdList.size() > 5) WMCmdList.remove();    //number of items stored in the list. Just needs to be at least the largest group of commands
+  } else if (port == port2) {
+    WECCmdCount = cmdCount;
+    WECCmdList.add(new Cmd(c, f));
+    if (WECCmdList.size() > 5) WECCmdList.remove();
+  }
+}
+void sendSerial(char c, float f, Serial port) {    //used for checksum verification of standalone commands.
+  sendSerial(c, f, port, 1);
+}
+void sendFloat(float f, Serial port) {
+  /* 
+   For Wavemaker:
+  /* '!' indicates mode switch, next int is mode
+   j indicates jog position
+   a indicates incoming amplitude
+   f indicates incoming frequency
+   s :sigH
+   p :peakF
+   g :gamma
+   
+   For WEC:
+   '!' indicates mode switch, next int is mode
+   t indicates torque command
+   k indicates kp -p was taken
+   d indicates kd
+   s :sigH
+   p :peakF
+   g :gamma
+   */
+  byte[] byteArray = floatToByteArray(f);
+  port.write(byteArray);
+  if (debug) println("sent float: "+f);
 }
 float readFloat(Serial port) {
   while (port.available() <= 4) {    //wait for full array to be in buffer
@@ -222,6 +253,56 @@ public static float byteArrayToFloat(byte[] bytes) {
   int intBits = 
     bytes[0] << 24 | (bytes[1] & 0xFF) << 16 | (bytes[2] & 0xFF) << 8 | (bytes[3] & 0xFF);
   return Float.intBitsToFloat(intBits);
+}
+int WMFailCount = 0, WECFailCount = 0;
+void verifyChecksum() {
+  if (WMConnected && WMChecksum != WMChecksumCalc()) {      //checks if calculated checksum and serial recieved checksum match
+    if (debug) println("Wavemaker checksum match failed "+ (WMFailCount+1) +" times. Arduino checksum: "+WMChecksum+" calculated checksum: "+WMChecksumCalc());
+    WMFailCount++;
+    if (WMFailCount > 2) {      //only resends serial if the check is contiuously failing.
+      resendSerial(port1, WMCmdList, WMCmdCount, waveMaker.mode);
+      WMFailCount = 0;    //reset the count
+    }
+  } else if (WMConnected) {
+    //if (debug) println("Wavemaker checksum match Passed: "+WMChecksum+" "+WMChecksumCalc());
+    WMFailCount = 0;    //reset failCount if the the checksum passes
+  }
+  if (WECConnected && WECChecksum != WECChecksumCalc()) {
+    if (debug) println("WEC checksum match failed "+ (WECFailCount+1) +" times. Arduino checksum: "+WECChecksum+" calculated checksum: "+WECChecksumCalc());
+    WECFailCount++;
+    if (WECFailCount > 2) {    //only resends serial if the check is contiuously failing. This often happens at least once
+      resendSerial(port2, WECCmdList, WECCmdCount, wec.mode);
+      WECFailCount = 0;    //reset the count
+    }
+  } else if (WECConnected) {
+    //if (debug) println("WEC checksum match Passed: "+WECChecksum+" "+WECChecksumCalc());
+    WECFailCount = 0;      //reset failCount if the the checksum passes
+  }
+  if((!WECConnected || WECChecksum == WECChecksumCalc()) && (!WMConnected || WMChecksum == WMChecksumCalc())){    //color of console button indicates if any connected arduinos are in sync
+    consoleButton.setColorBackground(green);
+  }else{
+    consoleButton.setColorBackground(grey);
+  }
+}
+void resendSerial(Serial port, LinkedList<Cmd> cmdList, int count, int mode) {
+  if (cmdList.size() < count)    //this may happen the first call, as the checksum is unlikely to match at initialization
+  {
+    if (debug) println("did not resend Serial, not enough command history");
+    return;
+  }
+  sendSerial('!', mode, port, 0);     //always update mode. The 0 prevents it from being added to the log
+  for (int i = count; i > 0; i--) {    //for the number of cmds
+    Cmd tempCmd = cmdList.get(cmdList.size() - i);          //resends in the order the commands were sent.
+    sendSerial(tempCmd.c, tempCmd.f, port, 0);    //resend the values, and preserve cmdCount and don't add to log
+    if (debug) println("resent mode and command: " + tempCmd.c + " " + tempCmd.f);
+    //println(millis());
+  }
+}
+float WMChecksumCalc() {
+  return waveMaker.mode + waveMaker.mag + waveMaker.amp + waveMaker.freq + waveMaker.sigH + waveMaker.peakF + waveMaker.gamma;
+}
+float WECChecksumCalc() {
+  return wec.mode + wec.mag + wec.amp + wec.freq + wec.sigH + wec.peakF + wec.gamma;
 }
 //boolean isFloat(float val) {
 //  if (Float.isNaN(val)){

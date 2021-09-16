@@ -1,5 +1,5 @@
 void initSerial() {
-  Serial.begin(250000);
+  Serial.begin(57600);
 }
 void readSerial()
 {
@@ -36,7 +36,7 @@ void readSerial()
         peakF = readFloat();
         break;
       case 'g':     //should always be recieved after s and p
-        _gamma = readFloat();
+        gam = readFloat();
         newJonswapData = true;
         break;
       case 'u':
@@ -49,6 +49,8 @@ void readSerial()
         }
         break;
     }
+    Serial.write('c');    //after recieving a byte, send checksum back
+    sendFloat(checksum());
   }
 }
 

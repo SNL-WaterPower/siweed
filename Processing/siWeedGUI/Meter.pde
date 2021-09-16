@@ -2,13 +2,14 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class Meter {
-  int xmin = 780*width/1920;      //coordinates in pixels
-  int xmax = 1284*width/1920;
+  int xmin = 1350*width/1920;      //coordinates in pixels
+  int xmax = 1854*width/1920;
   int ymin = 725*height/1100;
   int ymax = ymin+270*height/1100;
 
   Queue<Float> q;      //queue for moving average
-  int buffSize = 10;
+  int buffSize = 25;
+  float averageVal;
   int originx, originy;
   float minVal, maxVal;
   int divisionCount = 5, subDivisionCount = 5;    //how many large lines and numbers, and how subdivisions per division.
@@ -80,11 +81,13 @@ public class Meter {
       }
     }
     //draw needle:
-    q.add(val);
+    if (!Float.isNaN(val)) {    //verify that val is float
+      q.add(val);
+    }
     if (q.size() > buffSize) {
       q.remove();
     }
-    float averageVal = 0;
+    averageVal = 0;
     for (int i = 0; i < q.size(); i++) {      //find sum by removing and adding to queue
       float temp = q.remove();
       averageVal += temp;
@@ -93,7 +96,7 @@ public class Meter {
     averageVal = averageVal/q.size();      //finds moving average
     if (averageVal > maxVal) {
       averageVal = maxVal;
-    } else if (val < minVal) {
+    } else if (averageVal < minVal) {
       averageVal = minVal;
     }
     stroke(red);
@@ -104,5 +107,8 @@ public class Meter {
     int markX = (int)(originx - RCos);
     int markY = (int)(originy - RSin);
     line(originx, originy, markX, markY);    //draws line from point A to B
+  }
+  public float getAverageVal() {
+    return averageVal;
   }
 }

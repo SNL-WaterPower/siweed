@@ -1,0 +1,13 @@
+WaveMaker controls text:
+With these controls you can adjust the Wavemaker to create larger, smaller, faster, or slower waves. The "Sea State" mode will allow you to adjust the parameters of realistic waves, whereas "Function Mode" gives produces a sine wave. See how adjusting wave parameters affects how much power can be harvested from the waves.
+WEC controls text:
+These controls adjust the wave energy converter (WEC). "Torque" mode applies a constant torque/force up or down, regardless of what the wave looks like. "Feedback" mode will act like car's suspension: the P gain determines how much the WEC reacts to a change in position, much like a spring; the D gain changes how much the WEC resists change, like a damper. With a high D gain, and no P gain, the WEC won't care where it is, but will always resist movement. With high P gain and no D gain, the WEC will only try to push towards or away from its original position. Try to balance these to maximize power output.
+WaveMaker chart text:
+Here you can see the data from the Wavemaker; use the buttons at the bottom to show and hide different data.
+WEC chart text:
+Here you can see the data from the WEC; use the buttons at the bottom to show and hide different data.
+FFT text:
+This is a frequency spectrum of the wave. Any wave can be imagined as a combination of waves with a single frequency. This chart shows how strong each of those component waves. The x-axis is the frequency of that wave component, and the y-axis is the intensity of that wave component.
+Power meter text:
+This shows how much power the WEC is producing: if positive, the WEC is producing power; If negative, the WEC is consuming power. Try to produce enough power to light up all four of the lights in the town.
+**This file is read line by line. To edit the text in the pop up box, modify the text within only one line.

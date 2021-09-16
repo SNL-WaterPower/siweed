@@ -1,5 +1,5 @@
 void initSerial() {
-  Serial.begin(250000);
+  Serial.begin(57600);
 }
 /* '!' indicates mode switch, next int is mode
    j indicates jog position
@@ -17,19 +17,15 @@ void readSerial() {
     switch (c) {
       case '!':
         mode = (int)readFloat();
-        if (mode == 1) {
-          n = 1;    //sine wave
-        }
         break;
       case 'j':
-        pushBuffer(jogBuffer, readFloat());   //pushes in the latest value to the moving average buffer
-        desiredPos = averageArray(jogBuffer);     //averages the array for the the moving average
+        j = readFloat();    //j for jog
         break;
       case 'a':
-        amps[0] = readFloat();
+        a = readFloat();
         break;
       case 'f':
-        freqs[0] = readFloat();
+        f = readFloat();
         break;
       case 's':
         sigH = readFloat();
@@ -51,6 +47,8 @@ void readSerial() {
         }
         break;
     }
+    Serial.write('c');    //after recieving a byte, send checksum back
+    sendFloat(checksum());
   }
 }
 volatile float readFloat() {
