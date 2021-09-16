@@ -7,3 +7,6 @@ Processing/siWeedGUI/build-tmp
 *.fls
 *.aux
 *.fdb_latexmk
+*.bbl
+*.blg
+*.out
