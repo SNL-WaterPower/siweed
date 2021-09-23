@@ -1,3 +1,10 @@
+// ===============================
+// miniWaveTankJonswap.cpp
+// Created Spring 2020
+// Zachary Morrell and Nicholas Ross
+// Created for the SIWEED project at Sandia National Labs
+// ===============================
+
 #include "miniWaveTankJonswap.h"
 const int max_num_fs = 100;
 //double miniWaveTankJonswap::period = 0;

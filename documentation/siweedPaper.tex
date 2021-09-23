@@ -155,8 +155,8 @@ A number of key factors of SIWEED are:
   This will enabled interested researchers and students to efficiently develop replicates and variations of the SIWEED design for their own purposes.
   \item \textbf{Portability:} To allow for transport to conferences and outreach events, the SIWEED has been specifically designed to allow for easy transportation.
   \item \textbf{WEC control:} In addition to demonstrating the physics of ocean waves, the SIWEED allows users to interact with a WEC control system to better understand the principles of reactive feedback control to maximize power absorption for the waves.
-  \item \textbf{Student-led design:} The SIWEED project has been a student-led design project involving XX undergraduate engineering students.
-  \item \textbf{Curriculum:} The SIWEED repository includes a curriculum for students K-12 based on the Next Generation Science Standards \cite{NextGenScience2021}. 
+  \item \textbf{Student-led design:} The SIWEED project has been a student-led design project involving six undergraduate engineering students.
+  \item \textbf{Curriculum:} The SIWEED repository includes a curriculum for students K-12 based on the Next Generation Science Standards \cite{NextGenScience}. 
 The repository contains a presentation and a document intended to be given to the teacher beforehand. 
 The presentation explains water power and Sandia National Labs' role within it, and then goes into more detail about wave energy converters and how the SIWEED demonstration works.
 The teacher resources document contains general information about the project, and a multitude of resources surrounding wave energy education, including videos, worksheets, vocabulary words, general topics, and Next Generation Science standards for each grade level.
@@ -175,35 +175,52 @@ The teacher resources document contains general information about the project, a
 %Open Hardware Repository: http://www.ohwr.org/
 % > Software and firmware. All software files used in the design and operation of the hardware should be included in the repository. Provide a description of software and firmware and use extensive comments in the code.
 
-%\textit{The complete design files must be either uploaded to an approved online repository, uploaded at the time of submission on the online Elsevier submission interface as supplementary materials [CAD files, videos,\dots], or included in the body of the manuscript [e.g. figures]. The two approved online repositories are Mendeley Data and the Open Science Framework [OSF instructions]. Mendeley data: https://data.mendeley.com/ Open Science Framework: https://osf.io/ Open Science Framework HardwareX instructions: https://osf.io/wgk7q/wiki/home/
-%\begin{itemize}
-%\item CAD files. Authors are encouraged to use free and open source software packages for creating the files. For CAD files, OpenSCAD, FreeCAD, or Blender are encouraged, but if not available source files from proprietary CAD packages such as Autocad or Solidworks and other drawing packages are acceptable. OpenSCAD: %http://www.openscad.org/
-%\item 3D printing. Supplementary files that facilitate the digital replication of the devices are encouraged. For example, STL files for 3-D printing components. We recommend uploading CAD files to the NIH 3D Print Exchange as Custom Labware and providing a link to the location. NIH 3D Print Exchange: http://3dprint.nih.gov/
-%\item Electronics. PCB layouts and other electronics design files can be uploaded to the Open Hardware Repository or other repositories. Open Hardware Repository: http://www.ohwr.org/
-%\item Software and firmware. All software files used in the design and operation of the hardware should be included in the repository. Provide a description of software and firmware and use extensive comments in the code.
-%\end{itemize}
-%}
-\subsection{Design Files Summary}
 % Please include a summary of all design files for your hardware by filling rows of the table below
 
 \tabulinesep=1ex
 \begin{tabu} to \linewidth {|X|X|X[1.5,1]|X[1.5,1]|}
 \hline
-\textbf{Design filename} & \textbf{File type} & \textbf{Open source license} & \textbf{Location of the file} \\\hline
+\textbf{Design filename} & \textbf{File type} & \textbf{Open source license} & \textbf{Location of the file(s)} \\\hline
 %Insert design files
-\textit{Design file 1} & \textit{e.g. CAD file, figures, videos} & \textit{All designs must be submitted under an open hardware license. Enter the corresponding open source license for the file.} & \textit{Enter a link to the online location or the sentence: ``available with the article'', as appropriate}  \\\hline
-\textit{CAD} & XX& \dots & location \\\hline
-\textit{Functional CAD} & XX & \dots & \dots \\\hline
-\textit{Plunger CAD?} & XX & \dots & \dots \\\hline
-\textit{miniWEC dimensions?} & XX & \dots & \dots \\\hline
-\textit{Processing sketches} & XX & \dots & \dots \\\hline
-\textit{Arduino sketches} & XX & \dots & \dots \\\hline
-% Design file 3 & File type & License & Link \\\hline
-
+%\textit{Design file 1} & \textit{e.g. CAD file, figures, videos} & \textit{All designs must be submitted under an open hardware license. Enter the corresponding open source license for the file.} & \textit{Enter a link to the online location or the sentence: ``available with the article'', as appropriate}  \\\hline
+%CAD & XX& GNU GENERAL PUBLIC LICENSE & \textit{online repository}\\\hline
+WEC\_Controller\slash interrupts.ino & .ino & GNU GENERAL PUBLIC LICENSE& \textit{online repository} \\\hline
+WEC\_Controller\slash Serial.ino & .ino & GNU GENERAL PUBLIC LICENSE& \textit{online repository} \\\hline
+WEC\_Controller\slash WEC\_Controller.ino & .ino & GNU GENERAL PUBLIC LICENSE& \textit{online repository} \\\hline
+WaveMaker\_Controller\slash interrupts.ino & .ino & GNU GENERAL PUBLIC LICENSE& \textit{online repository} \\\hline
+WaveMaker\_Controller\slash Serial.ino & .ino & GNU GENERAL PUBLIC LICENSE& \textit{online repository} \\\hline
+WaveMaker\_Controller\slash WaveMaker\_Controller.ino & .ino & GNU GENERAL PUBLIC LICENSE& \textit{online repository} \\\hline
+dataLogging.pde & .pde& GNU GENERAL PUBLIC LICENSE & \textit{online repository} \\\hline
+Meter.pde & .pde& GNU GENERAL PUBLIC LICENSE & \textit{online repository} \\\hline
+Serial.pde & .pde& GNU GENERAL PUBLIC LICENSE & \textit{online repository} \\\hline
+siweedGUI.pde & .pde& GNU GENERAL PUBLIC LICENSE & \textit{online repository} \\\hline
+UI.pde & .pde& GNU GENERAL PUBLIC LICENSE & \textit{online repository} \\\hline
+UnitTests.pde & .pde& GNU GENERAL PUBLIC LICENSE & \textit{online repository} \\\hline
+fft.java & .java& GNU GENERAL PUBLIC LICENSE & \textit{online repository} \\\hline
+Complex.java & .java& GNU GENERAL PUBLIC LICENSE & \textit{online repository} \\\hline
 \end{tabu}
+\newline
+
 
 % For each design file listed in the summary above, include a short description of the file below (one or two sentences)
-\textit{For each design file listed above, include a short description of the file here (one or two sentences)}
+\textbf{CAD Model:}
+The CAD assembly includes all functional physical parts of the SIWEED system, with accurate dimensions that can be referenced during fabrication and assembly.
+\par
+
+
+\textbf{Processing Sketches:}
+The Processing sketch is made up of multiple files combined in the processing IDE as separate tabs. 
+This includes the .pde files and the .java files.
+This is done mostly for organization purposes, but all files are necessary for the sketch to run properly. 
+It is important to note that the sketch is also dependent on the Console library and ControlP5 library, and various graphics and text files that support the GUI. 
+These files are not listed here but are all included in the online repository.
+\par
+
+
+\textbf{Arduino Sketches:}
+Similarly to the Processing sketch, the two Arduino sketches are broken into multiple files for organization.
+Once again, all files are required for the sketch to function.
+It is important to note that the sketches are also dependent on various imported libraries, which are included in the online repository, but not listed here.
 
 \section{Bill of materials}
 % For a complex Bill of Materials, the complete Bill of Materials (editable spreadsheet file e.g., ODS file type or PDF file) can be uploaded in an open access online location such as the Open Science Framework repository. Include the link here. Alternatively, the Bill of Materials can be uploaded at the time of submission on the online Elsevier submission interface as supplementary material.
@@ -277,7 +294,7 @@ The position displacement time series was converted to a time series of the appl
 %\linebreak
 \[\tau=\sigma*\gamma *d* \pi*r^2\]
 %\linebreak
-Where $\tau$ is torque, $\sigma$ is the radius of the pinion gear, $\gamma$ is the specific weight of water, d is the displacement of the buoy in the water, and r is the radius of the buoy.
+Where $\tau$ is torque, $\sigma$ is the radius of the pinion gear, $\gamma$ is the specific weight of water, $d$ is the displacement of the buoy in the water, and $r$ is the radius of the buoy.
 %Torque = pinon radius (M)*  [9810(N/m^3)*pos(m)*pi*radius(m)^2]
 It is important to note that the torque values at this point did not account for friction or hysteresis.
 Plotting this torque data against the recorded commanded current values gives  \figurename~\ref{fig:TorqueConstant}.
@@ -304,7 +321,12 @@ The average offset shows that the friction is about 0.45mNm.
 \item \textbf{Wave Probes:}
 The readings from the wave probes could be verified by attaching them to the wave maker, which has a very precise encoder that allows for accurate changes in displacement. 
 Moving the wave maker with the wave probe attached and comparing the displacement data from both of them was used to make sure the wave probe was providing accurate readings. 
-\item \textbf{WEC feedback control} - XX
+\item \textbf{WEC feedback control}
+The PD controller functions on the following formula: 
+\[\tau = kp * p + -kd * v\]
+Where $\tau$ is the calculated torque, $kp$ is the user defined proportional gain, $p$ is the position in meters, $kd$ is the user defined derivative gain, and $v$ is the velocity, in meters per second, caclulated by the change in position over the last 10 milliseconds. 
+By logging the inputs and output of the control system through a range of user inputs, its performance can be verified. -XX
+XX: in a specific kp kd region, plot pos, vel, and the commanded torque and expected torque
 \end{itemize}
 
 \section{Declaration of interest}

@@ -1,3 +1,11 @@
+// ===============================
+// miniWaveTankJonswap.cpp
+// Created Spring 2020
+// Zachary Morrell and Nicholas Ross
+// Created for the SIWEED project at Sandia National Labs
+// Calculates up to 100 sine waves in a jonswap spectrum that can be 
+// summed to create a timeseries.
+// ===============================
 //#pragma once
 #ifndef miniWaveTankJonswap_h
 #define miniWaveTankJonswap_h
