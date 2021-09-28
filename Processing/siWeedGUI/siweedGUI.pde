@@ -1,4 +1,4 @@
- import controlP5.*;  //importing GUI library
+import controlP5.*;  //importing GUI library
 import processing.serial.*;
 import java.lang.Math.*;
 import java.util.LinkedList;
@@ -8,6 +8,11 @@ static final boolean debug = false;    //for debug print statements. Also disabl
 static final boolean guiConsole = true; 
 static final boolean dataLogging = false;    //if this is true, a .csv with most variables will be written in the data folder with the sketch
 static final boolean basicMode = false;      //disables some control modes, to make the GUI simpler to use
+//Probe settings:    Modify based on what ports your probes are connected on. If no probe, use empty string.
+//The com port can be found in the Windows Device Manager or the OSSI Interface program.
+static String probe1PortName = "COM11";      //probe1 is plotted
+static String probe2PortName = "";          //probe2 is only used for data logging.
+static int probeBaudRate = 9600;      //default value is 9600
 ////////////////////Scaling section:
 //input scaling:
 static final float WMJogScale = 1000;
@@ -45,12 +50,9 @@ String fundingState = "Sandia National Laboratories is a multi-mission laborator
 //String welcome = "Can you save the town from its power outage? \nChange the demension and type \n of wave to see how the power changes! \n Change the wave energy converter's controls \n to harvest more power. \n How quickly can you light up all four quadrants?";
 
 void setup() {
-  ////////
   frameRate(32);    //sets draw() to run x times a second.
   ///////initialize objects
-  //size(1920, 1100, P2D); //need this for the touch screen
   fullScreen(P2D, 2);
-  //surface.setResizable(true);    //throws an error
   surface.setTitle("SIWEED");
   waveMaker = new UIData();
   wec = new UIData();
@@ -75,8 +77,7 @@ void draw() {
   if (!initialized) {  //Because these take too long, they need to be run in draw(setup cannot take more that 5 seconds.)
     initializeSerial();    //has a 2+ second delay
     unitTests();
-    //press buttons to initialize GUI and Arduino modes:
-    //set chart buttons true at startup by virtually pressing the button:
+    //virtually press buttons to initialize GUI and Arduino modes:
     wavePosData();
     wecPosData();
     if (!basicMode) {    //if in normal mode, virtually press these buttons
@@ -94,6 +95,23 @@ void draw() {
     readWMSerial();
     readWECSerial();
     verifyChecksum();
+    //Read probe data:
+    if (probe1Connected) {
+      while (probe1Port.available() > 3 && probe1Port.readChar() == '0')    //if in normal operation, the first char should always be zero
+      {
+        probe1 = readProbeVal(probe1Port);
+        //graph probe 1:
+        if (waveElClicked == true && !Float.isNaN(probe1)) {
+          waveChart.push("waveElevation", probe1*waveElevationScale);
+        }
+      }
+    }
+    if (probe2Connected) {
+      while (probe2Port.available() > 3 && port2.readChar() == '0')    //if in normal operation, the first char should always be zero
+      {
+        probe2 = readProbeVal(probe2Port);      //this is inefficient, since the only need for probe2 values is data logging. A better way would be to only read the last value.
+      }
+    }
   }
   displayUpdate(); 
   drawFFT();

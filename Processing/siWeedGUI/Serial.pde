@@ -1,8 +1,10 @@
 Serial port1;    //arduino wavemaker due //<>//
 Serial port2;    //arduino WEC due
+Serial probe1Port, probe2Port;   //wave probes
+boolean probe1Connected = false, probe2Connected = false;
 boolean WMConnected, WECConnected;
 int connectionDelay  = 3500;      //how many ms to wait after connecting to a device. Can greatly slow the startup
-int baudRate = 57600;
+int baudRate = 57600;    //only for arduinos. Wave probe baud rate is set in modifiers.
 
 float WMChecksum, WECChecksum;
 int WMCmdCount, WECCmdCount;    //The cmdCount is the number of items sent with the last command ie. amplitude and frequency would give 2. This helps when verifying checksums
@@ -18,7 +20,24 @@ LinkedList<Cmd> WMCmdList, WECCmdList;
 void initializeSerial() {
   WMCmdList = new LinkedList<Cmd>();
   WECCmdList = new LinkedList<Cmd>();
-  ///////////initialize Serial:
+  //First try wave probes
+  try {
+    probe1Port = new Serial(this, probe1PortName);
+    println("Probe 1 CONNECTED");
+    probe1Connected = true;
+  }
+  catch(Exception e) {
+    println("Probe 1 connection FAILED");
+  }
+  try {
+    probe2Port = new Serial(this, probe2PortName);
+    println("Probe 2 CONNECTED");
+    probe2Connected = true;
+  }
+  catch(Exception e) {
+    println("Probe 2 connection FAILED");
+  }
+  //connect to arduinos:
   printArray(Serial.list());     //for debugging, shows all attached devices
   if (debug) println("Wavemaker Serial:");
   for (int i = 0; i < Serial.list().length; i++) {    //tries each device
@@ -94,13 +113,15 @@ void readWMSerial() {
       switch(port1.readChar()) {
       case '1':
         WMUnitTests[0] = true;      //for unit testing and acquiring serial.
-        probe1 = readFloat(port1);
-        if (waveElClicked == true && !Float.isNaN(probe1)) {
-          waveChart.push("waveElevation", probe1*waveElevationScale);
-        }
+        //This used to be how wave probe data was aquired. Now depreciated
+        //probe1 = readFloat(port1);
+        //if (waveElClicked == true && !Float.isNaN(probe1)) {
+        //  waveChart.push("waveElevation", probe1*waveElevationScale);
+        //}
         break;
       case '2':
-        probe2 = readFloat(port1);
+        //Same as probe 1, but only used for data logging.
+        //probe2 = readFloat(port1);
         break;
       case 'p':
         waveMakerPos = readFloat(port1);
@@ -278,9 +299,9 @@ void verifyChecksum() {
     //if (debug) println("WEC checksum match Passed: "+WECChecksum+" "+WECChecksumCalc());
     WECFailCount = 0;      //reset failCount if the the checksum passes
   }
-  if((!WECConnected || WECChecksum == WECChecksumCalc()) && (!WMConnected || WMChecksum == WMChecksumCalc())){    //color of console button indicates if any connected arduinos are in sync
+  if ((!WECConnected || WECChecksum == WECChecksumCalc()) && (!WMConnected || WMChecksum == WMChecksumCalc())) {    //color of console button indicates if any connected arduinos are in sync
     consoleButton.setColorBackground(green);
-  }else{
+  } else {
     consoleButton.setColorBackground(grey);
   }
 }
@@ -304,11 +325,10 @@ float WMChecksumCalc() {
 float WECChecksumCalc() {
   return wec.mode + wec.mag + wec.amp + wec.freq + wec.sigH + wec.peakF + wec.gamma;
 }
-//boolean isFloat(float val) {
-//  if (Float.isNaN(val)){
-//    return false;
-//  }
-//  else {
-//   return true; 
-//  }
-//}
+float readProbeVal(Serial port) {
+  String s = "";
+  for (int i = 0; i < 3; i++) {
+    s += port.readChar();
+  }
+  return(Float.parseFloat(s)/4095);    //convert string to float and divide by 4095 to convert to meters(as stated in Wave probe manual)
+}
