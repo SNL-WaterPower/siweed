@@ -250,7 +250,9 @@ The complete Bill of Materials can be found here: XX-put link here before upload
 % > Clearly reference design files and component parts described in the Design File Summary and Bill of Materials. 
 % >Highlight potential safety concerns that may arise
 
-Using the System Layout diagram in \figurename~\ref{fig:siweed_layout}, the bill of materials, and other dimensions listed in this document, a functionally similar version of this wavetank can be reconstructed. Many parts can be substituted with similar ones, such as the laptop, transistors, power supply, or the tank itself. Software specific hardware, such as the Arduinos or Encoder Buffers should not be substituted. 
+Using the System Layout diagram in \figurename~\ref{fig:siweed_layout}, the bill of materials, and other dimensions listed in this document, a functionally similar version of this wavetank can be reconstructed.
+Many parts can be substituted with similar ones, such as the laptop, transistors, power supply, or the tank itself.
+Software specific hardware, such as the Arduinos or Encoder Buffers should not be substituted. 
 Software setup:
 \begin{itemize}
 \item Download the latest version of Arduino IDE and Processing IDE.
@@ -273,7 +275,6 @@ After performing the setup described in the build instructions, the project can 
 \item Power on the wavetank, ensuring any kill switches are closed, and any pinch points are clear.
 \item Open processing.exe.
 \item File $>$ Open $>$ siweedGUI.pde 
-
 (Ex: C\textbackslash Users\textbackslash user\textbackslash Documents\textbackslash GitHub\textbackslash siweed\textbackslash Processing\textbackslash siWeedGUI\textbackslash siweedGUI.pde) 
 \item (optional)Edit modifiers. These are booleans at the top of the code that will do things like enable basic mode, debugging, or data logging.
 \item Click ``Run".
@@ -289,42 +290,50 @@ After performing the setup described in the build instructions, the project can 
 
 \begin{itemize}
 \item \textbf{Torque constant verification:} 
-The factory torque constant was verfied by logging the position and current of the free floating WEC while commanding a slow sinusoidal current.
+The factory torque constant was verified by logging the position and current of the free floating WEC while commanding a slow sinusoidal current.
 The position displacement time series was converted to a time series of the applied physical torque with the following equation:
-%\linebreak
-\[\tau=\sigma*\gamma *d* \pi*r^2\]
-%\linebreak
+
+\begin{equation}
+  \tau = \sigma \gamma d \pi r^2
+\end{equation}
+
 Where $\tau$ is torque, $\sigma$ is the radius of the pinion gear, $\gamma$ is the specific weight of water, $d$ is the displacement of the buoy in the water, and $r$ is the radius of the buoy.
 %Torque = pinon radius (M)*  [9810(N/m^3)*pos(m)*pi*radius(m)^2]
 It is important to note that the torque values at this point did not account for friction or hysteresis.
 Plotting this torque data against the recorded commanded current values gives  \figurename~\ref{fig:TorqueConstant}.
-The fit1 line represents the best linear fit of the entire data set, but the data points at the highest and lowest currents are affected more significatntly by static friction, so omitting them from the data set improves the torque constant estimation, as shown with the fit2 line in \figurename~\ref{fig:TorqueConstant}.
+The fit1 line represents the best linear fit of the entire data set, but the data points at the highest and lowest currents are affected more significantly by static friction, so omitting them from the data set improves the torque constant estimation, as shown with the fit2 line in \figurename~\ref{fig:TorqueConstant}.
 \begin{figure}[tb]
   \centering
   \includegraphics[width=0.5\textwidth]{diagrams/TorqueConstant.jpeg}
   \caption{Torque vs commanded current, with linear fits of the entire and partial data set.}
   \label{fig:TorqueConstant}
 \end{figure}
-This provides an estimated torque constant of about 7.52mNm/A, which is within 4\% of the factory stated constant of 7.8mNm/A.
+This provides an estimated torque constant of about 7.52\,mNm/A, which is within 4\% of the factory stated constant of 7.8\,mNm/A.
 \linebreak
-Since torque is being estimated from displacement and the frequency is low (inertial and viscous effects are small), the friction shows up as a "constant" offset from the ideal torque constant and doesn't affect the slope.
+Since torque is being estimated from displacement and the frequency is low (inertial and viscous effects are small), the friction shows up as a ``constant'' offset from the ideal torque constant and doesn't affect the slope.
 This allows the friction to be seen as half the offset between the data points as the wave maker moves up, and the points as it moves down. 
 Plotting the torque error using the calculated torque constant against the current gives \figurename~\ref{fig:TorqueError}.
+
 \begin{figure}[tb]
   \centering
   \includegraphics[width=0.5\textwidth]{diagrams/TorqueError.jpeg}
   \caption{Torque error vs commanded current.}
   \label{fig:TorqueError}
 \end{figure}
-The average offset shows that the friction is about 0.45mNm.
+
+The average offset shows that the friction is about 0.45\,mNm.
 
 \item \textbf{Wave Probes:}
 The readings from the wave probes could be verified by attaching them to the wave maker, which has a very precise encoder that allows for accurate changes in displacement. 
 Moving the wave maker with the wave probe attached and comparing the displacement data from both of them was used to make sure the wave probe was providing accurate readings. 
 \item \textbf{WEC feedback control}
-The PD controller functions on the following formula: 
-\[\tau = kp * p + -kd * v\]
-Where $\tau$ is the calculated torque, $kp$ is the user defined proportional gain, $p$ is the position in meters, $kd$ is the user defined derivative gain, and $v$ is the velocity, in meters per second, caclulated by the change in position over the last 10 milliseconds. 
+The PD controller functions on the following formula:
+
+\begin{equation}
+  \tau = kp \cdot p + -kd \cdot v
+\end{equation}
+
+\noindent{}Here, $\tau$ is the calculated torque, $kp$ is the user defined proportional gain, $p$ is the position in meters, $kd$ is the user defined derivative gain, and $v$ is the velocity, in meters per second, calculated by the change in position over the last 10 milliseconds. 
 By logging the inputs and output of the control system through a range of user inputs, its performance can be verified. -XX
 XX: in a specific kp kd region, plot pos, vel, and the commanded torque and expected torque
 \end{itemize}
@@ -335,7 +344,9 @@ Declarations of interest: none
 % All authors must disclose any financial and personal relationships with other people or organizations that could inappropriately influence (bias) their work. Examples of potential conflicts of interest include employment, consultancies, stock ownership, honoraria, paid expert testimony, patent applications/registrations, and grants or other funding. Authors must disclose any interests in a summary declaration of interest statement in the manuscript file. If there are no interests to declare then please state this: 'Declarations of interest: none'. This summary statement will be ultimately published if the article is accepted. More information.}
 
 \section*{Acknowledgment}
-Sandia National Laboratories is a multi-mission laboratory managed and operated by National Technology and Engineering Solutions of Sandia, LLC., a wholly owned subsidiary of Honeywell International, Inc., for the U.S. Department of Energy's National Nuclear Security Administration under contract DE-NA0003525. This paper describes objective technical results and analysis. Any subjective views or opinions that might be expressed in the paper do not necessarily represent the views of the U.S. Department of Energy or the United States Government.
+Sandia National Laboratories is a multi-mission laboratory managed and operated by National Technology and Engineering Solutions of Sandia, LLC., a wholly owned subsidiary of Honeywell International, Inc., for the U.S. Department of Energy's National Nuclear Security Administration under contract DE-NA0003525.
+This paper describes objective technical results and analysis.
+Any subjective views or opinions that might be expressed in the paper do not necessarily represent the views of the U.S. Department of Energy or the United States Government.
 
 % \section{Human and animal rights}
 
