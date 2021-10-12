@@ -294,14 +294,14 @@ The factory torque constant was verified by logging the position and current of 
 The position displacement time series was converted to a time series of the applied physical torque with the following equation:
 
 \begin{equation}
-  \tau = \sigma \gamma d \pi r^2
+  \tau = \sigma \cdot \gamma \cdot d \cdot \pi \cdot r^2
 \end{equation}
 
 Where $\tau$ is torque, $\sigma$ is the radius of the pinion gear, $\gamma$ is the specific weight of water, $d$ is the displacement of the buoy in the water, and $r$ is the radius of the buoy.
 %Torque = pinon radius (M)*  [9810(N/m^3)*pos(m)*pi*radius(m)^2]
 It is important to note that the torque values at this point did not account for friction or hysteresis.
 Plotting this torque data against the recorded commanded current values gives  \figurename~\ref{fig:TorqueConstant}.
-The fit1 line represents the best linear fit of the entire data set, but the data points at the highest and lowest currents are affected more significantly by static friction, so omitting them from the data set improves the torque constant estimation, as shown with the fit2 line in \figurename~\ref{fig:TorqueConstant}.
+The ``fit1'' line represents the best linear fit of the entire data set, but the data points at the highest and lowest currents are affected more significantly by static friction, so omitting them from the data set improves the torque constant estimation, as shown with the ``fit2'' line in \figurename~\ref{fig:TorqueConstant}.
 \begin{figure}[tb]
   \centering
   \includegraphics[width=0.5\textwidth]{diagrams/TorqueConstant.jpeg}
