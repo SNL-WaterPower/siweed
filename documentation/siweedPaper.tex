@@ -325,8 +325,9 @@ Moving the wave maker with the wave probe attached and comparing the displacemen
 The PD controller functions on the following formula: 
 \[\tau = kp * p + -kd * v\]
 Where $\tau$ is the calculated torque, $kp$ is the user defined proportional gain, $p$ is the position in meters, $kd$ is the user defined derivative gain, and $v$ is the velocity, in meters per second, caclulated by the change in position over the last 10 milliseconds. 
-By logging the inputs and output of the control system through a range of user inputs, its performance can be verified. -XX
-XX: in a specific kp kd region, plot pos, vel, and the commanded torque and expected torque
+By logging the inputs and output of the control system through a range of user inputs, its performance can be verified demonstrated and verified.
+\figurename~\ref{fig:XX} shows the controller response with zero D gain, and stepped P gain. \figurename~\ref{fig:XX} Is similar, but with zero P gain and stepped D gain.
+%XX: in a specific kp kd region, plot pos, vel, and the commanded torque and expected torque
 \end{itemize}
 
 \section{Declaration of interest}
@@ -349,11 +350,6 @@ Sandia National Laboratories is a multi-mission laboratory managed and operated 
 
 \bibliographystyle{plainnat}
 \bibliography{refs}
-
-\textit{\begin{itemize}
-\item Include at least one reference, to the original publication of the hardware you customized.
-\item Include other references as required. Include references to put your device in context in the literature. For more information on the reference format in HardwareX please see the Guide for Authors at: https://www.elsevier.com/journals/hardwarex/2468-0672/guide-for-authors
-\end{itemize}}
 
 \end{document}
 
