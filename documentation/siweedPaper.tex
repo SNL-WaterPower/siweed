@@ -123,8 +123,8 @@ The SIWEED is composed of a 1.5\,m $\times{}$ 0.3\,m $\times{}$ 0.5\,m acrylic t
 A system diagram is shown in \figurename~\ref{fig:siweed_layout}.
 \begin{figure}[tb]
   \centering
-  \includegraphics[width=1\textwidth]{diagrams/System Layout.png}
-  \caption{System Layout Diagram.}
+  \includegraphics[width=1\textwidth]{diagrams/SystemLayout.png}
+  \caption{System layout diagram.}
   \label{fig:siweed_layout}
 \end{figure}
 The system is controlled by a Windows PC running a graphical user interface (GUI) developed using Processing\footnote{\url{https://processing.org}} and the controlP5 library\footnote{\url{http://www.sojamo.de/libraries/controlP5/}}.
@@ -156,7 +156,7 @@ A number of key factors of SIWEED are:
   \item \textbf{Portability:} To allow for transport to conferences and outreach events, the SIWEED has been specifically designed to allow for easy transportation.
   \item \textbf{WEC control:} In addition to demonstrating the physics of ocean waves, the SIWEED allows users to interact with a WEC control system to better understand the principles of reactive feedback control to maximize power absorption for the waves.
   \item \textbf{Student-led design:} The SIWEED project has been a student-led design project involving six undergraduate engineering students.
-  \item \textbf{Curriculum:} The SIWEED repository includes a curriculum for students K-12 based on the Next Generation Science Standards \cite{NextGenScience}. 
+  \item \textbf{Curriculum:} The SIWEED repository includes a curriculum for students K-12 based on the Next Generation Science Standards \cite{NextGenScience2021}. 
 The repository contains a presentation and a document intended to be given to the teacher beforehand. 
 The presentation explains water power and Sandia National Labs' role within it, and then goes into more detail about wave energy converters and how the SIWEED demonstration works.
 The teacher resources document contains general information about the project, and a multitude of resources surrounding wave energy education, including videos, worksheets, vocabulary words, general topics, and Next Generation Science standards for each grade level.
@@ -335,7 +335,8 @@ The PD controller functions on the following formula:
 
 \noindent{}Here, $\tau$ is the calculated torque, $kp$ is the user defined proportional gain, $p$ is the position in meters, $kd$ is the user defined derivative gain, and $v$ is the velocity, in meters per second, calculated by the change in position over the last 10 milliseconds. 
 By logging the inputs and output of the control system through a range of user inputs, its performance can be verified demonstrated and verified.
-\figurename~\ref{fig:XX} shows the controller response with zero D gain, and stepped P gain. \figurename~\ref{fig:XX} Is similar, but with zero P gain and stepped D gain.
+\figurename~\ref{fig:XX} shows the controller response with zero D gain, and stepped P gain.
+\figurename~\ref{fig:XX} Is similar, but with zero P gain and stepped D gain.
 XX: in a specific kp kd region, plot pos, vel, and the commanded torque and expected torque
 \end{itemize}
 
