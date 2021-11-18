@@ -32,7 +32,7 @@ The Sandia Interactive Wave Energy Education Display (SIWEED) is a small portabl
 ### Installation
 
 1. Download the latest version of [Arduino IDE](https://www.arduino.cc/en/main/software) 
-2. Download the latest version of [Processing IDE](https://processing.org/download/)
+2. Download version 3.5.4 of [Processing IDE](https://processing.org/download/)
 3. Download the [Master SIWEED Repository](https://github.com/SNL-WaterPower/siweed/tree/master)
 4. Change the Sketchbook Location for the Arduino IDE to \siweed\Arduino
 ```

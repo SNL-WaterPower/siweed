@@ -4,14 +4,14 @@ import java.lang.Math.*;
 import java.util.LinkedList;
 
 //MODIFIERS: Change these booleans to adjust runtime functionality:
-static final boolean debug = false;    //for debug print statements. Also disables GUI console, and puts it in processing
-static final boolean guiConsole = true; 
+static final boolean debug = true;    //for debug print statements. Also disables GUI console, and puts it in processing
+static final boolean guiConsole = true;     //determines if console output is in the GUI or in the Processing console.
 static final boolean dataLogging = false;    //if this is true, a .csv with most variables will be written in the data folder with the sketch
 static final boolean basicMode = false;      //disables some control modes, to make the GUI simpler to use
 //Probe settings:    Modify based on what ports your probes are connected on. If no probe, use empty string.
 //The com port can be found in the Windows Device Manager or the OSSI Interface program.
-static String probe1PortName = "COM11";      //probe1 is plotted
-static String probe2PortName = "";          //probe2 is only used for data logging.
+static String probe1PortName = "COM6";      //probe1 is plotted
+static String probe2PortName = "COM7";          //probe2 is only used for data logging.
 static int probeBaudRate = 9600;      //default value is 9600
 ////////////////////Scaling section:
 //input scaling:
