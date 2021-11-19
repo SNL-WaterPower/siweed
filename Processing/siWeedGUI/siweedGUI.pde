@@ -4,8 +4,8 @@ import java.lang.Math.*;
 import java.util.LinkedList;
 
 //MODIFIERS: Change these booleans to adjust runtime functionality:
-static final boolean debug = true;    //for debug print statements. Also disables GUI console, and puts it in processing
-static final boolean guiConsole = true;     //determines if console output is in the GUI or in the Processing console.
+static final boolean debug = false;    //for debug print statements. Also disables GUI console, and puts it in processing
+static final boolean guiConsole = false;     //determines if console output is in the GUI or in the Processing console.
 static final boolean dataLogging = false;    //if this is true, a .csv with most variables will be written in the data folder with the sketch
 static final boolean basicMode = false;      //disables some control modes, to make the GUI simpler to use
 //Probe settings:    Modify based on what ports your probes are connected on. If no probe, use empty string.
@@ -23,7 +23,7 @@ static final float WCPScale = 40;
 static final float WCDScale = 200;
 static final float WCSigHScale = 1000; 
 //chart scaling:    //these factors are used in serial upon receipt of variables.
-static final float waveElevationScale = 500;
+static final float waveElevationScale = 6000;
 static final float WMPosScale = 250;
 static final float WCPosScale = 500;
 static final float WCTauScale = 1000;
@@ -42,7 +42,7 @@ float[] fftArr;        //used to store the output from the fft
 int previousMillis = 0;    //used to update fft 
 int fftInterval = 100;    //in milliseconds. This is the time between FFT calculations, so it can run at a slower rate
 boolean sendNewDataWM = false, sendNewDataWEC = false;    //when a mode button is switched, this flag is set true to indicate that slider values need to be sent
-
+float probe1Origin = 0, probe2Origin = 0;    //used to calibrate water surface level
 // meter set up  
 
 Meter myMeter;
@@ -87,6 +87,10 @@ void draw() {
       off();
       feedback();
     }
+    //initialize probe origin values:
+    readProbes();    //assigns variables to most recent measurement
+    probe1Origin = probe1;
+    probe2Origin = probe2;
     initialized = true;
   } else {      //if initialized
     if (dataLogging) {
@@ -96,22 +100,7 @@ void draw() {
     readWECSerial();
     verifyChecksum();
     //Read probe data:
-    if (probe1Connected) {
-      while (probe1Port.available() > 3 && probe1Port.readChar() == '0')    //if in normal operation, the first char should always be zero
-      {
-        probe1 = readProbeVal(probe1Port);
-        //graph probe 1:
-        if (waveElClicked == true && !Float.isNaN(probe1)) {
-          waveChart.push("waveElevation", probe1*waveElevationScale);
-        }
-      }
-    }
-    if (probe2Connected) {
-      while (probe2Port.available() > 3 && port2.readChar() == '0')    //if in normal operation, the first char should always be zero
-      {
-        probe2 = readProbeVal(probe2Port);      //this is inefficient, since the only need for probe2 values is data logging. A better way would be to only read the last value.
-      }
-    }
+    readProbes();
   }
   displayUpdate(); 
   drawFFT();
@@ -176,8 +165,6 @@ void draw() {
     sendNewDataWEC = false;
   }
 }
-
-
 void updateFFT() {
   Complex[] fftIn = new Complex[queueSize];
   for (int i = 0; i < queueSize; i++) {    //fill with zeros

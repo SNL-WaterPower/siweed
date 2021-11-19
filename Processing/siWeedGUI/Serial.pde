@@ -1,4 +1,4 @@
-Serial port1;    //arduino wavemaker due //<>//
+Serial port1;    //arduino wavemaker due //<>// //<>//
 Serial port2;    //arduino WEC due
 Serial probe1Port, probe2Port;   //wave probes
 boolean probe1Connected = false, probe2Connected = false;
@@ -38,7 +38,7 @@ void initializeSerial() {
     println("Probe 2 connection FAILED");
   }
   //connect to arduinos:
-  printArray(Serial.list());     //for debugging, shows all attached devices
+  if (debug) printArray(Serial.list());     //for debugging, shows all attached devices
   if (debug) println("Wavemaker Serial:");
   for (int i = 0; i < Serial.list().length; i++) {    //tries each device
     if (!WMConnected) {
@@ -114,14 +114,14 @@ void readWMSerial() {
       case '1':
         WMUnitTests[0] = true;      //for unit testing and acquiring serial.
         //This used to be how wave probe data was aquired. Now depreciated
-        //probe1 = readFloat(port1);
+        readFloat(port1);    //discard data
         //if (waveElClicked == true && !Float.isNaN(probe1)) {
         //  waveChart.push("waveElevation", probe1*waveElevationScale);
         //}
         break;
       case '2':
         //Same as probe 1, but only used for data logging.
-        //probe2 = readFloat(port1);
+        readFloat(port1);    //discard data
         break;
       case 'p':
         waveMakerPos = readFloat(port1);
@@ -325,10 +325,32 @@ float WMChecksumCalc() {
 float WECChecksumCalc() {
   return wec.mode + wec.mag + wec.amp + wec.freq + wec.sigH + wec.peakF + wec.gamma;
 }
+void readProbes() {
+  if (probe1Connected) {
+    while (probe1Port.available() > 5) {    //reads until buffer is empty. 4 data chars and 1 carriage return per measurement
+      int c = probe1Port.read();
+      if (c == 13) {   //data ends in carriage return(ascii code 13)
+        probe1 = readProbeVal(probe1Port)-probe1Origin;    //current value - starting value
+        //graph probe 1:
+        if (waveElClicked == true && !Float.isNaN(probe1)) {
+          waveChart.push("waveElevation", probe1*waveElevationScale);
+        }
+      }
+    }
+  }
+  if (probe2Connected) {
+    while (probe2Port.available() > 5) {
+      int c = probe2Port.read();
+      if (c == 13) {   //data ends in carriage return(ascii code 13)
+        probe2 = readProbeVal(probe2Port)-probe2Origin;    //current value - starting value
+      }
+    }
+  }
+}
 float readProbeVal(Serial port) {
   String s = "";
-  for (int i = 0; i < 3; i++) {
+  for (int i = 0; i < 4; i++) {
     s += port.readChar();
   }
-  return(Float.parseFloat(s)/4095);    //convert string to float and divide by 4095 to convert to meters(as stated in Wave probe manual)
+  return(0.5*Float.parseFloat(s)/4095);    //convert string to float and mulitply by staff length and divide by 4095 to convert to meters(as stated in Wave probe manual)
 }

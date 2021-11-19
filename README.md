@@ -25,14 +25,16 @@ The Sandia Interactive Wave Energy Education Display (SIWEED) is a small portabl
 	- [Arduino IDE 1.8.13](https://www.arduino.cc/en/main/software) or higher for programming Arduinos
 		- Libraries are included in the repo. Many are modified, so you need to use the versions in the repo.
 		- Arduino SAM boards package
-	- [Processing IDE 3.5.4](https://processing.org/download/) or higher for programming the GUI
+	- [Processing IDE 3.5.4](https://processing.org/download/) for programming the GUI
 		- Libraries are included in the repo. Many are modified, so you need to use the versions in the repo.
+	- [OSSI Interface](https://www.oceansensorsystems.com/products.htm) for configuring Wave Probes, if equipped.
 
 
 ### Installation
 
 1. Download the latest version of [Arduino IDE](https://www.arduino.cc/en/main/software) 
 2. Download version 3.5.4 of [Processing IDE](https://processing.org/download/)
+2.5. If using wave probes, download latest version of [OSSI Interface](https://www.oceansensorsystems.com/products.htm)
 3. Download the [Master SIWEED Repository](https://github.com/SNL-WaterPower/siweed/tree/master)
 4. Change the Sketchbook Location for the Arduino IDE to \siweed\Arduino
 ```
@@ -65,7 +67,7 @@ Ex: C:\Users\user\Documents\GitHub\siweed\Processing
 1. Open processing.exe 
 2. File > Open > siweedGUI.pde (Ex: C:\Users\user\Documents\GitHub\siweed\Processing\siWeedGUI\siweedGUI.pde)
 3. (optional)Edit modifiers. These are booleans at the top of the code that will do things like enable basic mode, debugging, or data logging.
-4. If using wave probes: edit the port names in the modifiers to match the ports of your probes. The port names can be found in the device manager, or using the OSSI Interface program. If using the OSSI interface program, it is also a good idea to set the refresh rate to 30hz, as the default is 20hz.
+4. If using wave probes: edit the port names in the modifiers to match the ports of your probes. The port names can be found in the device manager, or using the OSSI Interface program. Also within the OSSI Interface program, the tempurature output of any probes needs to be turned off, and the baud rate should be set to 30hz.
 5. Click "Run"
 6. The GUI will open, allow some time for it to load.
 
