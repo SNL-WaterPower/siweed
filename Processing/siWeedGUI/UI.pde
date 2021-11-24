@@ -12,7 +12,9 @@ Button consoleButton; //Idealy this would be a toggle, but was getting errors on
 Textarea wecText, waveText, myTextarea, wecChartText, waveChartText, FFTText, meterText;
 //These varibles are defined in initializeUI() so width and height variables return non zero values
 int zeroLocationLeft, zeroLocationRight, zeroLocationY, chartLocationY, columnWidth, chartSizeY, chartStroke, buttonHeight, bannerHeight, modeButtonsY, chartButtonsY, powerMeterButtonsY, buttonWidth, spaceBetweenButtons;    
-
+//careful control of these variables keeps the charts aligned with each other
+int ardDataSetSize = 32 * 10;    //adruinos sample at 32hz, chart hold 10 seconds of data
+int probeDataSetSize = 30 * 10;  //probes sample at 30hz, chart hold 10 seconds of data
 // Custom colors
 color green = color(176, 191, 70);
 color turq = color(20, 186, 215);
@@ -406,7 +408,7 @@ void initializeUI() {
     .setLabel("");
 
   waveChart.addDataSet("debug");                          //all other data sets are created with button functions
-  waveChart.setData("debug", new float[360]);
+  waveChart.setData("debug", new float[ardDataSetSize]);
   waveChart.setStrokeWeight(chartStroke);      //This needs to be set after a data set is added in order to work
   //println(waveChart.getStrokeWeight());
   wecChart =  cp5.addChart("WEC Information chart")
@@ -784,7 +786,7 @@ void wavePosData() {
     wavePosData.setColorBackground(buttonblue);
     waveChart.addDataSet("waveMakerPosition");
     waveChart.setColors("waveMakerPosition", buttonblue);
-    waveChart.setData("waveMakerPosition", new float[360]);
+    waveChart.setData("waveMakerPosition", new float[ardDataSetSize]);
     waveChart.setStrokeWeight(chartStroke);      //This needs to be set after a data set is added in order to work
   } else {
     wavePosClicked = false;  
@@ -800,7 +802,7 @@ void waveElData() {
     waveElData.setColorBackground(green);
     waveChart.addDataSet("waveElevation");
     waveChart.setColors("waveElevation", green);
-    waveChart.setData("waveElevation", new float[360]);
+    waveChart.setData("waveElevation", new float[probeDataSetSize]);
     waveChart.setStrokeWeight(chartStroke);      //This needs to be set after a data set is added in order to work
   } else {
     waveElClicked = false;  
@@ -816,7 +818,7 @@ void wecPosData() {
     wecPosData.setColorBackground(buttonblue);
     wecChart.addDataSet("wecPosition");
     wecChart.setColors("wecPosition", buttonblue);
-    wecChart.setData("wecPosition", new float[360]);
+    wecChart.setData("wecPosition", new float[ardDataSetSize]);
     wecChart.setStrokeWeight(chartStroke);      //This needs to be set after a data set is added in order to work
   } else {
     wecPosClicked = false;  
@@ -832,7 +834,7 @@ void wecVelData() {
     wecVelData.setColorBackground(green);
     wecChart.addDataSet("wecVelocity");
     wecChart.setColors("wecVelocity", green);
-    wecChart.setData("wecVelocity", new float[360]);
+    wecChart.setData("wecVelocity", new float[ardDataSetSize]);
     wecChart.setStrokeWeight(chartStroke);      //This needs to be set after a data set is added in order to work
   } else {
     wecVelClicked = false;  
@@ -848,7 +850,7 @@ void wecTorqData() {
     wecTorqData.setColorBackground(color(0, 0, 0));
     wecChart.addDataSet("wecTorque");
     wecChart.setColors("wecTorque", color(0, 0, 0));
-    wecChart.setData("wecTorque", new float[360]);
+    wecChart.setData("wecTorque", new float[ardDataSetSize]);
     wecChart.setStrokeWeight(chartStroke);      //This needs to be set after a data set is added in order to work
   } else {
     wecTorqClicked = false;  
@@ -864,7 +866,7 @@ void wecPowData() {
     wecPowData.setColorBackground(color(209, 18, 4));
     wecChart.addDataSet("wecPower");
     wecChart.setColors("wecPower", color(209, 18, 4));
-    wecChart.setData("wecPower", new float[360]);
+    wecChart.setData("wecPower", new float[ardDataSetSize]);
     wecChart.setStrokeWeight(chartStroke);      //This needs to be set after a data set is added in order to work
   } else {
     wecPowClicked = false;  
