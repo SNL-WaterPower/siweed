@@ -80,7 +80,6 @@ public class Meter {
         line(markAXS, markAYS, markBXS, markBYS);    //draws line from point A to B
       }
     }
-    //draw needle:
     if (!Float.isNaN(val)) {    //verify that val is float
       q.add(val);
     }

@@ -330,7 +330,7 @@ void readProbes() {
     while (probe1Port.available() > 5) {    //reads until buffer is empty. 4 data chars and 1 carriage return per measurement
       int c = probe1Port.read();
       if (c == 13) {   //data ends in carriage return(ascii code 13)
-        probe1 = readProbeVal(probe1Port)-probe1Origin;    //current value - starting value
+        probe1 = movingAverage(readProbeVal(probe1Port)-probe1Origin, probe1List, probeBuffSize);    //current value - starting value, run through moving average
         //graph probe 1:
         if (waveElClicked == true && !Float.isNaN(probe1)) {
           waveChart.push("waveElevation", probe1*waveElevationScale);
@@ -342,7 +342,7 @@ void readProbes() {
     while (probe2Port.available() > 5) {
       int c = probe2Port.read();
       if (c == 13) {   //data ends in carriage return(ascii code 13)
-        probe2 = readProbeVal(probe2Port)-probe2Origin;    //current value - starting value
+        probe2 = movingAverage(readProbeVal(probe2Port)-probe2Origin, probe2List, probeBuffSize);    //current value - starting value, run through moving average
       }
     }
   }
