@@ -407,9 +407,9 @@ void initializeUI() {
     .setColorBackground(white)
     .setLabel("");
 
-  waveChart.addDataSet("debug");                          //all other data sets are created with button functions
-  waveChart.setData("debug", new float[ardDataSetSize]);
-  waveChart.setStrokeWeight(chartStroke);      //This needs to be set after a data set is added in order to work
+  //waveChart.addDataSet("debug");                          //all other data sets are created with button functions
+  //waveChart.setData("debug", new float[ardDataSetSize]);
+  //waveChart.setStrokeWeight(chartStroke);      //This needs to be set after a data set is added in order to work
   //println(waveChart.getStrokeWeight());
   wecChart =  cp5.addChart("WEC Information chart")
     .setPosition(zeroLocationRight, chartLocationY)

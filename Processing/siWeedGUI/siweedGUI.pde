@@ -36,7 +36,7 @@ Textarea consoleOutput; //Needed for GUI console to work
 
 int queueSize = 512;    //power of 2 closest to 15 seconds at 32 samples/second    !!Needs to match sampling rate of arduino
 int probeBuffSize = 10;    //how many samples are used in the probe moving average
-LinkedList<Float> fftList, probe1List, probe2List;     //used to store the data coming into the FFT and the probes
+LinkedList<Float> fftList, probe1List, probe2List, probe2LargeList;     //used to store the data coming into the FFT and the probes
 fft myFFT;
 float[] fftArr;        //used to store the output from the fft
 //int originalx, originaly;    //used to track when the window is resized
@@ -59,6 +59,7 @@ void setup() {
   wec = new UIData();
   probe1List = new LinkedList<Float>();    //initialize linked lists for probe buffers
   probe2List = new LinkedList<Float>();
+  probe2LargeList = new LinkedList<Float>();
   fftList = new LinkedList<Float>();     //stores the input to the FFT
   myFFT = new fft();
   fftArr = new float[queueSize*2];    //used to store the output from the FFT

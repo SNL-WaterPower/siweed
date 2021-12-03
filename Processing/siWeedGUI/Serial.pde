@@ -132,7 +132,7 @@ void readWMSerial() {
       case 'd':
         debugData = readFloat(port1);
         if (!Float.isNaN(debugData) && debugData < 0.1 && debugData > -0.1) {    //when starting seastate immediately, a "large" value comes through, messing witht the FFT. The saturation prevents that.
-          waveChart.push("debug", debugData*WMPosScale);
+          //waveChart.push("debug", debugData*WMPosScale);
           //println(debugData);
           if (waveMaker.mode == 3||waveMaker.mode == 2) fftList.add(debugData);      //adds to the tail if in the right mode
           if (fftList.size() > queueSize) fftList.remove();          //removes from the head
@@ -332,9 +332,9 @@ void readProbes() {
       if (c == 13) {   //data ends in carriage return(ascii code 13)
         probe1 = movingAverage(readProbeVal(probe1Port)-probe1Origin, probe1List, probeBuffSize);    //current value - starting value, run through moving average
         //graph probe 1:
-        if (waveElClicked == true && !Float.isNaN(probe1)) {
-          waveChart.push("waveElevation", probe1*waveElevationScale);
-        }
+        //if (waveElClicked == true && !Float.isNaN(probe1)) {
+        //  waveChart.push("waveElevation", probe1*waveElevationScale);
+        //}
       }
     }
   }
@@ -342,7 +342,12 @@ void readProbes() {
     while (probe2Port.available() > 5) {
       int c = probe2Port.read();
       if (c == 13) {   //data ends in carriage return(ascii code 13)
-        probe2 = movingAverage(readProbeVal(probe2Port)-probe2Origin, probe2List, probeBuffSize);    //current value - starting value, run through moving average
+        float val = readProbeVal(probe2Port);
+        probe2 = movingAverage(val-probe2Origin, probe2List, probeBuffSize) - movingAverage(val-probe2Origin, probe2LargeList, probeBuffSize*5);    //current value - starting value, run through moving average
+        //graph probe 2:
+        if (waveElClicked == true && !Float.isNaN(probe2)) {
+          waveChart.push("waveElevation", probe2*waveElevationScale);
+        }
       }
     }
   }
