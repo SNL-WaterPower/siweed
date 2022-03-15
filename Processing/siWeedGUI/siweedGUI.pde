@@ -200,3 +200,10 @@ float movingAverage(float val, LinkedList<Float> q, int _buffSize){    //value t
     averageVal = averageVal/q.size();      //finds average
     return averageVal;
 }
+////band pass filter vars:
+float[] gains = new float[]{0.387508570552039854906212212881655432284, 0.387508570552039854906212212881655432284}; 
+float[][] numerator = new float[][]{ {1,0,-1}, {1,0,-1} };
+float [][] denominator = new float[][]{ {1,-1.970406888471329054368652577977627515793,0.970854770517962095688346835231641307473}, {1,-0.643377170931628050709605304291471838951,0.253626930077802126284325368033023551106} };
+float bandPass(float val, LinkedList<Float> q, int _buffSize){
+  
+}
