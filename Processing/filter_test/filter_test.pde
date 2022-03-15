@@ -33,7 +33,7 @@ void plot(int yIndex, int xIndex, LinkedList<Float> l) {
   float lastValue = l.get(0);
   int lastX = 10 + (xIndex) * width/2;
   //int lastY = 10 + (yIndex+1) * height/5;
-  int lastY = (int)((lastValue)*30f) + (yIndex+1) * height/6;
+  int lastY =  (yIndex+1) * height/6;
   int size = l.size();
   line(lastX, lastY, lastX+width, lastY);
   for (int i = 1; i < size; i++) {
@@ -66,7 +66,7 @@ float[] gains = new float[]{0.387508570552039854906212212881655432284, 0.3875085
 float[][] numerator = new float[][]{ {1, 0, -1}, {1, 0, -1} };
 float [][] denominator = new float[][]{ {1, -1.970406888471329054368652577977627515793, 0.970854770517962095688346835231641307473}, {1, -0.643377170931628050709605304291471838951, 0.253626930077802126284325368033023551106} };
 float bandPass(float val, LinkedList<Float> q) {
-  int bufferSize = 3;    //based on the filter
+  int bufferSize = 20;    //based on the filter
   if (!Float.isNaN(val)) {    //verify that val is float
     q.add(val);
   }
@@ -90,14 +90,14 @@ float bandPass(float val, LinkedList<Float> q) {
           wm1 = 0f;
         } else if (kk == 1) {
           xm2 = 0f;
-          xm1 = xin[bufferSize-3];
+          xm1 = xin[kk-1];
           wm2 = 0f;
-          wm1 = wOut[bufferSize-3];
+          wm1 = wOut[kk-1];
         } else {
-          xm2 = xin[bufferSize-3];
-          xm1 = xin[bufferSize-2];
-          wm2 = wOut[bufferSize-3];
-          wm1 = wOut[bufferSize-2];
+          xm2 = xin[kk-2];
+          xm1 = xin[kk-1];
+          wm2 = wOut[kk-2];
+          wm1 = wOut[kk-1];
         }
         wOut[kk] = gains[k]*xin[kk] - denominator[k][1] * wm1 - denominator[k][2]*wm2;
         yOut[kk] = numerator[k][0]*wOut[kk] + numerator[k][1]*wm1 + numerator[k][2]*wm2;
