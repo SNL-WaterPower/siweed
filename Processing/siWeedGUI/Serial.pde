@@ -1,9 +1,12 @@
-Serial port1;    //arduino wavemaker due //<>//
+Serial port1;    //arduino wavemaker due //<>// //<>//
 Serial port2;    //arduino WEC due
+Serial probe1Port, probe2Port;   //wave probes
+boolean probe1Connected = false, probe2Connected = false;
 boolean WMConnected, WECConnected;
 int connectionDelay  = 3500;      //how many ms to wait after connecting to a device. Can greatly slow the startup
-int baudRate = 57600;
+int baudRate = 57600;    //only for arduinos. Wave probe baud rate is set in modifiers.
 
+BandPass bpf1, bpf2;
 float WMChecksum, WECChecksum;
 int WMCmdCount, WECCmdCount;    //The cmdCount is the number of items sent with the last command ie. amplitude and frequency would give 2. This helps when verifying checksums
 public class Cmd {      //used to store each command
@@ -16,10 +19,32 @@ public class Cmd {      //used to store each command
 }
 LinkedList<Cmd> WMCmdList, WECCmdList;
 void initializeSerial() {
+  ///initialize wave probe band pass filters:
+  bpf1 = new BandPass();
+  bpf2 = new BandPass();
+  /////
+  
   WMCmdList = new LinkedList<Cmd>();
   WECCmdList = new LinkedList<Cmd>();
-  ///////////initialize Serial:
-  printArray(Serial.list());     //for debugging, shows all attached devices
+  //First try wave probes
+  try {
+    probe1Port = new Serial(this, probe1PortName);
+    println("Probe 1 CONNECTED");
+    probe1Connected = true;
+  }
+  catch(Exception e) {
+    println("Probe 1 connection FAILED");
+  }
+  try {
+    probe2Port = new Serial(this, probe2PortName);
+    println("Probe 2 CONNECTED");
+    probe2Connected = true;
+  }
+  catch(Exception e) {
+    println("Probe 2 connection FAILED");
+  }
+  //connect to arduinos:
+  if (debug) printArray(Serial.list());     //for debugging, shows all attached devices
   if (debug) println("Wavemaker Serial:");
   for (int i = 0; i < Serial.list().length; i++) {    //tries each device
     if (!WMConnected) {
@@ -94,13 +119,15 @@ void readWMSerial() {
       switch(port1.readChar()) {
       case '1':
         WMUnitTests[0] = true;      //for unit testing and acquiring serial.
-        probe1 = readFloat(port1);
-        if (waveElClicked == true && !Float.isNaN(probe1)) {
-          waveChart.push("waveElevation", probe1*waveElevationScale);
-        }
+        //This used to be how wave probe data was aquired. Now depreciated
+        readFloat(port1);    //discard data
+        //if (waveElClicked == true && !Float.isNaN(probe1)) {
+        //  waveChart.push("waveElevation", probe1*waveElevationScale);
+        //}
         break;
       case '2':
-        probe2 = readFloat(port1);
+        //Same as probe 1, but only used for data logging.
+        readFloat(port1);    //discard data
         break;
       case 'p':
         waveMakerPos = readFloat(port1);
@@ -111,7 +138,7 @@ void readWMSerial() {
       case 'd':
         debugData = readFloat(port1);
         if (!Float.isNaN(debugData) && debugData < 0.1 && debugData > -0.1) {    //when starting seastate immediately, a "large" value comes through, messing witht the FFT. The saturation prevents that.
-          waveChart.push("debug", debugData*WMPosScale);
+          //waveChart.push("debug", debugData*WMPosScale);
           //println(debugData);
           if (waveMaker.mode == 3||waveMaker.mode == 2) fftList.add(debugData);      //adds to the tail if in the right mode
           if (fftList.size() > queueSize) fftList.remove();          //removes from the head
@@ -278,9 +305,9 @@ void verifyChecksum() {
     //if (debug) println("WEC checksum match Passed: "+WECChecksum+" "+WECChecksumCalc());
     WECFailCount = 0;      //reset failCount if the the checksum passes
   }
-  if((!WECConnected || WECChecksum == WECChecksumCalc()) && (!WMConnected || WMChecksum == WMChecksumCalc())){    //color of console button indicates if any connected arduinos are in sync
+  if ((!WECConnected || WECChecksum == WECChecksumCalc()) && (!WMConnected || WMChecksum == WMChecksumCalc())) {    //color of console button indicates if any connected arduinos are in sync
     consoleButton.setColorBackground(green);
-  }else{
+  } else {
     consoleButton.setColorBackground(grey);
   }
 }
@@ -304,11 +331,42 @@ float WMChecksumCalc() {
 float WECChecksumCalc() {
   return wec.mode + wec.mag + wec.amp + wec.freq + wec.sigH + wec.peakF + wec.gamma;
 }
-//boolean isFloat(float val) {
-//  if (Float.isNaN(val)){
-//    return false;
-//  }
-//  else {
-//   return true; 
-//  }
-//}
+void readProbes() {
+  ///TODO HERE:
+  //replace these moving averages with a bandpass filter, either by native processing filter or with Gerrits methods
+  
+  ////
+  if (probe1Connected) {
+    while (probe1Port.available() > 5) {    //reads until buffer is empty. 4 data chars and 1 carriage return per measurement
+      int c = probe1Port.read();
+      if (c == 13) {   //data ends in carriage return(ascii code 13)
+      float val = readProbeVal(probe1Port);
+        probe1 = bpf1.update(val);
+        //graph probe 1:
+        //if (waveElClicked == true && !Float.isNaN(probe1)) {
+        //  waveChart.push("waveElevation", probe1*waveElevationScale);
+        //}
+      }
+    }
+  }
+  if (probe2Connected) {
+    while (probe2Port.available() > 5) {
+      int c = probe2Port.read();
+      if (c == 13) {   //data ends in carriage return(ascii code 13)
+        float val = readProbeVal(probe2Port);
+        probe2 = bpf2.update(val);
+        //graph probe 2:
+        if (waveElClicked == true && !Float.isNaN(probe2)) {
+          waveChart.push("waveElevation", probe2*waveElevationScale);
+        }
+      }
+    }
+  }
+}
+float readProbeVal(Serial port) {
+  String s = "";
+  for (int i = 0; i < 4; i++) {
+    s += port.readChar();
+  }
+  return(0.5*Float.parseFloat(s)/4095);    //convert string to float and mulitply by staff length and divide by 4095 to convert to meters(as stated in Wave probe manual)
+}

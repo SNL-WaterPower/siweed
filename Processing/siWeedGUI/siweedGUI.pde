@@ -1,14 +1,20 @@
- import controlP5.*;  //importing GUI library
+import controlP5.*;  //importing GUI library
 import processing.serial.*;
 import java.lang.Math.*;
 import java.util.LinkedList;
 
 //MODIFIERS: Change these booleans to adjust runtime functionality:
 static final boolean debug = false;    //for debug print statements. Also disables GUI console, and puts it in processing
-static final boolean guiConsole = true; 
+static final boolean guiConsole = true;     //determines if console output is in the GUI or in the Processing console.
 static final boolean dataLogging = false;    //if this is true, a .csv with most variables will be written in the data folder with the sketch
 static final boolean basicMode = false;      //disables some control modes, to make the GUI simpler to use
+//Probe settings:    Modify based on what ports your probes are connected on. If no probe, use empty string.
+//The com port can be found in the Windows Device Manager or the OSSI Interface program.
+static String probe1PortName = "COM12";      //probe1 is plotted
+static String probe2PortName = "COM11";          //probe2 is only used for data logging.
+static int probeBaudRate = 9600;      //default value is 9600
 ////////////////////Scaling section:
+static final float[] powerThreshold = {1, 2, 3, 4};
 //input scaling:
 static final float WMJogScale = 1000;
 static final float WMAmpScale = 1000;
@@ -18,7 +24,7 @@ static final float WCPScale = 40;
 static final float WCDScale = 200;
 static final float WCSigHScale = 1000; 
 //chart scaling:    //these factors are used in serial upon receipt of variables.
-static final float waveElevationScale = 500;
+static final float waveElevationScale = 6000;
 static final float WMPosScale = 250;
 static final float WCPosScale = 500;
 static final float WCTauScale = 1000;
@@ -30,14 +36,14 @@ Println console; //Needed for GUI console to work
 Textarea consoleOutput; //Needed for GUI console to work
 
 int queueSize = 512;    //power of 2 closest to 15 seconds at 32 samples/second    !!Needs to match sampling rate of arduino
-LinkedList<Float> fftList;     //used to store the data coming into the FFT
+int probeBuffSize = 10;    //how many samples are used in the probe moving average
+LinkedList<Float> fftList, probe1List, probe2List, probe2LargeList;     //used to store the data coming into the FFT and the probes
 fft myFFT;
 float[] fftArr;        //used to store the output from the fft
 //int originalx, originaly;    //used to track when the window is resized
 int previousMillis = 0;    //used to update fft 
 int fftInterval = 100;    //in milliseconds. This is the time between FFT calculations, so it can run at a slower rate
 boolean sendNewDataWM = false, sendNewDataWEC = false;    //when a mode button is switched, this flag is set true to indicate that slider values need to be sent
-
 // meter set up  
 
 Meter myMeter;
@@ -45,15 +51,15 @@ String fundingState = "Sandia National Laboratories is a multi-mission laborator
 //String welcome = "Can you save the town from its power outage? \nChange the demension and type \n of wave to see how the power changes! \n Change the wave energy converter's controls \n to harvest more power. \n How quickly can you light up all four quadrants?";
 
 void setup() {
-  ////////
   frameRate(32);    //sets draw() to run x times a second.
   ///////initialize objects
-  //size(1920, 1100, P2D); //need this for the touch screen
   fullScreen(P2D, 2);
-  //surface.setResizable(true);    //throws an error
   surface.setTitle("SIWEED");
   waveMaker = new UIData();
   wec = new UIData();
+  probe1List = new LinkedList<Float>();    //initialize linked lists for probe buffers
+  probe2List = new LinkedList<Float>();
+  probe2LargeList = new LinkedList<Float>();
   fftList = new LinkedList<Float>();     //stores the input to the FFT
   myFFT = new fft();
   fftArr = new float[queueSize*2];    //used to store the output from the FFT
@@ -75,8 +81,7 @@ void draw() {
   if (!initialized) {  //Because these take too long, they need to be run in draw(setup cannot take more that 5 seconds.)
     initializeSerial();    //has a 2+ second delay
     unitTests();
-    //press buttons to initialize GUI and Arduino modes:
-    //set chart buttons true at startup by virtually pressing the button:
+    //virtually press buttons to initialize GUI and Arduino modes:
     wavePosData();
     wecPosData();
     if (!basicMode) {    //if in normal mode, virtually press these buttons
@@ -94,6 +99,8 @@ void draw() {
     readWMSerial();
     readWECSerial();
     verifyChecksum();
+    //Read probe data:
+    readProbes();
   }
   displayUpdate(); 
   drawFFT();
@@ -158,8 +165,6 @@ void draw() {
     sendNewDataWEC = false;
   }
 }
-
-
 void updateFFT() {
   Complex[] fftIn = new Complex[queueSize];
   for (int i = 0; i < queueSize; i++) {    //fill with zeros
