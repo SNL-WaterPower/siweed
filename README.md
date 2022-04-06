@@ -76,7 +76,7 @@ Ex: C:\Users\user\Documents\GitHub\siweed\Processing
 SIWEED uses a PC to control two Arduino Dues: (1) to run the wavemaker and (2) to run the WEC.
 A detailed illustration of the system layout is shown in the diagram below.
 
-![system layout](https://github.com/SNL-WaterPower/siweed/blob/master/documentation/diagrams/systemLayoutPNG.png)
+![system layout](https://github.com/SNL-WaterPower/siweed/blob/master/documentation/diagrams/SystemLayout.png)
 <!-- System Specifications -->
 ## System specifications
  - Tank

@@ -20,8 +20,12 @@ void setup()
     tests[1].add(sin(2f * PI * (float)i * 20f/30f));
     tests[2].add(sin(2f * PI * (float)i * 3f/30f)); 
     tests[3].add(cos(2f * PI * (float)i * 20f/30f)+sin(2f * PI * i * 3f/30f)+5f);
-    for (int j = 0; j < 4; j++) {
-      outputs[j].add(bandPass(tests[j].getLast(), queues[j]));
+  }
+  BandPass[] filters = new BandPass[4];
+  for (int j = 0; j < 4; j++) {
+    filters[j] = new BandPass();
+    for (int i = 0; i < tests[0].size(); i++) {
+      outputs[j].add(filters[j].update(tests[j].get(i)));
     }
   }
   for (int i = 0; i < 4; i++) {
@@ -62,95 +66,78 @@ void draw()
   //  a = a + inc;
   //}
 }
-float[] gains = new float[]{0.387508570552039854906212212881655432284, 0.387508570552039854906212212881655432284}; 
-float[][] numerator = new float[][]{ {1, 0, -1}, {1, 0, -1} };
-float [][] denominator = new float[][]{ {1, -1.970406888471329054368652577977627515793, 0.970854770517962095688346835231641307473}, {1, -0.643377170931628050709605304291471838951, 0.253626930077802126284325368033023551106} };
-float bandPass(float val, LinkedList<Float> q) {
-  int bufferSize = 500;    //based on the filter
-  if (!Float.isNaN(val)) {    //verify that val is float
-    q.add(val);
-  }
-  if (q.size() > bufferSize) {
-    q.remove();
-    /////only filter if populated
-  }
-  Float xm1, xm2, wm1, wm2;
-  Float[] xin = new Float[bufferSize], yOut = new Float[bufferSize], wOut = new Float[bufferSize];
-  Float[] sig = q.toArray(new Float[q.size()]);
-  for (int k = 0; k < gains.length; k++) {
-    if (k == 0) {
-      xin = sig;
-    } else {
-      xin = yOut;
-    }
-    for (int kk = 0; kk< q.size(); kk++) {
-      if (kk == 0) {
-        xm2 = 0f;
-        xm1 = 0f;
-        wm2 = 0f;
-        wm1 = 0f;
-      } else if (kk == 1) {
-        xm2 = 0f;
-        xm1 = xin[kk-1];
-        wm2 = 0f;
-        wm1 = wOut[kk-1];
-      } else {
-        xm2 = xin[kk-2];
-        xm1 = xin[kk-1];
-        wm2 = wOut[kk-2];
-        wm1 = wOut[kk-1];
-      }
-      wOut[kk] = gains[k]*xin[kk] - denominator[k][1] * wm1 - denominator[k][2]*wm2;
-      yOut[kk] = numerator[k][0]*wOut[kk] + numerator[k][1]*wm1 + numerator[k][2]*wm2;
+
+
+
+class BandPass {
+  float[] gains = new float[]{0.387508570552039854906212212881655432284, 0.387508570552039854906212212881655432284}; 
+  float[][] numerator = new float[][]{ {1, 0, -1}, {1, 0, -1} };
+  float [][] denominator = new float[][]{ {1, -1.970406888471329054368652577977627515793, 0.970854770517962095688346835231641307473}, {1, -0.643377170931628050709605304291471838951, 0.253626930077802126284325368033023551106} };
+  LinkedList<Float> wOut1, yOut, wOut2;
+  int BPBufferSize = 3;
+  public BandPass() {
+    wOut1 = new LinkedList<Float>();
+    yOut = new LinkedList<Float>();
+    wOut2 = new LinkedList<Float>();
+    for (int i = 0; i < BPBufferSize; i++) {
+      wOut1.add(0f);
+      yOut.add(0f);
+      wOut2.add(0f);
     }
   }
-  return yOut[q.size()-1];
-  //} else {    //if not populated, return last val
-  //  return q.getLast();
-  //}
+  public float update(float val) {
+    //incrementBuff(val,xIn);
+    float temp = gains[0]*val - denominator[0][1]*wOut1.get(wOut1.size()-1) - denominator[0][2]*wOut1.get(wOut1.size()-2);
+    incrementBuff(temp, wOut1);
+    temp = numerator[0][0]*wOut1.get(wOut1.size()-1) + numerator[0][1]*wOut1.get(wOut1.size()-2) + numerator[0][2]*wOut1.get(wOut1.size()-3);
+    incrementBuff(temp, yOut);
+    temp = gains[1]*yOut.peekLast() - denominator[1][1]*wOut2.get(wOut1.size()-1) - denominator[1][2]*wOut2.get(wOut1.size()-2);
+    incrementBuff(temp, wOut2);
+    float yOut2 = numerator[1][0]*wOut2.get(wOut1.size()-1) + numerator[1][1]*wOut2.get(wOut1.size()-2) + numerator[1][2]*wOut2.get(wOut1.size()-3);
+    return yOut2;
+  }
+  void incrementBuff(float val, LinkedList<Float> l) {
+    l.add(val);
+    l.remove();
+  }
 }
-//float bandPass(float val, LinkedList<Float> q){
-//  if (!Float.isNaN(val)) {    //verify that val is float
-//      q.add(val);
-//  }
-//  if (q.size() > 3) {
-//    q.remove();
-//    /////only filter if populated
-//    float xm1, xm2, wm1, wm2;
-//    LinkedList<Float> xin = new LinkedList<Float>();
-//    LinkedList<Float> yOut = new LinkedList<Float>();
-//    LinkedList<Float> wOut = new LinkedList<Float>();
 
-//    for(int k = 0; k < gains.length; k++) {
-//      if (k == 0){
-//        xin = (LinkedList<Float>) q.clone();
-//      }else{
-//        xin = (LinkedList<Float>) yOut.clone();
-//      }
-
-//      for(int kk = 0; kk< q.size(); kk++){
-//        if (kk == 0){
-//            xm2 = 0;
-//            xm1 = 0;
-//            wm2 = 0;
-//            wm1 = 0;
-//        } else if (kk == 1){
-//            xm2 = 0;
-//            xm1 = xin.get(xin.size() - 3);
-//            wm2 = 0;
-//            wm1 = wOut.get(wOut.size() - 3);
-//        }else{
-//            xm2 = xin.get(xin.size() - 3);
-//            xm1 = xin.get(xin.size() - 2);
-//            wm2 = wOut.get(wOut.size() - 3);
-//            wm1 = wOut.get(wOut.size() - 2);
-//        }
-//        wOut.add(gains[k]*xin.getLast() - denominator[k][1] * wm1 - denominator[k][2]*wm2);
-//        yOut.add(numerator[k][0]*wOut.getLast() + numerator[k][1]*wm1 + numerator[k][2]*wm2);
-//      }
-//    }
-//    return yOut.getLast();
-//  } else {    //if not populated, return last val
-//    return q.getLast();
-//  }
-//}
+/*float bandPass(float val, LinkedList<Float> q) {
+ int bufferSize = 5;    //based on the filter
+ if (!Float.isNaN(val)) {    //verify that val is float
+ q.add(val);
+ }
+ if (q.size() > bufferSize) {
+ q.remove();
+ /////only filter if populated
+ }
+ Float wm1, wm2;
+ Float[] xin = new Float[bufferSize], yOut = new Float[bufferSize], wOut = new Float[bufferSize];
+ Float[] sig = q.toArray(new Float[q.size()]);
+ for (int k = 0; k < gains.length; k++) {
+ if (k == 0) {
+ xin = sig;
+ } else {
+ xin = yOut;
+ }
+ for (int kk = 0; kk< q.size(); kk++) {
+ if (kk == 0) {
+ wm2 = 0f;
+ wm1 = 0f;
+ } else if (kk == 1) {
+ wm2 = 0f;
+ wm1 = wOut[kk-1];
+ } else {
+ wm2 = wOut[kk-2];
+ wm1 = wOut[kk-1];
+ }
+ wOut[kk] = gains[k]*xin[kk] - denominator[k][1] * wm1 - denominator[k][2]*wm2;
+ yOut[kk] = numerator[k][0]*wOut[kk] + numerator[k][1]*wm1 + numerator[k][2]*wm2;
+ }
+ }
+ return yOut[q.size()-1];
+ //} else {    //if not populated, return last val
+ //  return q.getLast();
+ //}
+ }
+ */

@@ -6,6 +6,7 @@ boolean WMConnected, WECConnected;
 int connectionDelay  = 3500;      //how many ms to wait after connecting to a device. Can greatly slow the startup
 int baudRate = 57600;    //only for arduinos. Wave probe baud rate is set in modifiers.
 
+BandPass bpf1, bpf2;
 float WMChecksum, WECChecksum;
 int WMCmdCount, WECCmdCount;    //The cmdCount is the number of items sent with the last command ie. amplitude and frequency would give 2. This helps when verifying checksums
 public class Cmd {      //used to store each command
@@ -18,6 +19,11 @@ public class Cmd {      //used to store each command
 }
 LinkedList<Cmd> WMCmdList, WECCmdList;
 void initializeSerial() {
+  ///initialize wave probe band pass filters:
+  bpf1 = new BandPass();
+  bpf2 = new BandPass();
+  /////
+  
   WMCmdList = new LinkedList<Cmd>();
   WECCmdList = new LinkedList<Cmd>();
   //First try wave probes
@@ -326,15 +332,12 @@ float WECChecksumCalc() {
   return wec.mode + wec.mag + wec.amp + wec.freq + wec.sigH + wec.peakF + wec.gamma;
 }
 void readProbes() {
-  ///TODO HERE:
-  //replace these moving averages with a bandpass filter, either by native processing filter or with Gerrits methods
-  
-  ////
   if (probe1Connected) {
     while (probe1Port.available() > 5) {    //reads until buffer is empty. 4 data chars and 1 carriage return per measurement
       int c = probe1Port.read();
       if (c == 13) {   //data ends in carriage return(ascii code 13)
-        probe1 = bandPass(readProbeVal(probe1Port)-probe1Origin, probe1List, probeBuffSize);    //current value - starting value, run through moving average
+      float val = readProbeVal(probe1Port);
+        probe1 = bpf1.update(val);
         //graph probe 1:
         //if (waveElClicked == true && !Float.isNaN(probe1)) {
         //  waveChart.push("waveElevation", probe1*waveElevationScale);
@@ -347,7 +350,7 @@ void readProbes() {
       int c = probe2Port.read();
       if (c == 13) {   //data ends in carriage return(ascii code 13)
         float val = readProbeVal(probe2Port);
-        probe2 = movingAverage(val-probe2Origin, probe2List, probeBuffSize) - movingAverage(val-probe2Origin, probe2LargeList, probeBuffSize*5);    //current value - starting value, run through moving average
+        probe2 = bpf2.update(val);
         //graph probe 2:
         if (waveElClicked == true && !Float.isNaN(probe2)) {
           waveChart.push("waveElevation", probe2*waveElevationScale);

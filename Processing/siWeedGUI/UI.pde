@@ -430,8 +430,8 @@ void initializeUI() {
   //console, this needs to be in the setup to ensure
   //that it catches any errors when program starts
   consoleOutput=cp5.addTextarea("consoleOutput")
-    .setPosition(1650*width/1920, 800*height/1100) 
-    .setSize(330*width/1920, 150*height/1100)
+    .setPosition(1650*width/1920, 750*height/1100) 
+    .setSize(330*width/1920, 200*height/1100)
     .setLineHeight(14*height/1100)
     .setColorValue(green) //color of font
     .scroll(1) //enable scrolling up and down
@@ -1006,22 +1006,22 @@ void displayUpdate() {
   image(pic1, zeroLocationLeft + 20*width/1920, 90*height/1100, bannerHeight, bannerHeight);
   image(pic2, zeroLocationRight + 20*width/1920, 90*height/1100, bannerHeight, bannerHeight);
   //controls power indicators
-  if (myMeter.getAverageVal() >= 1) {
+  if (myMeter.getAverageVal() >= powerThreshold[0]) {
     quad1.setColorBackground(green).setColorActive(green);
   } else {
     quad1.setColorBackground(grey).setColorActive(grey);    //if under threshold, then grey
   }
-  if (myMeter.getAverageVal() >= 2) {
+  if (myMeter.getAverageVal() >= powerThreshold[1]) {
     quad2.setColorBackground(green).setColorActive(green);
   } else {
     quad2.setColorBackground(grey).setColorActive(grey);
   }
-  if (myMeter.getAverageVal() >= 3) {
+  if (myMeter.getAverageVal() >= powerThreshold[2]) {
     quad3.setColorBackground(green).setColorActive(green);
   } else {
     quad3.setColorBackground(grey).setColorActive(grey);
   }
-  if (myMeter.getAverageVal() >= 4) {
+  if (myMeter.getAverageVal() >= powerThreshold[3]) {
     quad4.setColorBackground(green).setColorActive(green);
   } else {
     quad4.setColorBackground(grey).setColorActive(grey);

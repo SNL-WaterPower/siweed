@@ -5,15 +5,16 @@ import java.util.LinkedList;
 
 //MODIFIERS: Change these booleans to adjust runtime functionality:
 static final boolean debug = false;    //for debug print statements. Also disables GUI console, and puts it in processing
-static final boolean guiConsole = false;     //determines if console output is in the GUI or in the Processing console.
+static final boolean guiConsole = true;     //determines if console output is in the GUI or in the Processing console.
 static final boolean dataLogging = false;    //if this is true, a .csv with most variables will be written in the data folder with the sketch
 static final boolean basicMode = false;      //disables some control modes, to make the GUI simpler to use
 //Probe settings:    Modify based on what ports your probes are connected on. If no probe, use empty string.
 //The com port can be found in the Windows Device Manager or the OSSI Interface program.
-static String probe1PortName = "COM6";      //probe1 is plotted
-static String probe2PortName = "COM7";          //probe2 is only used for data logging.
+static String probe1PortName = "COM12";      //probe1 is plotted
+static String probe2PortName = "COM11";          //probe2 is only used for data logging.
 static int probeBaudRate = 9600;      //default value is 9600
 ////////////////////Scaling section:
+static final float[] powerThreshold = {1, 2, 3, 4};
 //input scaling:
 static final float WMJogScale = 1000;
 static final float WMAmpScale = 1000;
@@ -43,7 +44,6 @@ float[] fftArr;        //used to store the output from the fft
 int previousMillis = 0;    //used to update fft 
 int fftInterval = 100;    //in milliseconds. This is the time between FFT calculations, so it can run at a slower rate
 boolean sendNewDataWM = false, sendNewDataWEC = false;    //when a mode button is switched, this flag is set true to indicate that slider values need to be sent
-float probe1Origin = 0, probe2Origin = 0;    //used to calibrate water surface level
 // meter set up  
 
 Meter myMeter;
