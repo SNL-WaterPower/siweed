@@ -91,10 +91,6 @@ void draw() {
       off();
       feedback();
     }
-    //initialize probe origin values:
-    readProbes();    //assigns variables to most recent measurement
-    probe1Origin = probe1;
-    probe2Origin = probe2;
     initialized = true;
   } else {      //if initialized
     if (dataLogging) {
@@ -185,25 +181,4 @@ void updateFFT() {
   for (int i = 0; i < queueSize; i++) {
     fftArr[i] = (float)Math.sqrt( fftOut[i].re()*fftOut[i].re() + fftOut[i].im()*fftOut[i].im() )/queueSize;      //magnitude
   }
-}
-float movingAverage(float val, LinkedList<Float> q, int _buffSize){    //value to add to moving average, buffer for that value, and maximum size of buffer. Function should populate the buffer and return the average
-  if (!Float.isNaN(val)) {    //verify that val is float
-      q.add(val);
-    }
-    if (q.size() > _buffSize) {
-      q.remove();
-    }
-    float averageVal = 0;
-    for (int i = 0; i < q.size(); i++) {      //sum values
-      averageVal += q.get(i);
-    }
-    averageVal = averageVal/q.size();      //finds average
-    return averageVal;
-}
-////band pass filter vars:
-float[] gains = new float[]{0.387508570552039854906212212881655432284, 0.387508570552039854906212212881655432284}; 
-float[][] numerator = new float[][]{ {1,0,-1}, {1,0,-1} };
-float [][] denominator = new float[][]{ {1,-1.970406888471329054368652577977627515793,0.970854770517962095688346835231641307473}, {1,-0.643377170931628050709605304291471838951,0.253626930077802126284325368033023551106} };
-float bandPass(float val, LinkedList<Float> q, int _buffSize){
-  
 }
