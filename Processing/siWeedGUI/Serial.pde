@@ -332,10 +332,6 @@ float WECChecksumCalc() {
   return wec.mode + wec.mag + wec.amp + wec.freq + wec.sigH + wec.peakF + wec.gamma;
 }
 void readProbes() {
-  ///TODO HERE:
-  //replace these moving averages with a bandpass filter, either by native processing filter or with Gerrits methods
-  
-  ////
   if (probe1Connected) {
     while (probe1Port.available() > 5) {    //reads until buffer is empty. 4 data chars and 1 carriage return per measurement
       int c = probe1Port.read();
