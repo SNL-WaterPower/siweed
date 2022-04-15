@@ -23,7 +23,7 @@ void initializeSerial() {
   bpf1 = new BandPass();
   bpf2 = new BandPass();
   /////
-  
+
   WMCmdList = new LinkedList<Cmd>();
   WECCmdList = new LinkedList<Cmd>();
   //First try wave probes
@@ -336,7 +336,7 @@ void readProbes() {
     while (probe1Port.available() > 5) {    //reads until buffer is empty. 4 data chars and 1 carriage return per measurement
       int c = probe1Port.read();
       if (c == 13) {   //data ends in carriage return(ascii code 13)
-      float val = readProbeVal(probe1Port);
+        float val = readProbeVal(probe1Port);
         probe1 = bpf1.update(val);
         //graph probe 1:
         //if (waveElClicked == true && !Float.isNaN(probe1)) {
@@ -364,5 +364,10 @@ float readProbeVal(Serial port) {
   for (int i = 0; i < 4; i++) {
     s += port.readChar();
   }
-  return(0.5*Float.parseFloat(s)/4095);    //convert string to float and mulitply by staff length and divide by 4095 to convert to meters(as stated in Wave probe manual)
+  try {
+    return(0.5*Float.parseFloat(s)/4095);    //convert string to float and mulitply by staff length and divide by 4095 to convert to meters(as stated in Wave probe manual)
+  }
+  catch(Exception e) {
+    return 0;
+  }
 }

@@ -24,11 +24,11 @@ static final float WCPScale = 40;
 static final float WCDScale = 200;
 static final float WCSigHScale = 1000; 
 //chart scaling:    //these factors are used in serial upon receipt of variables.
-static final float waveElevationScale = 6000;
+static final float waveElevationScale = 500;
 static final float WMPosScale = 250;
 static final float WCPosScale = 500;
 static final float WCTauScale = 1000;
-static final float WCPowScale = 35000;
+static final float WCPowScale = 65000;
 static final float WCVelScale = 60;
 ////////////////////////////
 
