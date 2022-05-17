@@ -325,11 +325,25 @@ void resendSerial(Serial port, LinkedList<Cmd> cmdList, int count, int mode) {
     //println(millis());
   }
 }
-float WMChecksumCalc() {
-  return waveMaker.mode + waveMaker.mag + waveMaker.amp + waveMaker.freq + waveMaker.sigH + waveMaker.peakF + waveMaker.gamma;
+float intScaleFactor = 100000;
+
+int WMChecksumCalc() {
+  return (int)(intScaleFactor* waveMaker.mode) + 
+  (int)(intScaleFactor* waveMaker.mag) + 
+  (int)(intScaleFactor* waveMaker.amp) + 
+  (int)(intScaleFactor* waveMaker.freq) + 
+  (int)(intScaleFactor* waveMaker.sigH) + 
+  (int)(intScaleFactor* waveMaker.peakF) + 
+  (int)(intScaleFactor* waveMaker.gamma);
 }
-float WECChecksumCalc() {
-  return wec.mode + wec.mag + wec.amp + wec.freq + wec.sigH + wec.peakF + wec.gamma;
+int WECChecksumCalc() {
+  return (int)(intScaleFactor* wec.mode) + 
+  (int)(intScaleFactor* wec.mag) + 
+  (int)(intScaleFactor* wec.amp) + 
+  (int)(intScaleFactor* wec.freq) + 
+  (int)(intScaleFactor* wec.sigH) + 
+  (int)(intScaleFactor* wec.peakF) + 
+  (int)(intScaleFactor* wec.gamma);
 }
 void readProbes() {
   if (probe1Connected) {

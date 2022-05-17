@@ -139,8 +139,16 @@ volatile float calcTS(volatile float tm) {      //calculate jonswap timeseries v
   }
   return val;
 }
-volatile float checksum() {
-  return mode + tau + kp + kd + sigH + peakF + gam;//adds the values of anything that can ba changes by processing.
+int intScaleFactor = 100000;
+volatile int checksum() {
+  //return mode + tau + kp + kd + sigH + peakF + gam;//adds the values of anything that can ba changes by processing.
+  return (int)(intScaleFactor * mode) +
+         (int)(intScaleFactor * tau) +
+         (int)(intScaleFactor * kp) +
+         (int)(intScaleFactor * kd) +
+         (int)(intScaleFactor * sigH) +
+         (int)(intScaleFactor * peakF) +
+         (int)(intScaleFactor * gam);
 }
 bool ampUnitTest = true, TSUnitTest = true, encoderTest = true;
 //float exampleAmps[] = {0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.01, 0.02, 0.05, 0.11, 0.20, 0.33, 0.48, 0.67, 0.87, 1.09, 1.30, 1.51, 1.7, 1.88, 2.03, 2.16};

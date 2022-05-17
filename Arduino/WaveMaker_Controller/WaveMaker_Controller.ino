@@ -135,11 +135,17 @@ volatile void pushBuffer(volatile float* arr, volatile float f) {
 float lerp(float a, float b, float f) {
   return a + f * (b - a);
 }
-volatile float checksum() {
-    return mode + j + a + f + sigH + peakF + gam;//adds the values of anything that can ba changes by processing.
+int intScaleFactor = 100000;
+volatile int checksum() {     //adds the values of anything that can ba changes by processing.
+  return (int)(intScaleFactor * mode) +
+         (int)(intScaleFactor * j) +
+         (int)(intScaleFactor * a) +
+         (int)(intScaleFactor * f) +
+         (int)(intScaleFactor * sigH) +
+         (int)(intScaleFactor * peakF) +
+         (int)(intScaleFactor * gam);
 }
-bool ampUnitTest = true, TSUnitTest = true, encoderTest = true;
-//float exampleAmps[] = {0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.01, 0.02, 0.05, 0.11, 0.20, 0.33, 0.48, 0.67, 0.87, 1.09, 1.30, 1.51, 1.7, 1.88, 2.03, 2.16};
+bool ampUnitTest = true, TSUnitTest = true, encoderTest = true;//float exampleAmps[] = {0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.01, 0.02, 0.05, 0.11, 0.20, 0.33, 0.48, 0.67, 0.87, 1.09, 1.30, 1.51, 1.7, 1.88, 2.03, 2.16};
 float exampleAmps[] = {0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.01, 0.09, 0.32, 0.77, 1.39, 2.08, 2.72, 3.25};
 //float exampleTS[] = {2.13, -1.08, 3.21, 3.02, -0.65, 0.42, 0.96, -3.35, 3.49, -3.32, 1.43, 4.24, 3.59, 2.01, -7.29, 4.79, 2.13, -1.08, 3.21, 3.02, -0.65, 0.42, 0.96, -3.35, 3.49, -3.32, 1.43, 4.24, 3.59, 2.01, -7.29, 4.79};
 float exampleTS[] = {2.24, -0.75, 3.53, -3.00, -3.04, 8.26, 2.77, 0.98, 2.24, -0.75, 3.53, -3.00, -3.04, 8.26, 2.77, 0.98};
