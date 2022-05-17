@@ -231,7 +231,7 @@ void initializeUI() {
   wecChartQs = cp5.addButton("wecChartQs")
     .setPosition(zeroLocationRight + columnWidth - buttonHeight, chartLocationY-buttonHeight)
     .setSize(buttonHeight, buttonHeight)
-    .setColorBackground(buttonblue)
+    .setColorBackground(green)
     .setFont(bigButtonFont)
     .setLabel("?");
   FFTQs = cp5.addButton("FFTQs")
@@ -243,7 +243,7 @@ void initializeUI() {
   meterQs = cp5.addButton("meterQs")
     .setPosition(zeroLocationRight + columnWidth - buttonHeight, 725*height/1100)
     .setSize(buttonHeight, buttonHeight)
-    .setColorBackground(buttonblue)
+    .setColorBackground(green)
     .setFont(bigButtonFont)
     .setLabel("?");
 
@@ -984,10 +984,10 @@ void displayUpdate() {
   rect(zeroLocationLeft, 90*height/1100, columnWidth, bannerHeight); // Change wave dimensions
   fill(green);
   rect(zeroLocationRight, 90*height/1100, columnWidth, bannerHeight); // Change WEC controls
-  fill(buttonblue);
-  rect(zeroLocationLeft, chartLocationY-buttonHeight, columnWidth, buttonHeight); // Wave Information
   rect(zeroLocationRight, chartLocationY-buttonHeight, columnWidth, buttonHeight); // Wec Information
   rect(zeroLocationRight, 725*height/1100, columnWidth, buttonHeight); // Power Meter title
+  fill(buttonblue);
+  rect(zeroLocationLeft, chartLocationY-buttonHeight, columnWidth, buttonHeight); // Wave Information
   rect(zeroLocationLeft, 725*height/1100, columnWidth, buttonHeight); // FFT title
   rect(zeroLocationRight, 760*height/1100, columnWidth, 250*height/1100);  //meter background
   rect(zeroLocationLeft, 760*height/1100, columnWidth, 250*height/1100+buttonHeight);  //FFT background
@@ -999,7 +999,7 @@ void displayUpdate() {
   rect(zeroLocationRight, powerMeterButtonsY, buttonWidth*4, buttonHeight);
   //draw lines to separate FFT and Meter titles from data
   stroke(white);
-  strokeWeight(2);
+  strokeWeight(5);
   line(zeroLocationLeft, 727*height/1100+buttonHeight, zeroLocationLeft + columnWidth, 727*height/1100+buttonHeight);
   line(zeroLocationRight, 727*height/1100+buttonHeight, zeroLocationRight + columnWidth, 727*height/1100+buttonHeight);
   image(LHSPic, 0, 0, width/2.7, height); //lhs pic

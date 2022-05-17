@@ -23,7 +23,7 @@ void initializeSerial() {
   bpf1 = new BandPass();
   bpf2 = new BandPass();
   /////
-  
+
   WMCmdList = new LinkedList<Cmd>();
   WECCmdList = new LinkedList<Cmd>();
   //First try wave probes
@@ -325,18 +325,32 @@ void resendSerial(Serial port, LinkedList<Cmd> cmdList, int count, int mode) {
     //println(millis());
   }
 }
-float WMChecksumCalc() {
-  return waveMaker.mode + waveMaker.mag + waveMaker.amp + waveMaker.freq + waveMaker.sigH + waveMaker.peakF + waveMaker.gamma;
+float intScaleFactor = 100000;
+
+int WMChecksumCalc() {
+  return (int)(intScaleFactor* waveMaker.mode) + 
+  (int)(intScaleFactor* waveMaker.mag) + 
+  (int)(intScaleFactor* waveMaker.amp) + 
+  (int)(intScaleFactor* waveMaker.freq) + 
+  (int)(intScaleFactor* waveMaker.sigH) + 
+  (int)(intScaleFactor* waveMaker.peakF) + 
+  (int)(intScaleFactor* waveMaker.gamma);
 }
-float WECChecksumCalc() {
-  return wec.mode + wec.mag + wec.amp + wec.freq + wec.sigH + wec.peakF + wec.gamma;
+int WECChecksumCalc() {
+  return (int)(intScaleFactor* wec.mode) + 
+  (int)(intScaleFactor* wec.mag) + 
+  (int)(intScaleFactor* wec.amp) + 
+  (int)(intScaleFactor* wec.freq) + 
+  (int)(intScaleFactor* wec.sigH) + 
+  (int)(intScaleFactor* wec.peakF) + 
+  (int)(intScaleFactor* wec.gamma);
 }
 void readProbes() {
   if (probe1Connected) {
     while (probe1Port.available() > 5) {    //reads until buffer is empty. 4 data chars and 1 carriage return per measurement
       int c = probe1Port.read();
       if (c == 13) {   //data ends in carriage return(ascii code 13)
-      float val = readProbeVal(probe1Port);
+        float val = readProbeVal(probe1Port);
         probe1 = bpf1.update(val);
         //graph probe 1:
         //if (waveElClicked == true && !Float.isNaN(probe1)) {
@@ -364,5 +378,10 @@ float readProbeVal(Serial port) {
   for (int i = 0; i < 4; i++) {
     s += port.readChar();
   }
-  return(0.5*Float.parseFloat(s)/4095);    //convert string to float and mulitply by staff length and divide by 4095 to convert to meters(as stated in Wave probe manual)
+  try {
+    return(0.5*Float.parseFloat(s)/4095);    //convert string to float and mulitply by staff length and divide by 4095 to convert to meters(as stated in Wave probe manual)
+  }
+  catch(Exception e) {
+    return 0;
+  }
 }
