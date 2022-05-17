@@ -430,7 +430,7 @@ void initializeUI() {
   //console, this needs to be in the setup to ensure
   //that it catches any errors when program starts
   consoleOutput=cp5.addTextarea("consoleOutput")
-    .setPosition(1650*width/1920, 750*height/1100) 
+    .setPosition(1650*width/1920, 800*height/1100) 
     .setSize(330*width/1920, 200*height/1100)
     .setLineHeight(14*height/1100)
     .setColorValue(green) //color of font

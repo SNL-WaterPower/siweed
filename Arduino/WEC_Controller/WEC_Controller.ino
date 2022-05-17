@@ -31,6 +31,10 @@ volatile float amps[maxComponents];
 volatile float phases[maxComponents];
 volatile float freqs[maxComponents];
 
+const int buffSize = 100;    //number of data points buffered in the moving average filter
+volatile float powBuff[buffSize];
+volatile float avPower = 0;
+
 void setup()
 {
   initSerial();
@@ -70,6 +74,11 @@ void setup()
 
   unitTests();
   initInterrupts();
+
+  //fill moving average buffers with 0's:
+  for (int i = 0; i < buffSize; i++) {
+    powBuff[i] = 0;
+  }
 }
 volatile float encPos() {
   return encoderBuff.readCNTR() * (1 / encStepsPerTurn) * teethPerTurn * mPerTooth; //steps*(turns/step)*(m/turn)
@@ -80,28 +89,28 @@ void loop()
   power = -tauCommanded * vel; //negative power is negative work done by the WEC (absorbed power) This in inverted to make more sense to the user.
   readSerial();
 
-  if (power > l4Lim)
+  if (avPower > l4Lim)
   {
     digitalWrite(l1Pin, HIGH);
     digitalWrite(l2Pin, HIGH);
     digitalWrite(l3Pin, HIGH);
     digitalWrite(l4Pin, HIGH);
   }
-  else if (power > l3Lim)
+  else if (avPower > l3Lim)
   {
     digitalWrite(l1Pin, HIGH);
     digitalWrite(l2Pin, HIGH);
     digitalWrite(l3Pin, HIGH);
     digitalWrite(l4Pin, LOW);
   }
-  else if (power > l2Lim)
+  else if (avPower > l2Lim)
   {
     digitalWrite(l1Pin, HIGH);
     digitalWrite(l2Pin, HIGH);
     digitalWrite(l3Pin, LOW);
     digitalWrite(l4Pin, LOW);
   }
-  else if (power > l1Lim)
+  else if (avPower > l1Lim)
   {
     digitalWrite(l1Pin, HIGH);
     digitalWrite(l2Pin, LOW);
@@ -190,4 +199,19 @@ void unitTests() {
   }
   mode = oldMode;   //reset mode to what it was before unit tests
 
+}
+
+volatile void pushBuffer(volatile float* arr, volatile float f) {
+  for (volatile int i = buffSize - 1; i > 0; i--) {
+    arr[i] = arr[i - 1];
+  }
+  arr[0] = f;
+}
+volatile float averageArray(volatile float* arr) {
+  volatile float total = 0;
+  for (volatile int i = 0; i < buffSize; i++) {
+    total += arr[i];
+  }
+  total /= buffSize;
+  return total;
 }

@@ -101,4 +101,6 @@ void sendSerial() {  //called by interupt
     Serial.write('c');
     sendFloat(checksum());
   }
+  pushBuffer(powBuff, power);     //increment this buffer here so it happens at the same rate as the one in the GUI
+  avPower = averageArray(powBuff);
 }

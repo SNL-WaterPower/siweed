@@ -10,8 +10,8 @@ static final boolean dataLogging = false;    //if this is true, a .csv with most
 static final boolean basicMode = false;      //disables some control modes, to make the GUI simpler to use
 //Probe settings:    Modify based on what ports your probes are connected on. If no probe, use empty string.
 //The com port can be found in the Windows Device Manager or the OSSI Interface program.
-static String probe1PortName = "COM12";      //probe1 is plotted
-static String probe2PortName = "COM11";          //probe2 is only used for data logging.
+static String probe1PortName = "COM7";      //probe1 is plotted
+static String probe2PortName = "COM6";          //probe2 is only used for data logging.
 static int probeBaudRate = 9600;      //default value is 9600
 ////////////////////Scaling section:
 static final float[] powerThreshold = {1, 2, 3, 4};

@@ -8,7 +8,7 @@ public class Meter {
   int ymax = ymin+270*height/1100;
 
   Queue<Float> q;      //queue for moving average
-  int buffSize = 25;
+  int buffSize = 50;
   float averageVal;
   int originx, originy;
   float minVal, maxVal;
