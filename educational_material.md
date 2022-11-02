@@ -18,6 +18,8 @@ There are also premade slides giving an overview of wave energy and the wave tan
 
 ## Videos 
 
+ - [SIWEED video, Sandia National Labs](https://youtu.be/PcOHZWLTsHc)
+ - [SIWEED live demonstration, Sandia National Labs](https://digitalops.sandia.gov/Mediasite/Play/bbe17add12244893bdbcaecbce89f8881d)
  - [Energy 101: Marine and Hydrokinetic Energy Video, US Department of Energy](https://www.youtube.com/watch?v=LXsuU_ZC56E): Great ~2-minute video giving an overview of waterpower. Appropriate for all grade levels.
  - [Advances in WEC Dynamics and Controls, Sandia National Labs](https://www.youtube.com/watch?v=c4npWk_-Pjk): Overview of the controls research being done at Sandia 
 

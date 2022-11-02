@@ -15,7 +15,10 @@
 ## About The Project
 
 The Sandia Interactive Wave Energy Education Display (SIWEED) is a small portable wave tank to be used for outreach and engagement on wave energy converters (WECs) and, in particular, WEC control.
+Check out these videos to get a better idea of what SIWEED's all about:
 
+ - [SIWEED video](https://youtu.be/PcOHZWLTsHc)
+ - [SIWEED live demonstration](https://digitalops.sandia.gov/Mediasite/Play/bbe17add12244893bdbcaecbce89f8881d)
 
 <!-- GETTING STARTED -->
 ## Getting Started
