@@ -21,7 +21,8 @@ Check out these videos to get a better idea of what SIWEED's all about:
  - [SIWEED live demonstration](https://digitalops.sandia.gov/Mediasite/Play/bbe17add12244893bdbcaecbce89f8881d)
 
 If you're interested in building your own SIWEED, check out the [Getting Started](#getting-started) section of this README.
-If you're an educator or student in need of teaching materials/activities, checkout out the [Educational Materials document](https://github.com/SNL-WaterPower/siweed/blob/master/educational_material.md)
+(We're working on a paper for [*HardwareX*](https://www.hardware-x.com/) that will hopefully provide an even better guide along with some data analysis from using the system.)
+If you're an educator or student in need of teaching materials/activities, checkout out the [Educational Materials document](https://github.com/SNL-WaterPower/siweed/blob/master/educational_material.md).
 
 <!-- GETTING STARTED -->
 ## Getting Started
