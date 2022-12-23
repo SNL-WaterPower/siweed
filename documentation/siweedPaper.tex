@@ -33,7 +33,7 @@
 \textbf{Title:} A portable wave tank and wave energy converter for dissemination and outreach
 
 %Insert Authors
-\textbf{Authors:} \textit{Author one, author two, and author three}
+\textbf{Authors:} \textit{Nicholas Ross, Delaney Heileman, A. Gerrit Motes, Anwi Fomukong, Sean Pluemer, Francisco Colorbio, John Quinlan, Giorgio Bacelli, Steven J. Spencer, Ryan G. Coe}
 
 %Insert Affiliations
 \textbf{Affiliations:} Sandia National Laboratories, University of New Mexico
@@ -47,6 +47,7 @@
 \textbf{Abstract:} Wave energy converters are a nascent energy generation technology that harness the power in ocean waves.
 To assist in communicating both fundamental and complex concepts of wave energy, a small scale portable wave tank and wave energy converter have been developed.
 The system has been designed using commercial off-the-shelf components and the all design hardware and software are openly available for replication.
+Educational curriculum has also been developed to assist in using this hardware for classroom education.
 
 %Insert Keywords
 % At least 3 keywords. There is no limit on the no. of keywords you can list. Please remember that effective keywords should not repeat words appearing in your title, and should be neither too general nor too narrow.
@@ -80,7 +81,7 @@ The system has been designed using commercial off-the-shelf components and the a
   % \item \textit{Field measurements and sensors}
   \item \textit{Electrical engineering and computer science}
   \item \textit{Mechanical engineering and materials science}
-  \item \textit{Other (please specify) - Ocean engineering}
+  \item \textit{Ocean engineering}
   \end{itemize}
   \\ 
 \hline \textbf{Open source license} &
@@ -107,30 +108,53 @@ Specifically, the SIWEED demonstrates the causal feedback control and device des
 
 A wide variety of similar educational wave tanks and tow tanks have been built, but few have been documented.
 \citet{unger2006creating} reworked a tow tank at MIT to enable remote operation via the internet.
-\citet{Trust2015} created a tank with a similar size and objective, but oriented at demostrating the effectiveness of coastal flood controls.
+\citet{Trust2015} created a tank with a similar size and objective, but oriented at demonstrating the effectiveness of coastal flood controls.
 There seem to be two major iterations, one electrically driven by a paddle like wave maker, and one plunger type driven mechanically by hand. 
 That team has also make multiple similar hydraulic flume tanks for demonstration purposes.
 \citet{Ivan2016} has an educational wave tank on display in the National Museum of Scotland, but the waves do not explicitly interact with any bodies on the surface. 
 %\citet{Y.H.Yu} Made a wave tank to study floating- point absorbers as wave energy converters, showing similarities to this project, but they use a flap-type wavemaker, and their tank is much larger and not portable.
 
-This is a novel expansion on similar small-scale educational wave tanks, as the user is able to control both the waves and the WEC device, and the wave maker is driven by a ballscrew.
+This is a novel expansion on similar small-scale educational wave tanks, as the wave maker is driven by a ballscrew, and the user is able to control both the waves and the WEC device.
 The parameters of the wave are also much more controllable in this project than in similar small wave tanks.
-The primary intended audience is college students and above, but there is implemented functionality to run a simplified version of the GUI for lower age groups.
+Users are able to select various control modes, the primary being a sine wave with variable amplitude and frequency.
+Another control mode dictates a static position, and the last is a JONSWAP spectrum, a combination of many sine waves, meant to imitate the chaos of a natural wave environment.
+The primary intended audience is college students and above, but there is implemented functionality to run a simplified version of the GUI for lower age groups, as well as additional curriculum for those younger groups.
 
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=0.5\textwidth]{diagrams/SIWEED_CAD.png}
+  \caption{SIWEED CAD Assembly}
+  \label{fig:CAD}
+\end{figure}
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=0.5\textwidth]{diagrams/Sandia_Wave_Tank_Exhibit_10x10_inlinebooth.png}
+  \caption{SIWEED Presentation layout}
+  \label{fig:Exhibit}
+\end{figure}
 
 \section{Hardware description} % Describe the hardware, highlighting the customization rather than the steps of the procedure. Highlight how it differs/which advantage it offers over pre-existing methods. For example, how could this hardware: be compared to other hardware in terms of cost or ease of use, be used in the development of further designs in a particular area, and so on. Add 3-5 bulleted points to broadly explain to other researchers how the hardware could be potentially useful to them, for either standard or novel laboratory tasks, inside or outside of the original user community.
 The SIWEED is composed of a 1.5\,m $\times{}$ 0.3\,m $\times{}$ 0.5\,m acrylic tank, filled to roughly 0.3\,m deep, housing a vertical plunger style wave maker (see, e.g., \cite{hyun1976simplified}), and a single body WEC modeled on the WaveBot~\cite{Coe2016a}.
 A system diagram is shown in \figurename~\ref{fig:siweed_layout}.
+
+
+Two Arduino Due micro controllers are used to control and acquire signals from the WEC and wave maker, communicating with the GUI through USB Serial.
+The Windows laptop acts as the core of the system, with the two Arduino Dues attached through USB. 
+Each Arduino is then attached to the various devices it communicates with.
+It is worth noting that Dues are used for their higher clock speeds, but since they operate at 3.3v, multiple level shifters are used to enable communication between the Arduino Dues and the components that use 5v logic.
+
+
+The system is controlled by a Windows PC running a graphical user interface (GUI) developed using Processing\footnote{\url{https://processing.org}} and the controlP5 library\footnote{\url{http://www.sojamo.de/libraries/controlP5/}}.
+This GUI is intended to be used with a touchscreen interface, but it is also fully functional with a mouse.
+A screen shot of the GUI is shown in \figurename~\ref{fig:siweed_guiScreenShot}.
+It is divided into three sections: The left instructional side, ``Mission Control", and ``System Status".
+
 \begin{figure}[tb]
   \centering
   \includegraphics[width=1\textwidth]{diagrams/SystemLayout.png}
   \caption{System layout diagram.}
   \label{fig:siweed_layout}
 \end{figure}
-The system is controlled by a Windows PC running a graphical user interface (GUI) developed using Processing\footnote{\url{https://processing.org}} and the controlP5 library\footnote{\url{http://www.sojamo.de/libraries/controlP5/}}.
-A screen shot of the GUI is shown in \figurename~\ref{fig:siweed_guiScreenShot}.
-It is divided into three sections: The left instructional side, ``Mission Control", and ``System Status".
-
 \begin{figure}[tb]
   \centering
   \includegraphics[width=1\textwidth]{diagrams/siweed_guiScreenShot.png}
@@ -140,13 +164,26 @@ It is divided into three sections: The left instructional side, ``Mission Contro
 
 The left side of the ``Mission Control" section of the GUI pertains to control of the wave maker, which allows the user to switch between operational modes (``jog,'' ``function,'' ``sea state,'' and ``off'') and set the relevant parameters.
 If, for example, the system is in ``sea state'' mode, the user can set the significant wave height ($H_s$), peak frequency ($f_p$), and peakedness factor ($\gamma$) for a JONSWAP wave spectrum.
+The ``function" mode commands a simple sine wave, and so there parameters are amplitude and frequency. 
+The `jog" mode simply commands a static position for the plunger to go to, so the only input parameter is that command position. 
+There are only as many input sliders displayed as there are inputs to the active control mode. 
+For example, if the selected mode was ``jog", only one slider would be present in that section of the GUI for the user to interact with.
 
-The right side of the ``Mission Control" section of the GUI  contains controls for the WEC, which can be set into ``torque'' mode; in which the user directly sets a commanded torque, ``feedback'' mode; where proportional and integral feedback factors can be set by the user; ``multi-sine'' mode, which allows for open-loop multi-sine signals to be set by the user; and ``off.''
+The right side of the ``Mission Control" section of the GUI  contains controls for the WEC, which can be set into ``torque'' mode; in which the user directly sets a commanded torque, ``feedback'' mode; where proportional and integral feedback factors can be set by the user; ``SID'' mode, which represents system identification and allows for open-loop multi-sine signals to be set by the user; and ``off.''
+The ``SID" works with the same inputs and JONSWAP control method as the ``Sea State" mode for the wave maker, but commanding torque instead of position.
+Where the purpose of the JONSWAP in the wave maker controls is to replicate a natural wave state, as a torque controller for the WEC its purpose is only to provide a wide variety of torque inputs. 
+This is useful when characterizing the hardware using recorded data in post-analysis.
 
 The ``System Status" section shows two plots, one for the WEC and one for the wave maker, with each allowing the user to choose what data is plotted. 
-Below the plots are an FFT of the generated waves, and a radial meter that displays the hypothetical generated power of the WEC.
-
-Two Arduino Due microcontrollers are used to control and acquire signals from the WEC and wave maker.
+There are multiple options for the data included in each of these plots, with the ability to plot all any combination of variables simultaneously.
+Each is plotted in a different color, allowing the user to differentiate the various variables on each plot.
+The available variables in the wave maker plot(left side) are ``Wave Maker Position"(as measured by the encoder) and ``Wave Elevation"(As measured from one of the submerged probes).
+The WEC plot variables are ``Position"(measured from an encoder), ``Velocity"(differentiated from position), ``Torque"(derived from a torque constant and motor current), and ``Power"(as derived below).
+Below the plots are an FFT of the generated waves(measured from the encoder), and a radial meter that displays the hypothetical generated power of the WEC.
+That hypothetically generated power meter is driven by the same variable as the ``Power" variable in the WEC information plot above the meter, given by the following formula:
+\begin{equation}
+  Power = -Commanded Torque \cdot Velocity
+\end{equation}
 
 A number of key factors of SIWEED are:
 
@@ -155,7 +192,7 @@ A number of key factors of SIWEED are:
   This will enabled interested researchers and students to efficiently develop replicates and variations of the SIWEED design for their own purposes.
   \item \textbf{Portability:} To allow for transport to conferences and outreach events, the SIWEED has been specifically designed to allow for easy transportation.
   \item \textbf{WEC control:} In addition to demonstrating the physics of ocean waves, the SIWEED allows users to interact with a WEC control system to better understand the principles of reactive feedback control to maximize power absorption for the waves.
-  \item \textbf{Student-led design:} The SIWEED project has been a student-led design project involving six undergraduate engineering students.
+  \item \textbf{Student-led design:} The SIWEED project has been a student-led design project involving undergraduate engineering students.
   \item \textbf{Curriculum:} The SIWEED repository includes a curriculum for students K-12 based on the Next Generation Science Standards \cite{NextGenScience2021}. 
 The repository contains a presentation and a document intended to be given to the teacher beforehand. 
 The presentation explains water power and Sandia National Labs' role within it, and then goes into more detail about wave energy converters and how the SIWEED demonstration works.
@@ -183,7 +220,8 @@ The teacher resources document contains general information about the project, a
 \textbf{Design filename} & \textbf{File type} & \textbf{Open source license} & \textbf{Location of the file(s)} \\\hline
 %Insert design files
 %\textit{Design file 1} & \textit{e.g. CAD file, figures, videos} & \textit{All designs must be submitted under an open hardware license. Enter the corresponding open source license for the file.} & \textit{Enter a link to the online location or the sentence: ``available with the article'', as appropriate}  \\\hline
-CAD & XX& GNU GENERAL PUBLIC LICENSE & \textit{online repository}\\\hline
+Final SIWEED Town & .SLDASM & GNU GENERAL PUBLIC LICENSE & \textit{online repository} \\\hline
+Hardware Hat & .SLDPRT & GNU GENERAL PUBLIC LICENSE & \textit{online repository} \\\hline
 WEC\_Controller\slash interrupts.ino & .ino & GNU GENERAL PUBLIC LICENSE& \textit{online repository} \\\hline
 WEC\_Controller\slash Serial.ino & .ino & GNU GENERAL PUBLIC LICENSE& \textit{online repository} \\\hline
 WEC\_Controller\slash WEC\_Controller.ino & .ino & GNU GENERAL PUBLIC LICENSE& \textit{online repository} \\\hline
@@ -205,6 +243,12 @@ Complex.java & .java& GNU GENERAL PUBLIC LICENSE & \textit{online repository} \\
 % For each design file listed in the summary above, include a short description of the file below (one or two sentences)
 \textbf{CAD Model:}
 The CAD assembly includes all functional physical parts of the SIWEED system, with accurate dimensions that can be referenced during fabrication and assembly.
+Aesthetic details, like the town are intentionally vague in the CAD model.
+Physical implementation of artistic aspects are not important for functionality, but are thought to add significantly to audience engagement.
+The files in the repository are Solidworks models, with all dependencies included in a compressed archive.
+There is an additional part labeled ``Hardware Hat". 
+This was a late addition that was 3D printed to cover potential pinch points on the model, and prevent sunlight from interfering with the infrared limit switches. 
+Because it's a late addition, the part is included in the repository, but not in the final assembly. 
 \par
 
 
@@ -221,6 +265,7 @@ These files are not listed here but are all included in the online repository.
 Similarly to the Processing sketch, the two Arduino sketches are broken into multiple files for organization.
 Once again, all files are required for the sketch to function.
 It is important to note that the sketches are also dependent on various imported libraries, which are included in the online repository, but not listed here.
+Some of these libraries are modified from their original versions, so it is important that they are pulled from the project repository, and not the libraries' original sources.
 
 \section{Bill of materials}
 % For a complex Bill of Materials, the complete Bill of Materials (editable spreadsheet file e.g., ODS file type or PDF file) can be uploaded in an open access online location such as the Open Science Framework repository. Include the link here. Alternatively, the Bill of Materials can be uploaded at the time of submission on the online Elsevier submission interface as supplementary material.
@@ -253,6 +298,9 @@ The complete Bill of Materials can be found here: XX-put link here before upload
 Using the System Layout diagram in \figurename~\ref{fig:siweed_layout}, the bill of materials, and other dimensions listed in this document, a functionally similar version of this wavetank can be reconstructed.
 Many parts can be substituted with similar ones, such as the laptop, transistors, power supply, or the tank itself.
 Software specific hardware, such as the Arduinos or Encoder Buffers should not be substituted. 
+It is important to consider safety during reconstruction: Electrical isolation and grounding, as well as guarding pinch points, is essential for safe usage.
+
+
 Software setup:
 \begin{itemize}
 \item Download the latest version of Arduino IDE and Processing IDE.
@@ -279,7 +327,11 @@ After performing the setup described in the build instructions, the project can 
 \item (optional)Edit modifiers. These are booleans at the top of the code that will do things like enable basic mode, debugging, or data logging.
 \item Click ``Run".
 \item The GUI will open, allow some time for it to load.
-\item In the console, which will either be in the GUI, made visible by pressing the console button in the bottom right corner, or in the Processing console, depending on your boolean modifiers, unit tests should be visible that can be used to verify that everything is functioning properly.
+\item In the console, which will either be in the GUI, made visible by pressing the console button in the bottom right corner, or in the Processing console, depending on your boolean modifiers, unit tests should be visible that can be used to verify that everything is functioning properly. 
+Note that the color of the console button in the GUI is representative of the serial checksum status.
+When the received checksum matches the calculated checksum(functioning nominally), the button will be a green/yellow.
+Otherwise it will be gray, indicating one of the Arduinos' checksum does not match, and the system is out of sync. 
+This will result in the state of the GUI not accurately representing the state of the physical system.
 \end{itemize}
 
 \section{Validation and characterization}
@@ -326,6 +378,7 @@ The average offset shows that the friction is about 0.45\,mNm.
 \item \textbf{Wave Probes:}
 The readings from the wave probes could be verified by attaching them to the wave maker, which has a very precise encoder that allows for accurate changes in displacement. 
 Moving the wave maker with the wave probe attached and comparing the displacement data from both of them was used to make sure the wave probe was providing accurate readings. 
+
 \item \textbf{WEC feedback control}
 The PD controller functions on the following formula:
 
