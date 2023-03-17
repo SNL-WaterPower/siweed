@@ -134,17 +134,29 @@ The primary intended audience is college students and above, but there is implem
 \end{figure}
 
 \section{Hardware description} % Describe the hardware, highlighting the customization rather than the steps of the procedure. Highlight how it differs/which advantage it offers over pre-existing methods. For example, how could this hardware: be compared to other hardware in terms of cost or ease of use, be used in the development of further designs in a particular area, and so on. Add 3-5 bulleted points to broadly explain to other researchers how the hardware could be potentially useful to them, for either standard or novel laboratory tasks, inside or outside of the original user community.
-The SIWEED is composed of a 1.5\,m $\times{}$ 0.3\,m $\times{}$ 0.5\,m acrylic tank, filled to roughly 0.3\,m deep, housing a vertical plunger style wave maker (see, e.g., \cite{hyun1976simplified}), and a single body WEC modeled on the WaveBot~\cite{Coe2016a}.
+The SIWEED is composed of a 1.5\,m $\times{}$ 0.3\,m $\times{}$ 0.5\,m acrylic tank, filled to roughly 0.3\,m deep, housing a vertical plunger style wave maker (see, e.g., \cite{hyun1976simplified}), and a single body WEC modeled on the WaveBot~\cite{Coe2016a}. 
+The system is centrally controlled by a Windows PC running a graphical user interface (GUI) developed using Processing\footnote{\url{https://processing.org}} and the controlP5 library\footnote{\url{http://www.sojamo.de/libraries/controlP5/}}.
+Seperate hardware nodes are then manages by two Arduinos.
+%\begin{itemize}
+%\item \textbf{Hardware}
+\subsection{Hardware}
 A system diagram is shown in \figurename~\ref{fig:siweed_layout}.
-
-
 Two Arduino Due micro controllers are used to control and acquire signals from the WEC and wave maker, communicating with the GUI through USB Serial.
 The Windows laptop acts as the core of the system, with the two Arduino Dues attached through USB. 
 Each Arduino is then attached to the various devices it communicates with.
 It is worth noting that Dues are used for their higher clock speeds, but since they operate at 3.3v, multiple level shifters are used to enable communication between the Arduino Dues and the components that use 5v logic.
 
+The Windows laptop runs a Processing application that acts as the GUI, data logger, and serial communication manager.
+The Arduinos recieve their commands from Processing over usb serial, and perform individual control loops based on control states dictated by the GUI.
+One Due controls the movement of the Wavemaker plunger, while the other controls the torque feedback of the WEC and lights in the model town.
+Each send data back to the Processing GUI for data logging and plotting purposes.
 
-The system is controlled by a Windows PC running a graphical user interface (GUI) developed using Processing\footnote{\url{https://processing.org}} and the controlP5 library\footnote{\url{http://www.sojamo.de/libraries/controlP5/}}.
+The Arduino Dues each have a number of components they communicate with through various protocols(PWM, SPI, Analog).
+These perform tasks like encoder buffering, motor control, and signal generation.
+The connections can be seen in \figurename~\ref{fig:siweed_layout}, but which protocols each individual component use are most easily discerned from the Arduino source code.
+
+%\item \textbf{Graphical User Interface}
+\subsection{Graphical User Interface}
 This GUI is intended to be used with a touchscreen interface, but it is also fully functional with a mouse.
 A screen shot of the GUI is shown in \figurename~\ref{fig:siweed_guiScreenShot}.
 It is divided into three sections: The left instructional side, ``Mission Control", and ``System Status".
@@ -184,6 +196,8 @@ That hypothetically generated power meter is driven by the same variable as the 
 \begin{equation}
   Power = -Commanded Torque \cdot Velocity
 \end{equation}
+
+%\end{itemize}
 
 A number of key factors of SIWEED are:
 
@@ -265,7 +279,7 @@ These files are not listed here but are all included in the online repository.
 Similarly to the Processing sketch, the two Arduino sketches are broken into multiple files for organization.
 Once again, all files are required for the sketch to function.
 It is important to note that the sketches are also dependent on various imported libraries, which are included in the online repository, but not listed here.
-Some of these libraries are modified from their original versions, so it is important that they are pulled from the project repository, and not the libraries' original sources.
+Some of these libraries are modified from their original versions, so it is important that they are pulled from this project repository, and not the libraries' original sources.
 
 \section{Bill of materials}
 % For a complex Bill of Materials, the complete Bill of Materials (editable spreadsheet file e.g., ODS file type or PDF file) can be uploaded in an open access online location such as the Open Science Framework repository. Include the link here. Alternatively, the Bill of Materials can be uploaded at the time of submission on the online Elsevier submission interface as supplementary material.
@@ -361,7 +375,8 @@ The ``fit1'' line represents the best linear fit of the entire data set, but the
   \label{fig:TorqueConstant}
 \end{figure}
 This provides an estimated torque constant of about 7.52\,mNm/A, which is within 4\% of the factory stated constant of 7.8\,mNm/A.
-\linebreak
+
+
 Since torque is being estimated from displacement and the frequency is low (inertial and viscous effects are small), the friction shows up as a ``constant'' offset from the ideal torque constant and doesn't affect the slope.
 This allows the friction to be seen as half the offset between the data points as the wave maker moves up, and the points as it moves down. 
 Plotting the torque error using the calculated torque constant against the current gives \figurename~\ref{fig:TorqueError}.
@@ -373,11 +388,16 @@ Plotting the torque error using the calculated torque constant against the curre
   \label{fig:TorqueError}
 \end{figure}
 
-The average offset shows that the friction is about 0.45\,mNm.
+The average offset shows that the friction is about 0.45\,mNm in this operational envelope.
 
 \item \textbf{Wave Probes:}
-The readings from the wave probes could be verified by attaching them to the wave maker, which has a very precise encoder that allows for accurate changes in displacement. 
-Moving the wave maker with the wave probe attached and comparing the displacement data from both of them was used to make sure the wave probe was providing accurate readings. 
+The readings from the wave probes could be verified by attaching them to the wave maker, which has a very precise encoder that allows for accurate changes in displacement.
+Moving the wave maker with the wave probe attached and comparing the displacement data from both of them was used to make sure the wave probe was providing accurate readings.
+
+It was found having two wave probes as close at they are, roughly 1ft apart, was problematic.
+Changing the depth of one probe seemed to also adjust the reading of the nearby, stationary probe.
+It is believed this is caused by a sort of capacitive coupling, but a solution was never pursued.
+Known work arounds are only using one probe, or powering the second probe off during operation.
 
 \item \textbf{WEC feedback control}
 The PD controller functions on the following formula:
@@ -386,11 +406,61 @@ The PD controller functions on the following formula:
   \tau = kp \cdot p + -kd \cdot v
 \end{equation}
 
-\noindent{}Here, $\tau$ is the calculated torque, $kp$ is the user defined proportional gain, $p$ is the position in meters, $kd$ is the user defined derivative gain, and $v$ is the velocity, in meters per second, calculated by the change in position over the last 10 milliseconds. 
-By logging the inputs and output of the control system through a range of user inputs, its performance can be verified demonstrated and verified.
-\figurename~\ref{fig:XX} shows the controller response with zero D gain, and stepped P gain.
-\figurename~\ref{fig:XX} Is similar, but with zero P gain and stepped D gain.
-XX: in a specific kp kd region, plot pos, vel, and the commanded torque and expected torque
+Here, $\tau$ is the calculated torque, $kp$ is the user defined proportional gain, $p$ is the position in meters, $kd$ is the user defined derivative gain, and $v$ is the velocity, in meters per second, calculated by the change in position over the last 10 milliseconds. 
+Using this control method allows the WEC to be controlled as a spring and damper, with the proportional gain $kp$ adjusting the strength of the spring, and the derivative gain $kd$ adjusting the stregth of the damper.
+Unlike a physical spring, this ``spring'' can both push device towards center, or push it away, depending on the sign of the gain.
+A positive $kp$ will act as a decentering force, whereas a negative $kp$ will center the WEC to the waterline, similarly to a physical spring.
+
+This calculation is done on the Arduino Due microcontroller resposible for controlling the WEC, which commands an output torque through PWM to the WEC motor controller.
+The position and velocity are determined with an encoder, while the $kp$ and $kd$ inputs are set by the user in the GUI, which the Arduino recieves through usb serial.
+
+By logging the inputs and output of the control system through a range of user inputs, its performance can be verified.
+Initial tests showed a delay of three samples(100\,ms) in the control loop.
+This was found to be an error with the serial communication checksum function, and has since been fixed.
+Control loop response times can now be verified as less than 33\,ms, as the data logging control loop runs at 30\,hz and shows a delay of one sample or less.
+
+\figurename~\ref{fig:TorqueCommanded} shows the controller during typical operation. 
+The commanded torque was calculated as per above formula, while the measured torque was taken from an analog output on the WEC motor controller that measures current, then multiplying it by the known torque contstant.
+This shows us how the PD control algoritm and motor controller react to our given inputs.
+As the linearity of the plot shows, the measured output torque closely matches the expected torque.
+
+It can be seen near the ends of the plot that the torque saturates, but not always.
+This is the result of a protection written into the WEC motor controller, and can be adjusted by what is referred to as the ``Thermal Time Constant".
+When commanded to apply a torque over an amplitude of about __XX____(as shown by \figurename~\ref{fig:TorqueCommanded}), the motor controller will apply this torque for only some time before saturating at the maximum nominal torque.
+The linear interior data of \figurename~\ref{fig:TorqueCommanded} shows that operation is as expected when the commanded torque is below the nominal limit of about __XX___. 
+Under normal operation, this thermal protection can only be triggered from high amplitude slow waves with a high magnitude negative $kp$, a situation that was not found to occur often with user testing.
+If it were to become and issue, the the range of possible $kp$ commands could be made more limiting to avoid any saturation triggers.
+
+While close fitting, there is still error present in this control loop. 
+ \figurename~\ref{fig:ErrorHistogram} Shows a histogram of the measured torque subtracted from the expected torque, giving us the error.
+In these particular user tests, the RMS error was ____XX___.
+
+Part of what has to be considered with this error is noise in the analog signal that is used to read amperage and calculate measured torque.
+To characterize this, zero torque can be commanded, and then the measurement analyzed.  
+\figurename~\ref{fig:NoiseHistogram} shows a histogram of the torque when a zero command is sent.
+This gives a RMS error of _______, and a noise band of ______, where 90\% of sampes lie between -______ and _______.
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=0.5\textwidth]{diagrams/TorqueCommanded.pdf}
+  \caption{Torque Measured vs Torque Commanded}
+  \label{fig:TorqueCommanded}
+\end{figure}
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=0.5\textwidth]{diagrams/ErrorHistogram.pdf}
+  \caption{Error Histogram}
+  \label{fig:ErrorHistogram}
+\end{figure}
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=0.5\textwidth]{diagrams/NoiseHistogram.pdf}
+  \caption{Noise Histogram}
+  \label{fig:NoiseHistogram}
+\end{figure}
+
 \end{itemize}
 
 \section{Declaration of interest}
