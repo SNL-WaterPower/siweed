@@ -10,6 +10,8 @@
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage[square,numbers,sort&compress]{natbib}
+\usepackage{siunitx}
+\sisetup{output-exponent-marker=\ensuremath{\mathrm{e}}}
 \newlist{selectlist}{itemize}{2}
 \setlist[selectlist]{label=$\square$,leftmargin=*,noitemsep,topsep=0pt}
 
@@ -114,7 +116,7 @@ That team has also make multiple similar hydraulic flume tanks for demonstration
 \citet{Ivan2016} has an educational wave tank on display in the National Museum of Scotland, but the waves do not explicitly interact with any bodies on the surface. 
 %\citet{Y.H.Yu} Made a wave tank to study floating- point absorbers as wave energy converters, showing similarities to this project, but they use a flap-type wavemaker, and their tank is much larger and not portable.
 
-This is a novel expansion on similar small-scale educational wave tanks, as the wave maker is driven by a ballscrew, and the user is able to control both the waves and the WEC device.
+This is a novel expansion on similar small-scale educational wave tanks, as the wave maker is driven by a ball screw, and the user is able to control both the waves and the WEC device.
 The parameters of the wave are also much more controllable in this project than in similar small wave tanks.
 Users are able to select various control modes, the primary being a sine wave with variable amplitude and frequency.
 Another control mode dictates a static position, and the last is a JONSWAP spectrum, a combination of many sine waves, meant to imitate the chaos of a natural wave environment.
@@ -147,7 +149,7 @@ Each Arduino is then attached to the various devices it communicates with.
 It is worth noting that Dues are used for their higher clock speeds, but since they operate at 3.3v, multiple level shifters are used to enable communication between the Arduino Dues and the components that use 5v logic.
 
 The Windows laptop runs a Processing application that acts as the GUI, data logger, and serial communication manager.
-The Arduinos recieve their commands from Processing over usb serial, and perform individual control loops based on control states dictated by the GUI.
+The Arduinos receive their commands from Processing over usb serial, and perform individual control loops based on control states dictated by the GUI.
 One Due controls the movement of the Wavemaker plunger, while the other controls the torque feedback of the WEC and lights in the model town.
 Each send data back to the Processing GUI for data logging and plotting purposes.
 
@@ -252,8 +254,8 @@ fft.java & .java& GNU GENERAL PUBLIC LICENSE & \textit{online repository} \\\hli
 Complex.java & .java& GNU GENERAL PUBLIC LICENSE & \textit{online repository} \\\hline
 \end{tabu}
 \newline
-
-
+The referenced online repository is here: \href{https://zenodo.org/record/7502670}{https://zenodo.org/record/7502670}.
+\newline
 % For each design file listed in the summary above, include a short description of the file below (one or two sentences)
 \textbf{CAD Model:}
 The CAD assembly includes all functional physical parts of the SIWEED system, with accurate dimensions that can be referenced during fabrication and assembly.
@@ -287,7 +289,7 @@ Some of these libraries are modified from their original versions, so it is impo
 % > To make it easy to tell which item in the Bill of Materials corresponds to which component in your design file(s), use matching designators in both places, or otherwise explain the correspondence.
 
 % > For material type, select from: Metal, semi-conductor, ceramic, polymer, biomaterial, organic, inorganic, composite, nanomaterial, semiconductor, non-specific, or other  
-The complete Bill of Materials can be found here: XX-put link here before uploading. Note that a SIWEED system can be assembled with any tank on hand (e.g., a fish tank) and any Windows PC capable of running the Processing IDE; as these components can contribute significantly to system cost, the BOM lists the tank and computer separately from the remainder of the components.
+The complete Bill of Materials can be found here: \href{https://zenodo.org/record/7502670}{https://zenodo.org/record/7502670}. Note that a SIWEED system can be assembled with any tank on hand (e.g., a fish tank) and any Windows PC capable of running the Processing IDE; as these components can contribute significantly to system cost, the BOM lists the tank and computer separately from the remainder of the components.
 %\textit{For a complex Bill of Materials, the complete Bill of Materials (editable spreadsheet file e.g., ODS file type or PDF file) can be uploaded in an open access online location such as the Open Science Framework repository. Include the link here. Alternatively, the Bill of Materials can be uploaded at the time of submission on the online Elsevier submission interface as supplementary material.}
 %\begin{itemize}
 %\item \textit{To make it easy to tell which item in the Bill of Materials corresponds to which component in your design file(s), use matching designators in both places, or otherwise explain the correspondence.}
@@ -337,7 +339,8 @@ After performing the setup described in the build instructions, the project can 
 \item Power on the wavetank, ensuring any kill switches are closed, and any pinch points are clear.
 \item Open processing.exe.
 \item File $>$ Open $>$ siweedGUI.pde 
-(Ex: C\textbackslash Users\textbackslash user\textbackslash Documents\textbackslash GitHub\textbackslash siweed\textbackslash Processing\textbackslash siWeedGUI\textbackslash siweedGUI.pde) 
+(Ex: C\textbackslash Users\textbackslash user\textbackslash Documents\textbackslash GitHub\textbackslash siweed\textbackslash Processing\textbackslash 
+\newline siWeedGUI\textbackslash siweedGUI.pde) 
 \item (optional)Edit modifiers. These are booleans at the top of the code that will do things like enable basic mode, debugging, or data logging.
 \item Click ``Run".
 \item The GUI will open, allow some time for it to load.
@@ -397,7 +400,7 @@ Moving the wave maker with the wave probe attached and comparing the displacemen
 It was found having two wave probes as close at they are, roughly 1ft apart, was problematic.
 Changing the depth of one probe seemed to also adjust the reading of the nearby, stationary probe.
 It is believed this is caused by a sort of capacitive coupling, but a solution was never pursued.
-Known work arounds are only using one probe, or powering the second probe off during operation.
+Known work-arounds are only using one probe, or powering the second probe off during operation.
 
 \item \textbf{WEC feedback control}
 The PD controller functions on the following formula:
@@ -407,12 +410,12 @@ The PD controller functions on the following formula:
 \end{equation}
 
 Here, $\tau$ is the calculated torque, $kp$ is the user defined proportional gain, $p$ is the position in meters, $kd$ is the user defined derivative gain, and $v$ is the velocity, in meters per second, calculated by the change in position over the last 10 milliseconds. 
-Using this control method allows the WEC to be controlled as a spring and damper, with the proportional gain $kp$ adjusting the strength of the spring, and the derivative gain $kd$ adjusting the stregth of the damper.
+Using this control method allows the WEC to be controlled as a spring and damper, with the proportional gain $kp$ adjusting the strength of the spring, and the derivative gain $kd$ adjusting the strength of the damper.
 Unlike a physical spring, this ``spring'' can both push device towards center, or push it away, depending on the sign of the gain.
 A positive $kp$ will act as a decentering force, whereas a negative $kp$ will center the WEC to the waterline, similarly to a physical spring.
 
-This calculation is done on the Arduino Due microcontroller resposible for controlling the WEC, which commands an output torque through PWM to the WEC motor controller.
-The position and velocity are determined with an encoder, while the $kp$ and $kd$ inputs are set by the user in the GUI, which the Arduino recieves through usb serial.
+This calculation is done on the Arduino Due micro controller responsible for controlling the WEC, which commands an output torque through PWM to the WEC motor controller.
+The position and velocity are determined with an encoder, while the $kp$ and $kd$ inputs are set by the user in the GUI, which the Arduino receives through USB serial.
 
 By logging the inputs and output of the control system through a range of user inputs, its performance can be verified.
 Initial tests showed a delay of three samples(100\,ms) in the control loop.
@@ -420,25 +423,29 @@ This was found to be an error with the serial communication checksum function, a
 Control loop response times can now be verified as less than 33\,ms, as the data logging control loop runs at 30\,hz and shows a delay of one sample or less.
 
 \figurename~\ref{fig:TorqueCommanded} shows the controller during typical operation. 
-The commanded torque was calculated as per above formula, while the measured torque was taken from an analog output on the WEC motor controller that measures current, then multiplying it by the known torque contstant.
-This shows us how the PD control algoritm and motor controller react to our given inputs.
+The commanded torque was calculated as per above formula, while the measured torque was taken from an analog output on the WEC motor controller that measures current, then multiplying it by the known torque constant.
+This shows us how the PD control algorithm and motor controller react to our given inputs.
 As the linearity of the plot shows, the measured output torque closely matches the expected torque.
+The standard deviation of the torque during user testing showed to by \num{3.8286e-04}\,Nm.
 
-It can be seen near the ends of the plot that the torque saturates, but not always.
+
+There is a theoretical possibility to experience saturation near the limits of our torque output.
 This is the result of a protection written into the WEC motor controller, and can be adjusted by what is referred to as the ``Thermal Time Constant".
-When commanded to apply a torque over an amplitude of about __XX____(as shown by \figurename~\ref{fig:TorqueCommanded}), the motor controller will apply this torque for only some time before saturating at the maximum nominal torque.
-The linear interior data of \figurename~\ref{fig:TorqueCommanded} shows that operation is as expected when the commanded torque is below the nominal limit of about __XX___. 
-Under normal operation, this thermal protection can only be triggered from high amplitude slow waves with a high magnitude negative $kp$, a situation that was not found to occur often with user testing.
-If it were to become and issue, the the range of possible $kp$ commands could be made more limiting to avoid any saturation triggers.
+When commanded to apply a torque over what the controller deems as nominal, the motor controller will apply this torque for only some time before saturating at the maximum nominal torque.
+This was seem during lab limit testing, occurring around  \num{3.5e-3}\,Nm, but not during any user tests, as the commanded torque was never that high.
+If it were to become and issue, the the range of possible $kp$ and $kd$ commands and torque jog commands could be made more limiting in the GUI to avoid any saturation triggers.
 
-While close fitting, there is still error present in this control loop. 
+While fitting closely, there is still error present in this control loop. 
  \figurename~\ref{fig:ErrorHistogram} Shows a histogram of the measured torque subtracted from the expected torque, giving us the error.
-In these particular user tests, the RMS error was ____XX___.
+In these particular user tests, the RMS error was \num{9.84e-05}\,Nm, while the standard deviation of the torque measurement was \num{3.82e-04}\,Nm.
 
 Part of what has to be considered with this error is noise in the analog signal that is used to read amperage and calculate measured torque.
 To characterize this, zero torque can be commanded, and then the measurement analyzed.  
+For simplified data collection, user testing data sets were truncated to only sections where the commanded torque was zero.
 \figurename~\ref{fig:NoiseHistogram} shows a histogram of the torque when a zero command is sent.
-This gives a RMS error of _______, and a noise band of ______, where 90\% of sampes lie between -______ and _______.
+It can be easily seen that there is a slight positive offset in the noise, which is assumed to come from inaccuracy in the analog reporting on the motor controller, or the analog reading on the Arduino Due.
+This offset varies from test to test, and can be negative.
+Using this method of analyzing only data points where the torque command is zero over multiple tests gives a noise band of about \num{8e-5}\,Nm, where 90\% of sampes lie between -\num{4e-5}\,Nm and\num{4e-5}\,Nm.
 
 \begin{figure}[tb]
   \centering
