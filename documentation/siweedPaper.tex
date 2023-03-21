@@ -136,11 +136,18 @@ The primary intended audience is college students and above, but there is implem
 \end{figure}
 
 \section{Hardware description} % Describe the hardware, highlighting the customization rather than the steps of the procedure. Highlight how it differs/which advantage it offers over pre-existing methods. For example, how could this hardware: be compared to other hardware in terms of cost or ease of use, be used in the development of further designs in a particular area, and so on. Add 3-5 bulleted points to broadly explain to other researchers how the hardware could be potentially useful to them, for either standard or novel laboratory tasks, inside or outside of the original user community.
-The SIWEED is composed of a 1.5\,m $\times{}$ 0.3\,m $\times{}$ 0.5\,m acrylic tank, filled to roughly 0.3\,m deep, housing a vertical plunger style wave maker (see, e.g., \cite{hyun1976simplified}), and a single body WEC modeled on the WaveBot~\cite{Coe2016a}. 
+The SIWEED is composed of a 1.5\,m $\times{}$ 0.3\,m $\times{}$ 0.5\,m acrylic tank, filled to roughly 0.3\,m deep, housing a vertical plunger style wave maker (see, e.g., \cite{hyun1976simplified}), and a single body WEC modeled on the WaveBot~\cite{Coe2016a}.
+A photograph of the system is shown in \figurename~\ref{fig:siweed_photo_with_callouts}.
 The system is centrally controlled by a Windows PC running a graphical user interface (GUI) developed using Processing\footnote{\url{https://processing.org}} and the controlP5 library\footnote{\url{http://www.sojamo.de/libraries/controlP5/}}.
 Seperate hardware nodes are then manages by two Arduinos.
-%\begin{itemize}
-%\item \textbf{Hardware}
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=0.75\textwidth]{diagrams/siweed_photo_with_callouts.pdf}
+  \caption{Photograph of SIWEED system showing key system elements.}
+  \label{fig:siweed_photo_with_callouts}
+\end{figure}
+
 \subsection{Hardware}
 A system diagram is shown in \figurename~\ref{fig:siweed_layout}.
 Two Arduino Due micro controllers are used to control and acquire signals from the WEC and wave maker, communicating with the GUI through USB Serial.
