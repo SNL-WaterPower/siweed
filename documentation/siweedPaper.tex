@@ -103,41 +103,67 @@ Educational curriculum has also been developed to assist in using this hardware 
 % create the main body of the paper
 
 \section{Hardware in context} % Include a short description of the hardware, putting into context of similar open hardware and proprietary equipment in the field.
-The SIWEED is a small scale wave tank that is designed to be portable and serve in outreach and dissemination of wave energy research.
-The development of this system was inspired by previous research at Sandia National Labs in the areas of wave energy converter (WEC) device and control design and testing.
+The Sandia Interactive Wave Energy Education Display(SIWEED) is a small scale wave tank that is designed to be portable and serve in outreach and dissemination of wave energy research.
+The development of this system was inspired by previous research at Sandia National Laboratories in the areas of wave energy converter (WEC) device and control design and testing.
 Specifically, the SIWEED demonstrates the causal feedback control and device design principles described in \citet{Bacelli2020} and \citet{Coe2020a}.
 
 
 A wide variety of similar educational wave tanks and tow tanks have been built, but few have been documented.
 \citet{unger2006creating} reworked a tow tank at MIT to enable remote operation via the internet.
-\citet{Trust2015} created a tank with a similar size and objective, but oriented at demonstrating the effectiveness of coastal flood controls.
+\citet{Trust2015} created a tank with a similar scale($\sim$2\,M) and objective, but oriented at demonstrating the effectiveness of coastal flood controls.
 There seem to be two major iterations, one electrically driven by a paddle like wave maker, and one plunger type driven mechanically by hand. 
-That team has also make multiple similar hydraulic flume tanks for demonstration purposes.
+That team has also made multiple similar hydraulic flume tanks for demonstration purposes.
 \citet{Ivan2016} has an educational wave tank on display in the National Museum of Scotland, but the waves do not explicitly interact with any bodies on the surface. 
 %\citet{Y.H.Yu} Made a wave tank to study floating- point absorbers as wave energy converters, showing similarities to this project, but they use a flap-type wavemaker, and their tank is much larger and not portable.
 
-This is a novel expansion on similar small-scale educational wave tanks, as the wave maker is driven by a ball screw, and the user is able to control both the waves and the WEC device.
-The parameters of the wave are also much more controllable in this project than in similar small wave tanks.
-Users are able to select various control modes, the primary being a sine wave with variable amplitude and frequency.
-Another control mode dictates a static position, and the last is a JONSWAP spectrum, a combination of many sine waves, meant to imitate the chaos of a natural wave environment.
-The primary intended audience is college students and above, but there is implemented functionality to run a simplified version of the GUI for lower age groups, as well as additional curriculum for those younger groups.
+SIWEED is a novel expansion on similar small-scale educational wave tanks, as the wave maker is driven by a ball screw, and the user is able to control both the waves and the WEC device.
+The parameters of the wave are also much more controllable in this project than in similar small wave tanks, as users are able to select from various control modes, each with their own set of inputs:
+
+\tabulinesep=1ex
+\begin{tabu} to \linewidth {|X|X|}
+\hline
+\textbf{Control mode} & \textbf{Input parameters} \\\hline
+Jog & 
+\begin{itemize}
+\item{Position\,(mm)}
+\end{itemize}
+  \\\hline
+Function Mode & 
+\begin{itemize}
+\item{Amplitude\,(mm)}
+\item{Frequency\,(Hz)}
+\end{itemize}
+\\\hline
+Sea State & 
+\begin{itemize}
+\item{Significant amplitude\,(mm)}
+\item{Peak frequency\,(Hz)}
+\item{Peakedness}
+\end{itemize}
+ \\\hline
+\end{tabu}
+
+The Sea State mode outputs a JONSWAP spectrum, a combination of many sine waves, meant to imitate a natural wave environment with random waves\footnote{Note that pseudo-random phasing is used.}.
+Initially, the primary intended audience for SIWEED was college students and above, but there now exists curriculum in the design files for lower age groups, and the GUI can be toggled to run a simplified version.
 
 \begin{figure}[tb]
   \centering
   \includegraphics[width=0.5\textwidth]{diagrams/SIWEED_CAD.png}
-  \caption{SIWEED CAD Assembly}
+  \caption{SIWEED CAD assembly.}
   \label{fig:CAD}
 \end{figure}
 \begin{figure}[tb]
   \centering
   \includegraphics[width=0.5\textwidth]{diagrams/Sandia_Wave_Tank_Exhibit_10x10_inlinebooth.png}
-  \caption{SIWEED Presentation layout}
+  \caption{SIWEED presentation layout.}
   \label{fig:Exhibit}
 \end{figure}
 
 \section{Hardware description} % Describe the hardware, highlighting the customization rather than the steps of the procedure. Highlight how it differs/which advantage it offers over pre-existing methods. For example, how could this hardware: be compared to other hardware in terms of cost or ease of use, be used in the development of further designs in a particular area, and so on. Add 3-5 bulleted points to broadly explain to other researchers how the hardware could be potentially useful to them, for either standard or novel laboratory tasks, inside or outside of the original user community.
 The SIWEED is composed of a 1.5\,m $\times{}$ 0.3\,m $\times{}$ 0.5\,m acrylic tank, filled to roughly 0.3\,m deep, housing a vertical plunger style wave maker (see, e.g., \cite{hyun1976simplified}), and a single body WEC modeled on the WaveBot~\cite{Coe2016a}.
-A photograph of the system is shown in \figurename~\ref{fig:siweed_photo_with_callouts}.
+Attached to the tank is a scale model of an ocean side town, meant to represent a potential power load.
+The town is equipped with four lighting zones, which allow the simulated power output to be physically represented.
+A photograph of the system is shown in \figurename~\ref{fig:siweed_photo_with_callouts}, while a CAD rendering is shown in \figurename~\ref{fig:CAD}.
 The system is centrally controlled by a Windows PC running a graphical user interface (GUI) developed using Processing\footnote{\url{https://processing.org}} and the controlP5 library\footnote{\url{http://www.sojamo.de/libraries/controlP5/}}.
 Seperate hardware nodes are then manages by two Arduinos.
 
@@ -149,20 +175,20 @@ Seperate hardware nodes are then manages by two Arduinos.
 \end{figure}
 
 \subsection{Hardware}
-A system diagram is shown in \figurename~\ref{fig:siweed_layout}.
+A system diagram for the SIWEED is shown in \figurename~\ref{fig:siweed_layout}.
 Two Arduino Due micro controllers are used to control and acquire signals from the WEC and wave maker, communicating with the GUI through USB Serial.
 The Windows laptop acts as the core of the system, with the two Arduino Dues attached through USB. 
 Each Arduino is then attached to the various devices it communicates with.
-It is worth noting that Dues are used for their higher clock speeds, but since they operate at 3.3v, multiple level shifters are used to enable communication between the Arduino Dues and the components that use 5v logic.
+It is worth noting that Dues are used for their higher clock speeds, but since they operate at 3.3\,V, multiple level shifters are used to enable communication between the Arduino Dues and the components that use 5v logic(see\figurename~\ref{fig:siweed_layout}).
 
 The Windows laptop runs a Processing application that acts as the GUI, data logger, and serial communication manager.
 The Arduinos receive their commands from Processing over usb serial, and perform individual control loops based on control states dictated by the GUI.
-One Due controls the movement of the Wavemaker plunger, while the other controls the torque feedback of the WEC and lights in the model town.
+One Due controls the movement of the wave maker plunger, while the other controls the torque feedback of the WEC and lights in the model town.
 Each send data back to the Processing GUI for data logging and plotting purposes.
 
-The Arduino Dues each have a number of components they communicate with through various protocols(PWM, SPI, Analog).
+The Arduino Dues each have a number of components they communicate with through various protocols\,(PWM, SPI, Analog).
 These perform tasks like encoder buffering, motor control, and signal generation.
-The connections can be seen in \figurename~\ref{fig:siweed_layout}, but which protocols each individual component use are most easily discerned from the Arduino source code.
+The connections can be seen in \figurename~\ref{fig:siweed_layout}.
 
 %\item \textbf{Graphical User Interface}
 \subsection{Graphical User Interface}
@@ -185,8 +211,8 @@ It is divided into three sections: The left instructional side, ``Mission Contro
 
 The left side of the ``Mission Control" section of the GUI pertains to control of the wave maker, which allows the user to switch between operational modes (``jog,'' ``function,'' ``sea state,'' and ``off'') and set the relevant parameters.
 If, for example, the system is in ``sea state'' mode, the user can set the significant wave height ($H_s$), peak frequency ($f_p$), and peakedness factor ($\gamma$) for a JONSWAP wave spectrum.
-The ``function" mode commands a simple sine wave, and so there parameters are amplitude and frequency. 
-The `jog" mode simply commands a static position for the plunger to go to, so the only input parameter is that command position. 
+The ``function" mode commands a simple sine wave, and so the parameters are amplitude and frequency. 
+The ``jog" mode simply commands a static position for the plunger to go to, so the only input parameter is that command position. 
 There are only as many input sliders displayed as there are inputs to the active control mode. 
 For example, if the selected mode was ``jog", only one slider would be present in that section of the GUI for the user to interact with.
 
@@ -196,17 +222,16 @@ Where the purpose of the JONSWAP in the wave maker controls is to replicate a na
 This is useful when characterizing the hardware using recorded data in post-analysis.
 
 The ``System Status" section shows two plots, one for the WEC and one for the wave maker, with each allowing the user to choose what data is plotted. 
-There are multiple options for the data included in each of these plots, with the ability to plot all any combination of variables simultaneously.
-Each is plotted in a different color, allowing the user to differentiate the various variables on each plot.
-The available variables in the wave maker plot(left side) are ``Wave Maker Position"(as measured by the encoder) and ``Wave Elevation"(As measured from one of the submerged probes).
+There are multiple options for the data included in each of these plots, with the ability to plot any combination of variables simultaneously.
+Each data stream is plotted in a different color, allowing the user to differentiate the various variables on each plot.
+The available variables in the wave maker plot\,(left side) are ``Wave Maker Position"(as measured by the encoder) and ``Wave Elevation"(As measured from one of the submerged probes).
 The WEC plot variables are ``Position"(measured from an encoder), ``Velocity"(differentiated from position), ``Torque"(derived from a torque constant and motor current), and ``Power"(as derived below).
-Below the plots are an FFT of the generated waves(measured from the encoder), and a radial meter that displays the hypothetical generated power of the WEC.
+Below the plots are a discrete Fourier transform of the generated waves\,(measured from the encoder), and a radial meter that displays the hypothetical generated power of the WEC.
 That hypothetically generated power meter is driven by the same variable as the ``Power" variable in the WEC information plot above the meter, given by the following formula:
 \begin{equation}
-  Power = -Commanded Torque \cdot Velocity
+  P = -\tau \cdot v
 \end{equation}
-
-%\end{itemize}
+Where $P$ is the calculated output power, $\tau$ is the torque commanded by the WEC motor controller, and $v$ is the velocity.
 
 A number of key factors of SIWEED are:
 
@@ -277,7 +302,7 @@ Because it's a late addition, the part is included in the repository, but not in
 
 \textbf{Processing Sketches:}
 The Processing sketch is made up of multiple files combined in the processing IDE as separate tabs. 
-This includes the .pde files and the .java files.
+This includes the \texttt{.pde} files and the \texttt{.java} files.
 This is done mostly for organization purposes, but all files are necessary for the sketch to run properly. 
 It is important to note that the sketch is also dependent on the Console library and ControlP5 library, and various graphics and text files that support the GUI. 
 These files are not listed here but are all included in the online repository.
@@ -318,7 +343,7 @@ The complete Bill of Materials can be found here: \href{https://zenodo.org/recor
 % > Clearly reference design files and component parts described in the Design File Summary and Bill of Materials. 
 % >Highlight potential safety concerns that may arise
 
-Using the System Layout diagram in \figurename~\ref{fig:siweed_layout}, the bill of materials, and other dimensions listed in this document, a functionally similar version of this wavetank can be reconstructed.
+A functionally similar version of this wavetank can be reconstructed using the System Layout diagram in \figurename~\ref{fig:siweed_layout}, the bill of materials, and the CAD model shown in \figurename~\ref{fig:CAD}, which is also included in the design files.
 Many parts can be substituted with similar ones, such as the laptop, transistors, power supply, or the tank itself.
 Software specific hardware, such as the Arduinos or Encoder Buffers should not be substituted. 
 It is important to consider safety during reconstruction: Electrical isolation and grounding, as well as guarding pinch points, is essential for safe usage.
@@ -328,8 +353,8 @@ Software setup:
 \begin{itemize}
 \item Download the latest version of Arduino IDE and Processing IDE.
 \item Download the Master SIWEED Repository.
-\item Change the Sketchbook Location for the Arduino IDE to \textbackslash siweed\textbackslash Arduino.
-\item Change Sketchbook Location for the Processing IDE to \textbackslash siweed\textbackslash Processing.
+\item Change the Sketchbook Location for the Arduino IDE to \texttt{\textbackslash siweed\textbackslash Arduino}.
+\item Change Sketchbook Location for the Processing IDE to \texttt{\textbackslash siweed\textbackslash Processing}.
 \item Change Arduino IDE board to ``Arduino Due Programming Port".
 \item Upload the sketches to the Arduinos.
 \item A more detailed version of these instructions can be found in the README file of the repository.
@@ -346,8 +371,8 @@ After performing the setup described in the build instructions, the project can 
 \item Power on the wavetank, ensuring any kill switches are closed, and any pinch points are clear.
 \item Open processing.exe.
 \item File $>$ Open $>$ siweedGUI.pde 
-(Ex: C\textbackslash Users\textbackslash user\textbackslash Documents\textbackslash GitHub\textbackslash siweed\textbackslash Processing\textbackslash 
-\newline siWeedGUI\textbackslash siweedGUI.pde) 
+%(Ex: C\textbackslash Users\textbackslash user\textbackslash Documents\textbackslash GitHub\textbackslash siweed\textbackslash Processing\textbackslash 
+%\newline siWeedGUI\textbackslash siweedGUI.pde) 
 \item (optional)Edit modifiers. These are booleans at the top of the code that will do things like enable basic mode, debugging, or data logging.
 \item Click ``Run".
 \item The GUI will open, allow some time for it to load.
@@ -358,16 +383,20 @@ Otherwise it will be gray, indicating one of the Arduinos' checksum does not mat
 This will result in the state of the GUI not accurately representing the state of the physical system.
 \end{itemize}
 
-\section{Validation and characterization}
+\section{Verification and characterization}
 %Demonstrate the operation of the hardware and characterize its performance over relevant critical metrics
 %> Demonstrate the use of the hardware for a relevant use case. 
 %> If possible, characterize performance of the hardware over operational parameters. 
 %> Create a bulleted list that describes the capabilities (and limitations) of the hardware. For example consider descriptions of load, operation time, spin speed, coefficient of variation, accuracy, precision and etc. 
-
-\begin{itemize}
-\item \textbf{Torque constant verification:} 
+A series of analyses were conducted on the hardware and software to confirm the proper functionality of the SIWEED.
+These tests ensure that individual components, and the systems they rely on, behave as expected.
+What is not included here is a series of software unit tests that run at the start of every execution of the GUI.
+These test specific software functions as well as the integrity of some of the hardware and the serial communications. 
+Results of these tests can be found on a per execution basis in the GUI console.
+During nominal operation all unit tests have proven to pass.
+\subsection{Torque constant verification:}  \label{tConstSec}
 The factory torque constant was verified by logging the position and current of the free floating WEC while commanding a slow sinusoidal current.
-The position displacement time series was converted to a time series of the applied physical torque with the following equation:
+The position displacement time series was converted to a time series of the applied physical torque based on the hydrostatic force due to submerging/lifting the WEC:
 
 \begin{equation}
   \tau = \sigma \cdot \gamma \cdot d \cdot \pi \cdot r^2
@@ -390,61 +419,61 @@ This provides an estimated torque constant of about 7.52\,mNm/A, which is within
 Since torque is being estimated from displacement and the frequency is low (inertial and viscous effects are small), the friction shows up as a ``constant'' offset from the ideal torque constant and doesn't affect the slope.
 This allows the friction to be seen as half the offset between the data points as the wave maker moves up, and the points as it moves down. 
 Plotting the torque error using the calculated torque constant against the current gives \figurename~\ref{fig:TorqueError}.
-
 \begin{figure}[tb]
   \centering
   \includegraphics[width=0.5\textwidth]{diagrams/TorqueError.pdf}
   \caption{Torque error vs commanded current.}
   \label{fig:TorqueError}
 \end{figure}
-
 The average offset shows that the friction is about 0.45\,mNm in this operational envelope.
 
-\item \textbf{Wave Probes:}
-The readings from the wave probes could be verified by attaching them to the wave maker, which has a very precise encoder that allows for accurate changes in displacement.
+\subsection{Wave Probes:}	\label{waveprobes}
+The readings from the wave probes could be verified by attaching them to the wave maker, which has a very precise encoder that allows for accurate measurement of changes in displacement.
 Moving the wave maker with the wave probe attached and comparing the displacement data from both of them was used to make sure the wave probe was providing accurate readings.
 
-It was found having two wave probes as close at they are, roughly 1ft apart, was problematic.
+It was found having two wave probes as close at they are, roughly 1/,ft apart, was problematic.
 Changing the depth of one probe seemed to also adjust the reading of the nearby, stationary probe.
 It is believed this is caused by a sort of capacitive coupling, but a solution was never pursued.
 Known work-arounds are only using one probe, or powering the second probe off during operation.
 
-\item \textbf{WEC feedback control}
-The PD controller functions on the following formula:
+\subsection{WEC feedback control}
+The proportional derivative\,(PD) controller functions on the following formula:
 
-\begin{equation}
-  \tau = kp \cdot p + -kd \cdot v
+\begin{equation}  \label{pdctrleq}
+  \tau = k_p \cdot p + -k_d \cdot v
 \end{equation}
 
-Here, $\tau$ is the calculated torque, $kp$ is the user defined proportional gain, $p$ is the position in meters, $kd$ is the user defined derivative gain, and $v$ is the velocity, in meters per second, calculated by the change in position over the last 10 milliseconds. 
-Using this control method allows the WEC to be controlled as a spring and damper, with the proportional gain $kp$ adjusting the strength of the spring, and the derivative gain $kd$ adjusting the strength of the damper.
+Here, $\tau$ is the calculated torque, $k_p$ is the user defined proportional gain, $p$ is the position in meters, $k_d$ is the user defined derivative gain, and $v$ is the velocity, in meters per second, calculated by the change in position over the last 10 milliseconds. 
+Using this control method allows the WEC to be controlled as a spring and damper, with the proportional gain $k_p$ adjusting the strength of the spring, and the derivative gain $k_d$ adjusting the strength of the damper.
 Unlike a physical spring, this ``spring'' can both push device towards center, or push it away, depending on the sign of the gain.
-A positive $kp$ will act as a decentering force, whereas a negative $kp$ will center the WEC to the waterline, similarly to a physical spring.
+A positive $k_p$ will act as a destabilizing force, whereas a negative $k_p$ will center the WEC to the waterline, similarly to a physical spring.
 
 This calculation is done on the Arduino Due micro controller responsible for controlling the WEC, which commands an output torque through PWM to the WEC motor controller.
-The position and velocity are determined with an encoder, while the $kp$ and $kd$ inputs are set by the user in the GUI, which the Arduino receives through USB serial.
+The position and velocity are determined with an encoder, while the $k_p$ and $k_d$ inputs are set by the user in the GUI, which the Arduino receives through USB serial.
 
 By logging the inputs and output of the control system through a range of user inputs, its performance can be verified.
-Initial tests showed a delay of three samples(100\,ms) in the control loop.
+Initial tests showed a delay of three samples\,(100\,ms) in the control loop.
 This was found to be an error with the serial communication checksum function, and has since been fixed.
-Control loop response times can now be verified as less than 33\,ms, as the data logging control loop runs at 30\,hz and shows a delay of one sample or less.
+Control loop response times can now be verified as less than 33\,ms, as the data logging control loop runs at 30\,Hz and shows a delay of one sample or less.
 
 \figurename~\ref{fig:TorqueCommanded} shows the controller during typical operation. 
-The commanded torque was calculated as per above formula, while the measured torque was taken from an analog output on the WEC motor controller that measures current, then multiplying it by the known torque constant.
+The commanded torque was calculated as per Equation \ref{pdctrleq}, while the measured torque was taken from an analog output on the WEC motor controller that measures current, then multiplying it by the known torque constant(see Section \ref{tConstSec}).
 This shows us how the PD control algorithm and motor controller react to our given inputs.
 As the linearity of the plot shows, the measured output torque closely matches the expected torque.
-The standard deviation of the torque during user testing showed to by \num{3.8286e-04}\,Nm.
+The standard deviation of the torque during user testing showed to by \num{3.82e-04}\,Nm.
 
 
 There is a theoretical possibility to experience saturation near the limits of our torque output.
 This is the result of a protection written into the WEC motor controller, and can be adjusted by what is referred to as the ``Thermal Time Constant".
-When commanded to apply a torque over what the controller deems as nominal, the motor controller will apply this torque for only some time before saturating at the maximum nominal torque.
-This was seem during lab limit testing, occurring around  \num{3.5e-3}\,Nm, but not during any user tests, as the commanded torque was never that high.
-If it were to become and issue, the the range of possible $kp$ and $kd$ commands and torque jog commands could be made more limiting in the GUI to avoid any saturation triggers.
+When commanded to apply a torque over what the controller deems as safe, the motor controller will apply this torque for only some time before saturating at the maximum nominal torque.
+This was observed during lab limit testing, occurring around  \num{3.5e-3}\,Nm, but not during any user tests, as the commanded torque was never that high.
+If it were to become and issue, the the range of possible $k_p$ and $k_d$ commands and torque jog commands could be made more limiting in the GUI to avoid any saturation triggers.
 
 While fitting closely, there is still error present in this control loop. 
- \figurename~\ref{fig:ErrorHistogram} Shows a histogram of the measured torque subtracted from the expected torque, giving us the error.
-In these particular user tests, the RMS error was \num{9.84e-05}\,Nm, while the standard deviation of the torque measurement was \num{3.82e-04}\,Nm.
+ \figurename~\ref{fig:ErrorHistogram} shows a histogram of the torque error, calculated by subtracting the measured torque from the expected torque.
+In these particular user tests, the RMS error was \num{9.84e-05}\,Nm.
+For context, the standard deviation of the torque measurement was \num{3.82e-04}\,Nm.
+
 
 Part of what has to be considered with this error is noise in the analog signal that is used to read amperage and calculate measured torque.
 To characterize this, zero torque can be commanded, and then the measurement analyzed.  
@@ -452,35 +481,44 @@ For simplified data collection, user testing data sets were truncated to only se
 \figurename~\ref{fig:NoiseHistogram} shows a histogram of the torque when a zero command is sent.
 It can be easily seen that there is a slight positive offset in the noise, which is assumed to come from inaccuracy in the analog reporting on the motor controller, or the analog reading on the Arduino Due.
 This offset varies from test to test, and can be negative.
-Using this method of analyzing only data points where the torque command is zero over multiple tests gives a noise band of about \num{8e-5}\,Nm, where 90\% of sampes lie between -\num{4e-5}\,Nm and\num{4e-5}\,Nm.
+Using this method of analyzing only data points where the torque command is zero over multiple tests gives a noise band of about \num{8e-5}\,Nm, where 90\% of sampes lie between -\num{4e-5}\,Nm and \num{4e-5}\,Nm.
 
 \begin{figure}[tb]
   \centering
   \includegraphics[width=0.5\textwidth]{diagrams/TorqueCommanded.pdf}
-  \caption{Torque Measured vs Torque Commanded}
+  \caption{Torque measured vs torque commanded.}
   \label{fig:TorqueCommanded}
 \end{figure}
 
 \begin{figure}[tb]
   \centering
   \includegraphics[width=0.5\textwidth]{diagrams/ErrorHistogram.pdf}
-  \caption{Error Histogram}
+  \caption{Error histogram.}
   \label{fig:ErrorHistogram}
 \end{figure}
 
 \begin{figure}[tb]
   \centering
   \includegraphics[width=0.5\textwidth]{diagrams/NoiseHistogram.pdf}
-  \caption{Noise Histogram}
+  \caption{Noise histogram.}
   \label{fig:NoiseHistogram}
 \end{figure}
 
-\end{itemize}
 
 \section{Declaration of interest}
 Declarations of interest: none
 % a statement must be included even if there is no conflict of interest
 % All authors must disclose any financial and personal relationships with other people or organizations that could inappropriately influence (bias) their work. Examples of potential conflicts of interest include employment, consultancies, stock ownership, honoraria, paid expert testimony, patent applications/registrations, and grants or other funding. Authors must disclose any interests in a summary declaration of interest statement in the manuscript file. If there are no interests to declare then please state this: 'Declarations of interest: none'. This summary statement will be ultimately published if the article is accepted. More information.}
+\section{Conclusion}
+The SIWEED was developed to communicate the importance of controls within wave energy devices while adhering to the open source philosophy. 
+This paper has provided the resources necessary to understand and even reproduce the SIWEED, while demonstrating the viability of the system. 
+With this information in hand, the owners and operators of SIWEED are now empowered to educate others about wave energy, and any interested parties are enabled to recreate this project.
+
+
+Should others wish to improve the SIWEED design, the wave probes module would act as an excellent start.
+Because of what was believed to be capacitive coupling as described in Section \ref{waveprobes}, and limited sensor resolution, the produced waves were never fully characterized to the user.
+Communication of wave speed and a more precise wave height measurement in the GUI could prove beneficial to the user. 
+
 
 \section*{Acknowledgment}
 Sandia National Laboratories is a multi-mission laboratory managed and operated by National Technology and Engineering Solutions of Sandia, LLC., a wholly owned subsidiary of Honeywell International, Inc., for the U.S. Department of Energy's National Nuclear Security Administration under contract DE-NA0003525.
