@@ -28,7 +28,7 @@ static final float waveElevationScale = 500;
 static final float WMPosScale = 250;
 static final float WCPosScale = 500;
 static final float WCTauScale = 1000;
-static final float WCPowScale = 65000;
+static final float WCPowScale = 90000;//65000;
 static final float WCVelScale = 60;
 ////////////////////////////
 
