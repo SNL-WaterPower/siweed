@@ -73,6 +73,7 @@ void setup() {
     if (encPos() - initialPos == 0)    //if motor is not moving(software testing), move on.
       break;
   }
+  delay(500); //wait a little after beam is broken to be further down int the water
   AD.setFrequency(MD_AD9833::CHAN_0, 0);
 
   encoderBuff.command2Reg(CNTR, IR_RegisterAction_CLR); //zero encoder
