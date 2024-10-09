@@ -1,109 +1,188 @@
-% GENERAL INFORMATION: HardwareX is an open access journal established to promote free and open source designing, building and customizing of scientific infrastructure (hardware). For more details on best practices for sharing open hardware see http://www.oshwa.org/sharing-best-practices/
+%  LaTeX support: latex@mdpi.com 
+%  For support, please attach all files needed for compiling as well as the log file, and specify your operating system, LaTeX version, and LaTeX editor.
 
-\documentclass[11pt, letterpaper]{article}
-\usepackage[utf8]{inputenc}
-\usepackage[margin=1in]{geometry}
-\usepackage{titlesec}
-\usepackage{tabu}
-\usepackage{enumitem}
-\usepackage{amssymb}
-\usepackage{graphicx}
-\usepackage{hyperref}
-\usepackage{multirow}
-\usepackage[square,numbers,sort&compress]{natbib}
-\usepackage{siunitx}
-\sisetup{output-exponent-marker=\ensuremath{\mathrm{e}}}
-\newlist{selectlist}{itemize}{2}
-\setlist[selectlist]{label=$\square$,leftmargin=*,noitemsep,topsep=0pt}
+%=================================================================
+\documentclass[hardware,article,submit,pdftex,moreauthors]{Definitions/mdpi} 
 
-% Set up the section label formatting
-\titleformat{\section}[block]{\hspace{1em}\bfseries}{\thesection.}{0.5em}{} 
-\titleformat{\subsection}[block]{\hspace{1em}}{\thesubsection}{0.5em}{}
+%--------------------
+% Class Options:
+%--------------------
+%----------
+% journal
+%----------
+% Choose between the following MDPI journals:
+% acoustics, actuators, addictions, admsci, adolescents, aerobiology, aerospace, agriculture, agriengineering, agrochemicals, agronomy, ai, air, algorithms, allergies, alloys, analytica, analytics, anatomia, animals, antibiotics, antibodies, antioxidants, applbiosci, appliedchem, appliedmath, applmech, applmicrobiol, applnano, applsci, aquacj, architecture, arm, arthropoda, arts, asc, asi, astronomy, atmosphere, atoms, audiolres, automation, axioms, bacteria, batteries, bdcc, behavsci, beverages, biochem, bioengineering, biologics, biology, biomass, biomechanics, biomed, biomedicines, biomedinformatics, biomimetics, biomolecules, biophysica, biosensors, biotech, birds, bloods, blsf, brainsci, breath, buildings, businesses, cancers, carbon, cardiogenetics, catalysts, cells, ceramics, challenges, chemengineering, chemistry, chemosensors, chemproc, children, chips, cimb, civileng, cleantechnol, climate, clinpract, clockssleep, cmd, coasts, coatings, colloids, colorants, commodities, compounds, computation, computers, condensedmatter, conservation, constrmater, cosmetics, covid, crops, cryptography, crystals, csmf, ctn, curroncol, cyber, dairy, data, ddc, dentistry, dermato, dermatopathology, designs, devices, diabetology, diagnostics, dietetics, digital, disabilities, diseases, diversity, dna, drones, dynamics, earth, ebj, ecologies, econometrics, economies, education, ejihpe, electricity, electrochem, electronicmat, electronics, encyclopedia, endocrines, energies, eng, engproc, entomology, entropy, environments, environsciproc, epidemiologia, epigenomes, est, fermentation, fibers, fintech, fire, fishes, fluids, foods, forecasting, forensicsci, forests, foundations, fractalfract, fuels, future, futureinternet, futurepharmacol, futurephys, futuretransp, galaxies, games, gases, gastroent, gastrointestdisord, gels, genealogy, genes, geographies, geohazards, geomatics, geosciences, geotechnics, geriatrics, grasses, gucdd, hazardousmatters, healthcare, hearts, hemato, hematolrep, heritage, higheredu, highthroughput, histories, horticulturae, hospitals, humanities, humans, hydrobiology, hydrogen, hydrology, hygiene, idr, ijerph, ijfs, ijgi, ijms, ijns, ijpb, ijtm, ijtpp, ime, immuno, informatics, information, infrastructures, inorganics, insects, instruments, inventions, iot, j, jal, jcdd, jcm, jcp, jcs, jcto, jdb, jeta, jfb, jfmk, jimaging, jintelligence, jlpea, jmmp, jmp, jmse, jne, jnt, jof, joitmc, jor, journalmedia, jox, jpm, jrfm, jsan, jtaer, jvd, jzbg, kidneydial, kinasesphosphatases, knowledge, land, languages, laws, life, liquids, literature, livers, logics, logistics, lubricants, lymphatics, machines, macromol, magnetism, magnetochemistry, make, marinedrugs, materials, materproc, mathematics, mca, measurements, medicina, medicines, medsci, membranes, merits, metabolites, metals, meteorology, methane, metrology, micro, microarrays, microbiolres, micromachines, microorganisms, microplastics, minerals, mining, modelling, molbank, molecules, mps, msf, mti, muscles, nanoenergyadv, nanomanufacturing,\gdef\@continuouspages{yes}} nanomaterials, ncrna, ndt, network, neuroglia, neurolint, neurosci, nitrogen, notspecified, %%nri, nursrep, nutraceuticals, nutrients, obesities, oceans, ohbm, onco, %oncopathology, optics, oral, organics, organoids, osteology, oxygen, parasites, parasitologia, particles, pathogens, pathophysiology, pediatrrep, pharmaceuticals, pharmaceutics, pharmacoepidemiology,\gdef\@ISSN{2813-0618}\gdef\@continuous pharmacy, philosophies, photochem, photonics, phycology, physchem, physics, physiologia, plants, plasma, platforms, pollutants, polymers, polysaccharides, poultry, powders, preprints, proceedings, processes, prosthesis, proteomes, psf, psych, psychiatryint, psychoactives, publications, quantumrep, quaternary, qubs, radiation, reactions, receptors, recycling, regeneration, religions, remotesensing, reports, reprodmed, resources, rheumato, risks, robotics, ruminants, safety, sci, scipharm, sclerosis, seeds, sensors, separations, sexes, signals, sinusitis, skins, smartcities, sna, societies, socsci, software, soilsystems, solar, solids, spectroscj, sports, standards, stats, std, stresses, surfaces, surgeries, suschem, sustainability, symmetry, synbio, systems, targets, taxonomy, technologies, telecom, test, textiles, thalassrep, thermo, tomography, tourismhosp, toxics, toxins, transplantology, transportation, traumacare, traumas, tropicalmed, universe, urbansci, uro, vaccines, vehicles, venereology, vetsci, vibration, virtualworlds, viruses, vision, waste, water, wem, wevj, wind, women, world, youth, zoonoticdis 
+% For posting an early version of this manuscript as a preprint, you may use "preprints" as the journal. Changing "submit" to "accept" before posting will remove line numbers.
 
-\begin{document}
-% Create the title block
-\begin{flushleft}
+%---------
+% article
+%---------
+% The default type of manuscript is "article", but can be replaced by: 
+% abstract, addendum, article, book, bookreview, briefreport, casereport, comment, commentary, communication, conferenceproceedings, correction, conferencereport, entry, expressionofconcern, extendedabstract, datadescriptor, editorial, essay, erratum, hypothesis, interestingimage, obituary, opinion, projectreport, reply, retraction, review, perspective, protocol, shortnote, studyprotocol, systematicreview, supfile, technicalnote, viewpoint, guidelines, registeredreport, tutorial
+% supfile = supplementary materials
 
-% Remove all text in italics when filling out the template and replace with your manuscripts corresponding text in regular font.
-% \textit{Text in italics are template instructions. Remove and replace all instructions with regular font text.}
+%----------
+% submit
+%----------
+% The class option "submit" will be changed to "accept" by the Editorial Office when the paper is accepted. This will only make changes to the frontpage (e.g., the logo of the journal will get visible), the headings, and the copyright information. Also, line numbering will be removed. Journal info and pagination for accepted papers will also be assigned by the Editorial Office.
 
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{10pt}
-% \textbf{\large HardwareX article template}
+%------------------
+% moreauthors
+%------------------
+% If there is only one author the class option oneauthor should be used. Otherwise use the class option moreauthors.
 
-%Insert title
-%Max. 20 words. A good title should contain the fewest possible words that adequately describe the content of a paper.
-\textbf{Title:} A portable wave tank and wave energy converter for engineering dissemination and outreach
+%---------
+% pdftex
+%---------
+% The option pdftex is for use with pdfLaTeX. Remove "pdftex" for (1) compiling with LaTeX & dvi2pdf (if eps figures are used) or for (2) compiling with XeLaTeX.
 
-%Insert Authors
-\textbf{Authors:} \textit{Nicholas Ross, Delaney Heileman, A. Gerrit Motes, Anwi Fomukong, Sean Pluemer, Francisco Colorbio, John Quinlan, Giorgio Bacelli, Steven J. Spencer, Dominic D. Forbush, Kevin~Dullea, Ryan~G.~Coe}
+%=================================================================
+% MDPI internal commands - do not modify
+\firstpage{1} 
+\makeatletter 
+\setcounter{page}{\@firstpage} 
+\makeatother
+\pubvolume{1}
+\issuenum{1}
+\articlenumber{0}
+\pubyear{2024}
+\copyrightyear{2024}
+%\externaleditor{Academic Editor: Firstname Lastname}
+\datereceived{ } 
+\daterevised{ } % Comment out if no revised date
+\dateaccepted{ } 
+\datepublished{ } 
+%\datecorrected{} % For corrected papers: "Corrected: XXX" date in the original paper.
+%\dateretracted{} % For corrected papers: "Retracted: XXX" date in the original paper.
+\hreflink{https://doi.org/} % If needed use \linebreak
+%\doinum{}
+%\pdfoutput=1 % Uncommented for upload to arXiv.org
+%\CorrStatement{yes}  % For updates
 
-%Insert Affiliations
-\textbf{Affiliations:} Sandia National Laboratories, University of New Mexico
 
-%Insert Contact Email
-%Include institutional email address of the corresponding author
-\textbf{Contact email:} rcoe@sandia.gov
+%=================================================================
+% Add packages and commands here. The following packages are loaded in our class file: fontenc, inputenc, calc, indentfirst, fancyhdr, graphicx, epstopdf, lastpage, ifthen, float, amsmath, amssymb, lineno, setspace, enumitem, mathpazo, booktabs, titlesec, etoolbox, tabto, xcolor, colortbl, soul, multirow, microtype, tikz, totcount, changepage, attrib, upgreek, array, tabularx, pbox, ragged2e, tocloft, marginnote, marginfix, enotez, amsthm, natbib, hyperref, cleveref, scrextend, url, geometry, newfloat, caption, draftwatermark, seqsplit
+% cleveref: load \crefname definitions after \begin{document}
 
-%Insert Abstract
-%Max. 200 words. Remember that the abstract is what readers see first in electronic abstracting and indexing services. This is the advertisement of your article. Make it interesting, and easy to be understood. Be accurate and specific, keep it as brief as possible.
-\textbf{Abstract:} Wave energy converters are a nascent energy generation technology that harness the power in ocean waves.
+%=================================================================
+% Please use the following mathematics environments: Theorem, Lemma, Corollary, Proposition, Characterization, Property, Problem, Example, ExamplesandDefinitions, Hypothesis, Remark, Definition, Notation, Assumption
+%% For proofs, please use the proof environment (the amsthm package is loaded by the MDPI class).
+
+%=================================================================
+% Full title of the paper (Capitalized)
+\Title{A portable wave tank and wave energy converter for engineering dissemination and outreach}
+
+% MDPI internal command: Title for citation in the left column
+\TitleCitation{A portable wave tank and wave energy converter for engineering dissemination and outreach}
+
+
+\newcommand{\orcidauthorA}{0000-0003-0738-3772} % Ryan
+\newcommand{\orcidauthorB}{0009-0002-5318-9225} % Gerrit
+\newcommand{\orcidauthorC}{0000-0002-1208-2352} % Giorgio
+\newcommand{\orcidauthorD}{0000-0001-8994-7257} % Dominic
+\newcommand{\orcidauthorE}{0000-0002-1732-5261} % Steve
+
+
+% \newcommand{\orcidauthorGiorgio}{XX}
+% \newcommand{\orcidauthorDominic}{XX}
+
+% Authors, for the paper (add full first names)
+\Author{Nicholas Ross$^{1,\ddagger}$, Delaney Heileman$^{1,\ddagger}$, A. Gerrit Motes$^{1,\ddagger}$\orcidB{}, Anwi Fomukong$^{1,\ddagger}$, Giorgio Bacelli$^{1,\ddagger}$\orcidC{}, Steven~J.~Spencer$^{1,\ddagger}$\orcidE{}, Dominic D. Forbush$^{1,\ddagger}$\orcidD{}, Kevin Dullea$^{1,\ddagger}$ and Ryan G. Coe$^{1,\ddagger}$\orcidA{}*}
+
+% Author Orchid ID: enter ID or remove command
+
+% %\newcommand{\orcidauthorB}{0000-0000-0000-000X} % Add \orcidB{} behind the author's name
+
+% % Authors, for the paper (add full first names)
+% \Author{Firstname Lastname $^{1,\dagger,\ddagger}$\orcidA{}, Firstname Lastname $^{2,\ddagger}$ and Firstname Lastname $^{2,}$*}
+
+%\longauthorlist{yes}
+
+% MDPI internal command: Authors, for metadata in PDF
+\AuthorNames{Nicholas Ross, Delaney Heileman, A. Gerrit Motes, Anwi Fomukong, Giorgio Bacelli, Steven~J.~Spencer, Dominic D. Forbush, Kevin Dullea and Ryan G. Coe}
+
+% MDPI internal command: Authors, for citation in the left column
+\AuthorCitation{Ross, N. et al.}
+% If this is a Chicago style journal: Lastname, Firstname, Firstname Lastname, and Firstname Lastname.
+
+% Affiliations / Addresses (Add [1] after \address if there is only one affiliation.)
+\address{%
+$^{1}$ \quad Sandia National Laboratories}
+% $^{2}$ \quad Affiliation 2; e-mail@e-mail.com}
+
+% Contact information of the corresponding author
+\corres{Correspondence: rcoe@sandia.gov}
+
+% Current address and/or shared authorship
+\firstnote{Current address: Affiliation.}  % Current address should not be the same as any items in the Affiliation section.
+\secondnote{These authors contributed equally to this work.}
+% The commands \thirdnote{} till \eighthnote{} are available for further notes
+
+%\simplesumm{} % Simple summary
+
+%\conference{} % An extended version of a conference paper
+
+% Abstract (Do not insert blank lines, i.e. \\) 
+\abstract{
+Wave energy converters are a nascent energy generation technology that harness the power in ocean waves.
 To assist in communicating both fundamental and complex concepts of wave energy, a small scale portable wave tank and wave energy converter have been developed.
 The system has been designed using commercial off-the-shelf components and all design hardware and software are openly available for replication.
 Accompanying educational curriculum has also been developed to assist in using this hardware for classroom education.
+}
 
-%Insert Keywords
-% At least 3 keywords. There is no limit on the no. of keywords you can list. Please remember that effective keywords should not repeat words appearing in your title, and should be neither too general nor too narrow.
-\textbf{Keywords:} wave energy, educational, outreach
+% Keywords
+\keyword{wave energy; educational; outreach} 
 
-\textbf{Specifications table:}
+% The fields PACS, MSC, and JEL may be left empty or commented out if not applicable
+%\PACS{J0101}
+%\MSC{}
+%\JEL{}
 
-\tabulinesep=1ex
-\begin{tabu} to \linewidth {|X|X[3,l]|}
-\hline  \textbf{Hardware name} & Sandia Interactive Wave Energy Education Display (SIWEED)
-  %Please specify the name of the hardware that you invented / customized
-  \\
-  \hline \textbf{Subject area} & %
-  % Please state the subject area most relevant to the original community for which this hardware was developed. Example subject areas are listed below.
-  \begin{itemize}
-  % \item \textit{Engineering and Material Science}
-  % \item \textit{Chemistry and Biochemistry}
-  % \item \textit{Medical (e.g. Pharmaceutical Science)}
-  % \item \textit{Neuroscience}
-  % \item \textit{Biological Sciences (e.g. Microbiology and Biochemistry)}
-  % \item \textit{Environmental, Planetary and Agricultural Sciences}
-  \item \textit{Educational Tools and Open Source Alternatives to Existing Infrastructure}
-  % \item \textit{General}
-  \end{itemize}
-  \\
-  \hline \textbf{Hardware type} &
-  \begin{itemize}
-  % \item \textit{Imaging tools}
-  % \item \textit{Measuring physical properties and in-lab sensors}
-  % \item \textit{Biological sample handling and preparation}
-  % \item \textit{Field measurements and sensors}
-  \item \textit{Electrical engineering and computer science}
-  \item \textit{Mechanical engineering and materials science}
-  \item \textit{Ocean engineering}
-  \end{itemize}
-  \\ 
-\hline \textbf{Open source license} &
-  %Please specify the open source license. For more details see the guide to authors.
-  GNU GENERAL PUBLIC LICENSE
-  \\
-\hline \textbf{Cost of hardware} &
-  \textit{\$7736 - Approximate cost of hardware (complete breakdown included in the Bill of Materials).}
-  \\
-\hline \textbf{Source file repository} & 
-  % Link to the source file repository, e.g. https://osf.io/q3nr5/ 
-  https://github.com/SNL-WaterPower/siweed
-\\\hline
-\end{tabu}
- 
-\end{flushleft}
-% create the main body of the paper
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Only for the journal Diversity
+%\LSID{\url{http://}}
 
-\section{Hardware in context} % Include a short description of the hardware, putting into context of similar open hardware and proprietary equipment in the field.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Only for the journal Applied Sciences
+%\featuredapplication{Authors are encouraged to provide a concise description of the specific application or a potential application of the work. This section is not mandatory.}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Only for the journal Data
+%\dataset{DOI number or link to the deposited data set if the data set is published separately. If the data set shall be published as a supplement to this paper, this field will be filled by the journal editors. In this case, please submit the data set as a supplement.}
+%\datasetlicense{License under which the data set is made available (CC0, CC-BY, CC-BY-SA, CC-BY-NC, etc.)}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Only for the journal Toxins
+%\keycontribution{The breakthroughs or highlights of the manuscript. Authors can write one or two sentences to describe the most important part of the paper.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Only for the journal Encyclopedia
+%\encyclopediadef{For entry manuscripts only: please provide a brief overview of the entry title instead of an abstract.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Only for the journal Advances in Respiratory Medicine and Smart Cities
+%\addhighlights{yes}
+%\renewcommand{\addhighlights}{%
+
+%\noindent This is an obligatory section in “Advances in Respiratory Medicine'' and ``Smart Cities”, whose goal is to increase the discoverability and readability of the article via search engines and other scholars. Highlights should not be a copy of the abstract, but a simple text allowing the reader to quickly and simplified find out what the article is about and what can be cited from it. Each of these parts should be devoted up to 2~bullet points.\vspace{3pt}\\
+%\textbf{What are the main findings?}
+% \begin{itemize}[labelsep=2.5mm,topsep=-3pt]
+% \item First bullet.
+% \item Second bullet.
+% \end{itemize}\vspace{3pt}
+%\textbf{What is the implication of the main finding?}
+% \begin{itemize}[labelsep=2.5mm,topsep=-3pt]
+% \item First bullet.
+% \item Second bullet.
+% \end{itemize}
+%}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
 The Sandia Interactive Wave Energy Education Display (SIWEED) is a small scale wave tank that is designed to be portable and serve in outreach and dissemination of wave energy research.
 The development of this system was inspired by previous research at Sandia National Laboratories in the areas of wave energy converter (WEC) device and control design and testing.
 Specifically, the SIWEED demonstrates the causal feedback control and device design principles described in \citet{Bacelli2020} and \citet{Coe2020a}.
@@ -111,10 +190,10 @@ Specifically, the SIWEED demonstrates the causal feedback control and device des
 
 A wide variety of similar educational wave tanks and tow tanks have been built, but few have been documented.
 \citet{unger2006creating} reworked a tow tank at MIT to enable remote operation via the internet.
-\citet{Trust2015} created a tank with a similar scale ($\sim$2\,M) and objective, but oriented at demonstrating the effectiveness of coastal flood controls.
+A tank with a similar scale ($\sim$2\,m) and focus was developed by \cite{Trust2015}, but oriented at demonstrating the effectiveness of coastal flood controls.
 There seem to have been two major iterations, one electrically driven by a paddle like wave maker, and one plunger type driven mechanically by hand. 
 That team has also made multiple similar hydraulic flume tanks for demonstration purposes.
-An educational wave tank in currently on display at the National Museum of Scotland, but the waves do not interact with any bodies on the surface \citet{Ivan2016}. 
+An educational wave tank in currently on display at the National Museum of Scotland, but the waves do not interact with any bodies on the surface \cite{Ivan2016}. 
 %\citet{Y.H.Yu} Made a wave tank to study floating- point absorbers as wave energy converters, showing similarities to this project, but they use a flap-type wavemaker, and their tank is much larger and not portable.
 
 SIWEED is a novel expansion on similar small-scale educational wave tanks, as the wave maker is driven by a ball screw, and the user is able to control both the waves and the WEC device.
@@ -143,7 +222,8 @@ Initially, the primary intended audience for SIWEED was college students and abo
   \end{tabular}
 \end{table}
 
-\section{Hardware description} % Describe the hardware, highlighting the customization rather than the steps of the procedure. Highlight how it differs/which advantage it offers over pre-existing methods. For example, how could this hardware: be compared to other hardware in terms of cost or ease of use, be used in the development of further designs in a particular area, and so on. Add 3-5 bulleted points to broadly explain to other researchers how the hardware could be potentially useful to them, for either standard or novel laboratory tasks, inside or outside of the original user community.
+
+\section{Design} % Describe the hardware, highlighting the customization rather than the steps of the procedure. Highlight how it differs/which advantage it offers over pre-existing methods. For example, how could this hardware: be compared to other hardware in terms of cost or ease of use, be used in the development of further designs in a particular area, and so on. Add 3-5 bulleted points to broadly explain to other researchers how the hardware could be potentially useful to them, for either standard or novel laboratory tasks, inside or outside of the original user community.
 The SIWEED is composed of a 1.5\,m $\times{}$ 0.3\,m $\times{}$ 0.5\,m acrylic tank, filled to roughly 0.3\,m deep, housing a vertical plunger style wave maker (see, e.g., \cite{hyun1976simplified}), and a single body WEC modeled on the WaveBot~\cite{Coe2016a}.
 Attached to the tank is a scale model of an ocean side town, meant to represent a potential power load.
 The town is equipped with four lighting zones, which allow the simulated power output to be physically represented.
@@ -153,14 +233,14 @@ Separate hardware nodes are then manages by two Arduinos.
 
 \begin{figure}[tb]
   \centering
-  \includegraphics[width=0.75\textwidth]{diagrams/SIWEED_CAD.png}
-  \caption{SIWEED CAD assembly.}
+  \includegraphics[width=1\textwidth]{diagrams/SIWEED_CAD.png}
+  \caption{SIWEED CAD assembly rendering.}
   \label{fig:CAD}
 \end{figure}
 
 \begin{figure}[tb]
   \centering
-  \includegraphics[width=0.75\textwidth]{diagrams/siweed_photo_with_callouts.pdf}
+  \includegraphics[width=1\textwidth]{diagrams/siweed_photo_with_callouts.pdf}
   \caption{Photograph of SIWEED system showing key system elements.}
   \label{fig:siweed_photo_with_callouts}
 \end{figure}
@@ -170,7 +250,7 @@ A system diagram for the SIWEED is shown in \figurename~\ref{fig:siweed_layout}.
 Two Arduino Due micro controllers are used to control and acquire signals from the WEC and wave maker, communicating with the GUI through USB Serial.
 The Windows laptop acts as the core of the system, with the two Arduino Dues attached through USB. 
 Each Arduino is then attached to the various devices it communicates with.
-It is worth noting that Arduino Due model was selected for their higher clock speeds, but since they operate at 3.3\,V, multiple level shifters are used to enable communication between the Arduino Dues and the components that use 5\,V logic (see\figurename~\ref{fig:siweed_layout}).
+It is worth noting that Arduino Due model was selected for their higher clock speeds, but since they operate at 3.3\,V, multiple level shifters are used to enable communication between the Arduino Dues and the components that use 5\,V logic (see \figurename~\ref{fig:siweed_layout}).
 
 The Windows laptop runs a Processing application that acts as the GUI, data logger, and serial communication manager.
 The Arduinos receive their commands from Processing over USB serial, and perform individual control loops based on control states dictated by the GUI.
@@ -180,7 +260,6 @@ The Arduino Dues each have a number of components they communicate with through 
 These perform tasks like encoder buffering, motor control, and signal generation.
 The connections can be seen in \figurename~\ref{fig:siweed_layout}.
 
-%\item \textbf{Graphical User Interface}
 \subsection{Graphical User Interface}
 This GUI is intended to be used with a touchscreen interface, but it is also fully functional with a mouse/track pad.
 A screen shot of the GUI is shown in \figurename~\ref{fig:siweed_guiScreenShot}.
@@ -192,6 +271,7 @@ It is divided into three sections: The left instructional side, ``Mission Contro
   \caption{System layout diagram.}
   \label{fig:siweed_layout}
 \end{figure}
+
 \begin{figure}[tb]
   \centering
   \includegraphics[width=1\textwidth]{diagrams/siweed_guiScreenShot.png}
@@ -223,7 +303,7 @@ That hypothetically generated power meter is driven by the same variable as the 
 \end{equation}
 Here, $P$ is the calculated output power, $\tau$ is the torque commanded by the WEC motor controller, and $v$ is the velocity.
 
-A number of key factors of SIWEED are:
+A number of key factors of the SIWEED project are:
 
 \begin{itemize}
   \item \textbf{Open-source and documented design:} To our knowledge, the SIWEED is the first educational wave tank and WEC system to be fully documented with an open-source design and software package.
@@ -237,95 +317,6 @@ A number of key factors of SIWEED are:
   The teacher resources document contains general information about the project, and a multitude of resources surrounding wave energy education, including videos, worksheets, vocabulary words, general topics, and Next Generation Science standards for each grade level.
 \end{itemize}
 
-\section{Design files}
-%The complete design files must be either uploaded to an approved online repository, uploaded at the time of submission on the online Elsevier submission interface as supplementary materials (CAD files, videos…), or included in the body of the manuscript (e.g. figures). The two approved online repositories are Mendeley Data and the Open Science Framework (OSF instructions).
-% Mendeley data: https://data.mendeley.com/
-% Open Science Framework: https://osf.io/
-% Open Science Framework HardwareX instructions: https://osf.io/wgk7q/wiki/home/
-% > CAD files. Authors are encouraged to use free and open source software packages for creating the files. For CAD files, OpenSCAD, FreeCAD, or Blender are encouraged, but if not available source files from proprietary CAD packages such as Autocad or Solidworks and other drawing packages are acceptable.
-%OpenSCAD: http://www.openscad.org/
-% > 3D printing. Supplementary files that facilitate the digital replication of the devices are encouraged. For example, STL files for 3-D printing components. We recommend uploading CAD files to the NIH 3D Print Exchange as Custom Labware and providing a link to the location.
-%NIH 3D Print Exchange: http://3dprint.nih.gov/
-% > Electronics. PCB layouts and other electronics design files can be uploaded to the Open Hardware Repository or other repositories .
-%Open Hardware Repository: http://www.ohwr.org/
-% > Software and firmware. All software files used in the design and operation of the hardware should be included in the repository. Provide a description of software and firmware and use extensive comments in the code.
-
-% Please include a summary of all design files for your hardware by filling rows of the table below
-
-\tabulinesep=1ex
-\begin{tabu} to \linewidth {|X|X|X[1.5,1]|X[1.5,1]|}
-\hline
-\textbf{Design filename} & \textbf{File type} & \textbf{Open source license} & \textbf{Location of the file(s)} \\\hline
-%Insert design files
-%\textit{Design file 1} & \textit{e.g. CAD file, figures, videos} & \textit{All designs must be submitted under an open hardware license. Enter the corresponding open source license for the file.} & \textit{Enter a link to the online location or the sentence: ``available with the article'', as appropriate}  \\\hline
-Final SIWEED Town & .SLDASM & GNU GENERAL PUBLIC LICENSE & \textit{online repository} \\\hline
-Hardware Hat & .SLDPRT & GNU GENERAL PUBLIC LICENSE & \textit{online repository} \\\hline
-WEC\_Controller\slash interrupts.ino & .ino & GNU GENERAL PUBLIC LICENSE& \textit{online repository} \\\hline
-WEC\_Controller\slash Serial.ino & .ino & GNU GENERAL PUBLIC LICENSE& \textit{online repository} \\\hline
-WEC\_Controller\slash WEC\_Controller.ino & .ino & GNU GENERAL PUBLIC LICENSE& \textit{online repository} \\\hline
-WaveMaker\_Controller\slash interrupts.ino & .ino & GNU GENERAL PUBLIC LICENSE& \textit{online repository} \\\hline
-WaveMaker\_Controller\slash Serial.ino & .ino & GNU GENERAL PUBLIC LICENSE& \textit{online repository} \\\hline
-WaveMaker\_Controller\slash WaveMaker\_Controller.ino & .ino & GNU GENERAL PUBLIC LICENSE& \textit{online repository} \\\hline
-dataLogging.pde & .pde& GNU GENERAL PUBLIC LICENSE & \textit{online repository} \\\hline
-Meter.pde & .pde& GNU GENERAL PUBLIC LICENSE & \textit{online repository} \\\hline
-Serial.pde & .pde& GNU GENERAL PUBLIC LICENSE & \textit{online repository} \\\hline
-siweedGUI.pde & .pde& GNU GENERAL PUBLIC LICENSE & \textit{online repository} \\\hline
-UI.pde & .pde& GNU GENERAL PUBLIC LICENSE & \textit{online repository} \\\hline
-UnitTests.pde & .pde& GNU GENERAL PUBLIC LICENSE & \textit{online repository} \\\hline
-fft.java & .java& GNU GENERAL PUBLIC LICENSE & \textit{online repository} \\\hline
-Complex.java & .java& GNU GENERAL PUBLIC LICENSE & \textit{online repository} \\\hline
-\end{tabu}
-\newline
-The referenced online repository is here: \href{https://zenodo.org/record/7502670}{https://zenodo.org/record/7502670}.
-\newline
-% For each design file listed in the summary above, include a short description of the file below (one or two sentences)
-\textbf{CAD Model:}
-The CAD assembly includes all functional physical parts of the SIWEED system, with accurate dimensions that can be referenced during fabrication and assembly.
-Aesthetic details, like the town are intentionally vague in the CAD model.
-Physical implementation of artistic aspects are not important for functionality, but are thought to add significantly to audience engagement.
-The files in the repository are Solidworks models, with all dependencies included in a compressed archive.
-There is an additional part labeled ``Hardware Hat". 
-This was a late addition that was 3D printed to cover potential pinch points on the model, and prevent sunlight from interfering with the infrared limit switches. 
-Because it's a late addition, the part is included in the repository, but not in the final assembly. 
-\par
-
-
-\textbf{Processing Sketches:}
-The Processing sketch is made up of multiple files combined in the processing IDE as separate tabs. 
-This includes the \texttt{.pde} files and the \texttt{.java} files.
-This is done mostly for organization purposes, but all files are necessary for the sketch to run properly. 
-It is important to note that the sketch is also dependent on the Console library and ControlP5 library, and various graphics and text files that support the GUI. 
-These files are not listed here but are all included in the online repository.
-\par
-
-
-\textbf{Arduino Sketches:}
-Similarly to the Processing sketch, the two Arduino sketches are broken into multiple files for organization.
-Once again, all files are required for the sketch to function.
-It is important to note that the sketches are also dependent on various imported libraries, which are included in the online repository, but not listed here.
-Some of these libraries are modified from their original versions, so it is important that they are pulled from this project repository, and not the libraries' original sources.
-
-\section{Bill of materials}
-% For a complex Bill of Materials, the complete Bill of Materials (editable spreadsheet file e.g., ODS file type or PDF file) can be uploaded in an open access online location such as the Open Science Framework repository. Include the link here. Alternatively, the Bill of Materials can be uploaded at the time of submission on the online Elsevier submission interface as supplementary material.
-
-% > To make it easy to tell which item in the Bill of Materials corresponds to which component in your design file(s), use matching designators in both places, or otherwise explain the correspondence.
-
-% > For material type, select from: Metal, semi-conductor, ceramic, polymer, biomaterial, organic, inorganic, composite, nanomaterial, semiconductor, non-specific, or other  
-The complete Bill of Materials can be found here: \href{https://zenodo.org/record/7502670}{https://zenodo.org/record/7502670}. Note that a SIWEED system can be assembled with any tank on hand (e.g., a fish tank) and any Windows PC capable of running the Processing IDE; as these components can contribute significantly to system cost, the BOM lists the tank and computer separately from the remainder of the components.
-%\textit{For a complex Bill of Materials, the complete Bill of Materials (editable spreadsheet file e.g., ODS file type or PDF file) can be uploaded in an open access online location such as the Open Science Framework repository. Include the link here. Alternatively, the Bill of Materials can be uploaded at the time of submission on the online Elsevier submission interface as supplementary material.}
-%\begin{itemize}
-%\item \textit{To make it easy to tell which item in the Bill of Materials corresponds to which component in your design file(s), use matching designators in both places, or otherwise explain the correspondence.}
-%\item \textit{For material type, select from: Metal, semi-conductor, ceramic, polymer, biomaterial, organic, inorganic, composite, nanomaterial, semiconductor, non-specific, or other} 
-%\end{itemize}
-%
-%\tabulinesep=1ex
-%\begin{tabu} to \linewidth {|X|X|X|X|X|X|X|}
-%\hline
-%\textbf{Designator} & \textbf{Component} & \textbf{Number} & \textbf{Cost per unit currency} & \textbf{Total cost} & \textbf{Source of materials} & \textbf{Material type} \\\hline
-%%Insert items here
-%\textit{Designator} & \textit{Name of Component 1} & \textit{Number of units} & \textit{Cost per unit} & \textit{Total cost} & \textit{Source} & \textit{Material type} \\\hline
-%\end{tabu}
-
 \section{Build instructions}
 %Provide detailed, step by step instructions for the construction of the reported hardware include all necessary information for reproducing the submitted hardware.
 % > Explain and, when possible, characterize design decisions. Including design alternatives if they exist. 
@@ -333,24 +324,25 @@ The complete Bill of Materials can be found here: \href{https://zenodo.org/recor
 % > Clearly reference design files and component parts described in the Design File Summary and Bill of Materials. 
 % >Highlight potential safety concerns that may arise
 
+\subsection{General}
 A functionally similar version of this wave tank can be reconstructed using the System Layout diagram in \figurename~\ref{fig:siweed_layout}, the bill of materials, and the CAD model shown in \figurename~\ref{fig:CAD}, which is also included in the design files.
 Many parts can be substituted with similar ones, such as the laptop, transistors, power supply, or the tank itself.
-Software specific hardware, such as the Arduinos or Encoder Buffers should not be substituted. 
-It is important to consider safety during reconstruction: Electrical isolation and grounding, as well as guarding pinch points, is essential for safe usage.
+Software specific hardware, such as the Arduinos or encoder buffers should not be substituted. 
+It is important to consider safety during reconstruction: electrical isolation and grounding, as well as guarding pinch points, are essential for safe usage.
 
 
-Software setup:
+\subsection{Software setup}
 \begin{enumerate}
 \item Download the latest version of Arduino IDE and Processing IDE.
-\item Download the Master SIWEED Repository.
-\item Change the Sketchbook Location for the Arduino IDE to \texttt{\textbackslash siweed\textbackslash Arduino}.
-\item Change Sketchbook Location for the Processing IDE to \texttt{\textbackslash siweed\textbackslash Processing}.
+\item Download the master SIWEED repository.
+\item Change the Sketchbook location for the Arduino IDE to \texttt{\textbackslash siweed\textbackslash Arduino}.
+\item Change Sketchbook location for the Processing IDE to \texttt{\textbackslash siweed\textbackslash Processing}.
 \item Change Arduino IDE board to ``Arduino Due Programming Port".
 \item Upload the sketches to the Arduinos.
 \item A more detailed version of these instructions can be found in the README file of the repository.
 \end{enumerate}
 
-\section{Operation instructions}
+\section{Operating instructions}
 %Provide detailed instructions for the safe and proper operation of the hardware. 
 %> Step-by-step operational instructions for operating the hardware. 
 %> Use visual instructions as necessary. 
@@ -373,7 +365,7 @@ Otherwise it will be gray, indicating one of the Arduinos' checksum does not mat
 This will result in the state of the GUI not accurately representing the state of the physical system.
 \end{enumerate}
 
-\section{Verification and characterization}
+\section{Validation and characterization}
 %Demonstrate the operation of the hardware and characterize its performance over relevant critical metrics
 %> Demonstrate the use of the hardware for a relevant use case. 
 %> If possible, characterize performance of the hardware over operational parameters. 
@@ -417,7 +409,7 @@ The average offset shows that the static friction is about 0.45\,mNm in this ope
 \begin{figure}[tb]
   \centering
   \includegraphics[width=0.75\textwidth]{diagrams/TorqueError.pdf}
-  \caption{Torque error vs commanded current.}
+  \caption{Motor torque error compared with commanded motor current.}
   \label{fig:TorqueError}
 \end{figure}
 
@@ -457,7 +449,7 @@ The standard deviation of the torque during user testing was $3.82 \times 10^{-4
 \begin{figure}[tb]
   \centering
   \includegraphics[width=0.75\textwidth]{diagrams/TorqueCommanded.pdf}
-  \caption{Torque measured vs torque commanded.}
+  \caption{Comparison of measured and commanded motor torque.}
   \label{fig:TorqueCommanded}
 \end{figure}
 
@@ -494,12 +486,7 @@ Using this method of analyzing only data points where the torque command is zero
   \label{fig:NoiseHistogram}
 \end{figure}
 
-
-\section{Declaration of interest}
-Declarations of interest: none
-% a statement must be included even if there is no conflict of interest
-% All authors must disclose any financial and personal relationships with other people or organizations that could inappropriately influence (bias) their work. Examples of potential conflicts of interest include employment, consultancies, stock ownership, honoraria, paid expert testimony, patent applications/registrations, and grants or other funding. Authors must disclose any interests in a summary declaration of interest statement in the manuscript file. If there are no interests to declare then please state this: 'Declarations of interest: none'. This summary statement will be ultimately published if the article is accepted. More information.}
-\section{Conclusion}
+\section{Conclusions}
 The SIWEED project was developed to communicate the importance of controls within wave energy devices while adhering to the open source philosophy. 
 This paper provides the resources necessary to understand and even reproduce the SIWEED, while demonstrating the viability of the system. 
 With this information in hand, the owners and operators of SIWEED are now empowered to educate others about wave energy, and any interested parties are enabled to recreate this project.
@@ -508,34 +495,82 @@ Should others wish to improve the SIWEED design in future work, the wave probes 
 Because of what was believed to be capacitive coupling as described in Section~\ref{waveprobes}, and limited sensor resolution, the produced waves were never fully characterized to the user.
 Communication of wave speed and a more precise wave height measurement in the GUI could prove beneficial to the user. 
 
-\section*{Acknowledgment}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\authorcontributions{Conceptualization, R.G.C., and G.B.; methodology, R.G.C, G.B., S.J.S, A.G.M and D.D.F.; investigation, N.R., D.H., A.G.M., K.D. and A.F.; writing, N.R., A.G.M and R.G.C; project administration, R.G.C; funding acquisition, R.G.C. All authors have read and agreed to the published version of the manuscript.}
+
+\funding{This project was supported by the US Department of Energy's Water Power Technologies Office.}
+
+\dataavailability{This project has been documented through a GitHub repository: \url{https://doi.org/10.5281/zenodo.7502670}.} 
+
+\acknowledgments{
+Francisco Colorbio, John Quinlan, and Sean Pluemer worked on an earlier version of the SIWEED project on which this current version was based.
 Sandia National Laboratories is a multi-mission laboratory managed and operated by National Technology and Engineering Solutions of Sandia, LLC., a wholly owned subsidiary of Honeywell International, Inc., for the U.S. Department of Energy's National Nuclear Security Administration under contract DE-NA0003525.
 This paper describes objective technical results and analysis.
 Any subjective views or opinions that might be expressed in the paper do not necessarily represent the views of the U.S. Department of Energy or the United States Government.
+}
 
-% \section{Human and animal rights}
+\conflictsofinterest{The authors declare no conflicts of interest.} 
 
-% \textit{
-% \begin{itemize}
-% \item If the work involves the use of human subjects, the author should ensure that the work described has been carried out in accordance with the appropriate ethical guidelines. \item If the work involves the use of human subjects, the author should ensure that the work described has been carried out in accordance with The Code of Ethics of the World Medical Association (Declaration of Helsinki) for experiments involving humans; Uniform Requirements for manuscripts submitted to Biomedical journals. Authors should include a statement in the manuscript that informed consent was obtained for experimentation with human subjects. The privacy rights of human subjects must always be observed. \item All animal experiments should comply with the ARRIVE guidelines and should be carried out in accordance with the U.K. Animals (Scientific Procedures) Act, 1986 and associated guidelines, EU Directive 2010/63/EU for animal experiments, or the National Institutes of Health guide for the care and use of Laboratory animals (NIH Publications No. 8023, revised 1978) and the authors should clearly indicate in the manuscript that such guidelines have been followed.\end{itemize}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Optional
 
-% \section*{References} 
-% %> Include at least one reference, to the original publication of the hardware you customized.
-% %> Include other references as required. Include references to put your device in context in the literature. For more information on the reference format in HardwareX please see the Guide for Authors at: https://www.elsevier.com/journals/hardwarex/2468-0672/guide-for-authors
+%% Only for journal Encyclopedia
+%\entrylink{The Link to this entry published on the encyclopedia platform.}
 
-\bibliographystyle{plainnat}
-\bibliography{refs}
+\abbreviations{Abbreviations}{
+The following abbreviations are used in this manuscript:\\
 
+\noindent 
+\begin{tabular}{@{}ll}
+SIWEED & Sandia Interactive Wave Energy Education Display\\
+WEC & wave energy converter\\
+GUI & graphic user interface\\
+JONSWAP & Joint North Sea Wave Project\\
+CAD & computer aided design\\
+PWM & pulse width modulation\\
+SPI & serial peripheral interface\\
+SID & system identification\\
+IDE & integrated development environment\\
+USB & universal serial bus\\
+PD & proportional-derivative\\
+RMS & root-mean-square
+\end{tabular}
+}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %% Optional
+% \appendixtitles{no} % Leave argument "no" if all appendix headings stay EMPTY (then no dot is printed after "Appendix A"). If the appendix sections contain a heading then change the argument to "yes".
+% \appendixstart
+% \appendix
+% \section[\appendixname~\thesection]{}
+% \subsection[\appendixname~\thesubsection]{}
+% The appendix is an optional section that can contain details and data supplemental to the main text---for example, explanations of experimental details that would disrupt the flow of the main text but nonetheless remain crucial to understanding and reproducing the research shown; figures of replicates for experiments of which representative data are shown in the main text can be added here if brief, or as Supplementary Data. Mathematical proofs of results not central to the paper can be added as an appendix.
+
+% \begin{table}[H] 
+% \caption{This is a table caption.\label{tab5}}
+% \newcolumntype{C}{>{\centering\arraybackslash}X}
+% \begin{tabularx}{\textwidth}{CCC}
+% \toprule
+% \textbf{Title 1}	& \textbf{Title 2}	& \textbf{Title 3}\\
+% \midrule
+% Entry 1		& Data			& Data\\
+% Entry 2		& Data			& Data\\
+% \bottomrule
+% \end{tabularx}
+% \end{table}
+
+% \section[\appendixname~\thesection]{}
+% All appendix sections must be cited in the main text. In the appendices, Figures, Tables, etc. should be labeled, starting with ``A''---e.g., Figure A1, Figure A2, etc.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{adjustwidth}{-\extralength}{0cm}
+%\printendnotes[custom] % Un-comment to print a list of endnotes
+
+\reftitle{References}
+
+\bibliography{siweedPaper}
+
+\PublishersNote{}
+\end{adjustwidth}
 \end{document}
 
-% Author manuscript checklist 
-% > HardwareX is a journal dedicated to the exhaustive and fully open source communication of advances in scientific infrastructure. Upon submission the author declares that all information necessary to reproduce the subject of the submission (e.g. bill of materials, build instructions, calibration procedures, source files, code, and safety considerations) is communicated in full and is accessible for use under an open source license.  
-% > Is the subject of the submission under an open source license - as defined by the Open Source Hardware definition [http://www.oshwa.org/definition/]? 
-% > Can the hardware be reproduced based on the details provided? 
-% > Are all relevant design files available on the Mendeley Data or Open Science Framework server, described in the Summary of Design Files document, and clearly documented? (e.g. descriptive file names, commented code, labeled images, etc.)  
-% > Do the authors use visual instructions when necessary? 
-% > Do the authors describe the utility of the hardware to the scientific community? 
-% > Is the performance of the hardware adequately demonstrated and characterized? 
-% > Do the authors address all potential safety concerns? 
-
-% > For more information on the article template consult the Guide to Authors [https://www.elsevier.com/journals/hardwarex/2468-0672/guide-for-authors].
