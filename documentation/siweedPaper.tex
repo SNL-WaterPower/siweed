@@ -287,7 +287,7 @@ The ``jog" mode simply commands a static position for the plunger to go to, so t
 There are only as many input sliders displayed as there are inputs to the active control mode. 
 For example, if the selected mode was ``jog", only one slider would be present in that section of the GUI for the user to interact with.
 
-The right side of the ``Mission Control" section of the GUI  contains controls for the WEC, which can be set into ``torque'' mode; in which the user directly sets a commanded torque, ``feedback'' mode; where proportional and integral feedback factors can be set by the user; ``SID'' mode, for system identification, allowing for open-loop multi-sine signals to be set by the user; and ``off.''
+The right side of the ``Mission Control" section of the GUI contains controls for the WEC, which can be set into ``torque'' mode; in which the user directly sets a commanded torque, ``feedback'' mode; where proportional and integral feedback factors can be set by the user; ``SID'' mode, for system identification, allowing for open-loop multi-sine signals to be set by the user; and ``off.''
 The ``SID'' mode works with the same inputs and JONSWAP control method as the ``Sea State'' mode for the wave maker, but commanding torque instead of position.
 Where the purpose of the JONSWAP in the wave maker controls is to replicate a natural wave state, as a torque controller for the WEC, its purpose is only to provide a wide variety of torque inputs. 
 This is useful when characterizing the hardware using recorded data in post-analysis (see, e.g., \cite{Bacelli2017a}).
@@ -324,15 +324,118 @@ A number of key factors of the SIWEED project are:
 % > Use visual instructions such as schematics, images, and videos. 
 % > Clearly reference design files and component parts described in the Design File Summary and Bill of Materials. 
 % >Highlight potential safety concerns that may arise
+\begin{table}[ht]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2} % Adjusts row spacing
+\setlength{\tabcolsep}{6pt} % Adjusts column spacing
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{p{3cm} p{4cm} p{5cm} r r r}
+\toprule
+Group & Designator & Component & Number & Cost per unit & Total Cost \\
+\midrule
+Electronics & USB isolator & ADUM4160 100MA USB ISOLATOR BRD & 1 & \$34.95 & \$34.95 \\
+Electronics & Arduino Due & Arduino Due & 2 & \$37.40 & \$74.80 \\
+Electronics & Level Shifter & BSS138 & 3 & \$3.49 & \$10.47 \\
+Electronics & Encoder Buffer & Single LS7366R Quadrature Encoder Buffer & 2 & \$28.65 & \$57.30 \\
+Electronics & Encoder & AMT102-V & 2 & \$23.86 & \$47.72 \\
+Electronics & WEC Motor Controller & ESCON Module 24/2, 4-Q servo controller for DC/... & 1 & \$89.39 & \$89.39 \\
+Electronics & WEC Motor Controller MotherBoard & ESCON Module 24/2 Motherboard & 1 & \$87.00 & \$87.00 \\
+Electronics & WEC Motor & Maxon EC-max 16, 283828 & 1 & \$190.45 & \$190.45 \\
+Electronics & Wavemaker Motor Controller & StepperOnline DM542T & 1 & \$19.90 & \$19.90 \\
+Electronics & Wavemaker Motor & StepperOnline 23HS45-4204S & 1 & \$33.92 & \$33.92 \\
+Electronics & Power Supply & MDS-400ADB24AA & 1 & \$164.19 & \$164.19 \\
+Electronics & Inferred Limit & 485-2168 & 1 & \$5.95 & \$5.95 \\
+Electronics & Wave Probe & OSSI-010-002E Wave Staff & 2 & \$1,075.00 & \$2,150.00 \\
+Electronics & Project Enclosure & BOX ABS/PC GRY 19.68"L X 15.74"W & 1 & \$122.65 & \$122.65 \\
+Electronics & Signal Generator & AD9833 Function Generator & 1 & \$8.95 & \$8.95 \\
+Electronics & Transistor & MOSFET N-CH 30V 120A TO220 & 5 & \$1.12 & \$5.60 \\
+Decorations & Lighthouse & \href{https://factorydirecthobbies.com/products/preorder-lighthouse}{Lighthouse} & 2 & \$50.38 & \$100.76 \\
+Decorations & General Store Set & \href{https://www.modeltrainstuff.com/motrak-models-h0}{General Store Set} & 2 & \$119.99 & \$239.98 \\
+Decorations & House (1 story) & \href{https://www.modeltrainstuff.com/Bachmann-HO-454}{House (1 story)} & 2 & \$21.99 & \$43.98 \\
+Decorations & Fishing Shack & \href{https://barmillsmodels.com/product/fishing-shack}{Fishing Shack} & 2 & \$22.95 & \$45.90 \\
+Decorations & Shed & \href{https://www.mapleleaftrains.com/catalog/shed}{Shed} & 2 & \$20.48 & \$40.96 \\
+Decorations & Street Lights & \href{https://factorydirecthobbies.com/products/street-lights}{Street Lights} & 2 & \$16.99 & \$33.98 \\
+Decorations & Seaweed (13 pack) & \href{https://www.modeltrainstuff.com/motrak-models-h0}{Seaweed} & 2 & \$12.99 & \$25.98 \\
+Decorations & Grass Tufts (withered yellow) & \href{https://www.modeltrainstuff.com/Bachmann-HO-454}{Grass Tufts} & 3 & \$12.99 & \$38.97 \\
+Decorations & Grass Tufts (green) & \href{https://barmillsmodels.com/product/fishing-shack}{Grass Tufts (green)} & 3 & \$12.99 & \$38.97 \\
+Decorations & Sand (38 lb) & \href{https://www.mapleleaftrains.com/catalog/sand}{Sand (38 lb)} & 2 & \$49.99 & \$99.98 \\
+Decorations & Sandpaper (48 pack) & \href{https://factorydirecthobbies.com/products/sandpaper}{Sandpaper} & 2 & \$12.99 & \$25.98 \\
+Decorations & Grass Shaker & \href{https://www.modeltrainstuff.com/motrak-models-h0}{Grass Shaker} & 2 & \$16.99 & \$33.98 \\
+Decorations & Palm trees & \href{https://www.modeltrainstuff.com/Bachmann-HO-454}{Palm Trees} & 2 & \$11.99 & \$23.98 \\
+Decorations & Gravel & \href{https://barmillsmodels.com/product/gravel}{Gravel} & 2 & \$2.49 & \$4.98 \\
+Decorations & Cliff Rocks & \href{https://www.mapleleaftrains.com/catalog/cliff-rocks}{Cliff Rocks} & 2 & \$16.98 & \$33.96 \\
+Decorations & Double Sided Tape & \href{https://factorydirecthobbies.com/products/double-sided-tape}{Double Sided Tape} & 4 & \$15.99 & \$63.96 \\
+Decorations & Angle Brace & \href{https://www.modeltrainstuff.com/motrak-models-h0}{Angle Brace} & 5 & \$1.78 & \$8.90 \\
+Decorations & Angle Brace Screws & \href{https://www.modeltrainstuff.com/Bachmann-HO-454}{Angle Brace Screws} & 6 & \$1.28 & \$7.68 \\
+Decorations & Styrofoam Sheets & \href{https://barmillsmodels.com/product/styrofoam-sheets}{Styrofoam Sheets} & 2 & \$14.99 & \$29.98 \\
+Decorations & Foam & \href{https://www.mapleleaftrains.com/catalog/foam}{Foam} & 2 & \$6.99 & \$13.98 \\
+Other & Touchscreen laptop & Dell 120-ARYY & 1 & \$2,200.00 & \$2,200.00 \\
+Other & 3/4 inch acrylic tank (1.5m x 0.3m x 0.5m) & - & 1 & \$1,460.00 & \$1,460.00 \\
+\bottomrule
+\end{tabular}%
+}
+\caption{Bill of Materials}
+\label{tab:materials}
+\end{table}
+
 
 \subsection{General}
-A functionally similar version of this wave tank can be reconstructed using the System Layout diagram in \figurename~\ref{fig:siweed_layout}, the bill of materials, and the CAD model shown in \figurename~\ref{fig:CAD}, which is also included in the design files.
-Many parts can be substituted with similar ones, such as the laptop, transistors, power supply, or the tank itself.
-Software specific hardware, such as the Arduinos or encoder buffers should not be substituted. 
-It is important to consider safety during reconstruction: electrical isolation and grounding, as well as guarding pinch points, are essential for safe usage.
+A functionally similar version of this wave tank can be reconstructed using the the following guidance, the System Layout diagram in \figurename~\ref{fig:siweed_layout}, the Bill of Materials in \tablename~\ref{tab:materials}, and the CAD model shown in \figurename~\ref{fig:CAD}, which is also included in the design files.
+This bill of materials includes the essential electronics for the functionality of the device, along with much of the decorative hardware included for the purpose of enhancing the presentation of the wave tank.
+What is not included is the mounting hardware, none of which is functionally specific. 
+Any suitable alternative that allows the functional components to be securely mounted will suffice.
 
+Many parts included in the Bill of Materials can be substituted with functionally similar ones, such as the laptop, transistors, power supply, or the tank itself.
+The specifications of any substitutions must at least meet the capabilities of the original components in the Bill of Materials.
+Software specific hardware, such as the Arduinos or encoder buffers should not be substituted. 
+
+\subsection{Safety}
+It is important to consider safety during construction and operation: electrical isolation and grounding, as well as guarding pinch points, are essential for safe usage.
+In the interest of electrical safety, the user interface of the device(the laptop) is electrically isolated with a simple usb isolator, and all individual components share a common ground with the power supply where possible. 
+An emergency stop switch is installed between that power supply and power bus, enabling the device to be shut off at any time, should a unexpected and/or dangerous condition occur.
+This switch should be made accessible and obvious at all times during operation and testing.
+The upward facing drive belt of the wave maker serves as a pinching hazard, and so it is recommended to construct a barrier for use during normal operation.
+This can 3D printed using the CAD model in the design files.
+
+\subsection{Hardware}
+The hardware of SIWEED consists of the wave maker support structure, the mini WEC support structure, the acrylic tank, the beach, and the decorative town. 
+A similar tank can be sourced as an off the shelf part, with its size selected to suit specific need-portability and wave stability in this case. 
+The beach is made by adhesively attaching a thin acrylic panel over pipes suspended at descending heights by threaded rods, as shown in \figurename~\ref{fig:siweed_photo_with_callouts}.
+The decorative texture of the beach is made by mixing sand with two part epoxy.
+The rest of the decorative elements are assembled as per individual included instructions, and arranged strategically on top of a wooden platform embedded with decorative LEDs. 
+These LEDs are used to indicate the level of simulated output power generation (i.e., all the buildings illuminate during optimal operation).
+
+The WEC and wave maker support structures are built such that they tightly grip the tank, with small rubber pads enhancing their stability and preventing scratches.
+It is particularly important that the wave maker is securely attached, as it undergoes significant force during operation.
+The wave probes are mounted onto the WEC support structure such that they are level with the surface of the water.
+The WEC itself consists of a small foam bouy, attached to a carbon fiber tube with a geared rack affixed to it, adjacent to a pinion gear that is both driven by the WEC motor and drives the WEC encoder.
+There are a few large washers fixed on top of the bouy to increase its inertia, the number of which can be tuned through trial and error to the size of the tank and waves within it.
+
+The wave maker consists of a stepper motor driving a belted ball screw. 
+The stepper motor mount is used to adjust the belt tension. 
+Both the screw pitch and the pulley ratio of the belt drive can be set as global variables at the beginning of the Arduino source code.
+The same goes for the rack and pinion sizes for the WEC.
+The ball screw drives a 3D-printed spade/plunger to create waves, which is painted to ensure it is waterproof.
+Two infrared limit switches are mounted such that each of their beams is broken when the position of the wavemaker is near its corresponding operational limit.
+This is used as a safeguard, and as a point of reference during startup calibration.
+
+More specific details regarding the exact hardware configuration can be found from CAD model shown in \figurename~\ref{fig:CAD} and \figurename~\ref{fig:siweed_photo_with_callouts}.
+\subsection{Electronics}
+\figurename~\ref{fig:siweed_layout} shows a detailed and accurate configuration of the SIWEED electronics. 
+It is useful to conceptualize the system in two halves: the WEC and wave maker.
+Each is controlled by an Arduino Due which communicates with the user facing laptop through a optically isolated USB cable, in order to prevent ground looping.
+Both Arduinos are connected through level shifters to encoder buffers and motor controllers.
+Additionally, the wave maker Arduino is connected to a signal generator via a level shifter and to four high-amperage transistors to control the decorative lights.
+All of these electronics, save for the motors and encoders themselves, are mounted inside an enclosure that sits near the SIWEED. 
+For each of the halves of the system, an detachable electrical connector is used for ease of transportation and storage. 
+To prevent cross-talk, the higher amperage stepper motor circuit has its own connector, physically separated from the rest of the circuitry.
+
+It is critical for accurate operation that the wave probes are grounded to the wave maker support structure submerged in the water, and that they maintain some distance from the nearest metal grounding point.
+The precise distance is dependent on which wave probes are used, and is specified in their documentation.
 
 \subsection{Software setup}
+On the laptop:
 \begin{enumerate}
 \item Download the latest version of Arduino IDE and Processing IDE.
 \item Download the master SIWEED repository.
@@ -540,7 +643,8 @@ SID & system identification\\
 IDE & integrated development environment\\
 USB & universal serial bus\\
 PD & proportional-derivative\\
-RMS & root-mean-square
+RMS & root-mean-square\\
+LED & light emitting diode
 \end{tabular}
 }
 
