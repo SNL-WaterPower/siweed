@@ -322,9 +322,11 @@ A number of key factors of the SIWEED project are:
 %Provide detailed, step by step instructions for the construction of the reported hardware include all necessary information for reproducing the submitted hardware.
 % > Explain and, when possible, characterize design decisions. Including design alternatives if they exist. 
 % > Use visual instructions such as schematics, images, and videos. 
-% > Clearly reference design files and component parts described in the Design File Summary and Bill of Materials. 
+% > Clearly reference design files and component parts described in the Design File Summary and bill of materials. 
 % >Highlight potential safety concerns that may arise
-\begin{table}[ht]
+\begin{table}[tb]
+\caption{Bill of materials.}
+\label{tab:materials}
 \centering
 \small
 \renewcommand{\arraystretch}{1.2} % Adjusts row spacing
@@ -375,26 +377,24 @@ Other & 3/4 inch acrylic tank (1.5m x 0.3m x 0.5m) & - & 1 & \$1,460.00 & \$1,46
 \bottomrule
 \end{tabular}%
 }
-\caption{Bill of Materials}
-\label{tab:materials}
 \end{table}
 
 
 \subsection{General}
-A functionally similar version of this wave tank can be reconstructed using the the following guidance, the System Layout diagram in \figurename~\ref{fig:siweed_layout}, the Bill of Materials in \tablename~\ref{tab:materials}, and the CAD model shown in \figurename~\ref{fig:CAD}, which is also included in the design files.
-This bill of materials includes the essential electronics for the functionality of the device, along with much of the decorative hardware included for the purpose of enhancing the presentation of the wave tank.
-What is not included is the mounting hardware, none of which is functionally specific. 
+A functionally similar version of this wave tank can be reconstructed using the the following guidance, the system layout diagram in \figurename~\ref{fig:siweed_layout}, the bill of materials in \tablename~\ref{tab:materials}, and the CAD model shown in \figurename~\ref{fig:CAD}, which is also included in the design files.
+The bill of materials in \tablename~\ref{tab:materials} includes the essential electronics for the functionality of the device, along with much of the decorative hardware included for the purpose of enhancing the presentation of the wave tank.
+Note that mounting hardware is not included in the bill of materials, as this is not considered functionally specific. 
 Any suitable alternative that allows the functional components to be securely mounted will suffice.
 
-Many parts included in the Bill of Materials can be substituted with functionally similar ones, such as the laptop, transistors, power supply, or the tank itself.
-The specifications of any substitutions must at least meet the capabilities of the original components in the Bill of Materials.
+Many parts included in the bill of materials can be substituted with functionally similar ones, such as the laptop, transistors, power supply, or the tank itself.
+The specifications of any substitutions must at least meet the capabilities of the original components in the bill of materials.
 Software specific hardware, such as the Arduinos or encoder buffers should not be substituted. 
 
 \subsection{Safety}
 It is important to consider safety during construction and operation: electrical isolation and grounding, as well as guarding pinch points, are essential for safe usage.
-In the interest of electrical safety, the user interface of the device(the laptop) is electrically isolated with a simple usb isolator, and all individual components share a common ground with the power supply where possible. 
+In the interest of electrical safety, the user interface of the device (the laptop) is electrically isolated with a simple USB isolator, and all individual components share a common ground with the power supply where possible. 
 An emergency stop switch is installed between that power supply and power bus, enabling the device to be shut off at any time, should a unexpected and/or dangerous condition occur.
-This switch should be made accessible and obvious at all times during operation and testing.
+This switch should be made accessible and visible at all times during operation and testing.
 The upward facing drive belt of the wave maker serves as a pinching hazard, and so it is recommended to construct a barrier for use during normal operation.
 This can 3D printed using the CAD model in the design files.
 
@@ -410,17 +410,17 @@ The WEC and wave maker support structures are built such that they tightly grip 
 It is particularly important that the wave maker is securely attached, as it undergoes significant force during operation.
 The wave probes are mounted onto the WEC support structure such that they are level with the surface of the water.
 The WEC itself consists of a small foam bouy, attached to a carbon fiber tube with a geared rack affixed to it, adjacent to a pinion gear that is both driven by the WEC motor and drives the WEC encoder.
-There are a few large washers fixed on top of the bouy to increase its inertia, the number of which can be tuned through trial and error to the size of the tank and waves within it.
+There are a few large washers fixed on top of the bouy to increase its mass, the number of which can be tuned through trial and error to the size of the tank and waves within it.
 
 The wave maker consists of a stepper motor driving a belted ball screw. 
-The stepper motor mount is used to adjust the belt tension. 
+The stepper motor mount is used to adjust the belt tension.
 Both the screw pitch and the pulley ratio of the belt drive can be set as global variables at the beginning of the Arduino source code.
 The same goes for the rack and pinion sizes for the WEC.
-The ball screw drives a 3D-printed spade/plunger to create waves, which is painted to ensure it is waterproof.
+The ball screw drives a 3D-printed spade/plunger to create waves, which is painted to achieve a waterproof surface.
 Two infrared limit switches are mounted such that each of their beams is broken when the position of the wavemaker is near its corresponding operational limit.
 This is used as a safeguard, and as a point of reference during startup calibration.
-
 More specific details regarding the exact hardware configuration can be found from CAD model shown in \figurename~\ref{fig:CAD} and \figurename~\ref{fig:siweed_photo_with_callouts}.
+
 \subsection{Electronics}
 \figurename~\ref{fig:siweed_layout} shows a detailed and accurate configuration of the SIWEED electronics. 
 It is useful to conceptualize the system in two halves: the WEC and wave maker.
