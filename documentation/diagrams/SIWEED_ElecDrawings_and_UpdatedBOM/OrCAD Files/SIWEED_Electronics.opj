@@ -1,0 +1,180 @@
+(ExpressProject "SIWEED_Electronics"
+  (ProjectVersion "19981106")
+  (SoftwareVersion "22.1 P001 (4063652)  [10/6/2022]-[02/07/25]")
+  (ProjectType "PCB")
+  (Folder "Design Resources"
+    (Folder "Library"
+      (File ".\library1.olb"
+        (Type "Schematic Library")))
+    ("Allegro Netlist Directory" "allegro")
+    (DOCKED "TRUE")
+    (DOCKING_POSITION "59420")
+    (NoModify)
+    (File ".\siweed_electronics.dsn"
+      (Type "Schematic Design"))
+    (BuildFileAddedOrDeleted "x")
+    (CompileFileAddedOrDeleted "x")
+    (Board_sim_option "VHDL_flow"))
+  (Folder "Layout")
+  (Folder "Outputs")
+  (Folder "Referenced Projects")
+  (Folder "PSpice Resources"
+    (Folder "Simulation Profiles")
+    (Folder "Model Libraries"
+      (Sort User))
+    (Folder "Stimulus Files"
+      (Sort User))
+    (Folder "Include Files"
+      (Sort User)))
+  (Folder "Logs")
+  (PartMRUSelector
+    ("EAO E-Stop"
+      (FullPartName "EAO E-Stop.Normal")
+      (LibraryName
+         "C:\USERS\AGMOTES\DOCUMENTS\SIWEED_PAPER_SCHEMATIC\LIBRARY1.OLB")
+      (DeviceIndex "0"))
+    (2Wire_To_Molex_Connector
+      (FullPartName "2Wire_To_Molex_Connector.Normal")
+      (LibraryName
+         "C:\USERS\AGMOTES\DOCUMENTS\SIWEED_PAPER_SCHEMATIC\LIBRARY1.OLB")
+      (DeviceIndex "0"))
+    (AC_Outlet_3wire
+      (FullPartName "AC_Outlet_3wire.Normal")
+      (LibraryName
+         "C:\USERS\AGMOTES\DOCUMENTS\SIWEED_PAPER_SCHEMATIC\LIBRARY1.OLB")
+      (DeviceIndex "0"))
+    (AC_Outlet
+      (FullPartName "AC_Outlet.Normal")
+      (LibraryName
+         "C:\USERS\AGMOTES\DOCUMENTS\SIWEED_PAPER_SCHEMATIC\LIBRARY1.OLB")
+      (DeviceIndex "0"))
+    (Host_Computer
+      (FullPartName "Host_Computer.Normal")
+      (LibraryName
+         "C:\USERS\AGMOTES\DOCUMENTS\SIWEED_PAPER_SCHEMATIC\LIBRARY1.OLB")
+      (DeviceIndex "0"))
+    (JustPlug_2Wire_To_Cable
+      (FullPartName "JustPlug_2Wire_To_Cable.Normal")
+      (LibraryName
+         "C:\USERS\AGMOTES\DOCUMENTS\SIWEED_PAPER_SCHEMATIC\LIBRARY1.OLB")
+      (DeviceIndex "0"))
+    (USB_Isolator
+      (FullPartName "USB_Isolator.Normal")
+      (LibraryName
+         "C:\USERS\AGMOTES\DOCUMENTS\SIWEED_PAPER_SCHEMATIC\LIBRARY1.OLB")
+      (DeviceIndex "0"))
+    (USB_Hub
+      (FullPartName "USB_Hub.Normal")
+      (LibraryName
+         "C:\USERS\AGMOTES\DOCUMENTS\SIWEED_PAPER_SCHEMATIC\LIBRARY1.OLB")
+      (DeviceIndex "0"))
+    (Adafruit_LimitSW_2168
+      (FullPartName "Adafruit_LimitSW_2168.Normal")
+      (LibraryName
+         "C:\USERS\AGMOTES\DOCUMENTS\SIWEED_PAPER_SCHEMATIC\LIBRARY1.OLB")
+      (DeviceIndex "0"))
+    (ToWaterThruFrame
+      (FullPartName "ToWaterThruFrame.Normal")
+      (LibraryName
+         "C:\USERS\AGMOTES\DOCUMENTS\SIWEED_PAPER_SCHEMATIC\LIBRARY1.OLB")
+      (DeviceIndex "0"))
+    (WoodlandScenics_LED
+      (FullPartName "WoodlandScenics_LED.Normal")
+      (LibraryName
+         "C:\USERS\AGMOTES\DOCUMENTS\SIWEED_PAPER_SCHEMATIC\LIBRARY1.OLB")
+      (DeviceIndex "0"))
+    (2P_JUMPER
+      (FullPartName "2P_JUMPER.Normal")
+      (LibraryName
+         "C:\USERS\AGMOTES\DOCUMENTS\SIWEED_PAPER_SCHEMATIC\LIBRARY1.OLB")
+      (DeviceIndex "0"))
+    (STM_STP160N3LL
+      (FullPartName "STM_STP160N3LL.Normal")
+      (LibraryName
+         "C:\USERS\AGMOTES\DOCUMENTS\SIWEED_PAPER_SCHEMATIC\LIBRARY1.OLB")
+      (DeviceIndex "0"))
+    (WoodLandScenics_JustPlug_Hub
+      (FullPartName "WoodLandScenics_JustPlug_Hub.Normal")
+      (LibraryName
+         "C:\USERS\AGMOTES\DOCUMENTS\SIWEED_PAPER_SCHEMATIC\LIBRARY1.OLB")
+      (DeviceIndex "0"))
+    (WoodlandScenics_Expander
+      (FullPartName "WoodlandScenics_Expander.Normal")
+      (LibraryName
+         "C:\USERS\AGMOTES\DOCUMENTS\SIWEED_PAPER_SCHEMATIC\LIBRARY1.OLB")
+      (DeviceIndex "0"))
+    (OSSI-010-002
+      (FullPartName "OSSI-010-002.Normal")
+      (LibraryName
+         "C:\USERS\AGMOTES\DOCUMENTS\SIWEED_PAPER_SCHEMATIC\LIBRARY1.OLB")
+      (DeviceIndex "0"))
+    ("Arduino Due"
+      (FullPartName "Arduino Due.Normal")
+      (LibraryName
+         "C:\USERS\AGMOTES\DOCUMENTS\SIWEED_PAPER_SCHEMATIC\LIBRARY1.OLB")
+      (DeviceIndex "0"))
+    (AMT102v_Encoder
+      (FullPartName "AMT102v_Encoder.Normal")
+      (LibraryName
+         "C:\USERS\AGMOTES\DOCUMENTS\SIWEED_PAPER_SCHEMATIC\LIBRARY1.OLB")
+      (DeviceIndex "0"))
+    (SO_23HS45-42045_MOTOR
+      (FullPartName "SO_23HS45-42045_MOTOR.Normal")
+      (LibraryName
+         "C:\USERS\AGMOTES\DOCUMENTS\SIWEED_PAPER_SCHEMATIC\LIBRARY1.OLB")
+      (DeviceIndex "0"))
+    (StepperOnline_DM542T
+      (FullPartName "StepperOnline_DM542T.Normal")
+      (LibraryName
+         "C:\USERS\AGMOTES\DOCUMENTS\SIWEED_PAPER_SCHEMATIC\LIBRARY1.OLB")
+      (DeviceIndex "0"))
+    (ProtoSupplies_MOD88
+      (FullPartName "ProtoSupplies_MOD88.Normal")
+      (LibraryName
+         "C:\USERS\AGMOTES\DOCUMENTS\SIWEED_PAPER_SCHEMATIC\LIBRARY1.OLB")
+      (DeviceIndex "0"))
+    (MACON_MR_TYPE_ML
+      (FullPartName "MACON_MR_TYPE_ML.Normal")
+      (LibraryName
+         "C:\USERS\AGMOTES\DOCUMENTS\SIWEED_PAPER_SCHEMATIC\LIBRARY1.OLB")
+      (DeviceIndex "0"))
+    (MAXON_283828_Motor
+      (FullPartName "MAXON_283828_Motor.Normal")
+      (LibraryName
+         "C:\USERS\AGMOTES\DOCUMENTS\SIWEED_PAPER_SCHEMATIC\LIBRARY1.OLB")
+      (DeviceIndex "0"))
+    (MAXON_486400
+      (FullPartName "MAXON_486400.Normal")
+      (LibraryName
+         "C:\USERS\AGMOTES\DOCUMENTS\SIWEED_PAPER_SCHEMATIC\LIBRARY1.OLB")
+      (DeviceIndex "0"))
+    (MAXON_242_466023
+      (FullPartName "MAXON_242_466023.Normal")
+      (LibraryName
+         "C:\USERS\AGMOTES\DOCUMENTS\SIWEED_PAPER_SCHEMATIC\LIBRARY1.OLB")
+      (DeviceIndex "0")))
+  (GlobalState
+    (FileView
+      (Path "Design Resources")
+      (Path "Design Resources" ".\siweed_electronics.dsn")
+      (Path "Design Resources" ".\siweed_electronics.dsn" "SCHEMATIC1")
+      (Path "Design Resources" "Library")
+      (Select "Design Resources" ".\siweed_electronics.dsn" "SCHEMATIC1"))
+    (HierarchyView)
+    (Doc
+      (Type "COrCapturePMDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -1 -1 0 200 0 579"))
+      (Tab 0))
+    (Doc
+      (Type "COrSchematicDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -1 -1 5 1025 24 597")
+        (Scroll "-140 -2")
+        (Zoom "17")
+        (Occurrence "/"))
+      (Path
+         "C:\USERS\AGMOTES\DOCUMENTS\SIWEED_PAPER_SCHEMATIC\SIWEED_ELECTRONICS.DSN")
+      (Schematic "SCHEMATIC1")
+      (Page "PAGE1")))
+  (MPSSessionName "agmotes"))
