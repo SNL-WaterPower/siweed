@@ -64,6 +64,11 @@
 % Add packages and commands here. The following packages are loaded in our class file: fontenc, inputenc, calc, indentfirst, fancyhdr, graphicx, epstopdf, lastpage, ifthen, float, amsmath, amssymb, lineno, setspace, enumitem, mathpazo, booktabs, titlesec, etoolbox, tabto, xcolor, colortbl, soul, multirow, microtype, tikz, totcount, changepage, attrib, upgreek, array, tabularx, pbox, ragged2e, tocloft, marginnote, marginfix, enotez, amsthm, natbib, hyperref, cleveref, scrextend, url, geometry, newfloat, caption, draftwatermark, seqsplit
 % cleveref: load \crefname definitions after \begin{document}
 
+\usepackage{datatool}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{pdflscape}
+
 %=================================================================
 % Please use the following mathematics environments: Theorem, Lemma, Corollary, Proposition, Characterization, Property, Problem, Example, ExamplesandDefinitions, Hypothesis, Remark, Definition, Notation, Assumption
 %% For proofs, please use the proof environment (the amsthm package is loaded by the MDPI class).
@@ -319,70 +324,10 @@ A number of key factors of the SIWEED project are:
 \end{itemize}
 
 \section{Build instructions}
-%Provide detailed, step by step instructions for the construction of the reported hardware include all necessary information for reproducing the submitted hardware.
-% > Explain and, when possible, characterize design decisions. Including design alternatives if they exist. 
-% > Use visual instructions such as schematics, images, and videos. 
-% > Clearly reference design files and component parts described in the Design File Summary and bill of materials. 
-% >Highlight potential safety concerns that may arise
-\begin{table}[tb]
-\caption{Bill of materials.}
-\label{tab:materials}
-\centering
-\small
-\renewcommand{\arraystretch}{1.2} % Adjusts row spacing
-\setlength{\tabcolsep}{6pt} % Adjusts column spacing
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{p{3cm} p{4cm} p{5cm} r r r}
-\toprule
-Group & Designator & Component & Number & Cost per unit & Total Cost \\
-\midrule
-Electronics & USB isolator & ADUM4160 100MA USB ISOLATOR BRD & 1 & \$34.95 & \$34.95 \\
-Electronics & Arduino Due & Arduino Due & 2 & \$37.40 & \$74.80 \\
-Electronics & Level Shifter & BSS138 & 3 & \$3.49 & \$10.47 \\
-Electronics & Encoder Buffer & Single LS7366R Quadrature Encoder Buffer & 2 & \$28.65 & \$57.30 \\
-Electronics & Encoder & AMT102-V & 2 & \$23.86 & \$47.72 \\
-Electronics & WEC Motor Controller & ESCON Module 24/2, 4-Q servo controller for DC/... & 1 & \$89.39 & \$89.39 \\
-Electronics & WEC Motor Controller MotherBoard & ESCON Module 24/2 Motherboard & 1 & \$87.00 & \$87.00 \\
-Electronics & WEC Motor & Maxon EC-max 16, 283828 & 1 & \$190.45 & \$190.45 \\
-Electronics & Wavemaker Motor Controller & StepperOnline DM542T & 1 & \$19.90 & \$19.90 \\
-Electronics & Wavemaker Motor & StepperOnline 23HS45-4204S & 1 & \$33.92 & \$33.92 \\
-Electronics & Power Supply & MDS-400ADB24AA & 1 & \$164.19 & \$164.19 \\
-Electronics & Inferred Limit & 485-2168 & 1 & \$5.95 & \$5.95 \\
-Electronics & Wave Probe & OSSI-010-002E Wave Staff & 2 & \$1,075.00 & \$2,150.00 \\
-Electronics & Project Enclosure & BOX ABS/PC GRY 19.68"L X 15.74"W & 1 & \$122.65 & \$122.65 \\
-Electronics & Signal Generator & AD9833 Function Generator & 1 & \$8.95 & \$8.95 \\
-Electronics & Transistor & MOSFET N-CH 30V 120A TO220 & 5 & \$1.12 & \$5.60 \\
-Decorations & Lighthouse & \href{https://factorydirecthobbies.com/products/preorder-lighthouse}{Lighthouse} & 2 & \$50.38 & \$100.76 \\
-Decorations & General Store Set & \href{https://www.modeltrainstuff.com/motrak-models-h0}{General Store Set} & 2 & \$119.99 & \$239.98 \\
-Decorations & House (1 story) & \href{https://www.modeltrainstuff.com/Bachmann-HO-454}{House (1 story)} & 2 & \$21.99 & \$43.98 \\
-Decorations & Fishing Shack & \href{https://barmillsmodels.com/product/fishing-shack}{Fishing Shack} & 2 & \$22.95 & \$45.90 \\
-Decorations & Shed & \href{https://www.mapleleaftrains.com/catalog/shed}{Shed} & 2 & \$20.48 & \$40.96 \\
-Decorations & Street Lights & \href{https://factorydirecthobbies.com/products/street-lights}{Street Lights} & 2 & \$16.99 & \$33.98 \\
-Decorations & Seaweed (13 pack) & \href{https://www.modeltrainstuff.com/motrak-models-h0}{Seaweed} & 2 & \$12.99 & \$25.98 \\
-Decorations & Grass Tufts (withered yellow) & \href{https://www.modeltrainstuff.com/Bachmann-HO-454}{Grass Tufts} & 3 & \$12.99 & \$38.97 \\
-Decorations & Grass Tufts (green) & \href{https://barmillsmodels.com/product/fishing-shack}{Grass Tufts (green)} & 3 & \$12.99 & \$38.97 \\
-Decorations & Sand (38 lb) & \href{https://www.mapleleaftrains.com/catalog/sand}{Sand (38 lb)} & 2 & \$49.99 & \$99.98 \\
-Decorations & Sandpaper (48 pack) & \href{https://factorydirecthobbies.com/products/sandpaper}{Sandpaper} & 2 & \$12.99 & \$25.98 \\
-Decorations & Grass Shaker & \href{https://www.modeltrainstuff.com/motrak-models-h0}{Grass Shaker} & 2 & \$16.99 & \$33.98 \\
-Decorations & Palm trees & \href{https://www.modeltrainstuff.com/Bachmann-HO-454}{Palm Trees} & 2 & \$11.99 & \$23.98 \\
-Decorations & Gravel & \href{https://barmillsmodels.com/product/gravel}{Gravel} & 2 & \$2.49 & \$4.98 \\
-Decorations & Cliff Rocks & \href{https://www.mapleleaftrains.com/catalog/cliff-rocks}{Cliff Rocks} & 2 & \$16.98 & \$33.96 \\
-Decorations & Double Sided Tape & \href{https://factorydirecthobbies.com/products/double-sided-tape}{Double Sided Tape} & 4 & \$15.99 & \$63.96 \\
-Decorations & Angle Brace & \href{https://www.modeltrainstuff.com/motrak-models-h0}{Angle Brace} & 5 & \$1.78 & \$8.90 \\
-Decorations & Angle Brace Screws & \href{https://www.modeltrainstuff.com/Bachmann-HO-454}{Angle Brace Screws} & 6 & \$1.28 & \$7.68 \\
-Decorations & Styrofoam Sheets & \href{https://barmillsmodels.com/product/styrofoam-sheets}{Styrofoam Sheets} & 2 & \$14.99 & \$29.98 \\
-Decorations & Foam & \href{https://www.mapleleaftrains.com/catalog/foam}{Foam} & 2 & \$6.99 & \$13.98 \\
-Other & Touchscreen laptop & Dell 120-ARYY & 1 & \$2,200.00 & \$2,200.00 \\
-Other & 3/4 inch acrylic tank (1.5m x 0.3m x 0.5m) & - & 1 & \$1,460.00 & \$1,460.00 \\
-\bottomrule
-\end{tabular}%
-}
-\end{table}
-
 
 \subsection{General}
-A functionally similar version of this wave tank can be reconstructed using the the following guidance, the system layout diagram in \figurename~\ref{fig:siweed_layout}, the bill of materials in \tablename~\ref{tab:materials}, and the CAD model shown in \figurename~\ref{fig:CAD}, which is also included in the design files.
-The bill of materials in \tablename~\ref{tab:materials} includes the essential electronics for the functionality of the device, along with much of the decorative hardware included for the purpose of enhancing the presentation of the wave tank.
+A functionally similar version of this wave tank can be reconstructed using the the following guidance, the system layout diagram in \figurename~\ref{fig:siweed_layout}, the bill of materials in \tablename~\ref{tab:bom}, and the CAD model shown in \figurename~\ref{fig:CAD}, which is also included in the design files.
+The bill of materials in \tablename~\ref{tab:bom} includes the essential electronics for the functionality of the device, along with much of the decorative hardware included for the purpose of enhancing the presentation of the wave tank.
 Note that mounting hardware is not included in the bill of materials, as this is not considered functionally specific. 
 Any suitable alternative that allows the functional components to be securely mounted will suffice.
 
@@ -651,9 +596,65 @@ LED & light emitting diode
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % %% Optional
 % \appendixtitles{no} % Leave argument "no" if all appendix headings stay EMPTY (then no dot is printed after "Appendix A"). If the appendix sections contain a heading then change the argument to "yes".
-% \appendixstart
-% \appendix
-% \section[\appendixname~\thesection]{}
+\appendixstart
+\appendix
+\section[\appendixname~\thesection]{Detailed design documents}
+Detailed electrical schematics are provided in \figurename~\ref{fig:siweed_electronics}-\ref{fig:siweed_electronics_aux_subsystems}.
+A detailed bill of materials is provided in Table~\ref{tab:bom}.
+
+\begin{landscape}
+\begin{figure}[tb]
+	\centering
+	\includegraphics[height=0.95\textwidth, width=\linewidth]{diagrams/SIWEED_ElecDrawings_and_UpdatedBOM/PDFs/siweed_electronics.pdf}
+	\caption{Overall electronics schematic.}
+	\label{fig:siweed_electronics}
+\end{figure}
+\end{landscape}
+
+\begin{landscape}
+\begin{figure}[tb]
+	\centering
+	\includegraphics[height=0.95\textwidth, width=\linewidth]{diagrams/SIWEED_ElecDrawings_and_UpdatedBOM/PDFs/siweed_electronics_wec_only.pdf}
+	\caption{WEC electronics schematic.}
+	\label{fig:siweed_electronics_wec_only}
+\end{figure}
+\end{landscape}
+
+\begin{landscape}
+\begin{figure}[tb]
+	\centering
+	\includegraphics[height=0.95\textwidth, width=\linewidth]{diagrams/SIWEED_ElecDrawings_and_UpdatedBOM/PDFs/siweed_electronics_wavemaker_only.pdf}
+	\caption{Wave maker electronics schematic.}
+	\label{fig:siweed_electronics_wavemaker_only}
+\end{figure}
+\end{landscape}
+
+\begin{landscape}
+\begin{figure}[tb]
+	\centering
+	\includegraphics[height=0.95\textwidth, width=\linewidth]{diagrams/SIWEED_ElecDrawings_and_UpdatedBOM/PDFs/siweed_electronics_aux_subsystems.pdf}
+	\caption{Wave maker electronics schematic.}
+	\label{fig:siweed_electronics_aux_subsystems}
+\end{figure}
+\end{landscape}
+
+
+
+\DTLloaddb{data}{BOM.csv}
+
+\begin{landscape}
+\begingroup
+\footnotesize
+\renewcommand{\dtldisplaystarttab}{\hline}%
+\renewcommand\dtldisplayafterhead{\hline}%
+\renewcommand\dtldisplaystartrow{\hline}%
+
+\DTLdisplaylongdb[caption=Bill of materials., contcaption=Bill of materials (continued)., label=tab:bom]{data}
+\end{landscape}
+\endgroup
+
+
+
 % \subsection[\appendixname~\thesubsection]{}
 % The appendix is an optional section that can contain details and data supplemental to the main text---for example, explanations of experimental details that would disrupt the flow of the main text but nonetheless remain crucial to understanding and reproducing the research shown; figures of replicates for experiments of which representative data are shown in the main text can be added here if brief, or as Supplementary Data. Mathematical proofs of results not central to the paper can be added as an appendix.
 
