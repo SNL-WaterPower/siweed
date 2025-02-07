@@ -252,11 +252,11 @@ Separate hardware nodes are then manages by two Arduinos.
 \end{figure}
 
 \subsection{Hardware}
-A system diagram for the SIWEED is shown in \figurename~\ref{fig:siweed_layout}.
+A high-level system diagram for the SIWEED is shown in \figurename~\ref{fig:siweed_layout}.
 Two Arduino Due micro controllers are used to control and acquire signals from the WEC and wave maker, communicating with the GUI through USB serial.
 The Windows laptop acts as the core of the system, with the two Arduino Dues attached through USB. 
 Each Arduino is then attached to the various devices it communicates with.
-It is worth noting that Arduino Due model was selected for their higher clock speeds, but since they operate at 3.3\,V, multiple level shifters are used to enable communication between the Arduino Dues and the components that use 5\,V logic (see \figurename~\ref{fig:siweed_layout}).
+It is worth noting that Arduino Due model was selected for their higher clock speeds, but since they operate at 3.3\,V, multiple level shifters are used to enable communication between the Arduino Dues and the components that use 5\,V logic (see detailed electrical diagrams in \appendixname~\ref{sec:detailed_design_documents}).
 
 The Windows laptop runs a Processing application that acts as the GUI, data logger, and serial communication manager.
 The Arduinos receive their commands from Processing over USB serial, and perform individual control loops based on control states dictated by the GUI.
@@ -264,7 +264,7 @@ One Due controls the movement of the wave maker plunger, while the other control
 Each send data back to the Processing GUI for data logging and plotting purposes.
 The Arduino Dues each have a number of components they communicate with through various protocols (PWM, SPI, Analog).
 These perform tasks like encoder buffering, motor control, and signal generation.
-The connections can be seen in \figurename~\ref{fig:siweed_layout}.
+The connections can be seen in the detailed electrical diagrams provided in \appendixname~\ref{sec:detailed_design_documents}.
 
 \subsection{Graphical User Interface}
 The SIWEED GUI is intended to be used with a touchscreen interface, but it is also fully functional with a mouse/track pad.
@@ -273,8 +273,8 @@ It is divided into three sections: The left instructional side, ``Mission Contro
 
 \begin{figure}[tb]
   \centering
-  \includegraphics[width=1\textwidth]{diagrams/SystemLayout.pdf}
-  \caption{SIWEED system layout diagram.}
+  \includegraphics[width=1\textwidth]{diagrams/siweed_cartoon.pdf}
+  \caption{Basic SIWEED system layout diagram (see \appendixname~\ref{sec:detailed_design_documents} for more detailed electrical diagrams).}
   \label{fig:siweed_layout}
 \end{figure}
 
@@ -326,7 +326,7 @@ A number of key factors of the SIWEED project are:
 \section{Build instructions}
 
 \subsection{General}
-A functionally similar version of this wave tank can be reconstructed using the the following guidance, the system layout diagram in \figurename~\ref{fig:siweed_layout}, the bill of materials in \tablename~\ref{tab:bom}, and the CAD model shown in \figurename~\ref{fig:CAD}, which is also included in the design files.
+A functionally similar version of this wave tank can be reconstructed using the the following guidance, a high-level system layout diagram in \figurename~\ref{fig:siweed_layout} (see detailed electrical diagrams in \appendixname~\ref{sec:detailed_design_documents}), the bill of materials in \tablename~\ref{tab:bom}, and the CAD model shown in \figurename~\ref{fig:CAD}, which is also included in the design files.
 The bill of materials in \tablename~\ref{tab:bom} includes the essential electronics for the functionality of the device, along with much of the decorative hardware included for the purpose of enhancing the presentation of the wave tank.
 Note that mounting hardware is not included in the bill of materials, as this is not considered functionally specific. 
 Any suitable alternative that allows the functional components to be securely mounted will suffice.
@@ -555,7 +555,7 @@ Communication of wave speed and a more precise wave height measurement in the GU
 
 \funding{This project was supported by the US Department of Energy's Water Power Technologies Office.}
 
-\dataavailability{This project has been documented through a GitHub repository: \url{https://doi.org/10.5281/zenodo.7502670}.} 
+\dataavailability{This project has been documented through a GitHub repository: \url{https://github.com/SNL-WaterPower/siweed}.} 
 
 \acknowledgments{
 Francisco Colorbio, John Quinlan, and Sean Pluemer worked on an earlier version of the SIWEED project on which this current version was based.
@@ -598,8 +598,9 @@ LED & light emitting diode
 % \appendixtitles{no} % Leave argument "no" if all appendix headings stay EMPTY (then no dot is printed after "Appendix A"). If the appendix sections contain a heading then change the argument to "yes".
 \appendixstart
 \appendix
-\section[\appendixname~\thesection]{Detailed design documents}
+\section[\appendixname~\thesection]{Detailed design documents}\label{sec:detailed_design_documents}
 Detailed electrical schematics are provided in \figurename~\ref{fig:siweed_electronics}-\ref{fig:siweed_electronics_aux_subsystems}.
+OrCAD design files are available in the project's GitHub repository.
 A detailed bill of materials is provided in Table~\ref{tab:bom}.
 
 \begin{landscape}
