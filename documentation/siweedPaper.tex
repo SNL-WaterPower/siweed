@@ -132,7 +132,10 @@ $^{1}$ \quad Sandia National Laboratories}
 Wave energy converters are a nascent energy generation technology that harness the power in ocean waves.
 To assist in communicating both fundamental and complex concepts of wave energy, a small scale portable wave tank and wave energy converter have been developed.
 The system has been designed using commercial off-the-shelf components and all design hardware and software are openly available for replication.
-Accompanying educational curriculum has also been developed to assist in using this hardware for classroom education.
+This project builds on prior research conducted at Sandia National Laboratories, particularly in the areas of WEC device design and control systems.
+By showcasing the principles of causal feedback control and innovative device design, SIWEED not only serves as a practical demonstration tool but also enhances the educational experience for users.
+This paper presents the detailed design system design.
+Further, via testing and analysis, we demonstrate basic functionality of the system.
 }
 
 % Keywords
@@ -188,18 +191,35 @@ Accompanying educational curriculum has also been developed to assist in using t
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
-The Sandia Interactive Wave Energy Education Display (SIWEED) is a small scale wave tank and wave energy converter (WEC) that is designed to be portable and serve in outreach and dissemination of wave energy research.
+Wave energy converters (WECs) have the potential to deliver renewable energy to the grid or other autonomous power demands \cite{Hagerman:2011aa,Clement2002,FALCAO2010899}.
+Research and development in this field has produced some notable improvements in WEC performance, but the technology is still in a developmental phase and has not achieved broad adoption.
+The Sandia Interactive Wave Energy Education Display (SIWEED)\footnote{A video showing the system in operation is available online: \url{https://youtu.be/PcOHZWLTsHc?si=CzyYw3yEPqnsiVeV}.} is a small scale wave tank and WEC that is designed to be portable and serve in outreach and dissemination of wave energy research.
 The development of this system was inspired by previous research at Sandia National Laboratories in the areas of WEC device and control design and testing.
-Specifically, the SIWEED demonstrates the causal feedback control and device design principles described in \citet{Bacelli2020} and \citet{Coe2020a}.
-
+Specifically, the SIWEED demonstrates the causal feedback control and device design principles described in \citet{Bacelli2020} and \citet{Coe:2021aa}.
 
 A wide variety of similar educational wave tanks and tow tanks have been built, but few have been documented.
 \citet{unger2006creating} reworked a tow tank at MIT to enable remote operation via the internet.
 A tank with a similar scale ($\sim$2\,m) and focus was developed by \cite{Trust2015}, but oriented at demonstrating the effectiveness of coastal flood controls.
 There seem to have been two major iterations, one electrically driven by a paddle like wave maker, and one plunger type driven mechanically by hand. 
-That team has also made multiple similar hydraulic flume tanks for demonstration purposes.
-An educational wave tank in currently on display at the National Museum of Scotland, but the waves do not interact with any bodies on the surface \cite{Ivan2016}. 
-%\citet{Y.H.Yu} Made a wave tank to study floating- point absorbers as wave energy converters, showing similarities to this project, but they use a flap-type wavemaker, and their tank is much larger and not portable.
+That same team has made multiple similar hydraulic flume tanks for demonstration purposes.
+An educational wave tank in currently on display at the National Museum of Scotland, but the waves do not interact with any bodies on the surface \cite{Ivan2016}.
+In some cases, ``virtual wave tanks'' have been developed for teaching purposes \cite{Ryu:2003aa}
+Additionally, there are some examples of educational activities of WECs that do no involve physical wave tanks \cite{Huynh:2016aa,Satriawan:2022aa,Satriawan:2024aa}.
+
+Relative to these other works, the SIWEED project was focused on are number of key contributions:
+
+\begin{itemize}
+  \item \textbf{Open-source and documented design:} To our knowledge, the SIWEED is the first educational wave tank and WEC system to be fully documented with an open-source design and software package.
+  This will enabled interested researchers and students to efficiently develop replicates and variations of the SIWEED design for their own purposes.
+  \item \textbf{Portability:} To allow for transport to conferences and outreach events, the SIWEED has been specifically designed to allow for easy transportation.
+  \item \textbf{WEC control:} In addition to demonstrating the physics of ocean waves, the SIWEED allows users to interact with a WEC control system to better understand the principles of reactive feedback control to maximize power absorption for the waves.
+  \item \textbf{Student-led design:} The SIWEED project has been a student-led design project involving undergraduate engineering students.
+  \item \textbf{Curriculum:} The SIWEED repository includes a curriculum for students K-12 based on the Next Generation Science Standards \cite{NextGenScience2021}. 
+  The repository contains a presentation and a document intended to be given to the teacher beforehand. 
+  The presentation explains water power and Sandia National Labs' role within the field, and then goes into more detail about wave energy converters and how the SIWEED system works.
+  The teacher resources document contains general information about the project, and a multitude of resources surrounding wave energy education, including videos, worksheets, vocabulary words, general topics, and Next Generation Science standards for each grade level.
+  By facilitating educational outreach, the SIWEED can help engage students in this field and inspire them to pursue careers in this field.
+\end{itemize}
 
 SIWEED is a novel expansion on similar small-scale educational wave tanks, as the wave maker is driven by a ball screw, and the user is able to control both the waves and the WEC device.
 The parameters of the wave are also fully controllable with a number of operational modes (see Table~\ref{tab:wave_maker_controls}).
@@ -309,20 +329,6 @@ That hypothetically generated power meter is driven by the same variable as the 
 \end{equation}
 Here, $P$ is the calculated output power, $\tau$ is the torque commanded by the WEC motor controller, and $v$ is the velocity.
 
-A number of key factors of the SIWEED project are:
-
-\begin{itemize}
-  \item \textbf{Open-source and documented design:} To our knowledge, the SIWEED is the first educational wave tank and WEC system to be fully documented with an open-source design and software package.
-  This will enabled interested researchers and students to efficiently develop replicates and variations of the SIWEED design for their own purposes.
-  \item \textbf{Portability:} To allow for transport to conferences and outreach events, the SIWEED has been specifically designed to allow for easy transportation.
-  \item \textbf{WEC control:} In addition to demonstrating the physics of ocean waves, the SIWEED allows users to interact with a WEC control system to better understand the principles of reactive feedback control to maximize power absorption for the waves.
-  \item \textbf{Student-led design:} The SIWEED project has been a student-led design project involving undergraduate engineering students.
-  \item \textbf{Curriculum:} The SIWEED repository includes a curriculum for students K-12 based on the Next Generation Science Standards \cite{NextGenScience2021}. 
-  The repository contains a presentation and a document intended to be given to the teacher beforehand. 
-  The presentation explains water power and Sandia National Labs' role within the field, and then goes into more detail about wave energy converters and how the SIWEED demonstration works.
-  The teacher resources document contains general information about the project, and a multitude of resources surrounding wave energy education, including videos, worksheets, vocabulary words, general topics, and Next Generation Science standards for each grade level.
-\end{itemize}
-
 \section{Build instructions}
 
 \subsection{General}
@@ -419,6 +425,7 @@ This will result in the state of the GUI not accurately representing the state o
 %> Demonstrate the use of the hardware for a relevant use case. 
 %> If possible, characterize performance of the hardware over operational parameters. 
 %> Create a bulleted list that describes the capabilities (and limitations) of the hardware. For example consider descriptions of load, operation time, spin speed, coefficient of variation, accuracy, precision and etc. 
+
 A series of analyses were conducted on the hardware and software to confirm the proper functionality of the SIWEED.
 These tests ensure that individual components, and the systems they rely on, behave as expected.
 What is not included here is a series of software unit tests that run at the start of every execution of the GUI.
@@ -427,37 +434,52 @@ Results of these tests can be found on a per execution basis in the GUI console.
 During nominal operation all unit tests have proven to pass.
 
 \subsection{Torque constant verification:}\label{tConstSec}
+Due to the desire to keep costs and complexity in check and the small scale of the system, the SIWEED does not include a direct measurement of the motor torque or force applied to the WEC.
+However, we may estimate motor torque and force applied to the WEC from the motor current, which is readily available.
 The factory torque constant was verified by logging the position and current of the free floating WEC while commanding a slow sinusoidal current.
 The position displacement time series was converted to a time series of the applied physical torque based on the hydrostatic force due to submerging/lifting the WEC:
 %
 \begin{equation}
-  \tau = \sigma \cdot \gamma \cdot d \cdot \pi \cdot r^2
+\begin{aligned}
+\tau_{hs} 
+&= \sigma F_{hs} \\
+&= \sigma \rho g A_{wp} \Delta z
+\end{aligned}
+\label{eq:hydrostatic_restoring}
 \end{equation}
 %
-Here, $\tau$ is torque, $\sigma$ is the radius of the pinion gear, $\gamma$ is the specific weight of water, $d$ is the displacement of the buoy in the water, and $r$ is the radius of the buoy.
+Here, $\tau_{hs}$ is torque due to hydrostatic restoring force, which is the product of the radius of the pinion gear ($\sigma$) and the hydrostatic restoring force ($F_{hs}$).
+The hydrostatic restoring force can be modeled as a linear spring effect due to some displacement $\Delta z$, where the stiffness is given by the product of the water plane ($A_{wp}$), density of the water ($\rho$), and gravity ($g$).
 %Torque = pinon radius (M)*  [9810(N/m^3)*pos(m)*pi*radius(m)^2]
-It is important to note that the torque values at this point did not account for friction or hysteresis.
+It is important to note that the torque calculated from \eqref{eq:hydrostatic_restoring} does not include friction effects.
+
 Plotting this torque data against the recorded commanded current values gives  \figurename~\ref{fig:TorqueConstant}.
-The ``fit1'' line represents the best linear fit of the entire data set, but the data points at the highest and lowest currents are affected more significantly by static friction, so omitting them from the data set improves the torque constant estimation, as shown with the ``fit2'' line in \figurename~\ref{fig:TorqueConstant}.
+The solid red curve in \figurename~\ref{fig:TorqueConstant} represents the best linear fit of the entire data set.
+However, the data points at the highest and lowest currents are affected more significantly by static friction, therefor omitting them from the data set improves the torque constant estimation, as shown with the dashed purple curve in \figurename~\ref{fig:TorqueConstant}.
 This provides an estimated torque constant of approximately 7.52\,mNm/A, which is within 4\% of the factory stated torque constant of 7.8\,mNm/A.
 
 \begin{figure}[tb]
   \centering
-  \includegraphics[width=0.75\textwidth]{diagrams/TorqueConstant.pdf}
-  \caption{Torque vs commanded current, with linear fits of the entire and partial data set.}
+  \includegraphics[width=1\textwidth]{diagrams/findKT_3.pdf}
+  \caption{Torque (estimated based on hydrostatics) vs. commanded current. Linear trends are fit to estimate/verify motor torque constant.}
   \label{fig:TorqueConstant}
 \end{figure}
 
 
 \subsection{Friction estimation:}\label{friction}
+As with any mechanical drive train, the SIWEED WEC's drive train exhibits some finite level of friction.
+To more fully understand how motor torque (estimated from motor current per Section~\ref{tConstSec}) relates the force applied to the WEC hull, we must estimate the friction present in the WEC's drive train.
+Here, we assume that the friction in the WEC's drive train is due primarily to Coulomb friction.
+
 Since applied torque in Section~\ref{tConstSec} is being estimated from displacement and the frequency is low (which means that inertial and viscous effects are small), the friction shows up as a ``constant'' offset from the ideal torque constant and doesn't affect the slope.
 This allows the friction to be seen as half the offset between the data points as the wave maker moves up and down moves down. 
-Plotting the torque error using the calculated torque constant against the current gives \figurename~\ref{fig:TorqueError}.
+Plotting the difference between the torque predicted by the linear torque constant's produce with current and the torque predicted based on hydrostatics gives \figurename~\ref{fig:TorqueError}.
+The data with lower motor currents ($I < 3$\,A; shown in red in \figurename~\ref{fig:TorqueError}) will have lower accelerations provide better estimates.
 The average offset shows that the static friction is about 0.45\,mNm in this operational envelope.
 
 \begin{figure}[tb]
   \centering
-  \includegraphics[width=0.75\textwidth]{diagrams/TorqueError.pdf}
+  \includegraphics[width=1\textwidth]{diagrams/torque_error_3.pdf}
   \caption{Motor torque error compared with commanded motor current.}
   \label{fig:TorqueError}
 \end{figure}
@@ -480,75 +502,51 @@ The proportional derivative\,(PD) controller functions on the following formula:
 %
 Here, $\tau$ is the calculated torque, $k_p$ is the user defined proportional gain, $p$ is the position in meters, $k_d$ is the user defined derivative gain, and $v$ is the velocity, in meters per second, calculated by the change in position over the last 10 milliseconds. 
 The torque applied by the motor is thus the combined effect of a spring and damper, with the proportional gain $k_p$ adjusting the strength of the spring, and the derivative gain $k_d$ adjusting the strength of the damper.
-Unlike a typical physical spring, this ``spring'' can both push device towards center, or push it away, depending on the sign of the gain.
+Unlike a typical physical spring, this ``spring'' can both push device towards center (a stabilizing affect), or push it away (a destabilizing effect), depending on the sign of the gain.
 A positive $k_p$ will act as a destabilizing force, whereas a negative $k_p$ will center the WEC to the waterline, similarly to a physical spring.
 
-The calculation of (\ref{pdctrleq}) is done on the Arduino Due micro-controller responsible for controlling the WEC, which commands an output torque through PWM to the WEC motor controller.
+The calculation of \eqref{pdctrleq} is done on the Arduino Due micro-controller responsible for controlling the WEC, which commands an output torque through PWM to the WEC motor controller.
 The position and velocity are determined with an encoder, while the $k_p$ and $k_d$ inputs are set by the user in the GUI, which the Arduino receives through USB serial.
-By logging the inputs and output of the control system through a range of user inputs, its performance can be verified.
-Control loop response times to be less than 33\,ms, as the data logging control loop runs at 30\,Hz and shows a delay of one sample or less.
+By logging the inputs and output of the control system through a range of user inputs, its functionality/performance can be verified.
+% Control loop response times to be less than 33\,ms, as the data logging control loop runs at 30\,Hz and shows a delay of one sample or less.
 
-\figurename~\ref{fig:TorqueCommanded} shows the performance of the controller during typical operation. 
+\figurename~\ref{fig:TorqueCommanded} shows the performance of the controller during typical operation.
+This data was collected during a test in which the feedback controller was used to command WEC torque.
 The commanded torque was calculated as per \eqref{pdctrleq}, while the measured torque was taken from an analog output on the WEC motor controller that measures current, then multiplying it by the known torque constant (see Section~\ref{tConstSec}).
-This shows us how the PD control algorithm and motor controller react to our given inputs.
+This comparison illustrates how the PD control algorithm and motor controller react to our given inputs.
 As the linearity of the plot shows, the measured output torque closely matches the expected torque.
-The standard deviation of the torque during user testing was $3.82 \times 10^{-4}$\,Nm.
+% The standard deviation of the torque during user testing was $3.82 \times 10^{-4}$\,Nm.
 
 \begin{figure}[tb]
   \centering
-  \includegraphics[width=0.75\textwidth]{diagrams/TorqueCommanded.pdf}
-  \caption{Comparison of measured and commanded motor torque.}
+  \includegraphics[width=1\textwidth]{diagrams/PDverification.pdf}
+  \caption{Comparison of measured and commanded motor torque with a linear regression and 95\% prediction interval ($2\sigma$); mean absolute error (MAE): 1E-4.}
   \label{fig:TorqueCommanded}
 \end{figure}
 
-There is a theoretical possibility to experience saturation near the limits of our torque output.
-This is the result of a protection written into the WEC motor controller, and can be adjusted by what is referred to as the ``Thermal Time Constant".
+To protect the system, a torque saturation constraint was applied within the WEC controller -- this can be adjusted by what is referred to as the ``Thermal Time Constant".
 When commanded to apply a torque over what the controller deems as safe, the motor controller will apply this torque for only some time before saturating at the maximum nominal torque.
-This was observed targeted testing, occurring around $3.5\times 10^{-3}$\,Nm, but not during any user tests, as the commanded torque was never that high.
+This was observed targeted testing, occurring around $3.5\times 10^{-3}$\,Nm, but not during any user tests, as the commanded torque was never above that threshold.
 If it were to become an issue, the the range of possible $k_p$ and $k_d$ commands and torque jog commands could be limited within the GUI to avoid any saturation triggers.
 
-While fitting closely, there is still error present in this control loop. 
-\figurename~\ref{fig:ErrorHistogram} shows a histogram of the torque error, calculated by subtracting the measured torque ($\tau_m$) from the commanded torque ($\tau_c$).
-%
-\begin{equation}
-	\tau_e = \tau_c - \tau_m
-	\label{eq:torque_error}
-\end{equation}
-%
-In these particular user tests, the RMS error was $9.84 \times 10^{-5}$\,Nm.
-For context, the standard deviation of the torque measurement was $3.82\times 10^{-4}$\,Nm.
+\section{Discussion and conclusions}
+The SIWEED project was developed to communicate important aspects of WEC design, performance, and control while adhering to the open source philosophy.
+This paper provides the resources necessary to understand and even reproduce the SIWEED, while demonstrating basic functionality of the system through basic testing and analysis.
+This information should enable users of the SIWEED and developers of other similar systems to better understand fundamental concepts of wave energy.
 
-\begin{figure}[tb]
-  \centering
-  \includegraphics[width=0.75\textwidth]{diagrams/ErrorHistogram.pdf}
-  \caption{Histogram of motor torque error per \eqref{eq:torque_error}.}
-  \label{fig:ErrorHistogram}
-\end{figure}
+This project aims to demonstrate the feasibility of harnessing wave energy as a sustainable and renewable resource while actively involving the public in the learning process.
+This SIWEED is a simple, accessible, and reproducible tool for outreach and engagement.
+As an open-source project, the SIWEED encourages collaboration and contributions from the scientific community, fostering innovation and improvements in the modeling, control, and design of WECs.
+Through its educational outreach efforts, the SIWEED can actively engage students in this field and encourage them to explore career opportunities within it.
+To-date, the SIWEED has been employed in multiple demonstrations that have involved over 500 elementary school students in total.
+In addition, the SIWEED was invited and participated in ``American Possibilities: A White House Demo Day'' attended by many influential governmental officials.
 
-Part of what has to be considered with this error is noise in the analog signal that is used to read amperage and calculate measured torque.
-To characterize this, zero torque can be commanded, and then the measurement analyzed.  
-For simplified data collection, user testing data sets were truncated to only sections where the commanded torque was zero.
-\figurename~\ref{fig:NoiseHistogram} shows a histogram of the torque when a zero command is sent.
-It can be easily seen that there is a slight positive offset in the noise, which is assumed to come from inaccuracy in the analog reporting on the motor controller, or the analog reading on the Arduino Due.
-This offset varies from test to test, and can be negative.
-Using this method of analyzing only data points where the torque command is zero over multiple tests gives a noise band of about $8 \times 10^{-5}$\,Nm, where 90\% of samples lie between $\pm 4 \times 10^{-5}$\,Nm.
-Taken together with the torque error results shown in \figurename~\ref{fig:ErrorHistogram}, this indicates that the system is generally performing close to the limits of the components in terms of repeatability.
-
-\begin{figure}[tb]
-  \centering
-  \includegraphics[width=0.75\textwidth]{diagrams/NoiseHistogram.pdf}
-  \caption{Histogram of motor torque noise (torque error when commanding zero torque).}
-  \label{fig:NoiseHistogram}
-\end{figure}
-
-\section{Conclusions}
-The SIWEED project was developed to communicate important aspects of WEC design, performance and control while adhering to the open source philosophy. 
-This paper provides the resources necessary to understand and even reproduce the SIWEED, while demonstrating the viability of the system. 
-With this information in hand, the owners and operators of the SIWEED are now empowered to educate others about wave energy, and any interested parties are enabled to recreate this project.
-
-Should others wish to improve the SIWEED design in future work, the wave probes module would be an excellent area for additional future work.
-Because of what was believed to be capacitive coupling as described in Section~\ref{waveprobes}, and limited sensor resolution, the produced waves were never fully characterized to the user.
-Communication of wave speed and a more precise wave height measurement in the GUI could prove beneficial to the user. 
+Work to-date on the system has focused on basic functionality and other activities that directly supported our goal of enabling educational outreach activities.
+However, there are many potential areas for future work with the SIWEED system.
+Using the system as-is, different combinations of wave amplitudes and frequencies could be studied to assess the system's ability to generate these waves and maintain good absorption via the beach.
+Filters could be designed for the system's analog signals (e.g., motor current and wave height).
+Although we have operated the system for a substantial number of demonstrations, more systematic long-term operational tests to assess the system's reliability could also be conducted.
+Beyond these initiatives to better characterize the system as currently built, improvements to the SIWEED system's wave probes' signal and their signal process, transitioning the GUI from Processing to a more broadly used framework, and experiments involving changes to the WEC hull shape are of interest.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \authorcontributions{Conceptualization, R.G.C., and G.B.; methodology, R.G.C, G.B., S.J.S, A.G.M and D.D.F.; investigation, N.R., D.H., A.G.M., K.D. and A.F.; writing, N.R., A.G.M and R.G.C; project administration, R.G.C; funding acquisition, R.G.C. All authors have read and agreed to the published version of the manuscript.}
@@ -602,6 +600,7 @@ LED & light emitting diode
 Detailed electrical schematics are provided in \figurename~\ref{fig:siweed_electronics}-\ref{fig:siweed_electronics_aux_subsystems}.
 OrCAD design files are available in the project's GitHub repository.
 A detailed bill of materials is provided in Table~\ref{tab:bom}.
+A listing of files included as supplementary materials is provided in Table~\ref{tab:subpplementary_materials}.
 
 \begin{landscape}
 \begin{figure}[tb]
@@ -654,7 +653,33 @@ A detailed bill of materials is provided in Table~\ref{tab:bom}.
 \end{landscape}
 \endgroup
 
+\begin{table}[tb]
+	\caption{Supplementary materials.}
+	\label{tab:subpplementary_materials}
+	\centering
 
+	\begin{tabular}{lll}
+	\hline
+	\hline
+	\textbf{File name} & \textbf{File type} & \textbf{Description} \\
+	\hline
+		Arduino/libraries 				& Directory & Standard Arduino libraries \\
+		Arduino/WaveMaker\_Controller 	& Directory & Arduino source for wave maker \\
+		Arduino/WEC\_Controller 		& Directory & Arduino source for WEC \\
+		CODE\_OF\_CONDUCT.md 			& Markdown 	& Repository code of conduct \\
+		contributing.md 				& Markdown 	& Repository contributing guide \\
+		COPYING 						& ASCII 	& Copyright \\
+		documentation 					& Directory & Material for journal paper \\
+		educational\_material.md 		& Markdown 	& Teacher/student material and guide \\
+		matlabExamples 					& Directory & Simple MATLAB analysis examples \\
+		miniWaveModel.slx 				& Simulink 	& Simple Simulink model for prototyping \\
+		Processing 						& Directory & Graphic user interface code \\
+		README.md 						& Markdown 	& Basic information about the project \\
+	\hline
+
+	\hline
+	\end{tabular}
+\end{table}
 
 % \subsection[\appendixname~\thesubsection]{}
 % The appendix is an optional section that can contain details and data supplemental to the main text---for example, explanations of experimental details that would disrupt the flow of the main text but nonetheless remain crucial to understanding and reproducing the research shown; figures of replicates for experiments of which representative data are shown in the main text can be added here if brief, or as Supplementary Data. Mathematical proofs of results not central to the paper can be added as an appendix.

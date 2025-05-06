@@ -1,11 +1,14 @@
 clc;clear all;close all;
-data{1} = importfile('C:\Users\sjspenc\Documents\MATLAB\new_Tau_tests\6-15-2021_16-47-1.csv');
-data{2} = importfile('C:\Users\sjspenc\Documents\MATLAB\new_Tau_tests\6-15-2021_16-55-16.csv');
-data{3} = importfile('C:\Users\sjspenc\Documents\MATLAB\new_Tau_tests\6-15-2021_17-0-32.csv');
+data{1} = importfile('6-15-2021_16-47-1.csv');
+data{2} = importfile('6-15-2021_16-55-16.csv');
+data{3} = importfile('6-15-2021_17-0-32.csv');
 
 %%
 for i = 1:3
-figure(i);clf;hold on;grid on;
+f1(i) = figure(i);
+clf
+hold on
+grid on;
 Kt0 = 0.0078;
 I = data{i}.wecTau/Kt0;
 x = data{i}.wecPos;
@@ -24,17 +27,26 @@ p2 = polyfit(I(abs(I)<0.3),tau(abs(I)<0.3),1);
 p1*1000
 p2*1000
 plot(sort(I),polyval(p2,sort(I)),'--','linewidth',2)
-legend({'data','fit1','selected','fit2'},'location','southeast')
+legend({'Data','Linear trend (all data)','Selected data',...
+    'Linear trend (selected data)'},'location','southeast','Interpreter','latex')
+xlabel('Current, $I$ [A]','Interpreter','latex')
+ylabel('Torque, $\tau$ [Nm]','Interpreter','latex')
+exportgraphics(f1(i),sprintf('findKT_%i.pdf',i),'ContentType','vector')
 
-figure(i+3);clf;hold on;grid on;
+
+f2(i) = figure(i+3);
+clf
+hold on
+grid on;
 plot(I,tau-polyval(p1,I),'.')
 plot(I(abs(I)<0.3),tau(abs(I)<0.3)-polyval(p2,I(abs(I)<0.3)),'.')
-legend({'tau_{err}','tau_{err_2}'},'location','northwest')
-xlabel('current (A)')
-ylabel('torque error (Nm)')
-    
+legend({'All data','Data w. $I<0.3$A'},'location','northwest','Interpreter','latex')
+xlabel('Current, $I$ [A]','Interpreter','latex')
+ylabel('Torque error [Nm]','Interpreter','latex')
+exportgraphics(f2(i),sprintf('torque_error_%i.pdf',i),'ContentType','vector')
+
 tau_error = tau(abs(I)<0.3)-polyval(p2,I(abs(I)<0.3));
 mean(tau_error(tau_error>0))
 mean(tau_error(tau_error<0))
 mean(abs(tau_error))
-end
+end;
