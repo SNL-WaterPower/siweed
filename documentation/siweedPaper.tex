@@ -276,7 +276,7 @@ A high-level system diagram for the SIWEED is shown in \figurename~\ref{fig:siwe
 Two Arduino Due micro controllers are used to control and acquire signals from the WEC and wave maker, communicating with the GUI through USB serial.
 The Windows laptop acts as the core of the system, with the two Arduino Dues attached through USB. 
 Each Arduino is then attached to the various devices it communicates with.
-It is worth noting that Arduino Due model was selected for their higher clock speeds, but since they operate at 3.3\,V, multiple level shifters are used to enable communication between the Arduino Dues and the components that use 5\,V logic (see detailed electrical diagrams in \appendixname~\ref{sec:detailed_design_documents}).
+It is worth noting that Arduino Due model was selected for their higher clock speeds, but since they operate at 3.3\,V, multiple level shifters are used to enable communication between the Arduino Dues and the components that use 5\,V logic (see detailed electrical diagrams in Supplementary Materials).
 
 The Windows laptop runs a Processing application that acts as the GUI, data logger, and serial communication manager.
 The Arduinos receive their commands from Processing over USB serial, and perform individual control loops based on control states dictated by the GUI.
@@ -284,7 +284,7 @@ One Due controls the movement of the wave maker plunger, while the other control
 Each send data back to the Processing GUI for data logging and plotting purposes.
 The Arduino Dues each have a number of components they communicate with through various protocols (PWM, SPI, Analog).
 These perform tasks like encoder buffering, motor control, and signal generation.
-The connections can be seen in the detailed electrical diagrams provided in \appendixname~\ref{sec:detailed_design_documents}.
+The connections can be seen in the detailed electrical diagrams provided as Supplementary Materials.
 
 \subsection{Graphical User Interface}
 The SIWEED GUI is intended to be used with a touchscreen interface, but it is also fully functional with a mouse/track pad.
@@ -294,7 +294,7 @@ It is divided into three sections: The left instructional side, ``Mission Contro
 \begin{figure}[tb]
   \centering
   \includegraphics[width=1\textwidth]{diagrams/siweed_cartoon.pdf}
-  \caption{Basic SIWEED system layout diagram (see \appendixname~\ref{sec:detailed_design_documents} for more detailed electrical diagrams).}
+  \caption{Basic SIWEED system layout diagram (see Supplementary Materials for more detailed electrical diagrams).}
   \label{fig:siweed_layout}
 \end{figure}
 
@@ -332,7 +332,7 @@ Here, $P$ is the calculated output power, $\tau$ is the torque commanded by the 
 \section{Build instructions}
 
 \subsection{General}
-A functionally similar version of this wave tank can be reconstructed using the the following guidance, a high-level system layout diagram in \figurename~\ref{fig:siweed_layout} (see detailed electrical diagrams in \appendixname~\ref{sec:detailed_design_documents}), the bill of materials in \tablename~\ref{tab:bom}, and the CAD model shown in \figurename~\ref{fig:CAD}, which is also included in the design files.
+A functionally similar version of this wave tank can be reconstructed using the the following guidance, a high-level system layout diagram in \figurename~\ref{fig:siweed_layout} (see detailed electrical diagrams in Supplementary Materials), the bill of materials in \tablename~\ref{tab:bom}, and the CAD model shown in \figurename~\ref{fig:CAD}, which is also included in the design files.
 The bill of materials in \tablename~\ref{tab:bom} includes the essential electronics for the functionality of the device, along with much of the decorative hardware included for the purpose of enhancing the presentation of the wave tank.
 Note that mounting hardware is not included in the bill of materials, as this is not considered functionally specific. 
 Any suitable alternative that allows the functional components to be securely mounted will suffice.
@@ -551,6 +551,65 @@ Filters could be designed for the system's analog signals (e.g., motor current a
 Although we have operated the system for a substantial number of demonstrations, more systematic long-term operational tests to assess the system's reliability could also be conducted.
 Beyond these initiatives to better characterize the system as currently built, improvements to the SIWEED system's wave probes' signal and their signal process, transitioning the GUI from Processing to a more broadly used framework, and experiments involving changes to the WEC hull shape are of interest.
 
+\supplementary{The following supporting information can be downloaded at:  \linksupplementary{s1}.
+
+\vspace{3pt}
+\setlength{\cellWidtha}{\columnwidth/3-2\tabcolsep--0.3in}
+\setlength{\cellWidthb}{\columnwidth/3-2\tabcolsep-0.9in}
+\setlength{\cellWidthc}{\columnwidth/3-2\tabcolsep--0.6in}
+\noindent
+\scalebox{1}[1]{\begin{tabularx}{\columnwidth}{>{\PreserveBackslash\raggedright}m{\cellWidtha}>{\PreserveBackslash\raggedright}m{\cellWidthb}>{\PreserveBackslash\raggedright}m{\cellWidthc}}
+\toprule
+
+\textbf{\boldmath{File Name}} & \textbf{\boldmath{File Type}} & \textbf{\boldmath{Description}}\\
+\cmidrule{1-3}
+Arduino/libraries 				& Directory & Standard Arduino libraries\\
+Arduino/WaveMaker\_Controller 	& Directory & Arduino source for wave maker\\
+Arduino/WEC\_Controller 		& Directory & Arduino source for WEC\\
+CODE\_OF\_CONDUCT.md 			& Markdown & Repository code of conduct\\
+contributing.md 				& Markdown & Repository contributing guide\\
+COPYING 						& ASCII & Copyright\\
+documentation 					& Directory & journal paper; electrical diagrams\\
+educational\_material.md 		& Markdown & Teacher/student material and guide\\
+matlabExamples 					& Directory & Simple MATLAB analysis examples\\
+miniWaveModel.slx 				& Simulink & Simple Simulink model for prototyping\\
+Processing 						& Directory & Graphic user interface code\\
+README.md 						& Markdown & Basic information about the project\\
+\bottomrule
+\end{tabularx}}
+
+}
+\vspace{6pt}
+
+
+% \begin{table}[tb]
+% 	\caption{Supplementary materials.}
+% 	\label{tab:subpplementary_materials}
+% 	\centering
+
+% 	\begin{tabular}{lll}
+% 	\hline
+% 	\hline
+% 	\textbf{File name} & \textbf{File type} & \textbf{Description} \\
+% 	\hline
+% 		Arduino/libraries 				& Directory & Standard Arduino libraries \\
+% 		Arduino/WaveMaker\_Controller 	& Directory & Arduino source for wave maker \\
+% 		Arduino/WEC\_Controller 		& Directory & Arduino source for WEC \\
+% 		CODE\_OF\_CONDUCT.md 			& Markdown 	& Repository code of conduct \\
+% 		contributing.md 				& Markdown 	& Repository contributing guide \\
+% 		COPYING 						& ASCII 	& Copyright \\
+% 		documentation 					& Directory & Material for journal paper \\
+% 		educational\_material.md 		& Markdown 	& Teacher/student material and guide \\
+% 		matlabExamples 					& Directory & Simple MATLAB analysis examples \\
+% 		miniWaveModel.slx 				& Simulink 	& Simple Simulink model for prototyping \\
+% 		Processing 						& Directory & Graphic user interface code \\
+% 		README.md 						& Markdown 	& Basic information about the project \\
+% 	\hline
+
+% 	\hline
+% 	\end{tabular}
+% \end{table}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \authorcontributions{Conceptualization, R.G.C., and G.B.; methodology, R.G.C, G.B., S.J.S, A.G.M and D.D.F.; investigation, N.R., D.H., A.G.M., K.D. and A.F.; writing, N.R., A.G.M and R.G.C; project administration, R.G.C; funding acquisition, R.G.C. All authors have read and agreed to the published version of the manuscript.}
 
@@ -599,49 +658,44 @@ LED & light emitting diode
 % \appendixtitles{no} % Leave argument "no" if all appendix headings stay EMPTY (then no dot is printed after "Appendix A"). If the appendix sections contain a heading then change the argument to "yes".
 \appendixstart
 \appendix
-\section[\appendixname~\thesection]{Detailed design documents}\label{sec:detailed_design_documents}
-Detailed electrical schematics are provided in \figurename~\ref{fig:siweed_electronics}-\ref{fig:siweed_electronics_aux_subsystems}.
-OrCAD design files are available in the project's GitHub repository.
+\section[\appendixname~\thesection]{Bill of materials\label{sec:detailed_design_documents}}
 A detailed bill of materials is provided in Table~\ref{tab:bom}.
-A listing of files included as supplementary materials is provided in Table~\ref{tab:subpplementary_materials}.
 
-\begin{landscape}
-\begin{figure}[tb]
-	\centering
-	\includegraphics[height=0.95\textwidth, width=\linewidth]{diagrams/SIWEED_ElecDrawings_and_UpdatedBOM/PDFs/siweed_electronics.pdf}
-	\caption{Overall electronics schematic.}
-	\label{fig:siweed_electronics}
-\end{figure}
-\end{landscape}
+% \begin{landscape}
+% \begin{figure}[tb]
+% 	\centering
+% 	\includegraphics[height=0.95\textwidth, width=\linewidth]{diagrams/SIWEED_ElecDrawings_and_UpdatedBOM/PDFs/siweed_electronics.pdf}
+% 	\caption{Overall electronics schematic.}
+% 	\label{fig:siweed_electronics}
+% \end{figure}
+% \end{landscape}
 
-\begin{landscape}
-\begin{figure}[tb]
-	\centering
-	\includegraphics[height=0.95\textwidth, width=\linewidth]{diagrams/SIWEED_ElecDrawings_and_UpdatedBOM/PDFs/siweed_electronics_wec_only.pdf}
-	\caption{WEC electronics schematic.}
-	\label{fig:siweed_electronics_wec_only}
-\end{figure}
-\end{landscape}
+% \begin{landscape}
+% \begin{figure}[tb]
+% 	\centering
+% 	\includegraphics[height=0.95\textwidth, width=\linewidth]{diagrams/SIWEED_ElecDrawings_and_UpdatedBOM/PDFs/siweed_electronics_wec_only.pdf}
+% 	\caption{WEC electronics schematic.}
+% 	\label{fig:siweed_electronics_wec_only}
+% \end{figure}
+% \end{landscape}
 
-\begin{landscape}
-\begin{figure}[tb]
-	\centering
-	\includegraphics[height=0.95\textwidth, width=\linewidth]{diagrams/SIWEED_ElecDrawings_and_UpdatedBOM/PDFs/siweed_electronics_wavemaker_only.pdf}
-	\caption{Wave maker electronics schematic.}
-	\label{fig:siweed_electronics_wavemaker_only}
-\end{figure}
-\end{landscape}
+% \begin{landscape}
+% \begin{figure}[tb]
+% 	\centering
+% 	\includegraphics[height=0.95\textwidth, width=\linewidth]{diagrams/SIWEED_ElecDrawings_and_UpdatedBOM/PDFs/siweed_electronics_wavemaker_only.pdf}
+% 	\caption{Wave maker electronics schematic.}
+% 	\label{fig:siweed_electronics_wavemaker_only}
+% \end{figure}
+% \end{landscape}
 
-\begin{landscape}
-\begin{figure}[tb]
-	\centering
-	\includegraphics[height=0.95\textwidth, width=\linewidth]{diagrams/SIWEED_ElecDrawings_and_UpdatedBOM/PDFs/siweed_electronics_aux_subsystems.pdf}
-	\caption{Wave maker electronics schematic.}
-	\label{fig:siweed_electronics_aux_subsystems}
-\end{figure}
-\end{landscape}
-
-
+% \begin{landscape}
+% \begin{figure}[tb]
+% 	\centering
+% 	\includegraphics[height=0.95\textwidth, width=\linewidth]{diagrams/SIWEED_ElecDrawings_and_UpdatedBOM/PDFs/siweed_electronics_aux_subsystems.pdf}
+% 	\caption{Wave maker electronics schematic.}
+% 	\label{fig:siweed_electronics_aux_subsystems}
+% \end{figure}
+% \end{landscape}
 
 \DTLloaddb{data}{BOM.csv}
 
@@ -655,34 +709,6 @@ A listing of files included as supplementary materials is provided in Table~\ref
 \DTLdisplaylongdb[caption=Bill of materials., contcaption=Bill of materials (continued)., label=tab:bom]{data}
 \end{landscape}
 \endgroup
-
-\begin{table}[tb]
-	\caption{Supplementary materials.}
-	\label{tab:subpplementary_materials}
-	\centering
-
-	\begin{tabular}{lll}
-	\hline
-	\hline
-	\textbf{File name} & \textbf{File type} & \textbf{Description} \\
-	\hline
-		Arduino/libraries 				& Directory & Standard Arduino libraries \\
-		Arduino/WaveMaker\_Controller 	& Directory & Arduino source for wave maker \\
-		Arduino/WEC\_Controller 		& Directory & Arduino source for WEC \\
-		CODE\_OF\_CONDUCT.md 			& Markdown 	& Repository code of conduct \\
-		contributing.md 				& Markdown 	& Repository contributing guide \\
-		COPYING 						& ASCII 	& Copyright \\
-		documentation 					& Directory & Material for journal paper \\
-		educational\_material.md 		& Markdown 	& Teacher/student material and guide \\
-		matlabExamples 					& Directory & Simple MATLAB analysis examples \\
-		miniWaveModel.slx 				& Simulink 	& Simple Simulink model for prototyping \\
-		Processing 						& Directory & Graphic user interface code \\
-		README.md 						& Markdown 	& Basic information about the project \\
-	\hline
-
-	\hline
-	\end{tabular}
-\end{table}
 
 % \subsection[\appendixname~\thesubsection]{}
 % The appendix is an optional section that can contain details and data supplemental to the main text---for example, explanations of experimental details that would disrupt the flow of the main text but nonetheless remain crucial to understanding and reproducing the research shown; figures of replicates for experiments of which representative data are shown in the main text can be added here if brief, or as Supplementary Data. Mathematical proofs of results not central to the paper can be added as an appendix.
