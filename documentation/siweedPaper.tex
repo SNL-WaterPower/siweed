@@ -697,14 +697,15 @@ A detailed bill of materials is provided in Table~\ref{tab:bom}.
 % \end{figure}
 % \end{landscape}
 
-\DTLloaddb{data}{BOM.csv}
+\DTLloaddb{data}{BOM_no_decorations.csv}
 
 \begin{landscape}
 \begingroup
 \footnotesize
-\renewcommand{\dtldisplaystarttab}{\hline}%
+\renewcommand{\dtldisplaystarttab}{\\\toprule}%
 \renewcommand\dtldisplayafterhead{\hline}%
 \renewcommand\dtldisplaystartrow{\hline}%
+\renewcommand{\dtldisplayendtab}{\\\bottomrule}%
 
 \DTLdisplaylongdb[caption=Bill of materials., contcaption=Bill of materials (continued)., label=tab:bom]{data}
 \end{landscape}
