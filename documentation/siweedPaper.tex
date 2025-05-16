@@ -337,6 +337,20 @@ The bill of materials in \tablename~\ref{tab:bom} includes the essential electro
 Note that mounting hardware is not included in the bill of materials, as this is not considered functionally specific. 
 Any suitable alternative that allows the functional components to be securely mounted will suffice.
 
+\DTLloaddb{data}{BOM_no_decorations.csv}
+
+\begin{landscape}
+\begingroup
+\footnotesize
+\renewcommand{\dtldisplaystarttab}{\\\toprule}%
+\renewcommand\dtldisplayafterhead{\hline}%
+\renewcommand\dtldisplaystartrow{\hline}%
+\renewcommand{\dtldisplayendtab}{\\\bottomrule}%
+
+\DTLdisplaylongdb[caption=Bill of materials (note: decorations for town not included)., contcaption=Bill of materials (continued)., label=tab:bom]{data}
+\end{landscape}
+\endgroup
+
 Many parts included in the bill of materials can be substituted with functionally similar ones, such as the laptop, transistors, power supply, or the tank itself.
 The specifications of any substitutions must at least meet the capabilities of the original components in the bill of materials.
 Software specific hardware, such as the Arduinos or encoder buffers should not be substituted. 
@@ -656,10 +670,10 @@ LED & light emitting diode
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % %% Optional
 % \appendixtitles{no} % Leave argument "no" if all appendix headings stay EMPTY (then no dot is printed after "Appendix A"). If the appendix sections contain a heading then change the argument to "yes".
-\appendixstart
-\appendix
-\section[\appendixname~\thesection]{Bill of materials\label{sec:detailed_design_documents}}
-A detailed bill of materials is provided in Table~\ref{tab:bom}.
+% \appendixstart
+% \appendix
+% \section[\appendixname~\thesection]{Bill of materials\label{sec:detailed_design_documents}}
+% A detailed bill of materials is provided in Table~\ref{tab:bom}.
 
 % \begin{landscape}
 % \begin{figure}[tb]
@@ -697,19 +711,7 @@ A detailed bill of materials is provided in Table~\ref{tab:bom}.
 % \end{figure}
 % \end{landscape}
 
-\DTLloaddb{data}{BOM_no_decorations.csv}
 
-\begin{landscape}
-\begingroup
-\footnotesize
-\renewcommand{\dtldisplaystarttab}{\\\toprule}%
-\renewcommand\dtldisplayafterhead{\hline}%
-\renewcommand\dtldisplaystartrow{\hline}%
-\renewcommand{\dtldisplayendtab}{\\\bottomrule}%
-
-\DTLdisplaylongdb[caption=Bill of materials., contcaption=Bill of materials (continued)., label=tab:bom]{data}
-\end{landscape}
-\endgroup
 
 % \subsection[\appendixname~\thesubsection]{}
 % The appendix is an optional section that can contain details and data supplemental to the main text---for example, explanations of experimental details that would disrupt the flow of the main text but nonetheless remain crucial to understanding and reproducing the research shown; figures of replicates for experiments of which representative data are shown in the main text can be added here if brief, or as Supplementary Data. Mathematical proofs of results not central to the paper can be added as an appendix.

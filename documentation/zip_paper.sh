@@ -4,6 +4,6 @@ siweedPaper.bib \
 Definitions/* \
 diagrams/* \
 diagrams/SIWEED_ElecDrawings_and_UpdatedBOM/PDFs/* \
-BOM.csv \
+BOM_no_decorations.csv \
 -x "*.graffle" \
 -x "*.vsdx" \
