@@ -135,15 +135,15 @@ Sandia National Laboratories, Albuquerque, NM 87123, USA}
 
 %\conference{} % An extended version of a conference paper
 
-% Abstract (Do not insert blank lines, i.e. \\) 
+% Abstract (Do not insert blank lines, i.e.,~\\) 
 \abstract{
-Wave energy converters are a nascent energy generation technology that harness the power in ocean waves.
-To assist in communicating both fundamental and complex concepts of wave energy, a small scale portable wave tank and wave energy converter have been developed.
-The system has been designed using commercial off-the-shelf components and all design hardware and software are openly available for replication.
+Wave energy converters are a nascent energy generation technology that harnesses the power in ocean waves.
+To assist in communicating both fundamental and complex concepts of wave energy, a small-scale portable wave tank and wave energy converter have been developed.
+The system has been designed using commercial off-the-shelf components, and all design hardware and software are openly available for replication.
 This project builds on prior research conducted at Sandia National Laboratories, particularly in the areas of WEC device design and control systems.
 By showcasing the principles of causal feedback control and innovative device design, SIWEED not only serves as a practical demonstration tool but also enhances the educational experience for users.
-This paper presents the detailed design system design.
-Further, via testing and analysis, we demonstrate basic functionality of the system.
+This paper presents the detailed system design of this tool.
+Furthermore, via testing and analysis, we demonstrate the basic functionality of the system.
 }
 
 % Keywords
@@ -197,6 +197,7 @@ Further, via testing and analysis, we demonstrate basic functionality of the sys
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 Wave energy converters (WECs) have the potential to deliver renewable energy to the grid or other autonomous power demands~\cite{Hagerman:2011aa,Clement2002,FALCAO2010899}.
 Research and development in this field have produced some notable improvements in WEC performance, but~the technology is still in a developmental phase and has not achieved broad adoption.
@@ -213,7 +214,7 @@ That same team has created multiple similar hydraulic flume tanks for demonstrat
 An educational wave tank is currently on display at the National Museum of Scotland, but~the waves do not interact with any bodies on the surface~\cite{Ivan2016}.
 A wave tank with a similar educational mission focused around wave energy was developed by Maynooth University \cite{Maynooth}.
 In some cases, ``virtual wave tanks'' have been developed for teaching purposes~\cite{Ryu:2003aa}.
-Additionally, there are some examples of the educational activities of WECs that do no involve physical wave tanks~\cite{Huynh:2016aa,Satriawan:2022aa,Satriawan:2024aa}.
+Additionally, there are some examples of the educational activities of WECs that do not involve physical wave tanks~\cite{Huynh:2016aa,Satriawan:2022aa,Satriawan:2024aa}.
 
 Relative to these other works, the~SIWEED project was focused on the following key contributions:
 
@@ -374,7 +375,7 @@ In the interest of electrical safety, the~user interface of the device (the lapt
 An emergency stop switch is installed between the power supply and power bus, enabling the device to be shut off at any time should an unexpected and/or dangerous condition occur.
 This switch should be made accessible and visible at all times during operation and testing.
 The upward-facing drive belt of the wave maker serves as a pinching hazard, and~so it is recommended to construct a barrier for use during normal operation.
-This can 3D printed using the CAD model in the design~files.
+This can be 3D printed using the CAD model in the design~files.
 
 
 \subsection{Hardware}
@@ -404,7 +405,7 @@ More specific details regarding the exact hardware configuration can be found fr
 \subsection{Electronics}
 Figure~\ref{fig:siweed_layout} shows a detailed and accurate configuration of the SIWEED electronics.
 It is useful to conceptualize the system in two halves, namely the WEC and wave maker.
-Each is controlled by an Arduino Due which communicates with the user-facing laptop through a optically isolated USB cable in~order to prevent ground looping.
+Each is controlled by an Arduino Due which communicates with the user-facing laptop through an optically isolated USB cable in~order to prevent ground looping.
 Both Arduinos are connected through level shifters to encoder buffers and motor controllers.
 Additionally, the~wave maker Arduino is connected to a signal generator via a level shifter and to four high-amperage transistors to control the decorative lights.
 All of these electronics, save for the motors and encoders themselves, are mounted inside an enclosure that sits near the SIWEED.
@@ -538,7 +539,6 @@ The position displacement time series was converted to a time series of the appl
 \label{eq:hydrostatic_restoring}
 \end{equation}
 %
-
 Here, $\tau_{hs}$ is torque due to the hydrostatic restoring force, which is the product of the radius of the pinion gear ($\sigma$) and the hydrostatic restoring force ($F_{hs}$).
 The hydrostatic restoring force can be modeled as a linear spring effect due to some displacement $\Delta z$, where the stiffness is given by the product of the water plane ($A_{wp}$), density of the water ($\rho$), and~gravity ($g$).
 %Torque = pinon radius (M)*  [9810(N/m^3)*pos(m)*pi*radius(m)^2]
@@ -593,10 +593,9 @@ The proportional derivative\,(PD) controller functions using the following formu
   \tau = k_p \cdot p + -k_d \cdot v
 \end{equation}
 %
-
 Here, $\tau$ is the calculated torque, $k_p$ is the user-defined proportional gain, $p$ is the position in meters, $k_d$ is the user-defined derivative gain, and~$v$ is the velocity in~meters per second, calculated by the change in position over the last 10 ms.
 The torque applied by the motor is thus the combined effect of a spring and damper, with~the proportional gain $k_p$ adjusting the strength of the spring and~the derivative gain $k_d$ adjusting the strength of the damper.
-Unlike a typical physical spring, this ``spring'' can both push the device towards the center (a stabilizing affect) or~push it away (a destabilizing effect) depending on the sign of the gain.
+Unlike a typical physical spring, this ``spring'' can both push the device towards the center (a stabilizing effect) or~push it away (a destabilizing effect) depending on the sign of the gain.
 A positive $k_p$ will act as a destabilizing force, whereas a negative $k_p$ will center the WEC to the waterline, similarly to a physical~spring.
 
 The calculation of \eqref{pdctrleq} is performed on the Arduino Due micro-controller responsible for controlling the WEC, which commands an output torque through PWM to the WEC motor controller.
