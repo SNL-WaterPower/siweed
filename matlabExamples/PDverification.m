@@ -62,6 +62,7 @@ plot(data{1}.wecTau)
 
 
 %%
+clc
 
 rr = find(abs(data{1}.wecTau) > 1e-4);
 qq = find(abs(data{1}.wecTau) <= 1e-4);
@@ -70,27 +71,6 @@ qq = find(abs(data{1}.wecTau) <= 1e-4);
 tau_mc = data{1}.wecTau;
 tau_fb = data{1}.wecPos.*data{1}.UIWeckP + data{1}.wecVel.*data{1}.UIWeckD;
 
-[p,S] = polyfit(tau_fb(rr), tau_mc(rr), 1);
-xx = linspace(min(tau_fb(rr)),max(tau_fb(rr)),100);
-[yy,yyd] = polyval(p,xx,S);
-
-f1 = figure;
-grid on
-hold on
-scatter(tau_fb(rr), tau_mc(rr))
-plot(xx,yy,'r--')
-plot(xx,yy+2*yyd,'m--',xx,yy-2*yyd,'m--')
-xlabel('Commanded torque [Nm]','interpreter','latex')
-ylabel('Actual torque [Nm]','interpreter','latex')
-legend('Data',...
-    sprintf('Linear reg. ($y=%.2fx + %.2f$, $r^2$: %.2f, MAE: %.0e)',p(1),p(2),S.rsquared,mean(abs(tau_err(rr)))),...
-    '95\% prediction interval',...
-    'interpreter','latex')
-
-exportgraphics(f1,'PDverification.pdf','ContentType','vector')
-
-%%
-clc
 tau_err = tau_fb - tau_mc;
 rms(tau_err(rr))
 rms(tau_fb(rr))
@@ -105,3 +85,32 @@ T = table([rms(tau_fb(qq));rms(tau_fb(rr))],[rms(tau_err(qq));rms(tau_err(rr))],
 
 figure
 histogram(tau_err)
+
+%%
+
+vtw = mean(abs(tau_err(rr)));
+s = sign(vtw)
+ev = ceil(abs(log10(vtw)))
+fprintf('%.3f\n x 10^-4',vtw*1*10^ev)
+
+%%
+
+[p,S] = polyfit(tau_fb(rr), tau_mc(rr), 1);
+xx = linspace(min(tau_fb(rr)),max(tau_fb(rr)),100);
+[yy,yyd] = polyval(p,xx,S);
+
+f1 = figure;
+grid on
+hold on
+scatter(tau_fb(rr), tau_mc(rr))
+plot(xx,yy,'r--')
+plot(xx,yy+2*yyd,'m--',xx,yy-2*yyd,'m--')
+xlabel('Commanded torque [Nm]','interpreter','latex')
+ylabel('Actual torque [Nm]','interpreter','latex')
+legend('Data',...
+    sprintf('Linear reg. ($y=%.2fx + %.2f$, $r^2$: %.2f, MAE: 1.25$\\times{10}^{-4}$)',...
+    p(1),p(2),S.rsquared),...
+    '95\% prediction interval',...
+    'interpreter','latex')
+
+exportgraphics(f1,'PDverification.pdf','ContentType','vector')
